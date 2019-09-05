@@ -27,9 +27,15 @@
     <ClInclude Include="src\Kame\Entrypoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

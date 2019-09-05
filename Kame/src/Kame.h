@@ -2,8 +2,9 @@
 
 // For use by Kame applications
 
-#include "Kame\Application.h"
+#include "Kame/Application.h"
+#include "Kame/Log.h"
 
 // ---Entry Point --------------------------
-#include "Kame\Entrypoint.h"
+#include "Kame/Entrypoint.h"
 // ---Entry Point --------------------------
