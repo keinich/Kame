@@ -17,6 +17,9 @@ project "Kame"
   targetdir ("bin/" .. outputdir  .. "/%{prj.name}")
   objdir ("bin-int/" .. outputdir  .. "/%{prj.name}")
 
+  pchheader "kmpch.h"
+  pchsource "Kame/src/kmpch.cpp"
+
   files {
     "%{prj.name}/src/**.h",
     "%{prj.name}/src/**.cpp"

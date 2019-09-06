@@ -1,3 +1,4 @@
+#include "kmpch.h"
 #include "Application.h"
 
 #include "Kame/Events/ApplicationEvent.h"

@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace Kame {
 
   class KAME_API KeyEvent : public Event {

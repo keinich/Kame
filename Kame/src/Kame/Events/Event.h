@@ -2,9 +2,6 @@
 
 #include "Kame/Core.h"
 
-#include <string>
-#include <functional>
-
 namespace Kame {
 
   enum class EventType {
