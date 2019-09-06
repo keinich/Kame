@@ -4,6 +4,9 @@
     <Filter Include="Kame">
       <UniqueIdentifier>{03DB877C-EF11-890D-98FE-6E108414050F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Events">
+      <UniqueIdentifier>{87A5FE1F-F35A-7715-7C4F-71ECE8036E19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Kame.h" />
@@ -15,6 +18,18 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Entrypoint.h">
       <Filter>Kame</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Events\ApplicationEvent.h">
+      <Filter>Kame\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Events\Event.h">
+      <Filter>Kame\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Events\KeyEvent.h">
+      <Filter>Kame\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Events\MouseEvent.h">
+      <Filter>Kame\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Log.h">
       <Filter>Kame</Filter>
