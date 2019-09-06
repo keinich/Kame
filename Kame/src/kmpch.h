@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Kame/Log.h"
+
 #ifdef KAME_PLATFORM_WINDOWS
   #include <Windows.h>
 #endif

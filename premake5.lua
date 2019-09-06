@@ -9,6 +9,11 @@ workspace "Kame"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "Kame/vendor/GLFW/include"
+
+include "Kame/vendor/GLFW"
+
 project "Kame"
   location "Kame"
   kind "SharedLib"
@@ -27,7 +32,13 @@ project "Kame"
 
   includedirs {
     "%{prj.name}/src",
-    "%{prj.name}/vendor/spdlog/include"
+    "%{prj.name}/vendor/spdlog/include",
+    "%{IncludeDir.GLFW}"
+  }
+
+  links {
+    "GLFW",
+    "opengl32.lib"
   }
 
   filter "system:windows"

@@ -7,6 +7,12 @@
     <Filter Include="Kame\Events">
       <UniqueIdentifier>{87A5FE1F-F35A-7715-7C4F-71ECE8036E19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Platform">
+      <UniqueIdentifier>{B72A5C36-23EB-D76C-EC25-21EA58A51C49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Platform\Windows">
+      <UniqueIdentifier>{F19BE807-5D08-A402-26FC-3B609227C66A}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Kame.h" />
@@ -34,6 +40,12 @@
     <ClInclude Include="src\Kame\Log.h">
       <Filter>Kame</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Platform\Windows\WindowsWindow.h">
+      <Filter>Kame\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Window.h">
+      <Filter>Kame</Filter>
+    </ClInclude>
     <ClInclude Include="src\kmpch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +54,9 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Log.cpp">
       <Filter>Kame</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Kame\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
   </ItemGroup>

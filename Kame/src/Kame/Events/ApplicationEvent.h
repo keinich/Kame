@@ -6,7 +6,7 @@ namespace Kame {
 
   class KAME_API WindowResizeEvent : public Event {
 
-  public:
+    public:
     WindowResizeEvent(unsigned int width, unsigned int height)
       : _Width(width), _Height(height) {
     }
@@ -23,13 +23,13 @@ namespace Kame {
     EVENT_CLASS_TYPE(WindowResize)
       EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
-  private:
+    private:
     unsigned int _Width, _Height;
 
   };
 
   class KAME_API WindowCloseEvent : public Event {
-  public:
+    public:
     WindowCloseEvent() {}
 
     EVENT_CLASS_TYPE(WindowClose)
@@ -37,7 +37,7 @@ namespace Kame {
   };
 
   class KAME_API AppTickEvent : public Event {
-  public:
+    public:
     AppTickEvent() {}
 
     EVENT_CLASS_TYPE(AppTick)
@@ -45,7 +45,7 @@ namespace Kame {
   };
 
   class KAME_API AppUpdateEvent : public Event {
-  public:
+    public:
     AppUpdateEvent() {}
 
     EVENT_CLASS_TYPE(AppUpdate)
@@ -53,8 +53,8 @@ namespace Kame {
   };
 
   class KAME_API AppRenderEvent : public Event {
-  public:
-    AppRenderEvent() { }
+    public:
+    AppRenderEvent() {}
 
     EVENT_CLASS_TYPE(AppRender)
       EVENT_CLASS_CATEGORY(EventCategoryApplication)

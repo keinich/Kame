@@ -1,5 +1,7 @@
 #pragma once
 
+#include "kmpch.h"
+
 #include "Kame/Core.h"
 
 namespace Kame {
@@ -14,11 +16,11 @@ namespace Kame {
 
   enum EventCategory {
     None = 0,
-    EventCategoryApplication   = BIT(0),
-    EventCategoryInput         = BIT(1),
-    EventCategoryKeybord       = BIT(2),
-    EventCategoryMouse         = BIT(3),
-    EventCategoryMouseButton   = BIT(4)
+    EventCategoryApplication = BIT(0),
+    EventCategoryInput = BIT(1),
+    EventCategoryKeybord = BIT(2),
+    EventCategoryMouse = BIT(3),
+    EventCategoryMouseButton = BIT(4)
   };
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
@@ -30,7 +32,7 @@ namespace Kame {
   class KAME_API Event {
     friend class EventDispatcher;
 
-  public:
+    public:
     virtual EventType GetEventType() const = 0;
     virtual const char* GetName() const = 0;
     virtual int GetCategoryFlags() const = 0;
@@ -38,15 +40,15 @@ namespace Kame {
 
     inline bool IsInCategory(EventCategory category) { return GetCategoryFlags() & category; }
 
-  protected:
+    protected:
     bool _Handled = false;
   };
 
   class EventDispatcher {
     template<typename T>
     using EventFn = std::function<bool(T&)>;
-    
-  public:
+
+    public:
     EventDispatcher(Event& event) : _Event(event) {}
 
     template<typename T>
@@ -58,7 +60,7 @@ namespace Kame {
       return false;
     }
 
-  private:
+    private:
     Event& _Event;
   };
 
