@@ -57,14 +57,17 @@ project "Kame"
 
   filter "configurations:Debug"
     defines "KAME_DEBUG"
+    buildoptions "/MDd"
     symbols "On"
 
   filter "configurations:Release"
     defines "KAME_RELEASE"
+    buildoptions "/MD"
     optimize "On"
 
   filter "configurations:Dist"
     defines "KAME_DIST"
+    buildoptions "/MD"
     optimize "On"
   
 project "Sandbox"
@@ -100,12 +103,15 @@ project "Sandbox"
 
   filter "configurations:Debug"
     defines "KAME_DEBUG"
+    buildoptions "/MDd"
     symbols "On"
 
   filter "configurations:Release"
     defines "KAME_RELEASE"
+    buildoptions "/MD"
     optimize "On"
 
   filter "configurations:Dist"
     defines "KAME_DIST"
+    buildoptions "/MD"
     optimize "On"

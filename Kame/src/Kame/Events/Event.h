@@ -39,6 +39,7 @@ namespace Kame {
     virtual std::string ToString() const { return GetName(); }
 
     inline bool IsInCategory(EventCategory category) { return GetCategoryFlags() & category; }
+    inline bool IsHandled() { return _Handled; }
 
     protected:
     bool _Handled = false;

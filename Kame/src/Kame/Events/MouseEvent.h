@@ -85,20 +85,20 @@ class KAME_API MouseButtonPressedEvent : public MouseButtonEvent {
   EVENT_CLASS_TYPE(MouseButtonPressed)
 };
 
-class KAME_API MouseButtonPressedEvent : public MouseButtonEvent {
+class KAME_API MouseButtonReleasedEvent : public MouseButtonEvent {
 
   public:
-  MouseButtonPressedEvent(int button)
+  MouseButtonReleasedEvent(int button)
     : MouseButtonEvent(button) {
   }
 
   std::string ToString() const override {
     std::stringstream ss;
-    ss << "MouseButtonPressedEvent: " << _Button;
+    ss << "MouseButtonReleasedEvent: " << _Button;
     return ss.str();
   }
 
-  EVENT_CLASS_TYPE(MouseButtonPressed)
+  EVENT_CLASS_TYPE(MouseButtonReleased)
 };
 
 }

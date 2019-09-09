@@ -6,11 +6,11 @@
 
 namespace Kame {
 
-  class WindowsWindow : public Window {
+  class GLFWWindow : public Window {
 
     public:
-    WindowsWindow(const WindowProperties& props);
-    ~WindowsWindow();
+    GLFWWindow(const WindowProperties& props);
+    ~GLFWWindow();
 
     void OnUpdate() override;
 
