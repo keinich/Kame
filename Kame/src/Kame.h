@@ -5,6 +5,7 @@
 #include "Kame/Application.h"
 #include "Kame/Layer.h"
 #include "Kame/Log.h"
+#include "Kame/ImGui/ImGuiLayer.h"
 
 // ---Entry Point --------------------------
 #include "Kame/Entrypoint.h"

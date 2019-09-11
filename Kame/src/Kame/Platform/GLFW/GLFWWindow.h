@@ -2,13 +2,13 @@
 
 #include "Kame/Window.h"
 
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 namespace Kame {
 
   class GLFWWindow : public Window {
 
-    public:
+  public:
     GLFWWindow(const WindowProperties& props);
     ~GLFWWindow();
 
@@ -21,12 +21,14 @@ namespace Kame {
     void SetVSync(bool enabled) override;
     bool IsVSync() const override;
 
-    private: // Functions
+    inline virtual void* GetNativeWindow() const override { return _Window; };
+
+  private: // Functions
     virtual void Init(const WindowProperties& props);
     virtual void Shutdown();
 
-    private: // Fields
-    GLFWwindow* _Window;
+  private: // Fields
+    struct GLFWwindow* _Window;
 
     struct WindowData {
       std::string Title;
@@ -35,7 +37,7 @@ namespace Kame {
 
       EventCallbackFn EventCallback;
     };
-
+    
     WindowData _Data;
   };
 

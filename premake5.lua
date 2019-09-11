@@ -11,8 +11,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Kame/vendor/GLFW/include"
+IncludeDir["Glad"] = "Kame/vendor/GLAD/include"
+IncludeDir["ImGui"] = "Kame/vendor/imgui"
 
 include "Kame/vendor/GLFW"
+include "Kame/vendor/Glad"
+include "Kame/vendor/imgui"
 
 project "Kame"
   location "Kame"
@@ -33,11 +37,15 @@ project "Kame"
   includedirs {
     "%{prj.name}/src",
     "%{prj.name}/vendor/spdlog/include",
-    "%{IncludeDir.GLFW}"
+    "%{IncludeDir.GLFW}",
+    "%{IncludeDir.Glad}",
+    "%{IncludeDir.ImGui}"
   }
 
   links {
     "GLFW",
+    "Glad",
+    "ImGui",
     "opengl32.lib"
   }
 
@@ -48,7 +56,8 @@ project "Kame"
 
     defines {
       "KAME_PLATFORM_WINDOWS",
-      "KAME_BUILD_DLL"
+      "KAME_BUILD_DLL",
+      "GLFW_INCLUDE_NONE"
     }
 
     postbuildcommands {

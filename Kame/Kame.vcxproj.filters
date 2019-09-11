@@ -7,11 +7,17 @@
     <Filter Include="Kame\Events">
       <UniqueIdentifier>{87A5FE1F-F35A-7715-7C4F-71ECE8036E19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\ImGui">
+      <UniqueIdentifier>{6D46B7F1-59FE-F83E-C205-D29AAEDC932F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\Platform">
       <UniqueIdentifier>{B72A5C36-23EB-D76C-EC25-21EA58A51C49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Kame\Platform\GLFW">
       <UniqueIdentifier>{5630E136-4214-A28C-AB74-9CDF97778C0E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Platform\OpenGl">
+      <UniqueIdentifier>{2BC03489-174F-BE52-C06D-D24DACDBCEF8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +43,12 @@
     <ClInclude Include="src\Kame\Events\MouseEvent.h">
       <Filter>Kame\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h">
+      <Filter>Kame\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Input.h">
+      <Filter>Kame</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Layer.h">
       <Filter>Kame</Filter>
     </ClInclude>
@@ -46,8 +58,14 @@
     <ClInclude Include="src\Kame\Log.h">
       <Filter>Kame</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Platform\GLFW\GLFWInput.h">
+      <Filter>Kame\Platform\GLFW</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWWindow.h">
       <Filter>Kame\Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.h">
+      <Filter>Kame\Platform\OpenGl</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Window.h">
       <Filter>Kame</Filter>
@@ -58,6 +76,9 @@
     <ClCompile Include="src\Kame\Application.cpp">
       <Filter>Kame</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp">
+      <Filter>Kame\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kame\Layer.cpp">
       <Filter>Kame</Filter>
     </ClCompile>
@@ -67,8 +88,14 @@
     <ClCompile Include="src\Kame\Log.cpp">
       <Filter>Kame</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kame\Platform\GLFW\GLFWInput.cpp">
+      <Filter>Kame\Platform\GLFW</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWWindow.cpp">
       <Filter>Kame\Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.cpp">
+      <Filter>Kame\Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
   </ItemGroup>

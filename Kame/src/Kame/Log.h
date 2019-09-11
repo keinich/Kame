@@ -7,6 +7,7 @@
 namespace Kame {
 
   class KAME_API Log {
+
   public:
     static void Init();
 

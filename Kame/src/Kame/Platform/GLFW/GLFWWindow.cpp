@@ -5,6 +5,8 @@
 #include "Kame/Events/MouseEvent.h"
 #include "Kame/Events/KeyEvent.h"
 
+#include <glad/glad.h>
+
 namespace Kame {
 
   static bool s_GLFWInitialized = false;
@@ -42,6 +44,8 @@ namespace Kame {
 
     _Window = glfwCreateWindow((int)props.Width, (int)props.Height, _Data.Title.c_str(), nullptr, nullptr);
     glfwMakeContextCurrent(_Window);
+    int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    KM_CORE_ASSERT(status, "Failed to initialize Glad!");
     glfwSetWindowUserPointer(_Window, &_Data);
     SetVSync(true);
 
@@ -53,7 +57,7 @@ namespace Kame {
         data.Width = width;
         data.Height = height;
 
-        WindowResizeEvent event(width, height);
+        WindowResizedEvent event(width, height);
         data.EventCallback(event);
       }
     );
@@ -96,6 +100,16 @@ namespace Kame {
       }
     );
 
+    glfwSetCharCallback(
+      _Window,
+      [](GLFWwindow* window, unsigned int keyCode) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+        KeyTypedEvent event(keyCode);
+        data.EventCallback(event);
+      }
+    );
+
     glfwSetMouseButtonCallback(
       _Window,
       [](GLFWwindow* window, int button, int action, int mods) {
@@ -122,7 +136,7 @@ namespace Kame {
       _Window,
       [](GLFWwindow* window, double xOffset, double yOffset) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-        MouseScrollEvent event((float)xOffset,(float)yOffset);
+        MouseScrolledEvent event((float)xOffset, (float)yOffset);
         data.EventCallback(event);
       }
     );

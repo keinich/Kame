@@ -16,14 +16,19 @@ namespace Kame {
     void Run();
 
     void OnEvent(Event& e);
-    
+
     void PushLayer(Layer* layer);
     void PushOverlay(Layer* layer);
 
-    private:
+    inline static Application& Get() { return *s_Instance; }
+    inline Window& GetWindow() { return *_Window; }
+
+  private:
     std::unique_ptr<Window> _Window;
     bool _Running = true;
     LayerStack _LayerStack;
+  
+    static Application*  s_Instance;
   };
 
   // to be defined in the client

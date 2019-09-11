@@ -79,8 +79,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>kmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;KAME_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -102,8 +102,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>kmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;KAME_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -129,8 +129,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>kmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;KAME_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -160,19 +160,26 @@
     <ClInclude Include="src\Kame\Events\Event.h" />
     <ClInclude Include="src\Kame\Events\KeyEvent.h" />
     <ClInclude Include="src\Kame\Events\MouseEvent.h" />
+    <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Kame\Input.h" />
     <ClInclude Include="src\Kame\Layer.h" />
     <ClInclude Include="src\Kame\LayerStack.h" />
     <ClInclude Include="src\Kame\Log.h" />
+    <ClInclude Include="src\Kame\Platform\GLFW\GLFWInput.h" />
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWWindow.h" />
+    <ClInclude Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Kame\Window.h" />
     <ClInclude Include="src\kmpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp" />
+    <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Layer.cpp" />
     <ClCompile Include="src\Kame\LayerStack.cpp" />
     <ClCompile Include="src\Kame\Log.cpp" />
+    <ClCompile Include="src\Kame\Platform\GLFW\GLFWInput.cpp" />
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWWindow.cpp" />
+    <ClCompile Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="src\kmpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -180,6 +187,12 @@
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\Glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

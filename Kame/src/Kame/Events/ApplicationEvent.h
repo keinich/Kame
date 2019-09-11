@@ -4,10 +4,10 @@
 
 namespace Kame {
 
-  class KAME_API WindowResizeEvent : public Event {
+  class KAME_API WindowResizedEvent : public Event {
 
     public:
-    WindowResizeEvent(unsigned int width, unsigned int height)
+    WindowResizedEvent(unsigned int width, unsigned int height)
       : _Width(width), _Height(height) {
     }
 

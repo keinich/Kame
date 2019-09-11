@@ -30,10 +30,10 @@ class KAME_API MouseMovedEvent : public Event {
 
 };
 
-class KAME_API MouseScrollEvent : public Event {
+class KAME_API MouseScrolledEvent : public Event {
 
   public:
-  MouseScrollEvent(float xOffset, float yOffset)
+  MouseScrolledEvent(float xOffset, float yOffset)
     : _XOffset(xOffset), _YOffset(yOffset) {
   }
 
