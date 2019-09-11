@@ -49,6 +49,9 @@
     <ClInclude Include="src\Kame\Input.h">
       <Filter>Kame</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\KeyCodes.h">
+      <Filter>Kame</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Layer.h">
       <Filter>Kame</Filter>
     </ClInclude>
@@ -56,6 +59,9 @@
       <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Log.h">
+      <Filter>Kame</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\MouseButtonCodes.h">
       <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWInput.h">
@@ -71,8 +77,6 @@
       <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\KeyCodes.h" />
-    <ClInclude Include="src\Kame\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">

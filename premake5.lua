@@ -13,6 +13,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Kame/vendor/GLFW/include"
 IncludeDir["Glad"] = "Kame/vendor/GLAD/include"
 IncludeDir["ImGui"] = "Kame/vendor/imgui"
+IncludeDir["glm"] = "Kame/vendor/glm"
 
 include "Kame/vendor/GLFW"
 include "Kame/vendor/Glad"
@@ -39,7 +40,8 @@ project "Kame"
     "%{prj.name}/vendor/spdlog/include",
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.Glad}",
-    "%{IncludeDir.ImGui}"
+    "%{IncludeDir.ImGui}",
+    "%{IncludeDir.glm}"
   }
 
   links {
@@ -94,7 +96,8 @@ project "Sandbox"
 
   includedirs {
     "Kame/vendor/spdlog/include",
-    "Kame/src"
+    "Kame/src",
+    "%{IncludeDir.glm}"
   }
 
   links {
