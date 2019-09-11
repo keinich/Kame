@@ -71,6 +71,8 @@
       <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
+    <ClInclude Include="src\Kame\KeyCodes.h" />
+    <ClInclude Include="src\Kame\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">

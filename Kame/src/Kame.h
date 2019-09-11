@@ -5,6 +5,11 @@
 #include "Kame/Application.h"
 #include "Kame/Layer.h"
 #include "Kame/Log.h"
+
+#include "Kame/Input.h"
+#include "Kame/KeyCodes.h"
+#include "Kame/MouseButtonCodes.h"
+
 #include "Kame/ImGui/ImGuiLayer.h"
 
 // ---Entry Point --------------------------

@@ -46,8 +46,8 @@ namespace Kame {
       for (Layer* layer : _LayerStack)
         layer->OnUpdate();
 
-      auto[x, y] = Input::GetMousePosition();
-      KM_CORE_TRACE("{0}, {1}", x, y);
+      //auto[x, y] = Input::GetMousePosition();
+      //KM_CORE_TRACE("{0}, {1}", x, y);
 
       _Window->OnUpdate();
     }
@@ -55,7 +55,7 @@ namespace Kame {
 
   void Application::OnEvent(Event & e) {
 
-    KM_CORE_INFO("{0}", e);
+    //KM_CORE_INFO("{0}", e);
 
     for (auto it = _LayerStack.end(); it != _LayerStack.begin();) {
       (*--it)->OnEvent(e);

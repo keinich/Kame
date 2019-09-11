@@ -7,10 +7,13 @@ class ExampleLayer : public Kame::Layer {
 
   void OnUpdate() override {
     KM_INFO("ExampleLayer::Update");
+
+    if (Kame::Input::IsKeyPressed(KAME_KEY_TAB))
+      KM_INFO("Tab is pressed!");
   }
 
   void OnEvent(Kame::Event& event) override {
-    KM_TRACE("{0}", event);
+    //KM_TRACE("{0}", event);
   }
 
 };
