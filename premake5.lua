@@ -59,7 +59,9 @@ project "Kame"
     defines {
       "KAME_PLATFORM_WINDOWS",
       "KAME_BUILD_DLL",
-      "GLFW_INCLUDE_NONE"
+      "GLFW_INCLUDE_NONE",
+	  "KAME_PLATFORM_GLFW",
+	  "KAME_PLATFORM_OPENGL"
     }
 
     postbuildcommands {

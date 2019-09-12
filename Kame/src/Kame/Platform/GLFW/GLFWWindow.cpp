@@ -1,4 +1,7 @@
 #include "kmpch.h"
+
+#ifdef KAME_PLATFORM_GLFW
+
 #include "GLFWWindow.h"
 
 #include "Kame/Events/ApplicationEvent.h"
@@ -175,3 +178,5 @@ namespace Kame {
   }
 
 }
+
+#endif

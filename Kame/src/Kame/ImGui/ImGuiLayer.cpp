@@ -2,7 +2,12 @@
 #include "ImGuiLayer.h"
 
 #include "imgui.h"
+
+#ifdef KAME_PLATFORM_OPENGL
 #include "Kame/Platform/OpenGl/ImGuiOpenGLRenderer.h"
+#else
+#include "Kame/Platform/DirectX12/ImGui/ImGuiDX12Renderer.h"
+#endif
 
 #include "Kame/Application.h"
 
@@ -48,7 +53,11 @@ namespace Kame {
     io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
     io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 
+#ifdef KAME_PLATFORM_OPENGL
     ImGui_ImplOpenGL3_Init("#version 410");
+#else
+    //ImGui_ImplDX12_Init(;
+#endif
   }
 
   void ImGuiLayer::OnDetach() {}
@@ -63,18 +72,26 @@ namespace Kame {
     io.DeltaTime = _Time > 0.0f ? (time - _Time) : (1.0f / 60.0f);
     _Time = time;
 
+#ifdef KAME_PLATFORM_OPENGL
     ImGui_ImplOpenGL3_NewFrame();
+#else
+    ImGui_ImplDX12_NewFrame();
+#endif
+
     ImGui::NewFrame();
 
     static bool show = true;
     ImGui::ShowDemoWindow(&show);
 
     ImGui::Render();
+#ifdef KAME_PLATFORM_OPENGL
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+#else
+    //ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),);
+#endif
   }
 
-  void ImGuiLayer::OnEvent(Event & event) {
+  void ImGuiLayer::OnEvent(Event& event) {
     EventDispatcher dispatcher(event);
     dispatcher.Dispatch< MouseButtonPressedEvent>(KM_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonPressedEvent));
     dispatcher.Dispatch< MouseButtonReleasedEvent>(KM_BIND_EVENT_FN(ImGuiLayer::OnMouseButtonReleasedEvent));
@@ -86,28 +103,28 @@ namespace Kame {
     dispatcher.Dispatch< WindowResizedEvent>(KM_BIND_EVENT_FN(ImGuiLayer::OnWindowResizedEvent));
   }
 
-  bool ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent & e) {
+  bool ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e) {
     ImGuiIO& io = ImGui::GetIO();
     io.MouseDown[e.GetMouseButton()] = true;
 
     return false;
   }
 
-  bool ImGuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent & e) {
+  bool ImGuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e) {
     ImGuiIO& io = ImGui::GetIO();
     io.MouseDown[e.GetMouseButton()] = false;
 
     return false;
   }
 
-  bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent & e) {
+  bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent& e) {
     ImGuiIO& io = ImGui::GetIO();
     io.MousePos = ImVec2(e.GetX(), e.GetY());
 
     return false;
   }
 
-  bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent & e) {
+  bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& e) {
     ImGuiIO& io = ImGui::GetIO();
     io.MouseWheelH += e.GetXOffset();
     io.MouseWheel += e.GetYOffset();
@@ -115,10 +132,10 @@ namespace Kame {
     return false;
   }
 
-  bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent & e) {
+  bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e) {
     ImGuiIO& io = ImGui::GetIO();
     io.KeysDown[e.GetKeyCode()] = true;
-    
+
     io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
     io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
     io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
@@ -127,14 +144,14 @@ namespace Kame {
     return false;
   }
 
-  bool ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent & e) {
+  bool ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent& e) {
     ImGuiIO& io = ImGui::GetIO();
     io.KeysDown[e.GetKeyCode()] = false;
 
     return false;
   }
 
-  bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent & e) {
+  bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& e) {
     ImGuiIO& io = ImGui::GetIO();
     int keycode = e.GetKeyCode();
 
@@ -144,7 +161,7 @@ namespace Kame {
     return false;
   }
 
-  bool ImGuiLayer::OnWindowResizedEvent(WindowResizedEvent & e) {
+  bool ImGuiLayer::OnWindowResizedEvent(WindowResizedEvent& e) {
     ImGuiIO& io = ImGui::GetIO();
     io.DisplaySize = ImVec2(e.GetWidth(), e.GetHeight());
     io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);

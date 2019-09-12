@@ -49,11 +49,14 @@
 //  ES 3.0    300       "#version 300 es"
 //----------------------------------------
 
+#include "kmpch.h"
+
+#ifdef KAME_PLATFORM_OPENGL
+
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include "kmpch.h"
 #include "imgui.h"
 #include "ImGuiOpenGLrenderer.h"
 #include "glad/glad.h"
@@ -534,3 +537,5 @@ void    ImGui_ImplOpenGL3_DestroyDeviceObjects()
 
     ImGui_ImplOpenGL3_DestroyFontsTexture();
 }
+
+#endif

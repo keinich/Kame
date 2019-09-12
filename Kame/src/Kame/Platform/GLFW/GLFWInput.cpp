@@ -1,4 +1,7 @@
 #include "kmpch.h"
+
+#ifdef KAME_PLATFORM_GLFW
+
 #include "GLFWInput.h"
 
 #include <GLFW/glfw3.h>
@@ -39,3 +42,5 @@ namespace Kame {
   }
 
 }
+
+#endif

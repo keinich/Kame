@@ -4,7 +4,9 @@
 #include "Kame/Events/ApplicationEvent.h"
 #include "Kame/Log.h"
 
+#ifdef KAME_PLATFORM_OPENGL
 #include <glad/glad.h>
+#endif
 
 #include "Input.h"
 
@@ -23,7 +25,7 @@ namespace Kame {
     _Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
     unsigned int id;
-    glGenVertexArrays(1, &id);
+    //glGenVertexArrays(1, &id);
   }
 
   Application::~Application() {}
@@ -40,8 +42,11 @@ namespace Kame {
 
   void Application::Run() {
     while (_Running) {
+
+#ifdef KAME_PLATFORM_OPENGL
       glClearColor(1, 0, 1, 1);
       glClear(GL_COLOR_BUFFER_BIT);
+#endif
 
       for (Layer* layer : _LayerStack)
         layer->OnUpdate();

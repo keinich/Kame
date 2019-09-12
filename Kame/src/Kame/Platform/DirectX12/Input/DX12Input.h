@@ -1,12 +1,12 @@
 #pragma once
 
-#ifdef KAME_PLATFORM_GLFW
+#ifdef KAME_PLATFORM_DIRECTX12
 
 #include "Kame/Input.h"
 
 namespace Kame {
   
-  class GLFWInput : public Input {
+  class DX12Input : public Input {
 
   protected:
 

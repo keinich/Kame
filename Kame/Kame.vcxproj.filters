@@ -13,11 +13,26 @@
     <Filter Include="Kame\Platform">
       <UniqueIdentifier>{B72A5C36-23EB-D76C-EC25-21EA58A51C49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Platform\DirectX12">
+      <UniqueIdentifier>{3CDDA534-A814-EECB-B11E-52EF1DD514C5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Platform\DirectX12\Graphics">
+      <UniqueIdentifier>{FC48FC6A-E899-E7AC-11FE-D56EFDAD7A16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Platform\DirectX12\ImGui">
+      <UniqueIdentifier>{664F86E0-D267-6D0A-9B14-FDA307EC01A4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Platform\DirectX12\Input">
+      <UniqueIdentifier>{3B8A87E0-A7A2-6E0A-704F-FEA3DC2603A4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\Platform\GLFW">
       <UniqueIdentifier>{5630E136-4214-A28C-AB74-9CDF97778C0E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Kame\Platform\OpenGl">
       <UniqueIdentifier>{2BC03489-174F-BE52-C06D-D24DACDBCEF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Platform\Win32">
+      <UniqueIdentifier>{D94F3914-45B1-1622-CE1E-5DD43A7F4DE1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +79,15 @@
     <ClInclude Include="src\Kame\MouseButtonCodes.h">
       <Filter>Kame</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DxTutorial.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.h">
+      <Filter>Kame\Platform\DirectX12\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Input\DX12Input.h">
+      <Filter>Kame\Platform\DirectX12\Input</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWInput.h">
       <Filter>Kame\Platform\GLFW</Filter>
     </ClInclude>
@@ -72,6 +96,12 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.h">
       <Filter>Kame\Platform\OpenGl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\Win32\Win32Window.h">
+      <Filter>Kame\Platform\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\VectorMath.h">
+      <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Window.h">
       <Filter>Kame</Filter>
@@ -94,6 +124,15 @@
     <ClCompile Include="src\Kame\Log.cpp">
       <Filter>Kame</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DxTutorial.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.cpp">
+      <Filter>Kame\Platform\DirectX12\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Input\DX12Input.cpp">
+      <Filter>Kame\Platform\DirectX12\Input</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWInput.cpp">
       <Filter>Kame\Platform\GLFW</Filter>
     </ClCompile>
@@ -102,6 +141,9 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.cpp">
       <Filter>Kame\Platform\OpenGl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\Win32\Win32Window.cpp">
+      <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
   </ItemGroup>

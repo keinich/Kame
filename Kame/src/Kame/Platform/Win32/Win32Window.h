@@ -1,18 +1,16 @@
 #pragma once
 
-#ifdef KAME_PLATFORM_GLFW
+#ifdef KAME_PLATFORM_WIN32
 
 #include "Kame/Window.h"
 
-#include "GLFW/glfw3.h"
-
 namespace Kame {
 
-  class GLFWWindow : public Window {
+  class Win32Window : public Window {
 
   public:
-    GLFWWindow(const WindowProperties& props);
-    ~GLFWWindow();
+    Win32Window(const WindowProperties& props);
+    ~Win32Window();
 
     void OnUpdate() override;
 
@@ -29,8 +27,10 @@ namespace Kame {
     virtual void Init(const WindowProperties& props);
     virtual void Shutdown();
 
+    static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
   private: // Fields
-    struct GLFWwindow* _Window;
+    HWND* _Window;
 
     struct WindowData {
       std::string Title;
