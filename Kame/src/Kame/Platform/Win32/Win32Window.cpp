@@ -1,5 +1,8 @@
 #include "kmpch.h"
 
+//TODO Remove this
+#include "Kame/Platform/DirectX12/Graphics/DxTutorial.h"
+
 #ifdef KAME_PLATFORM_WIN32
 
 #include "Win32Window.h"
@@ -47,7 +50,10 @@ namespace Kame {
     windowClass.hInstance = hInstance;
     windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass.lpszClassName = L"DXSampleClass";
-    RegisterClassEx(&windowClass);
+
+    static HRESULT hr = ::RegisterClassEx(&windowClass);
+    assert(SUCCEEDED(hr));
+
 
     RECT windowRect = { 0,0,1280,720 }; //TODO who sets the window dimensions first?
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
@@ -68,107 +74,6 @@ namespace Kame {
 
     _Window = &w;
 
-    //// Set GLFW callbacks
-    //glfwSetWindowSizeCallback(
-    //  _Window,
-    //  [](GLFWwindow* window, int width, int height) {
-    //    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-    //    data.Width = width;
-    //    data.Height = height;
-
-    //    WindowResizedEvent event(width, height);
-    //    data.EventCallback(event);
-    //  }
-    //);
-
-    //glfwSetWindowCloseCallback(
-    //  _Window,
-    //  [](GLFWwindow* window) {
-    //    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-    //    WindowCloseEvent event;
-    //    data.EventCallback(event);
-    //  }
-    //);
-
-    //glfwSetKeyCallback(
-    //  _Window,
-    //  [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-    //    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-    //    switch (action) {
-    //      case GLFW_PRESS:
-    //      {
-    //        KeyPressedEvent event(key, 0);
-    //        data.EventCallback(event);
-    //        break;
-    //      }
-    //      case GLFW_RELEASE:
-    //      {
-    //        KeyReleasedEvent event(key);
-    //        data.EventCallback(event);
-    //        break;
-    //      }
-    //      case GLFW_REPEAT:
-    //      {
-    //        KeyPressedEvent event(key, 1);
-    //        data.EventCallback(event);
-    //        break;
-    //      }
-    //    }
-    //  }
-    //);
-
-    //glfwSetCharCallback(
-    //  _Window,
-    //  [](GLFWwindow* window, unsigned int keyCode) {
-    //    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-    //    KeyTypedEvent event(keyCode);
-    //    data.EventCallback(event);
-    //  }
-    //);
-
-    //glfwSetMouseButtonCallback(
-    //  _Window,
-    //  [](GLFWwindow* window, int button, int action, int mods) {
-    //    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-    //    switch (action) {
-    //      case GLFW_PRESS:
-    //      {
-    //        MouseButtonPressedEvent event(button);
-    //        data.EventCallback(event);
-    //        break;
-    //      }
-    //      case GLFW_RELEASE:
-    //      {
-    //        MouseButtonReleasedEvent event(button);
-    //        data.EventCallback(event);
-    //        break;
-    //      }
-    //    }
-    //  }
-    //);
-
-    //glfwSetScrollCallback(
-    //  _Window,
-    //  [](GLFWwindow* window, double xOffset, double yOffset) {
-    //    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-    //    MouseScrolledEvent event((float)xOffset, (float)yOffset);
-    //    data.EventCallback(event);
-    //  }
-    //);
-
-    //glfwSetCursorPosCallback(
-    //  _Window,
-    //  [](GLFWwindow* window, double x, double y) {
-    //    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-    //    MouseMovedEvent event((float)x, (float)y);
-    //    data.EventCallback(event);
-    //  }
-    //);
   }
 
   void Win32Window::Shutdown() {}
@@ -185,18 +90,40 @@ namespace Kame {
 
   LRESULT Win32Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 
-    switch (message) {
-    case WM_CREATE:
-    {
-      LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-      SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
-    }
-    return 0;
-    case WM_PAINT:
+    if (DxTutorial::_Instance->_IsInitialized) {
+      switch (message) {
+      case WM_CREATE:
+      {
+        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+      }
+      case WM_SIZE:
+      {
+        RECT clientRect = {};
+        ::GetClientRect(hWnd, &clientRect);
+
+        int width = clientRect.right - clientRect.left;
+        int height = clientRect.bottom - clientRect.top;
+
+        DxTutorial::_Instance->Resize(width, height);
+      }
+      break;
       return 0;
+      case WM_PAINT:
+        //TODO make this better!!!!
+        DxTutorial::_Instance->Update();
+        DxTutorial::_Instance->Render();
+        break;
+        return 0;
+      }
+
+      return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
-    return DefWindowProc(hWnd, message, wParam, lParam);
+    else {
+      return ::DefWindowProcW(hWnd, message, wParam, lParam);
+
+    }
   }
 
 }

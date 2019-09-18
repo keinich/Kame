@@ -60,8 +60,8 @@ project "Kame"
       "KAME_PLATFORM_WINDOWS",
       "KAME_BUILD_DLL",
       "GLFW_INCLUDE_NONE",
-	  "KAME_PLATFORM_GLFW",
-	  "KAME_PLATFORM_OPENGL"
+	  "KAME_PLATFORM_WIN32",
+	  "KAME_PLATFORM_DIRECTX12"
     }
 
     postbuildcommands {

@@ -44,10 +44,15 @@
 #ifdef KAME_PLATFORM_DIRECTX12
 
 #include <d3d12.h>
+#include <dxgi1_6.h>
+#include "Kame/Platform/DirectX12/Graphics/dxd12.h"
+
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
 #include <DirectXMath.h>
+
+using namespace Microsoft::WRL;
 
 #define MY_IID_PPV_ARGS IID_PPV_ARGS
 #define D3D12_GPU_VIRTUAL_ADDRESS_NULL      ((D3D12_GPU_VIRTUAL_ADDRESS)0)

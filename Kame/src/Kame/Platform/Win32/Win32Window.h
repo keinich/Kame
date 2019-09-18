@@ -22,6 +22,7 @@ namespace Kame {
     bool IsVSync() const override;
 
     inline virtual void* GetNativeWindow() const override { return _Window; };
+    inline HWND GethWnd() const { return *_Window; }
 
   private: // Functions
     virtual void Init(const WindowProperties& props);

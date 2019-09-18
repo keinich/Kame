@@ -10,7 +10,7 @@
 #error Kame only supports Windows!
 #endif
 
-#ifdef KM_ENABLE_ASSERTS
+#ifdef KAME_DEBUG
 #define KM_ASSERT(x, ...) { if(!(x)) {KM_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #define KM_CORE_ASSERT(x, ...) { if(!(x)) {KM_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else

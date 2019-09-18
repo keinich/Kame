@@ -6,6 +6,8 @@
 
 #ifdef KAME_PLATFORM_OPENGL
 #include <glad/glad.h>
+#else
+#include "Kame/Platform/DirectX12/Graphics/DxTutorial.h"
 #endif
 
 #include "Input.h"
@@ -21,8 +23,8 @@ namespace Kame {
     KM_CORE_ASSERT(!s_Instance, "Application already exists!");
     s_Instance = this;
 
-    _Window = std::unique_ptr<Window>(Window::Create());
-    _Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
+    //_Window = std::unique_ptr<Window>(Window::Create());
+    //_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
     unsigned int id;
     //glGenVertexArrays(1, &id);
@@ -46,6 +48,9 @@ namespace Kame {
 #ifdef KAME_PLATFORM_OPENGL
       glClearColor(1, 0, 1, 1);
       glClear(GL_COLOR_BUFFER_BIT);
+#else
+      DxTutorial* dxTest = DxTutorial::_Instance;
+      dxTest->Init();
 #endif
 
       for (Layer* layer : _LayerStack)

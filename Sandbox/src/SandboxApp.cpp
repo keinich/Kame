@@ -37,8 +37,8 @@ class ExampleLayer : public Kame::Layer {
 class Sandbox : public Kame::Application {
   public:
   Sandbox() {
-    PushLayer(new ExampleLayer());
-    PushOverlay(new Kame::ImGuiLayer());
+    //PushLayer(new ExampleLayer());
+    //PushOverlay(new Kame::ImGuiLayer());
   }
   ~Sandbox() {}
 };

@@ -79,7 +79,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>kmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_PLATFORM_GLFW;KAME_PLATFORM_OPENGL;KAME_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_PLATFORM_WIN32;KAME_PLATFORM_DIRECTX12;KAME_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -102,7 +102,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>kmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_PLATFORM_GLFW;KAME_PLATFORM_OPENGL;KAME_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_PLATFORM_WIN32;KAME_PLATFORM_DIRECTX12;KAME_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -129,7 +129,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>kmpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_PLATFORM_GLFW;KAME_PLATFORM_OPENGL;KAME_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KAME_PLATFORM_WINDOWS;KAME_BUILD_DLL;GLFW_INCLUDE_NONE;KAME_PLATFORM_WIN32;KAME_PLATFORM_DIRECTX12;KAME_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\GLAD\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -167,6 +167,7 @@
     <ClInclude Include="src\Kame\LayerStack.h" />
     <ClInclude Include="src\Kame\Log.h" />
     <ClInclude Include="src\Kame\MouseButtonCodes.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\dxd12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DxTutorial.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Input\DX12Input.h" />
