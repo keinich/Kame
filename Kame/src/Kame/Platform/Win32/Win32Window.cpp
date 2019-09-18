@@ -33,6 +33,10 @@ namespace Kame {
     Shutdown();
   }
 
+  void Win32Window::Show() const {
+    ::ShowWindow(_Window, SW_SHOW);
+  }
+
   void Win32Window::Init(const WindowProperties& props) {
 
     _Data.Title = props.Title;
@@ -72,7 +76,7 @@ namespace Kame {
       &Application::Get() //TODO what is this param?
     );
 
-    _Window = &w;
+    _Window = w;
 
   }
 
@@ -106,18 +110,17 @@ namespace Kame {
         int height = clientRect.bottom - clientRect.top;
 
         DxTutorial::_Instance->Resize(width, height);
-      }
-      break;
-      return 0;
-      case WM_PAINT:
-        //TODO make this better!!!!
-        DxTutorial::_Instance->Update();
-        DxTutorial::_Instance->Render();
         break;
-        return 0;
       }
 
-      return DefWindowProc(hWnd, message, wParam, lParam);
+      case WM_PAINT:
+        Application::Get().Update();
+        Application::Get().Render();
+        break;
+
+      default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+      }
     }
 
     else {

@@ -18,7 +18,10 @@ namespace Kame {
     WindowProperties wp;
     Win32Window w(wp);
 
-    g_hWnd = w.GethWnd();
+    Window* window = &(Application::Get().GetWindow());
+    Win32Window* win32Window = (Win32Window*)window;   
+    
+    g_hWnd = (HWND)Application::Get().GetWindow().GetNativeWindow();   
 
     //g_hWnd = (HWND)(w->GetNativeWindow());
     ::GetWindowRect(g_hWnd, &_WindowRect);
@@ -48,7 +51,7 @@ namespace Kame {
 
     _IsInitialized = true;
 
-    ::ShowWindow(g_hWnd, SW_SHOW);
+    /*::ShowWindow(g_hWnd, SW_SHOW);
 
     MSG msg = {};
     while (msg.message != WM_QUIT) {
@@ -56,11 +59,7 @@ namespace Kame {
         ::TranslateMessage(&msg);
         ::DispatchMessage(&msg);
       }
-    }
-
-    Flush(g_CommandQueue, _Fence, g_FenceValue, g_FenceEvent);
-
-    ::CloseHandle(g_FenceEvent);
+    }*/   
         
   }
 
@@ -429,6 +428,12 @@ namespace Kame {
 
       UpdateRenderTargetViews(g_Device, g_SwapChain, g_RTVDescriptorHeap);
     }
+  }
+
+  void DxTutorial::ShutDown() {
+    Flush(g_CommandQueue, _Fence, g_FenceValue, g_FenceEvent);
+
+    ::CloseHandle(g_FenceEvent);
   }
 
   void DxTutorial::SetFullscreen(bool fullscreen) {

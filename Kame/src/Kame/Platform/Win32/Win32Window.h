@@ -22,7 +22,9 @@ namespace Kame {
     bool IsVSync() const override;
 
     inline virtual void* GetNativeWindow() const override { return _Window; };
-    inline HWND GethWnd() const { return *_Window; }
+    inline HWND GethWnd() const { return _Window; }
+
+    void Show() const override;
 
   private: // Functions
     virtual void Init(const WindowProperties& props);
@@ -31,7 +33,7 @@ namespace Kame {
     static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
   private: // Fields
-    HWND* _Window;
+    HWND _Window;
 
     struct WindowData {
       std::string Title;

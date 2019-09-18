@@ -18,6 +18,8 @@ namespace Kame {
     void Render();
     void Resize(uint32_t width, uint32_t height);
 
+    void ShutDown();
+
     // TODO : remove this
     static DxTutorial* _Instance;
     bool _IsInitialized = false;

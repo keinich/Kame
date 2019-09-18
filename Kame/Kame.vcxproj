@@ -191,6 +191,7 @@
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWInput.cpp" />
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWWindow.cpp" />
     <ClCompile Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="src\Kame\Platform\Win32\Win32Application.cpp" />
     <ClCompile Include="src\Kame\Platform\Win32\Win32Window.cpp" />
     <ClCompile Include="src\kmpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

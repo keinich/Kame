@@ -107,6 +107,7 @@
       <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\dxd12.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -146,5 +147,6 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
+    <ClCompile Include="src\Kame\Platform\Win32\Win32Application.cpp" />
   </ItemGroup>
 </Project>

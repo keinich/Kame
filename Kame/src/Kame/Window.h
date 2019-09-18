@@ -38,6 +38,8 @@ namespace Kame {
 
     virtual void* GetNativeWindow() const = 0;
 
+    virtual void Show() const = 0;
+
     static Window* Create(const WindowProperties& props = WindowProperties());
   };
 

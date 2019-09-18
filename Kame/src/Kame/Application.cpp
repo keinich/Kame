@@ -42,8 +42,20 @@ namespace Kame {
     layer->OnAttach();
   }
 
+  void Application::Update() {
+    DxTutorial::_Instance->Update();
+  }
+
+  void Application::Render() {
+    DxTutorial::_Instance->Render();
+  }
+
   void Application::Run() {
     while (_Running) {
+
+      _Window = std::unique_ptr<Window>(Window::Create());
+      auto test = _Window->GetNativeWindow();
+      HWND test2 = (HWND)test;
 
 #ifdef KAME_PLATFORM_OPENGL
       glClearColor(1, 0, 1, 1);
@@ -51,7 +63,11 @@ namespace Kame {
 #else
       DxTutorial* dxTest = DxTutorial::_Instance;
       dxTest->Init();
-#endif
+#endif      
+
+      _Window->Show();
+
+      PlatformRun(std::bind(&Application::Update, this), std::bind(&Application::Render, this));
 
       for (Layer* layer : _LayerStack)
         layer->OnUpdate();
