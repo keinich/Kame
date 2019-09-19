@@ -5,6 +5,7 @@
 #include "Kame/LayerStack.h"
 #include "Core.h"
 #include "Events/Event.h"
+#include "Events/KeyEvent.h"
 
 namespace Kame {
 
@@ -13,8 +14,7 @@ namespace Kame {
     Application();
     virtual ~Application();
 
-    void Run();
-    void PlatformRun(std::function<void()> onUpdate, std::function<void()> onRender);
+    void Run();    
 
     void OnEvent(Event& e);
 
@@ -24,8 +24,14 @@ namespace Kame {
     inline static Application& Get() { return *s_Instance; }
     inline Window& GetWindow() { return *_Window; }
 
-    void Update();
+    void Update();    
     void Render();
+
+  private: //Functions
+    void PlatformMainLoop();
+    void CountFps();
+
+    bool OnKeyPressedEvent(KeyPressedEvent& e);
 
   private:
     std::unique_ptr<Window> _Window;

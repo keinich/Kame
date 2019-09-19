@@ -27,8 +27,9 @@ namespace Kame {
     inline int GetRepeatCount() const { return _RepeatCount; }
 
     std::string ToString() const override {
+      char keyAsChar = (char)(_KeyCode);
       std::stringstream ss;
-      ss << "KeyPressedEvent: " << _KeyCode << " (" << _RepeatCount << " repeats)";
+      ss << "KeyPressedEvent: " << keyAsChar << " (" << _RepeatCount << " repeats)";
       return ss.str();
     }
 

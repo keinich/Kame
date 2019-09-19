@@ -13,13 +13,14 @@ namespace Kame {
     ~DxTutorial() {};
 
     void Init();
-
-    void Update();
-    void Render();
-    void Resize(uint32_t width, uint32_t height);
-
     void ShutDown();
 
+    void Render();
+
+    void Resize(uint32_t width, uint32_t height);
+    void SetFullscreen(bool fullscreen);
+    void SwitchFullscreen();
+       
     // TODO : remove this
     static DxTutorial* _Instance;
     bool _IsInitialized = false;
@@ -55,10 +56,6 @@ namespace Kame {
       std::chrono::milliseconds duration = std::chrono::milliseconds::max()
     );
     void Flush(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue, HANDLE fenceEvent);
-    
-    
-
-    void SetFullscreen(bool fullscreen);
 
   private: // Fields
     static const uint8_t c_NumFrames = 3;

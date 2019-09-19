@@ -73,8 +73,10 @@ namespace Kame {
       nullptr,
       nullptr,
       hInstance,
-      &Application::Get() //TODO what is this param?
+      &_Data //TODO what is this param?
     );
+
+    SetWindowLongPtr(w, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&_Data));
 
     _Window = w;
 
@@ -98,8 +100,8 @@ namespace Kame {
       switch (message) {
       case WM_CREATE:
       {
-        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+        //LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+        //SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
       }
       case WM_SIZE:
       {
@@ -108,6 +110,11 @@ namespace Kame {
 
         int width = clientRect.right - clientRect.left;
         int height = clientRect.bottom - clientRect.top;
+
+        WindowData* data = reinterpret_cast<WindowData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+
+        data->Width = width;
+        data->Height = height;
 
         DxTutorial::_Instance->Resize(width, height);
         break;
@@ -118,6 +125,12 @@ namespace Kame {
         Application::Get().Render();
         break;
 
+      case WM_KEYDOWN:
+      {        
+        WindowData* data = reinterpret_cast<WindowData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+        KeyPressedEvent event(wParam, 0);
+        data->EventCallback(event);
+      }
       default:
         return DefWindowProc(hWnd, message, wParam, lParam);
       }

@@ -2,7 +2,9 @@
 #include "Application.h"
 
 #include "Kame/Events/ApplicationEvent.h"
+#include "Kame/Events/KeyEvent.h"
 #include "Kame/Log.h"
+#include "Kame/KeyCodes.h"
 
 #ifdef KAME_PLATFORM_OPENGL
 #include <glad/glad.h>
@@ -43,7 +45,47 @@ namespace Kame {
   }
 
   void Application::Update() {
-    DxTutorial::_Instance->Update();
+
+    for (Layer* layer : _LayerStack)
+      layer->OnUpdate();
+
+    _Window->OnUpdate();
+
+    // FPS Counter
+    CountFps();
+  }
+
+  void Application::CountFps() {
+    static uint64_t frameCounter = 0;
+    static double elapsedSeconds = 0.0;
+    static std::chrono::high_resolution_clock clock;
+    static auto t0 = clock.now();
+
+    frameCounter++;
+    auto t1 = clock.now();
+    auto deltaTime = t1 - t0;
+    t0 = t1;
+
+    elapsedSeconds += deltaTime.count() * 1e-9;
+    if (elapsedSeconds > 1.0) {
+      char buffer[500];
+      auto fps = frameCounter / elapsedSeconds;
+      sprintf_s(buffer, 500, "FPS: %f\n", fps);
+      KM_INFO(buffer);
+
+      frameCounter = 0;
+      elapsedSeconds = 0.0;
+    }
+  }
+
+  bool Application::OnKeyPressedEvent(KeyPressedEvent& e) {
+    switch (e.GetKeyCode()) 
+      case KAME_KEY_F:
+    {
+      DxTutorial::_Instance->SwitchFullscreen();
+      return true;
+    }
+    return false;
   }
 
   void Application::Render() {
@@ -54,8 +96,7 @@ namespace Kame {
     while (_Running) {
 
       _Window = std::unique_ptr<Window>(Window::Create());
-      auto test = _Window->GetNativeWindow();
-      HWND test2 = (HWND)test;
+      _Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
 #ifdef KAME_PLATFORM_OPENGL
       glClearColor(1, 0, 1, 1);
@@ -67,21 +108,16 @@ namespace Kame {
 
       _Window->Show();
 
-      PlatformRun(std::bind(&Application::Update, this), std::bind(&Application::Render, this));
-
-      for (Layer* layer : _LayerStack)
-        layer->OnUpdate();
-
-      //auto[x, y] = Input::GetMousePosition();
-      //KM_CORE_TRACE("{0}, {1}", x, y);
-
-      _Window->OnUpdate();
+      PlatformMainLoop();
     }
   }
 
-  void Application::OnEvent(Event & e) {
+  void Application::OnEvent(Event& e) {
 
-    //KM_CORE_INFO("{0}", e);
+    KM_CORE_INFO("{0}", e);    
+
+    EventDispatcher dispatcher(e);
+    dispatcher.Dispatch<KeyPressedEvent>(KM_BIND_EVENT_FN(Application::OnKeyPressedEvent));
 
     for (auto it = _LayerStack.end(); it != _LayerStack.begin();) {
       (*--it)->OnEvent(e);

@@ -10,20 +10,9 @@ namespace Kame {
   void DxTutorial::Init() {
     SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     EnableDebugLayer();
-    _TearingSupported = CheckTearingSupport();
-
-    //Window* w = Window::Create();
-    //Window* w = &Application::Get().GetWindow();
-
-    WindowProperties wp;
-    Win32Window w(wp);
-
-    Window* window = &(Application::Get().GetWindow());
-    Win32Window* win32Window = (Win32Window*)window;   
+    _TearingSupported = CheckTearingSupport();   
     
     g_hWnd = (HWND)Application::Get().GetWindow().GetNativeWindow();   
-
-    //g_hWnd = (HWND)(w->GetNativeWindow());
     ::GetWindowRect(g_hWnd, &_WindowRect);
 
     ComPtr<IDXGIAdapter4> dxgiAdapter4 = GetAdapter(_UseWarp);
@@ -331,30 +320,6 @@ namespace Kame {
     WaitForFenceValue(fence, fenceValueForSignal, fenceEvent);
   }
 
-  void DxTutorial::Update() {
-    static uint64_t frameCounter = 0;
-    static double elapsedSeconds = 0.0;
-    static std::chrono::high_resolution_clock clock;
-    static auto t0 = clock.now();
-
-    frameCounter++;
-    auto t1 = clock.now();
-    auto deltaTime = t1 - t0;
-    t0 = t1;
-
-    elapsedSeconds += deltaTime.count() * 1e-9;
-    if (elapsedSeconds > 1.0) {
-      char buffer[500];
-      auto fps = frameCounter / elapsedSeconds;
-      sprintf_s(buffer, 500, "FPS: %f\n", fps);
-      KM_INFO(buffer);
-
-      frameCounter = 0;
-      elapsedSeconds = 0.0;
-    }
-
-  }
-
   void Kame::DxTutorial::Render() {
     auto commandAllocator = g_CommandAllocator[g_CurrentBackBufferIndex];
     auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
@@ -479,6 +444,12 @@ namespace Kame {
         ::ShowWindow(g_hWnd, SW_NORMAL);
       }
     }
+  }
+
+  void DxTutorial::SwitchFullscreen() {
+    bool fs = !_Fullscreen;
+    SetFullscreen(fs);
+    _Fullscreen = fs;
   }
 
 }

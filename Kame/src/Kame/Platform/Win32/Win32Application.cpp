@@ -4,7 +4,7 @@
 
 namespace Kame {
 
-  void Application::PlatformRun(std::function<void()> onUpdate, std::function<void()> onRender) {
+  void Application::PlatformMainLoop() {
        
     MSG msg = {};
     while (msg.message != WM_QUIT) {
