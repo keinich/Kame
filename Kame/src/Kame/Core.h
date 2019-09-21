@@ -21,3 +21,12 @@
 #define BIT(x) (1 << x)
 
 #define KM_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+#if defined KAME_PLATFORM_WINDOWS
+#include <Windows.h>
+inline void ThrowIfFailed(HRESULT hr) {
+  if (FAILED(hr)) {
+    throw std::exception();
+  }
+}
+#endif

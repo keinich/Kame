@@ -3,26 +3,38 @@
 #include "Kame/Platform/Win32/Win32Window.h"
 #include "Kame/Application.h"
 
+#include "CommandManager.h"
+
 namespace Kame {
 
   DxTutorial* DxTutorial::_Instance = new DxTutorial();
 
+  DxTutorial::DxTutorial() {
+    _CommandManager = new CommandManager();
+  }
+
+  DxTutorial::~DxTutorial() {
+    delete _CommandManager;
+  }
+
   void DxTutorial::Init() {
     SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     EnableDebugLayer();
-    _TearingSupported = CheckTearingSupport();   
-    
-    g_hWnd = (HWND)Application::Get().GetWindow().GetNativeWindow();   
+    _TearingSupported = CheckTearingSupport();
+
+    g_hWnd = (HWND)Application::Get().GetWindow().GetNativeWindow();
     ::GetWindowRect(g_hWnd, &_WindowRect);
 
     ComPtr<IDXGIAdapter4> dxgiAdapter4 = GetAdapter(_UseWarp);
 
     g_Device = CreateDevice(dxgiAdapter4);
 
-    g_CommandQueue = CreateCommandQueue(g_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
+    //g_CommandQueue = CreateCommandQueue(g_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
+    _CommandManager->Create(g_Device.Get());
 
-    g_SwapChain = CreateSwapChain(g_hWnd, g_CommandQueue, _ClientWidth, _ClientHeight, c_NumFrames);
-    
+    //g_SwapChain = CreateSwapChain(g_hWnd, g_CommandQueue, _ClientWidth, _ClientHeight, c_NumFrames);
+    g_SwapChain = CreateSwapChain(g_hWnd, _CommandManager->GetCommandQueue(), _ClientWidth, _ClientHeight, c_NumFrames);
+
     g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
     g_RTVDescriptorHeap = CreateDescriptorHeap(g_Device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, c_NumFrames);
@@ -40,16 +52,6 @@ namespace Kame {
 
     _IsInitialized = true;
 
-    /*::ShowWindow(g_hWnd, SW_SHOW);
-
-    MSG msg = {};
-    while (msg.message != WM_QUIT) {
-      if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-        ::TranslateMessage(&msg);
-        ::DispatchMessage(&msg);
-      }
-    }*/   
-        
   }
 
   void DxTutorial::EnableDebugLayer() {
@@ -178,7 +180,7 @@ namespace Kame {
 
   ComPtr<IDXGISwapChain4> DxTutorial::CreateSwapChain(
     HWND hWnd,
-    ComPtr<ID3D12CommandQueue> commandQueue,
+    ID3D12CommandQueue* commandQueue,
     uint32_t width, uint32_t height,
     uint32_t bufferCount
   ) {
@@ -207,7 +209,7 @@ namespace Kame {
 
     ComPtr<IDXGISwapChain1> swapChain1;
     ThrowIfFailed(dxgiFactory4->CreateSwapChainForHwnd(
-      commandQueue.Get(),
+      commandQueue,
       hWnd,
       &swapChainDesc,
       nullptr,
@@ -354,9 +356,9 @@ namespace Kame {
       ID3D12CommandList* const commandLists[] = {
           g_CommandList.Get()
       };
-      g_CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+      _CommandManager->GetCommandQueue()->ExecuteCommandLists(_countof(commandLists), commandLists);
 
-      g_FrameFenceValues[g_CurrentBackBufferIndex] = Signal(g_CommandQueue, _Fence, g_FenceValue);
+      g_FrameFenceValues[g_CurrentBackBufferIndex] = Signal(_CommandManager->GetCommandQueue(), _Fence, g_FenceValue);
 
       UINT syncInterval = g_VSync ? 1 : 0;
       UINT presentFlags = _TearingSupported && !g_VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
@@ -373,7 +375,7 @@ namespace Kame {
       _ClientWidth = std::max(1u, width);
       _ClientHeight = std::max(1u, height);
 
-      Flush(g_CommandQueue, _Fence, g_FenceValue, g_FenceEvent);
+      Flush(_CommandManager->GetCommandQueue(), _Fence, g_FenceValue, g_FenceEvent);
 
       for (int i = 0; i < c_NumFrames; ++i) {
         g_BackBuffers[i].Reset();
@@ -396,7 +398,7 @@ namespace Kame {
   }
 
   void DxTutorial::ShutDown() {
-    Flush(g_CommandQueue, _Fence, g_FenceValue, g_FenceEvent);
+    Flush(_CommandManager->GetCommandQueue(), _Fence, g_FenceValue, g_FenceEvent);
 
     ::CloseHandle(g_FenceEvent);
   }

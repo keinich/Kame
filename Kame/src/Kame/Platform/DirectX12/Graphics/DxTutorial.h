@@ -2,6 +2,8 @@
 
 #include "kmpch.h"
 
+#include "CommandManager.h"
+
 #include <cstdint>
 
 namespace Kame {
@@ -9,8 +11,8 @@ namespace Kame {
   class KAME_API DxTutorial {
 
   public:
-    DxTutorial() {};
-    ~DxTutorial() {};
+    DxTutorial();
+    ~DxTutorial();
 
     void Init();
     void ShutDown();
@@ -34,7 +36,7 @@ namespace Kame {
     bool CheckTearingSupport();
     ComPtr<IDXGISwapChain4> CreateSwapChain(
       HWND hWnd, 
-      ComPtr<ID3D12CommandQueue> commandQueue, 
+      ID3D12CommandQueue* commandQueue, 
       uint32_t width, uint32_t height, 
       uint32_t bufferCount
     );
@@ -70,7 +72,8 @@ namespace Kame {
 
     // DX12 Core Object
     ComPtr<ID3D12Device2> g_Device;
-    ComPtr<ID3D12CommandQueue> g_CommandQueue;
+    //ComPtr<ID3D12CommandQueue> g_CommandQueue;
+    CommandManager* _CommandManager;
     ComPtr<IDXGISwapChain4> g_SwapChain;
     ComPtr<ID3D12Resource> g_BackBuffers[c_NumFrames];
     ComPtr<ID3D12GraphicsCommandList> g_CommandList;
@@ -89,12 +92,6 @@ namespace Kame {
     bool _TearingSupported = false;
     bool _Fullscreen = false;
 
-  };
-
-  inline void ThrowIfFailed(HRESULT hr) {
-    if (FAILED(hr)) {
-      throw std::exception();
-    }
-  }
+  };  
 
 }
