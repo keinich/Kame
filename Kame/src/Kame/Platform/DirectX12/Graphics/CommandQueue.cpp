@@ -3,7 +3,9 @@
 
 Kame::CommandQueue::CommandQueue(D3D12_COMMAND_LIST_TYPE type) :
   _Type(type),
-  _CommandQueue(nullptr) {}
+  _CommandQueue(nullptr),
+  _Fence(nullptr),
+  _CommandAllocatorPool(type) {}
 
 Kame::CommandQueue::~CommandQueue() {
   Shutdown();
@@ -27,12 +29,17 @@ void Kame::CommandQueue::Create(ID3D12Device* device) {
   _FenceEventHandle = CreateEvent(nullptr, false, false, nullptr);
   assert(_FenceEventHandle);
 
+  // Create the CommandAllocator-Pool
+  _CommandAllocatorPool.Create(device);
+
 }
 
 void Kame::CommandQueue::Shutdown() {
 
   if (_CommandQueue == nullptr)
     return;
+
+  _CommandAllocatorPool.Shutdown();
 
   CloseHandle(_FenceEventHandle);
 

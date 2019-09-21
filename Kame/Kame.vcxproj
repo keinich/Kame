@@ -152,6 +152,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandManager.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandQueue.h" />
     <ClInclude Include="src\Kame.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="src\kmpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandManager.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandQueue.cpp" />
     <ClCompile Include="src\Kame\Application.cpp" />

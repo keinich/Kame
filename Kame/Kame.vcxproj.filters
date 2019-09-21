@@ -116,6 +116,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandManager.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -164,5 +165,6 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandManager.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.cpp" />
   </ItemGroup>
 </Project>

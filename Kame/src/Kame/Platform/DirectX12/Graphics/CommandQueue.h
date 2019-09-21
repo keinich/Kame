@@ -1,5 +1,7 @@
 #include "kmpch.h"
 
+#include "CommandAllocatorPool.h"
+
 namespace Kame {
 
   class KAME_API CommandQueue {
@@ -22,6 +24,8 @@ namespace Kame {
 
     ComPtr<ID3D12CommandQueue> _CommandQueue;
     D3D12_COMMAND_LIST_TYPE _Type;
+
+    CommandAllocatorPool _CommandAllocatorPool;
 
     ComPtr<ID3D12Fence> _Fence;
     HANDLE _FenceEventHandle;
