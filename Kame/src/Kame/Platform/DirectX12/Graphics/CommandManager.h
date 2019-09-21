@@ -16,6 +16,8 @@ namespace Kame {
     void Create(ID3D12Device2* device);
     void Shutdown();
 
+    void IdleGpu();
+
     CommandQueue& GetGraphicsQueue() { return _GraphicsQueue; }
 
     ID3D12CommandQueue* GetCommandQueue() { return _GraphicsQueue.GetCommandQueue(); }

@@ -83,10 +83,10 @@ namespace Kame {
     UINT g_CurrentBackBufferIndex;
 
     // DX12 Sync Objects
-    ComPtr<ID3D12Fence> _Fence;
-    uint64_t g_FenceValue = 0;
+    //ComPtr<ID3D12Fence> _Fence;
+    //uint64_t g_FenceValue = 0;
     uint64_t g_FrameFenceValues[c_NumFrames] = {};
-    HANDLE g_FenceEvent;
+    //HANDLE g_FenceEvent;
 
     bool g_VSync = true;
     bool _TearingSupported = false;

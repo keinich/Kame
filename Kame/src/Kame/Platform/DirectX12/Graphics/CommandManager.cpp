@@ -13,5 +13,10 @@ namespace Kame {
     _GraphicsQueue.Create(device);
 
   }
-  void CommandManager::Shutdown() {}
+  void CommandManager::Shutdown() {
+    _GraphicsQueue.Shutdown();
+  }
+  void CommandManager::IdleGpu() {
+    _GraphicsQueue.WaitForIdle();
+  }
 }

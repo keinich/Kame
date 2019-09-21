@@ -11,6 +11,9 @@ namespace Kame {
 
   DxTutorial::DxTutorial() {
     _CommandManager = new CommandManager();
+    _WindowRect = RECT();
+    g_CurrentBackBufferIndex = 0;
+    // TODO Constructor verbessern
   }
 
   DxTutorial::~DxTutorial() {
@@ -29,10 +32,8 @@ namespace Kame {
 
     g_Device = CreateDevice(dxgiAdapter4);
 
-    //g_CommandQueue = CreateCommandQueue(g_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
     _CommandManager->Create(g_Device.Get());
 
-    //g_SwapChain = CreateSwapChain(g_hWnd, g_CommandQueue, _ClientWidth, _ClientHeight, c_NumFrames);
     g_SwapChain = CreateSwapChain(g_hWnd, _CommandManager->GetCommandQueue(), _ClientWidth, _ClientHeight, c_NumFrames);
 
     g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
@@ -46,10 +47,7 @@ namespace Kame {
       g_CommandAllocator[i] = CreateCommandAllocator(g_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
     }
     g_CommandList = CreateCommandList(g_Device, g_CommandAllocator[g_CurrentBackBufferIndex], D3D12_COMMAND_LIST_TYPE_DIRECT);
-
-    _Fence = CreateFence(g_Device);
-    g_FenceEvent = CreateEventHandle();
-
+       
     _IsInitialized = true;
 
   }
@@ -358,7 +356,7 @@ namespace Kame {
       };
       _CommandManager->GetCommandQueue()->ExecuteCommandLists(_countof(commandLists), commandLists);
 
-      g_FrameFenceValues[g_CurrentBackBufferIndex] = Signal(_CommandManager->GetCommandQueue(), _Fence, g_FenceValue);
+      g_FrameFenceValues[g_CurrentBackBufferIndex] = _CommandManager->GetGraphicsQueue().Signal();
 
       UINT syncInterval = g_VSync ? 1 : 0;
       UINT presentFlags = _TearingSupported && !g_VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
@@ -366,7 +364,7 @@ namespace Kame {
 
       g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
-      WaitForFenceValue(_Fence, g_FrameFenceValues[g_CurrentBackBufferIndex], g_FenceEvent);
+      _CommandManager->GetGraphicsQueue().WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]);
     }
   }
 
@@ -375,7 +373,7 @@ namespace Kame {
       _ClientWidth = std::max(1u, width);
       _ClientHeight = std::max(1u, height);
 
-      Flush(_CommandManager->GetCommandQueue(), _Fence, g_FenceValue, g_FenceEvent);
+      _CommandManager->IdleGpu();
 
       for (int i = 0; i < c_NumFrames; ++i) {
         g_BackBuffers[i].Reset();
@@ -398,9 +396,9 @@ namespace Kame {
   }
 
   void DxTutorial::ShutDown() {
-    Flush(_CommandManager->GetCommandQueue(), _Fence, g_FenceValue, g_FenceEvent);
+    _CommandManager->IdleGpu();
 
-    ::CloseHandle(g_FenceEvent);
+    _CommandManager->Shutdown();
   }
 
   void DxTutorial::SetFullscreen(bool fullscreen) {
