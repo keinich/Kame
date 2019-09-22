@@ -20,6 +20,9 @@ namespace Kame {
     bool IsFenceComplete(uint64_t fenceValue);
     void WaitForIdle();
 
+    ID3D12CommandAllocator* RequestAllocator();
+    void DiscardAllocator(uint64_t fenceValue, ID3D12CommandAllocator* allocator);
+
   private:
 
     ComPtr<ID3D12CommandQueue> _CommandQueue;

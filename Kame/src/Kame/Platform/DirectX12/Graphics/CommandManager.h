@@ -22,6 +22,8 @@ namespace Kame {
 
     ID3D12CommandQueue* GetCommandQueue() { return _GraphicsQueue.GetCommandQueue(); }
 
+    void CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12GraphicsCommandList** list, ID3D12CommandAllocator** allocator);
+
   private: // Fields
 
     ID3D12Device2* _Device;
