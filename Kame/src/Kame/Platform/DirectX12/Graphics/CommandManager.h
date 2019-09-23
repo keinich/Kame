@@ -18,7 +18,9 @@ namespace Kame {
 
     void IdleGpu();
 
+    CommandQueue& GetQueue(D3D12_COMMAND_LIST_TYPE type);
     CommandQueue& GetGraphicsQueue() { return _GraphicsQueue; }
+
 
     ID3D12CommandQueue* GetCommandQueue() { return _GraphicsQueue.GetCommandQueue(); }
 

@@ -1,7 +1,7 @@
 #include "kmpch.h"
 
 //TODO Remove this
-#include "Kame/Platform/DirectX12/Graphics/DxTutorial.h"
+#include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 
 #ifdef KAME_PLATFORM_WIN32
 
@@ -96,7 +96,7 @@ namespace Kame {
 
   LRESULT Win32Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 
-    if (DxTutorial::_Instance->_IsInitialized) {
+    if (DX12Core::_Instance->_IsInitialized) {
       switch (message) {
       case WM_CREATE:
       {
@@ -116,7 +116,7 @@ namespace Kame {
         data->Width = width;
         data->Height = height;
 
-        DxTutorial::_Instance->Resize(width, height);
+        DX12Core::_Instance->Resize(width, height);
         break;
       }
 

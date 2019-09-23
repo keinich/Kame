@@ -9,7 +9,7 @@
 #ifdef KAME_PLATFORM_OPENGL
 #include <glad/glad.h>
 #else
-#include "Kame/Platform/DirectX12/Graphics/DxTutorial.h"
+#include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 #endif
 
 #include "Input.h"
@@ -82,14 +82,14 @@ namespace Kame {
     switch (e.GetKeyCode()) 
       case KAME_KEY_F:
     {
-      DxTutorial::_Instance->SwitchFullscreen();
+      DX12Core::_Instance->SwitchFullscreen();
       return true;
     }
     return false;
   }
 
   void Application::Render() {
-    DxTutorial::_Instance->Render();
+    DX12Core::_Instance->Render();
   }
 
   void Application::Run() {
@@ -102,7 +102,7 @@ namespace Kame {
       glClearColor(1, 0, 1, 1);
       glClear(GL_COLOR_BUFFER_BIT);
 #else
-      DxTutorial* dxTest = DxTutorial::_Instance;
+      DX12Core* dxTest = DX12Core::_Instance;
       dxTest->Init();
 #endif      
 

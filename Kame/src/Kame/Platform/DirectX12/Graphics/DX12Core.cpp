@@ -1,26 +1,28 @@
 #include "kmpch.h"
-#include "DxTutorial.h"
+#include "DX12Core.h"
 #include "Kame/Platform/Win32/Win32Window.h"
 #include "Kame/Application.h"
 
 #include "CommandManager.h"
+#include "ContextManager.h"
 
 namespace Kame {
 
-  DxTutorial* DxTutorial::_Instance = new DxTutorial();
+  DX12Core* DX12Core::_Instance = new DX12Core();
 
-  DxTutorial::DxTutorial() {
+  DX12Core::DX12Core() {
     _CommandManager = new CommandManager();
+    _ContextManager = new ContextManager();
     _WindowRect = RECT();
     g_CurrentBackBufferIndex = 0;
     // TODO Constructor verbessern
   }
 
-  DxTutorial::~DxTutorial() {
+  DX12Core::~DX12Core() {
     delete _CommandManager;
   }
 
-  void DxTutorial::Init() {
+  void DX12Core::Init() {
     SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     EnableDebugLayer();
     _TearingSupported = CheckTearingSupport();
@@ -52,7 +54,7 @@ namespace Kame {
 
   }
 
-  void DxTutorial::EnableDebugLayer() {
+  void DX12Core::EnableDebugLayer() {
 
 #if defined KAME_DEBUG
 
@@ -65,7 +67,7 @@ namespace Kame {
 
   }
 
-  ComPtr<IDXGIAdapter4> DxTutorial::GetAdapter(bool useWarp) {
+  ComPtr<IDXGIAdapter4> DX12Core::GetAdapter(bool useWarp) {
     ComPtr<IDXGIFactory4> dxgiFactory;
     UINT createFactoryFlags = 0;
 
@@ -101,7 +103,7 @@ namespace Kame {
     return dxgiAdapter4;
   }
 
-  ComPtr<ID3D12Device2> DxTutorial::CreateDevice(ComPtr<IDXGIAdapter4> adapter) {
+  ComPtr<ID3D12Device2> DX12Core::CreateDevice(ComPtr<IDXGIAdapter4> adapter) {
 
     ComPtr<ID3D12Device2> d3d12Device2;
     ThrowIfFailed(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&d3d12Device2)));
@@ -139,7 +141,7 @@ namespace Kame {
 
   }
 
-  ComPtr<ID3D12CommandQueue> DxTutorial::CreateCommandQueue(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) {
+  ComPtr<ID3D12CommandQueue> DX12Core::CreateCommandQueue(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) {
     ComPtr<ID3D12CommandQueue> d3d12CommandQueue;
 
     D3D12_COMMAND_QUEUE_DESC desc = {};
@@ -154,7 +156,7 @@ namespace Kame {
 
   }
 
-  bool DxTutorial::CheckTearingSupport() {
+  bool DX12Core::CheckTearingSupport() {
     BOOL allowTearing = FALSE;
 
     // Rather than create the DXGI 1.5 factory interface directly, we create the
@@ -176,7 +178,7 @@ namespace Kame {
     return allowTearing == TRUE;
   }
 
-  ComPtr<IDXGISwapChain4> DxTutorial::CreateSwapChain(
+  ComPtr<IDXGISwapChain4> DX12Core::CreateSwapChain(
     HWND hWnd,
     ID3D12CommandQueue* commandQueue,
     uint32_t width, uint32_t height,
@@ -224,7 +226,7 @@ namespace Kame {
 
   }
 
-  ComPtr<ID3D12DescriptorHeap> DxTutorial::CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors) {
+  ComPtr<ID3D12DescriptorHeap> DX12Core::CreateDescriptorHeap(ComPtr<ID3D12Device2> device, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors) {
     ComPtr<ID3D12DescriptorHeap> descriptorHeap;
 
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
@@ -236,7 +238,7 @@ namespace Kame {
     return descriptorHeap;
   }
 
-  void DxTutorial::UpdateRenderTargetViews(
+  void DX12Core::UpdateRenderTargetViews(
     ComPtr<ID3D12Device2> device,
     ComPtr<IDXGISwapChain4> swapChain,
     ComPtr<ID3D12DescriptorHeap> descriptorHeap
@@ -258,14 +260,14 @@ namespace Kame {
     }
   }
 
-  ComPtr<ID3D12CommandAllocator> Kame::DxTutorial::CreateCommandAllocator(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) {
+  ComPtr<ID3D12CommandAllocator> DX12Core::CreateCommandAllocator(ComPtr<ID3D12Device2> device, D3D12_COMMAND_LIST_TYPE type) {
     ComPtr<ID3D12CommandAllocator> commandAllocator;
     ThrowIfFailed(device->CreateCommandAllocator(type, IID_PPV_ARGS(&commandAllocator)));
 
     return commandAllocator;
   }
 
-  ComPtr<ID3D12GraphicsCommandList> DxTutorial::CreateCommandList(ComPtr<ID3D12Device2> device, ComPtr<ID3D12CommandAllocator> commandAllocator, D3D12_COMMAND_LIST_TYPE type) {
+  ComPtr<ID3D12GraphicsCommandList> DX12Core::CreateCommandList(ComPtr<ID3D12Device2> device, ComPtr<ID3D12CommandAllocator> commandAllocator, D3D12_COMMAND_LIST_TYPE type) {
     ComPtr<ID3D12GraphicsCommandList> commandList;
     ThrowIfFailed(device->CreateCommandList(0, type, commandAllocator.Get(), nullptr, IID_PPV_ARGS(&commandList)));
 
@@ -274,7 +276,7 @@ namespace Kame {
     return commandList;
   }
 
-  ComPtr<ID3D12Fence> DxTutorial::CreateFence(ComPtr<ID3D12Device2> device) {
+  ComPtr<ID3D12Fence> DX12Core::CreateFence(ComPtr<ID3D12Device2> device) {
     ComPtr<ID3D12Fence> fence;
 
     ThrowIfFailed(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
@@ -282,7 +284,7 @@ namespace Kame {
     return fence;
   }
 
-  HANDLE DxTutorial::CreateEventHandle() {
+  HANDLE DX12Core::CreateEventHandle() {
     HANDLE fenceEvent;
 
     fenceEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL);
@@ -291,14 +293,14 @@ namespace Kame {
     return fenceEvent;
   }
 
-  uint64_t DxTutorial::Signal(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue) {
+  uint64_t DX12Core::Signal(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue) {
     uint64_t fenceValueForSignal = ++fenceValue;
     ThrowIfFailed(commandQueue->Signal(fence.Get(), fenceValue));
 
     return fenceValueForSignal;
   }
 
-  void DxTutorial::WaitForFenceValue(
+  void DX12Core::WaitForFenceValue(
     ComPtr<ID3D12Fence> fence,
     uint64_t fenceValue,
     HANDLE fenceEvent,
@@ -310,7 +312,7 @@ namespace Kame {
     }
   }
 
-  void DxTutorial::Flush(
+  void DX12Core::Flush(
     ComPtr<ID3D12CommandQueue> commandQueue,
     ComPtr<ID3D12Fence> fence,
     uint64_t& fenceValue,
@@ -320,25 +322,32 @@ namespace Kame {
     WaitForFenceValue(fence, fenceValueForSignal, fenceEvent);
   }
 
-  void Kame::DxTutorial::Render() {
+  void DX12Core::Render() {
     auto commandAllocator = g_CommandAllocator[g_CurrentBackBufferIndex];
     auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
+
+    // CommandContext::Begin will Reset allocator and reset commandList
+    CommandContext& myContext = CommandContext::Begin(L"Main Loop");
 
     commandAllocator->Reset();
     g_CommandList->Reset(commandAllocator.Get(), nullptr);
 
     // Clear the render target.
     {
+      // Transition is (new?) Helper-function. Its body is "manually" done in CommandContext::TransitionResource
       CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
         backBuffer.Get(),
         D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
+      // CommandContext::FlushResourceBarriers (also done in CommandContext::TransitionResource)
       g_CommandList->ResourceBarrier(1, &barrier);
 
       FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
+      // the rtv is in the g_SceneColorBuffer
       CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(g_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
         g_CurrentBackBufferIndex, g_RTVDescriptorSize);
 
+      // GraphicsContext->ClearColor()
       g_CommandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
     }
 
@@ -368,7 +377,7 @@ namespace Kame {
     }
   }
 
-  void DxTutorial::Resize(uint32_t width, uint32_t height) {
+  void DX12Core::Resize(uint32_t width, uint32_t height) {
     if (_ClientWidth != width || _ClientHeight != height) {
       _ClientWidth = std::max(1u, width);
       _ClientHeight = std::max(1u, height);
@@ -395,13 +404,13 @@ namespace Kame {
     }
   }
 
-  void DxTutorial::ShutDown() {
+  void DX12Core::ShutDown() {
     _CommandManager->IdleGpu();
 
     _CommandManager->Shutdown();
   }
 
-  void DxTutorial::SetFullscreen(bool fullscreen) {
+  void DX12Core::SetFullscreen(bool fullscreen) {
     if (_Fullscreen != fullscreen) {
       _Fullscreen = fullscreen;
 
@@ -446,7 +455,7 @@ namespace Kame {
     }
   }
 
-  void DxTutorial::SwitchFullscreen() {
+  void DX12Core::SwitchFullscreen() {
     bool fs = !_Fullscreen;
     SetFullscreen(fs);
     _Fullscreen = fs;

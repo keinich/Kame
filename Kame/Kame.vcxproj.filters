@@ -79,9 +79,6 @@
     <ClInclude Include="src\Kame\MouseButtonCodes.h">
       <Filter>Kame</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DxTutorial.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.h">
       <Filter>Kame\Platform\DirectX12\ImGui</Filter>
     </ClInclude>
@@ -117,6 +114,11 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandContext.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -133,9 +135,6 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Log.cpp">
       <Filter>Kame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DxTutorial.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.cpp">
       <Filter>Kame\Platform\DirectX12\ImGui</Filter>
@@ -166,5 +165,10 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandContext.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.cpp" />
   </ItemGroup>
 </Project>

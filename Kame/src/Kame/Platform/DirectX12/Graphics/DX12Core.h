@@ -2,17 +2,18 @@
 
 #include "kmpch.h"
 
-#include "CommandManager.h"
-
 #include <cstdint>
 
 namespace Kame {
 
-  class KAME_API DxTutorial {
+  class CommandManager;
+  class ContextManager;
+
+  class KAME_API DX12Core {
 
   public:
-    DxTutorial();
-    ~DxTutorial();
+    DX12Core();
+    ~DX12Core();
 
     void Init();
     void ShutDown();
@@ -24,8 +25,11 @@ namespace Kame {
     void SwitchFullscreen();
        
     // TODO : remove this
-    static DxTutorial* _Instance;
+    static DX12Core* _Instance;
     bool _IsInitialized = false;
+
+    inline ContextManager* GetContextManager() { return _ContextManager; }
+    inline CommandManager* GetCommandManager() { return _CommandManager; }
 
   private: // Functions
     
@@ -58,7 +62,7 @@ namespace Kame {
       std::chrono::milliseconds duration = std::chrono::milliseconds::max()
     );
     void Flush(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue, HANDLE fenceEvent);
-
+       
   private: // Fields
     static const uint8_t c_NumFrames = 3;
     bool _UseWarp = false;
@@ -72,8 +76,8 @@ namespace Kame {
 
     // DX12 Core Object
     ComPtr<ID3D12Device2> g_Device;
-    //ComPtr<ID3D12CommandQueue> g_CommandQueue;
     CommandManager* _CommandManager;
+    ContextManager* _ContextManager;
     ComPtr<IDXGISwapChain4> g_SwapChain;
     ComPtr<ID3D12Resource> g_BackBuffers[c_NumFrames];
     ComPtr<ID3D12GraphicsCommandList> g_CommandList;
@@ -81,12 +85,8 @@ namespace Kame {
     ComPtr<ID3D12DescriptorHeap> g_RTVDescriptorHeap;
     UINT g_RTVDescriptorSize;
     UINT g_CurrentBackBufferIndex;
-
-    // DX12 Sync Objects
-    //ComPtr<ID3D12Fence> _Fence;
-    //uint64_t g_FenceValue = 0;
+  
     uint64_t g_FrameFenceValues[c_NumFrames] = {};
-    //HANDLE g_FenceEvent;
 
     bool g_VSync = true;
     bool _TearingSupported = false;

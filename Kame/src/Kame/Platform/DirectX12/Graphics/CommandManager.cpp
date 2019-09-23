@@ -18,6 +18,14 @@ namespace Kame {
   void CommandManager::IdleGpu() {
     _GraphicsQueue.WaitForIdle();
   }
+
+  CommandQueue& CommandManager::GetQueue(D3D12_COMMAND_LIST_TYPE type) {
+    switch (type) {    
+    case D3D12_COMMAND_LIST_TYPE_COMPUTE: throw; // TODO
+    case D3D12_COMMAND_LIST_TYPE_COPY: throw; // TODO
+    default: return _GraphicsQueue;
+    }
+  }
   void CommandManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12GraphicsCommandList** list, ID3D12CommandAllocator** allocator) {
 
     switch (type) {
