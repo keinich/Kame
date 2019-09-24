@@ -53,8 +53,8 @@ namespace Kame {
   }
 
   uint64_t CommandQueue::Signal() {
-    uint64_t fenceValueForSignal = ++_FenceValue;
-    ThrowIfFailed(_CommandQueue->Signal(_Fence.Get(), _FenceValue));
+    uint64_t fenceValueForSignal = ++_NextFenceValue;
+    ThrowIfFailed(_CommandQueue->Signal(_Fence.Get(), _NextFenceValue));
 
     return fenceValueForSignal;
   }
@@ -82,6 +82,20 @@ namespace Kame {
 
   void CommandQueue::WaitForIdle() {
     WaitForFence(Signal());
+  }
+
+  uint64_t CommandQueue::ExecuteCommandList(ID3D12CommandList* list) {
+    
+    std::lock_guard<std::mutex> LockGuard(_FenceMutex);
+
+    ThrowIfFailed(((ID3D12GraphicsCommandList*)list)->Close());
+
+    _CommandQueue->ExecuteCommandLists(1, &list);
+
+    _CommandQueue->Signal(_Fence.Get(), _NextFenceValue);
+
+    return _NextFenceValue++;
+
   }
 
   ID3D12CommandAllocator* Kame::CommandQueue::RequestAllocator() {

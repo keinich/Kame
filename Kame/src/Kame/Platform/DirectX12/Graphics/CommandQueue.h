@@ -20,6 +20,8 @@ namespace Kame {
     bool IsFenceComplete(uint64_t fenceValue);
     void WaitForIdle();
 
+    uint64_t ExecuteCommandList(ID3D12CommandList* list);
+
     ID3D12CommandAllocator* RequestAllocator();
     void DiscardAllocator(uint64_t fenceValue, ID3D12CommandAllocator* allocator);
 
@@ -33,8 +35,10 @@ namespace Kame {
     ComPtr<ID3D12Fence> _Fence;
     HANDLE _FenceEventHandle;
     uint64_t _LastCompletedFenceValue;
-    uint64_t _FenceValue;
+    uint64_t _NextFenceValue;
     std::mutex _EventMutex;
+    std::mutex _FenceMutex;
+
   };
 
 }

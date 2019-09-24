@@ -12,6 +12,7 @@ namespace Kame {
     ContextManager();
 
     class CommandContext* AllocateContext(D3D12_COMMAND_LIST_TYPE type);
+    void FreeContext(CommandContext* usedContext);
 
   private:
 

@@ -4,6 +4,7 @@
 
 namespace Kame {
 
+  class GraphicsContext;
 
   class CommandContext {
 
@@ -22,13 +23,27 @@ namespace Kame {
     void Initialize();
 
     static CommandContext& Begin(const std::wstring ID = L"");
+    uint64_t Finish(bool waitForCompletion = false);
 
-  private:
+    GraphicsContext& GetGraphicsContext();
+
+    void TransitionResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES oldState, D3D12_RESOURCE_STATES newState, bool flushImmediate = false);
+
+    inline void FlushResourceBarriers();
+
+    // TODO nur fürs Rantasten gedacht
+    inline ID3D12GraphicsCommandList* GetCommandList() { return _CommandList; };
+    inline ID3D12CommandAllocator* GetCurrentAllocator() { return _CurrentAllocator; };
+
+  protected:
 
     ID3D12GraphicsCommandList* _CommandList;
     ID3D12CommandAllocator* _CurrentAllocator;
 
     D3D12_COMMAND_LIST_TYPE _Type;
+
+    UINT _NumBarriersToFlush;
+    D3D12_RESOURCE_BARRIER _ResourceBarrierBuffer[16];
 
   };
 

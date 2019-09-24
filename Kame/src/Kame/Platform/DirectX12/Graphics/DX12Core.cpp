@@ -5,6 +5,7 @@
 
 #include "CommandManager.h"
 #include "ContextManager.h"
+#include "GraphicsContext.h"
 
 namespace Kame {
 
@@ -327,45 +328,59 @@ namespace Kame {
     auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
 
     // CommandContext::Begin will Reset allocator and reset commandList
-    CommandContext& myContext = CommandContext::Begin(L"Main Loop");
+    GraphicsContext& myContext = GraphicsContext::Begin(L"Main Loop");
 
-    commandAllocator->Reset();
-    g_CommandList->Reset(commandAllocator.Get(), nullptr);
+    // TODO zum rantasten
+    g_CommandList = myContext.GetCommandList();
+    commandAllocator = myContext.GetCurrentAllocator();
+
+    //commandAllocator->Reset();
+    //g_CommandList->Reset(commandAllocator.Get(), nullptr);
 
     // Clear the render target.
     {
-      // Transition is (new?) Helper-function. Its body is "manually" done in CommandContext::TransitionResource
-      CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        backBuffer.Get(),
-        D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+      //myContext.TransitionResource();
 
-      // CommandContext::FlushResourceBarriers (also done in CommandContext::TransitionResource)
-      g_CommandList->ResourceBarrier(1, &barrier);
+      //// Transition is (new?) Helper-function. Its body is "manually" done in CommandContext::TransitionResource
+      //CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+      //  backBuffer.Get(),
+      //  D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET
+      //);
+      //// CommandContext::FlushResourceBarriers (also done in CommandContext::TransitionResource)
+      //g_CommandList->ResourceBarrier(1, &barrier);
+
+      myContext.TransitionResource(backBuffer.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
       FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
       // the rtv is in the g_SceneColorBuffer
-      CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(g_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-        g_CurrentBackBufferIndex, g_RTVDescriptorSize);
+      CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(
+        g_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+        g_CurrentBackBufferIndex, g_RTVDescriptorSize
+      );
 
-      // GraphicsContext->ClearColor()
-      g_CommandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
+      //g_CommandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
+      myContext.ClearColor(rtv, clearColor);
     }
 
     // Present
     {
-      CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        backBuffer.Get(),
-        D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-      g_CommandList->ResourceBarrier(1, &barrier);
+      //CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+      //  backBuffer.Get(),
+      //  D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT
+      //);
+      //g_CommandList->ResourceBarrier(1, &barrier);
+      myContext.TransitionResource(backBuffer.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT, true);
 
-      ThrowIfFailed(g_CommandList->Close());
+      g_FrameFenceValues[g_CurrentBackBufferIndex] = myContext.Finish();
 
-      ID3D12CommandList* const commandLists[] = {
-          g_CommandList.Get()
-      };
-      _CommandManager->GetCommandQueue()->ExecuteCommandLists(_countof(commandLists), commandLists);
+      //ThrowIfFailed(g_CommandList->Close());
 
-      g_FrameFenceValues[g_CurrentBackBufferIndex] = _CommandManager->GetGraphicsQueue().Signal();
+      //ID3D12CommandList* const commandLists[] = {
+      //    g_CommandList.Get()
+      //};
+      //_CommandManager->GetCommandQueue()->ExecuteCommandLists(_countof(commandLists), commandLists);
+
+      //g_FrameFenceValues[g_CurrentBackBufferIndex] = _CommandManager->GetGraphicsQueue().Signal();
 
       UINT syncInterval = g_VSync ? 1 : 0;
       UINT presentFlags = _TearingSupported && !g_VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;

@@ -1,5 +1,6 @@
 #include "kmpch.h"
 #include "CommandManager.h"
+#include "DX12Core.h"
 
 namespace Kame {
   CommandManager::CommandManager() :
@@ -26,6 +27,11 @@ namespace Kame {
     default: return _GraphicsQueue;
     }
   }
+  void CommandManager::WaitForFence(uint64_t fenceValue) {
+    CommandQueue& producer = DX12Core::_Instance->GetCommandManager()->GetQueue((D3D12_COMMAND_LIST_TYPE)(fenceValue >> 56));
+    producer.WaitForFence(fenceValue);
+  }
+
   void CommandManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12GraphicsCommandList** list, ID3D12CommandAllocator** allocator) {
 
     switch (type) {

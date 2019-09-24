@@ -21,6 +21,7 @@ namespace Kame {
     CommandQueue& GetQueue(D3D12_COMMAND_LIST_TYPE type);
     CommandQueue& GetGraphicsQueue() { return _GraphicsQueue; }
 
+    void WaitForFence(uint64_t fenceValue);
 
     ID3D12CommandQueue* GetCommandQueue() { return _GraphicsQueue.GetCommandQueue(); }
 

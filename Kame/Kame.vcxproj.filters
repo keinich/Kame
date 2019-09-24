@@ -113,12 +113,20 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandManager.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandContext.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandContext.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GpuResource.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GraphicsContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -164,11 +172,19 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandManager.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandContext.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandContext.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResource.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

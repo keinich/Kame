@@ -30,7 +30,12 @@ namespace Kame {
 
   }
 
-
+  void ContextManager::FreeContext(CommandContext* usedContext) {
+    assert(usedContext != nullptr);
+    
+    std::lock_guard<std::mutex> LockGuard(_ContextAllocationMutex);
+    _AvailableContexts[usedContext->_Type].push(usedContext);
+  }
 
 }
 
