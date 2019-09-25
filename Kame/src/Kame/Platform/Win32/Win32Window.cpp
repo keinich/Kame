@@ -96,7 +96,7 @@ namespace Kame {
 
   LRESULT Win32Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 
-    if (DX12Core::_Instance->_IsInitialized) {
+    if (DX12Core::Get()->_IsInitialized) {
       switch (message) {
       case WM_CREATE:
       {
@@ -116,7 +116,7 @@ namespace Kame {
         data->Width = width;
         data->Height = height;
 
-        DX12Core::_Instance->Resize(width, height);
+        DX12Core::Get()->Resize(width, height);
         break;
       }
 

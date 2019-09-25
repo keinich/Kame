@@ -3,6 +3,7 @@
 #include "CommandManager.h"
 #include "ContextManager.h"
 #include "DX12Core.h"
+#include "GpuResource.h"
 
 namespace Kame {
 
@@ -15,7 +16,7 @@ namespace Kame {
   }
 
   void CommandContext::Reset() {
-    _CurrentAllocator = DX12Core::_Instance->GetCommandManager()->GetQueue(_Type).RequestAllocator();
+    _CurrentAllocator = DX12Core::GetCommandManager()->GetQueue(_Type).RequestAllocator();
     _CommandList->Reset(_CurrentAllocator, nullptr);
   }
 
@@ -25,11 +26,11 @@ namespace Kame {
   }
 
   void CommandContext::Initialize() {
-    DX12Core::_Instance->GetCommandManager()->CreateNewCommandList(_Type, &_CommandList, &_CurrentAllocator);
+    DX12Core::GetCommandManager()->CreateNewCommandList(_Type, &_CommandList, &_CurrentAllocator);
   }
 
   CommandContext& CommandContext::Begin(const std::wstring ID) {
-    CommandContext* newContext = DX12Core::_Instance->GetContextManager()->AllocateContext(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    CommandContext* newContext = DX12Core::GetContextManager()->AllocateContext(D3D12_COMMAND_LIST_TYPE_DIRECT);
     return *newContext;
   }
 
@@ -37,15 +38,15 @@ namespace Kame {
 
     FlushResourceBarriers();
 
-    CommandQueue& queue = DX12Core::_Instance->GetCommandManager()->GetQueue(_Type);
+    CommandQueue& queue = DX12Core::GetCommandManager()->GetQueue(_Type);
     uint64_t fenceValue = queue.ExecuteCommandList(_CommandList);
     queue.DiscardAllocator(fenceValue, _CurrentAllocator);
     _CurrentAllocator = nullptr;
 
     if (waitForCompletion)
-      DX12Core::_Instance->GetCommandManager()->WaitForFence(fenceValue);
+      DX12Core::GetCommandManager()->WaitForFence(fenceValue);
 
-    DX12Core::_Instance->GetContextManager()->FreeContext(this);
+    DX12Core::GetContextManager()->FreeContext(this);
 
     return fenceValue;
   }
@@ -71,6 +72,28 @@ namespace Kame {
     if (flushImmediate || _NumBarriersToFlush == 16)
       FlushResourceBarriers();
 
+  }
+
+  void CommandContext::TransitionResource(
+    GpuResource& resource,
+    D3D12_RESOURCE_STATES newState,
+    bool flushImmediate
+  ) {
+
+    D3D12_RESOURCE_STATES oldState = resource._UsageState;
+
+    if (oldState != newState) {
+      CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        resource._Resource,
+        oldState, newState
+      );
+      _ResourceBarrierBuffer[_NumBarriersToFlush++] = barrier;
+
+      resource._UsageState = newState;
+    }
+
+    if (flushImmediate || _NumBarriersToFlush == 16)
+      FlushResourceBarriers();
   }
 
   inline void CommandContext::FlushResourceBarriers() {

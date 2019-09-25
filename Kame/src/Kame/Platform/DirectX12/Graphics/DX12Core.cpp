@@ -7,6 +7,8 @@
 #include "ContextManager.h"
 #include "GraphicsContext.h"
 
+#include "ColorBuffer.h"
+
 namespace Kame {
 
   DX12Core* DX12Core::_Instance = new DX12Core();
@@ -249,10 +251,12 @@ namespace Kame {
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(descriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
     for (int i = 0; i < c_NumFrames; ++i) {
-      ComPtr<ID3D12Resource> backBuffer;
+      ComPtr<ID3D12Resource> backBuffer;      
       ThrowIfFailed(swapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffer)));
 
-      device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
+      g_BackBuffers1[i].CreateFromSwapChain(L"", backBuffer.Get(), rtvHandle);
+
+      //device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
 
       g_BackBuffers[i] = backBuffer;
 
@@ -326,6 +330,7 @@ namespace Kame {
   void DX12Core::Render() {
     auto commandAllocator = g_CommandAllocator[g_CurrentBackBufferIndex];
     auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
+    auto backBuffer1 = g_BackBuffers1[g_CurrentBackBufferIndex];
 
     // CommandContext::Begin will Reset allocator and reset commandList
     GraphicsContext& myContext = GraphicsContext::Begin(L"Main Loop");
@@ -349,7 +354,8 @@ namespace Kame {
       //// CommandContext::FlushResourceBarriers (also done in CommandContext::TransitionResource)
       //g_CommandList->ResourceBarrier(1, &barrier);
 
-      myContext.TransitionResource(backBuffer.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+      //myContext.TransitionResource(backBuffer.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+      myContext.TransitionResource(backBuffer1, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
       FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
       // the rtv is in the g_SceneColorBuffer
@@ -369,7 +375,8 @@ namespace Kame {
       //  D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT
       //);
       //g_CommandList->ResourceBarrier(1, &barrier);
-      myContext.TransitionResource(backBuffer.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT, true);
+      //myContext.TransitionResource(backBuffer.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT, true);
+      myContext.TransitionResource(backBuffer1, D3D12_RESOURCE_STATE_PRESENT, true);
 
       g_FrameFenceValues[g_CurrentBackBufferIndex] = myContext.Finish();
 

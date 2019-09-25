@@ -5,6 +5,7 @@
 namespace Kame {
 
   class GraphicsContext;
+  class GpuResource;
 
   class CommandContext {
 
@@ -28,6 +29,7 @@ namespace Kame {
     GraphicsContext& GetGraphicsContext();
 
     void TransitionResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES oldState, D3D12_RESOURCE_STATES newState, bool flushImmediate = false);
+    void TransitionResource(GpuResource& resource, D3D12_RESOURCE_STATES newState, bool flushImmediate = false);
 
     inline void FlushResourceBarriers();
 

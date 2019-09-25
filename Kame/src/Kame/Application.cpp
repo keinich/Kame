@@ -82,14 +82,14 @@ namespace Kame {
     switch (e.GetKeyCode()) 
       case KAME_KEY_F:
     {
-      DX12Core::_Instance->SwitchFullscreen();
+      DX12Core::Get()->SwitchFullscreen();
       return true;
     }
     return false;
   }
 
   void Application::Render() {
-    DX12Core::_Instance->Render();
+    DX12Core::Get()->Render();
   }
 
   void Application::Run() {
@@ -102,7 +102,7 @@ namespace Kame {
       glClearColor(1, 0, 1, 1);
       glClear(GL_COLOR_BUFFER_BIT);
 #else
-      DX12Core* dxTest = DX12Core::_Instance;
+      DX12Core* dxTest = DX12Core::Get();
       dxTest->Init();
 #endif      
 

@@ -127,6 +127,8 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GpuResource.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GraphicsContext.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PixelBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -186,5 +188,7 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResource.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsContext.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PixelBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.cpp" />
   </ItemGroup>
 </Project>

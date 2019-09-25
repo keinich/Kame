@@ -4,16 +4,24 @@
 
 #include <cstdint>
 
+#include "ColorBuffer.h"
+
 namespace Kame {
 
   class CommandManager;
   class ContextManager;
-
+  
   class KAME_API DX12Core {
 
-  public:
+  private:
+
+    static DX12Core* _Instance;
     DX12Core();
+
+  public:
     ~DX12Core();
+    
+    static DX12Core* Get() { return _Instance; }
 
     void Init();
     void ShutDown();
@@ -23,13 +31,12 @@ namespace Kame {
     void Resize(uint32_t width, uint32_t height);
     void SetFullscreen(bool fullscreen);
     void SwitchFullscreen();
-       
-    // TODO : remove this
-    static DX12Core* _Instance;
-    bool _IsInitialized = false;
+    
+    bool _IsInitialized = false;    
 
-    inline ContextManager* GetContextManager() { return _ContextManager; }
-    inline CommandManager* GetCommandManager() { return _CommandManager; }
+    inline static ContextManager* GetContextManager() { return _Instance->_ContextManager; }
+    inline static CommandManager* GetCommandManager() { return _Instance->_CommandManager; }
+    inline static ID3D12Device* GetDevice() { return _Instance->g_Device.Get(); }
 
   private: // Functions
     
@@ -80,6 +87,7 @@ namespace Kame {
     ContextManager* _ContextManager;
     ComPtr<IDXGISwapChain4> g_SwapChain;
     ComPtr<ID3D12Resource> g_BackBuffers[c_NumFrames];
+    ColorBuffer g_BackBuffers1[c_NumFrames];
     ComPtr<ID3D12GraphicsCommandList> g_CommandList;
     ComPtr<ID3D12CommandAllocator> g_CommandAllocator[c_NumFrames];
     ComPtr<ID3D12DescriptorHeap> g_RTVDescriptorHeap;

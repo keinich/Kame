@@ -28,7 +28,7 @@ namespace Kame {
     }
   }
   void CommandManager::WaitForFence(uint64_t fenceValue) {
-    CommandQueue& producer = DX12Core::_Instance->GetCommandManager()->GetQueue((D3D12_COMMAND_LIST_TYPE)(fenceValue >> 56));
+    CommandQueue& producer = DX12Core::GetCommandManager()->GetQueue((D3D12_COMMAND_LIST_TYPE)(fenceValue >> 56));
     producer.WaitForFence(fenceValue);
   }
 
