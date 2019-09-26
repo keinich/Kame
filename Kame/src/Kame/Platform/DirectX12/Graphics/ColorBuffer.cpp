@@ -9,6 +9,7 @@ namespace Kame {
 
     AssociateWithResource(DX12Core::GetDevice(), name, baseResource, D3D12_RESOURCE_STATE_PRESENT);
 
+    //_RtvHandle = DX12Core::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     DX12Core::GetDevice()->CreateRenderTargetView(_Resource, nullptr, rtv);
 
   }

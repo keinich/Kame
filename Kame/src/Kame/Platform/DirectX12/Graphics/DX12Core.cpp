@@ -5,6 +5,7 @@
 
 #include "CommandManager.h"
 #include "ContextManager.h"
+#include "DescriptorAllocator.h"
 #include "GraphicsContext.h"
 
 #include "ColorBuffer.h"
@@ -14,7 +15,7 @@ namespace Kame {
   DX12Core* DX12Core::_Instance = new DX12Core();
 
   DX12Core::DX12Core() {
-    _CommandManager = new CommandManager();
+        _CommandManager = new CommandManager();
     _ContextManager = new ContextManager();
     _WindowRect = RECT();
     g_CurrentBackBufferIndex = 0;
@@ -23,6 +24,7 @@ namespace Kame {
 
   DX12Core::~DX12Core() {
     delete _CommandManager;
+    delete _ContextManager;
   }
 
   void DX12Core::Init() {
@@ -258,7 +260,7 @@ namespace Kame {
 
       //device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
 
-      g_BackBuffers[i] = backBuffer;
+      //g_BackBuffers[i] = backBuffer;
 
       rtvHandle.Offset(rtvDescriptorSize);
 
@@ -329,7 +331,7 @@ namespace Kame {
 
   void DX12Core::Render() {
     auto commandAllocator = g_CommandAllocator[g_CurrentBackBufferIndex];
-    auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
+    //auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
     auto backBuffer1 = g_BackBuffers1[g_CurrentBackBufferIndex];
 
     // CommandContext::Begin will Reset allocator and reset commandList
@@ -395,7 +397,7 @@ namespace Kame {
 
       g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
-      _CommandManager->GetGraphicsQueue().WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]);
+      _CommandManager->GetGraphicsQueue().WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]); // TODO where des the Mini-Engine wait?
     }
   }
 
@@ -407,7 +409,7 @@ namespace Kame {
       _CommandManager->IdleGpu();
 
       for (int i = 0; i < c_NumFrames; ++i) {
-        g_BackBuffers[i].Reset();
+        //g_BackBuffers[i].Reset();
         g_FrameFenceValues[i] = g_FrameFenceValues[g_CurrentBackBufferIndex];
       }
 
@@ -423,13 +425,13 @@ namespace Kame {
       g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
       UpdateRenderTargetViews(g_Device, g_SwapChain, g_RTVDescriptorHeap);
-    }
+    } 
   }
 
   void DX12Core::ShutDown() {
     _CommandManager->IdleGpu();
 
-    _CommandManager->Shutdown();
+    _CommandManager->Shutdown();    
   }
 
   void DX12Core::SetFullscreen(bool fullscreen) {

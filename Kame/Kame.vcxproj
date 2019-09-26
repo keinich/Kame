@@ -173,6 +173,7 @@
     <ClInclude Include="src\Kame\LayerStack.h" />
     <ClInclude Include="src\Kame\Log.h" />
     <ClInclude Include="src\Kame\MouseButtonCodes.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\dxd12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GpuResource.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="src\Kame\Layer.cpp" />
     <ClCompile Include="src\Kame\LayerStack.cpp" />
     <ClCompile Include="src\Kame\Log.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResource.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsContext.cpp" />

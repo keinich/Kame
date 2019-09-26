@@ -9,6 +9,7 @@ namespace Kame {
     D3D12_RESOURCE_DESC resourceDesc = resource->GetDesc();
 
     _Resource = resource;
+    //_Resource1.Attach(resource);
     _UsageState = currentState;
 
     _Width = (uint32_t)resourceDesc.Width;
