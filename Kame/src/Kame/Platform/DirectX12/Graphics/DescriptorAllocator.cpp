@@ -37,6 +37,7 @@ namespace Kame {
     D3D12_DESCRIPTOR_HEAP_DESC desc;
     desc.Type = type;
     desc.NumDescriptors = _NumDescriptorsPerHeap;
+    desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     desc.NodeMask = 1;
 
     ComPtr<ID3D12DescriptorHeap> heap;

@@ -14,11 +14,19 @@ namespace Kame {
 
   DX12Core* DX12Core::_Instance = new DX12Core();
 
+  DescriptorAllocator g_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {
+    D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+      D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+      D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
+      D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER
+  };
+
   DX12Core::DX12Core() {
-        _CommandManager = new CommandManager();
+    _CommandManager = new CommandManager();
     _ContextManager = new ContextManager();
     _WindowRect = RECT();
     g_CurrentBackBufferIndex = 0;
+    
     // TODO Constructor verbessern
   }
 
@@ -53,7 +61,7 @@ namespace Kame {
     for (int i = 0; i < c_NumFrames; ++i) {
       g_CommandAllocator[i] = CreateCommandAllocator(g_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
     }
-    g_CommandList = CreateCommandList(g_Device, g_CommandAllocator[g_CurrentBackBufferIndex], D3D12_COMMAND_LIST_TYPE_DIRECT);    
+    g_CommandList = CreateCommandList(g_Device, g_CommandAllocator[g_CurrentBackBufferIndex], D3D12_COMMAND_LIST_TYPE_DIRECT);
 
     _IsInitialized = true;
 
@@ -253,7 +261,7 @@ namespace Kame {
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(descriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
     for (int i = 0; i < c_NumFrames; ++i) {
-      ComPtr<ID3D12Resource> backBuffer;      
+      ComPtr<ID3D12Resource> backBuffer;
       ThrowIfFailed(swapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffer)));
 
       g_BackBuffers1[i].CreateFromSwapChain(L"", backBuffer.Get(), rtvHandle);
@@ -425,13 +433,13 @@ namespace Kame {
       g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
       UpdateRenderTargetViews(g_Device, g_SwapChain, g_RTVDescriptorHeap);
-    } 
+    }
   }
 
   void DX12Core::ShutDown() {
     _CommandManager->IdleGpu();
 
-    _CommandManager->Shutdown();    
+    _CommandManager->Shutdown();
   }
 
   void DX12Core::SetFullscreen(bool fullscreen) {
