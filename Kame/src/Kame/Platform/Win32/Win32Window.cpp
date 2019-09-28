@@ -131,6 +131,15 @@ namespace Kame {
         KeyPressedEvent event(wParam, 0);
         data->EventCallback(event);
       }
+      
+      //case WM_DESTROY:
+        //PostQuitMessage(0);
+        //break;
+
+      //case WM_CLOSE:
+      //  PostQuitMessage(0);
+      //  break;
+
       default:
         return DefWindowProc(hWnd, message, wParam, lParam);
       }

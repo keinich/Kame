@@ -84,7 +84,7 @@ namespace Kame {
 
     if (oldState != newState) {
       CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        resource._Resource,
+        resource._Resource1.Get(),
         oldState, newState
       );
       _ResourceBarrierBuffer[_NumBarriersToFlush++] = barrier;

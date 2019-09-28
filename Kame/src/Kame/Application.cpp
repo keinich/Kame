@@ -93,7 +93,7 @@ namespace Kame {
   }
 
   void Application::Run() {
-    while (_Running) {
+    //while (_Running) {
 
       _Window = std::unique_ptr<Window>(Window::Create());
       _Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
@@ -109,7 +109,10 @@ namespace Kame {
       _Window->Show();
 
       PlatformMainLoop();
-    }
+
+      DX12Core::Get()->ShutDown();
+
+    //}
   }
 
   void Application::OnEvent(Event& e) {

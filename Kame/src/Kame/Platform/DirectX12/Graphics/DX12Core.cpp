@@ -15,10 +15,10 @@ namespace Kame {
   DX12Core* DX12Core::_Instance = new DX12Core();
 
   DescriptorAllocator g_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {
-    D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
       D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-      D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
-      D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER
+      D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
+    D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+      D3D12_DESCRIPTOR_HEAP_TYPE_DSV
   };
 
   DX12Core::DX12Core() {
@@ -31,6 +31,7 @@ namespace Kame {
   }
 
   DX12Core::~DX12Core() {
+    ShutDown();
     delete _CommandManager;
     delete _ContextManager;
   }
@@ -264,7 +265,7 @@ namespace Kame {
       ComPtr<ID3D12Resource> backBuffer;
       ThrowIfFailed(swapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffer)));
 
-      g_BackBuffers1[i].CreateFromSwapChain(L"", backBuffer.Get(), rtvHandle);
+      g_BackBuffers1[i].CreateFromSwapChain(L"", backBuffer.Detach(), rtvHandle);
 
       //device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
 
@@ -375,7 +376,8 @@ namespace Kame {
       );
 
       //g_CommandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
-      myContext.ClearColor(rtv, clearColor);
+      //myContext.ClearColor(rtv, clearColor);
+      myContext.ClearColor(backBuffer1, clearColor);
     }
 
     // Present
@@ -405,7 +407,7 @@ namespace Kame {
 
       g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
-      _CommandManager->GetGraphicsQueue().WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]); // TODO where des the Mini-Engine wait?
+      _CommandManager->GetGraphicsQueue().WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]); // TODO where does the Mini-Engine wait?
     }
   }
 
@@ -417,7 +419,7 @@ namespace Kame {
       _CommandManager->IdleGpu();
 
       for (int i = 0; i < c_NumFrames; ++i) {
-        //g_BackBuffers[i].Reset();
+        g_BackBuffers1[i].Destroy();
         g_FrameFenceValues[i] = g_FrameFenceValues[g_CurrentBackBufferIndex];
       }
 
@@ -440,6 +442,10 @@ namespace Kame {
     _CommandManager->IdleGpu();
 
     _CommandManager->Shutdown();
+
+    g_DescriptorAllocators->DestroyAll();
+
+    _IsInitialized = false;
   }
 
   void DX12Core::SetFullscreen(bool fullscreen) {

@@ -5,19 +5,22 @@ namespace Kame {
   class DescriptorAllocator {
 
   public:
-
+    
     DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) :
       _Type(type),
       _CurrentHeap(nullptr) {
     }
 
+    ~DescriptorAllocator() {
+
+    }
     D3D12_CPU_DESCRIPTOR_HANDLE Allocate(uint32_t count);
 
     static void DestroyAll();
 
+    static ID3D12DescriptorHeap* RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type); // TODO make this protected again
   protected: // Functions
 
-    static ID3D12DescriptorHeap* RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type);
 
   protected: // Fields
 

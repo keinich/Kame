@@ -4,7 +4,7 @@
 namespace Kame {
 
   void GpuResource::Destroy() {
-    _Resource = nullptr;
+    _Resource1 = nullptr;
   }
 
 }

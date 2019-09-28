@@ -4,12 +4,12 @@
 #include "DX12Core.h"
 
 namespace Kame {
-  
+
   std::mutex DescriptorAllocator::_AllocationMutex;
   std::vector<ComPtr<ID3D12DescriptorHeap>> DescriptorAllocator::_DescriptorHeapPool;
 
   D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(uint32_t count) {
-      
+
     if (_CurrentHeap == nullptr || _RemainingFreeHandles < count) {
       _CurrentHeap = RequestNewHeap(_Type);
       _CurrentHandle = _CurrentHeap->GetCPUDescriptorHandleForHeapStart();
@@ -31,7 +31,7 @@ namespace Kame {
   }
 
   ID3D12DescriptorHeap* DescriptorAllocator::RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type) {
-    
+
     std::lock_guard<std::mutex> LockGuard(_AllocationMutex);
 
     D3D12_DESCRIPTOR_HEAP_DESC desc;
@@ -43,8 +43,8 @@ namespace Kame {
     ComPtr<ID3D12DescriptorHeap> heap;
     ThrowIfFailed(DX12Core::GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
     _DescriptorHeapPool.emplace_back(heap);
-
     return heap.Get();
+    
   }
 
 }
