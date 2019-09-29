@@ -132,9 +132,13 @@ namespace Kame {
         data->EventCallback(event);
       }
       
-      //case WM_DESTROY:
-        //PostQuitMessage(0);
-        //break;
+      case WM_DESTROY:
+        if (DX12Core::Get()->IsTogglingFullscreen()) {
+          DX12Core::Get()->FinishTogglingFullscreen();
+          break;
+        }
+        PostQuitMessage(0);
+        break;
 
       //case WM_CLOSE:
       //  PostQuitMessage(0);

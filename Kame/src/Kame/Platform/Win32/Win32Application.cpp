@@ -12,7 +12,7 @@ namespace Kame {
         ::TranslateMessage(&msg);
         ::DispatchMessage(&msg);
       }
-    }
+    } 
   }
 
 }

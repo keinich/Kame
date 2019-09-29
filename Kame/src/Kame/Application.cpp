@@ -112,6 +112,7 @@ namespace Kame {
 
       DX12Core::Get()->ShutDown();
 
+      //delete DX12Core::Get();
     //}
   }
 

@@ -7,11 +7,14 @@ namespace Kame {
 
   std::mutex DescriptorAllocator::_AllocationMutex;
   std::vector<ComPtr<ID3D12DescriptorHeap>> DescriptorAllocator::_DescriptorHeapPool;
+  //Test DescriptorAllocator::test;
+  GlobalDescriptorAllocator* GlobalDescriptorAllocator::_Instance = nullptr;
 
   D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(uint32_t count) {
 
     if (_CurrentHeap == nullptr || _RemainingFreeHandles < count) {
-      _CurrentHeap = RequestNewHeap(_Type);
+      //_CurrentHeap = RequestNewHeap(_Type);
+      _CurrentHeap = DX12Core::GetGlobalDescriptorAllocator()->RequestNewHeap(_Type);
       _CurrentHandle = _CurrentHeap->GetCPUDescriptorHandleForHeapStart();
       _RemainingFreeHandles = _NumDescriptorsPerHeap;
 
@@ -27,11 +30,48 @@ namespace Kame {
   }
 
   void DescriptorAllocator::DestroyAll() {
+    //auto testDevice = DX12Core::Get()->GetDevice();
+
+    //D3D12_DESCRIPTOR_HEAP_DESC desc;
+    //desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    //desc.NumDescriptors = 256;
+    //desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    //desc.NodeMask = 1;
+
+    //ComPtr<ID3D12DescriptorHeap> heap;
+    //ThrowIfFailed(DX12Core::GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
+    //_DescriptorHeapPool.clear();
+  }
+
+  //ID3D12DescriptorHeap* DescriptorAllocator::RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type) {
+
+  //  //_Tests.emplace_back();
+
+  //  std::lock_guard<std::mutex> LockGuard(_AllocationMutex);
+
+  //  D3D12_DESCRIPTOR_HEAP_DESC desc;
+  //  desc.Type = type;
+  //  desc.NumDescriptors = _NumDescriptorsPerHeap;
+  //  desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+  //  desc.NodeMask = 1;
+
+  //  ComPtr<ID3D12DescriptorHeap> heap;
+  //  ThrowIfFailed(DX12Core::GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
+  //  _DescriptorHeapPool.emplace_back(heap);
+  //  //test._DescriptorHeapPool.emplace_back(heap);
+  //  return heap.Get();
+
+
+
+  //  
+  //}
+
+  Test::~Test() { 
     _DescriptorHeapPool.clear();
   }
 
-  ID3D12DescriptorHeap* DescriptorAllocator::RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type) {
-
+  ID3D12DescriptorHeap* GlobalDescriptorAllocator::RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type) {
+    
     std::lock_guard<std::mutex> LockGuard(_AllocationMutex);
 
     D3D12_DESCRIPTOR_HEAP_DESC desc;
@@ -43,8 +83,8 @@ namespace Kame {
     ComPtr<ID3D12DescriptorHeap> heap;
     ThrowIfFailed(DX12Core::GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
     _DescriptorHeapPool.emplace_back(heap);
+
     return heap.Get();
-    
   }
 
 }

@@ -24,6 +24,7 @@ namespace Kame {
   DX12Core::DX12Core() {
     _CommandManager = new CommandManager();
     _ContextManager = new ContextManager();
+    _GlobalDescriptorAllocator = GlobalDescriptorAllocator::Get();
     _WindowRect = RECT();
     g_CurrentBackBufferIndex = 0;
     
@@ -31,9 +32,9 @@ namespace Kame {
   }
 
   DX12Core::~DX12Core() {
-    ShutDown();
     delete _CommandManager;
     delete _ContextManager;
+    delete _GlobalDescriptorAllocator;
   }
 
   void DX12Core::Init() {
@@ -439,17 +440,19 @@ namespace Kame {
   }
 
   void DX12Core::ShutDown() {
+    g_DescriptorAllocators->DestroyAll();
     _CommandManager->IdleGpu();
 
     _CommandManager->Shutdown();
 
-    g_DescriptorAllocators->DestroyAll();
+    _GlobalDescriptorAllocator->Shutdown();
 
     _IsInitialized = false;
   }
 
   void DX12Core::SetFullscreen(bool fullscreen) {
     if (_Fullscreen != fullscreen) {
+      _TogglingFullscreen = true;
       _Fullscreen = fullscreen;
 
       if (_Fullscreen) {

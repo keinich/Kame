@@ -11,7 +11,7 @@ namespace Kame {
 
   class CommandManager;
   class ContextManager;
-  
+
   extern DescriptorAllocator g_DescriptorAllocators[];
 
   class KAME_API DX12Core {
@@ -39,11 +39,15 @@ namespace Kame {
 
     inline static ContextManager* GetContextManager() { return _Instance->_ContextManager; }
     inline static CommandManager* GetCommandManager() { return _Instance->_CommandManager; }
+    inline static GlobalDescriptorAllocator* GetGlobalDescriptorAllocator() { return _Instance->_GlobalDescriptorAllocator; }
     inline static ID3D12Device* GetDevice() { return _Instance->g_Device.Get(); }
 
     inline static D3D12_CPU_DESCRIPTOR_HANDLE AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count = 1) {
       return g_DescriptorAllocators[type].Allocate(count);
     }
+
+    inline const bool IsTogglingFullscreen() const { return _TogglingFullscreen; }
+    inline const void FinishTogglingFullscreen() { _TogglingFullscreen = false; }
 
   private: // Functions
 
@@ -92,6 +96,7 @@ namespace Kame {
     ComPtr<ID3D12Device2> g_Device;
     CommandManager* _CommandManager;
     ContextManager* _ContextManager;
+    GlobalDescriptorAllocator* _GlobalDescriptorAllocator;
     ComPtr<IDXGISwapChain4> g_SwapChain;
     ComPtr<ID3D12Resource> g_BackBuffers[c_NumFrames];
     ColorBuffer g_BackBuffers1[c_NumFrames];
@@ -106,7 +111,8 @@ namespace Kame {
     bool g_VSync = true;
     bool _TearingSupported = false;
     bool _Fullscreen = false;
+    bool _TogglingFullscreen = false;
 
-  };  
+  };
 
 }
