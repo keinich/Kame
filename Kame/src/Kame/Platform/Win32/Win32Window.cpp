@@ -130,6 +130,7 @@ namespace Kame {
         WindowData* data = reinterpret_cast<WindowData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
         KeyPressedEvent event(wParam, 0);
         data->EventCallback(event);
+        break;
       }
       
       case WM_DESTROY:

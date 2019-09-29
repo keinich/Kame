@@ -5,7 +5,7 @@
 
 namespace Kame {
 
-  void ColorBuffer::CreateFromSwapChain(const std::wstring& name, ID3D12Resource* baseResource, D3D12_CPU_DESCRIPTOR_HANDLE rtv) {
+  void ColorBuffer::CreateFromSwapChain(const std::wstring& name, ID3D12Resource* baseResource) {
 
     AssociateWithResource(DX12Core::GetDevice(), name, baseResource, D3D12_RESOURCE_STATE_PRESENT);
 

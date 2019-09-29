@@ -2,41 +2,23 @@
 
 namespace Kame {
 
-  class Test {
-  public:
-    Test() {}
-    ~Test();
-    
-
-    std::vector<ComPtr<ID3D12DescriptorHeap>> _DescriptorHeapPool;
-  };
-
   class DescriptorAllocator {
 
   public:
-    
+
     DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) :
       _Type(type),
-      _CurrentHeap(nullptr) {
-    }
+      _CurrentHeap(nullptr) {}
 
     ~DescriptorAllocator() {
 
     }
     D3D12_CPU_DESCRIPTOR_HANDLE Allocate(uint32_t count);
 
-    static void DestroyAll();
-    
   protected: // Functions
 
 
-  protected: // Fields
-
-    static const uint32_t _NumDescriptorsPerHeap = 256;
-    static std::mutex _AllocationMutex;
-    //static Test test;
-    //static std::vector<ComPtr<Test>> _Tests;
-    static std::vector<ComPtr<ID3D12DescriptorHeap>> _DescriptorHeapPool;
+  protected: // Fields    
 
     D3D12_DESCRIPTOR_HEAP_TYPE _Type;
     ID3D12DescriptorHeap* _CurrentHeap;
@@ -58,15 +40,13 @@ namespace Kame {
       return _Instance;
     }
 
-    ~GlobalDescriptorAllocator() {
-      //_DescriptorHeapPool.clear();
-    }
+    ~GlobalDescriptorAllocator() {}
 
     void Shutdown() { _DescriptorHeapPool.clear(); }
 
   protected: // Functions
 
-    ID3D12DescriptorHeap* RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type); // TODO make this protected again
+    ID3D12DescriptorHeap* RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type);
 
   protected: // Fields
 

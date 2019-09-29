@@ -266,7 +266,7 @@ namespace Kame {
       ComPtr<ID3D12Resource> backBuffer;
       ThrowIfFailed(swapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffer)));
 
-      g_BackBuffers1[i].CreateFromSwapChain(L"", backBuffer.Detach(), rtvHandle);
+      g_BackBuffers1[i].CreateFromSwapChain(L"", backBuffer.Detach());
 
       //device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
 
@@ -440,7 +440,7 @@ namespace Kame {
   }
 
   void DX12Core::ShutDown() {
-    g_DescriptorAllocators->DestroyAll();
+    
     _CommandManager->IdleGpu();
 
     _CommandManager->Shutdown();
