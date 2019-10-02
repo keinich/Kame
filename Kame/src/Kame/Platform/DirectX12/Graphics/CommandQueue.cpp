@@ -6,7 +6,9 @@ namespace Kame {
     _Type(type),
     _CommandQueue(nullptr),
     _Fence(nullptr),
-    _CommandAllocatorPool(type) {}
+    _CommandAllocatorPool(type),
+    _LastCompletedFenceValue((uint64_t)type << 56),
+    _NextFenceValue((uint64_t)type << 56 | 1) {}
 
   CommandQueue::~CommandQueue() {
     Shutdown();
@@ -85,7 +87,7 @@ namespace Kame {
   }
 
   uint64_t CommandQueue::ExecuteCommandList(ID3D12CommandList* list) {
-    
+
     std::lock_guard<std::mutex> LockGuard(_FenceMutex);
 
     ThrowIfFailed(((ID3D12GraphicsCommandList*)list)->Close());
