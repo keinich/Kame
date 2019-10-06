@@ -152,6 +152,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Kame\Graphics\Mesh.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.h" />
@@ -181,6 +182,8 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PixelBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Input\DX12Input.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Math\DX12Math.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Math\Vector3.h" />
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWInput.h" />
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWWindow.h" />
     <ClInclude Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="src\kmpch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandAllocatorPool.cpp" />

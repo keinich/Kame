@@ -47,6 +47,10 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include "Kame/Platform/DirectX12/Graphics/dxd12.h"
+#include <DirectXMath.h>
+#include "Kame/Platform/DirectX12/Math/DX12Math.h"
+
+#define INTERNAL_SCALAR_REPRESENTATION DirectX::XMVECTOR
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")

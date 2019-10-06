@@ -130,6 +130,9 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PixelBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.h" />
+    <ClInclude Include="src\Kame\Graphics\Mesh.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Math\Vector3.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Math\DX12Math.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -192,5 +195,6 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PixelBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
   </ItemGroup>
 </Project>

@@ -28,6 +28,8 @@ namespace Kame {
     _WindowRect = RECT();
     g_CurrentBackBufferIndex = 0;
     
+
+
     // TODO Constructor verbessern
   }
 
