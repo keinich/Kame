@@ -10,25 +10,54 @@
 
 #include "ColorBuffer.h"
 
+
+
 namespace Kame {
+
+  struct VertexPosColor {
+    DirectX::XMFLOAT3 Position;
+    DirectX::XMFLOAT3 Color;
+  };
+
+  static VertexPosColor _Vertices[8] = {
+    { DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f) }, // 0
+    { DirectX::XMFLOAT3(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) }, // 1
+    { DirectX::XMFLOAT3(1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f) }, // 2
+    { DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) }, // 3
+    { DirectX::XMFLOAT3(-1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) }, // 4
+    { DirectX::XMFLOAT3(-1.0f,  1.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f) }, // 5
+    { DirectX::XMFLOAT3(1.0f,  1.0f,  1.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f) }, // 6
+    { DirectX::XMFLOAT3(1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f) }  // 7
+  };
+
+  static WORD _Indices[36] = {
+    0, 1, 2, 0, 2, 3,
+    4, 6, 5, 4, 7, 6,
+    4, 5, 1, 4, 1, 0,
+    3, 2, 6, 3, 6, 7,
+    1, 5, 6, 1, 6, 2,
+    4, 0, 3, 4, 3, 7
+  };
 
   DX12Core* DX12Core::_Instance = new DX12Core();
 
   DescriptorAllocator g_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {
-      D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-      D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
+    D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+    D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
     D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
-      D3D12_DESCRIPTOR_HEAP_TYPE_DSV
+    D3D12_DESCRIPTOR_HEAP_TYPE_DSV
   };
 
-  DX12Core::DX12Core() {
+  DX12Core::DX12Core() :
+    _ScissorRect(CD3DX12_RECT(0, 0, LONG_MAX, LONG_MAX)),
+    _Viewport(CD3DX12_VIEWPORT(0.0f, 0.0f, _ClientWidth, _ClientHeight)),
+    _FoV(45.0f),
+    _ContentLoaded(false) {
     _CommandManager = new CommandManager();
     _ContextManager = new ContextManager();
     _GlobalDescriptorAllocator = GlobalDescriptorAllocator::Get();
     _WindowRect = RECT();
     g_CurrentBackBufferIndex = 0;
-    
-
 
     // TODO Constructor verbessern
   }
@@ -49,25 +78,27 @@ namespace Kame {
 
     ComPtr<IDXGIAdapter4> dxgiAdapter4 = GetAdapter(_UseWarp);
 
-    g_Device = CreateDevice(dxgiAdapter4);
+    _Device = CreateDevice(dxgiAdapter4);
 
-    _CommandManager->Create(g_Device.Get());
+    _CommandManager->Create(_Device.Get());
 
     g_SwapChain = CreateSwapChain(g_hWnd, _CommandManager->GetCommandQueue(), _ClientWidth, _ClientHeight, c_NumFrames);
 
     g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
-    g_RTVDescriptorHeap = CreateDescriptorHeap(g_Device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, c_NumFrames);
-    g_RTVDescriptorSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    g_RTVDescriptorHeap = CreateDescriptorHeap(_Device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, c_NumFrames);
+    g_RTVDescriptorSize = _Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-    UpdateRenderTargetViews(g_Device, g_SwapChain, g_RTVDescriptorHeap);
+    UpdateRenderTargetViews(_Device, g_SwapChain, g_RTVDescriptorHeap);
 
     for (int i = 0; i < c_NumFrames; ++i) {
-      g_CommandAllocator[i] = CreateCommandAllocator(g_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
+      g_CommandAllocator[i] = CreateCommandAllocator(_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
     }
-    g_CommandList = CreateCommandList(g_Device, g_CommandAllocator[g_CurrentBackBufferIndex], D3D12_COMMAND_LIST_TYPE_DIRECT);
+    g_CommandList = CreateCommandList(_Device, g_CommandAllocator[g_CurrentBackBufferIndex], D3D12_COMMAND_LIST_TYPE_DIRECT);
 
     _IsInitialized = true;
+
+    LoadContent();
 
   }
 
@@ -341,7 +372,208 @@ namespace Kame {
     WaitForFenceValue(fence, fenceValueForSignal, fenceEvent);
   }
 
+  void DX12Core::UpdateBufferResource(
+    ID3D12GraphicsCommandList* commandList,
+    ID3D12Resource** destinationResource,
+    ID3D12Resource** intermediateResource,
+    size_t numElements, size_t elementSize,
+    const void* bufferData,
+    D3D12_RESOURCE_FLAGS flags
+  ) {
+
+    size_t bufferSize = numElements * elementSize;
+
+    ThrowIfFailed(
+      _Device->CreateCommittedResource(
+        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+        D3D12_HEAP_FLAG_NONE,
+        &CD3DX12_RESOURCE_DESC::Buffer(bufferSize, flags),
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        nullptr,
+        IID_PPV_ARGS(destinationResource)
+      )
+    );
+
+    if (bufferData) {
+      ThrowIfFailed(
+        _Device->CreateCommittedResource(
+          &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+          D3D12_HEAP_FLAG_NONE,
+          &CD3DX12_RESOURCE_DESC::Buffer(bufferSize),
+          D3D12_RESOURCE_STATE_GENERIC_READ,
+          nullptr,
+          IID_PPV_ARGS(intermediateResource)
+        )
+      );
+
+      D3D12_SUBRESOURCE_DATA subresourceData = {};
+      subresourceData.pData = bufferData;
+      subresourceData.RowPitch = bufferSize;
+      subresourceData.SlicePitch = subresourceData.RowPitch;
+
+      UpdateSubresources(
+        commandList,
+        *destinationResource, *intermediateResource,
+        0, 0, 1, &subresourceData
+      );
+
+    }
+
+  }
+
+  bool DX12Core::LoadContent() {
+    CommandContext initContext = CommandContext::Begin(L"Test");
+    ID3D12GraphicsCommandList* commandList = initContext.GetCommandList();
+
+    ComPtr<ID3D12Resource> intermediateVertexBuffer;
+    UpdateBufferResource(commandList, &_VertexBuffer, &intermediateVertexBuffer, _countof(_Vertices), sizeof(VertexPosColor), _Vertices);
+
+    _VertexBufferView.BufferLocation = _VertexBuffer->GetGPUVirtualAddress();
+    _VertexBufferView.SizeInBytes = sizeof(_Vertices);
+    _VertexBufferView.StrideInBytes = sizeof(VertexPosColor);
+
+    ComPtr<ID3D12Resource> intermediateIndexBuffer;
+    UpdateBufferResource(commandList, &_IndexBuffer, &intermediateIndexBuffer, _countof(_Indices), sizeof(WORD), _Indices);
+
+    _IndexBufferView.BufferLocation = _IndexBuffer->GetGPUVirtualAddress();
+    _IndexBufferView.Format = DXGI_FORMAT_R16_UINT;
+    _IndexBufferView.SizeInBytes = sizeof(_Indices);
+
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+    dsvHeapDesc.NumDescriptors = 1;
+    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    ThrowIfFailed(_Device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&_DsvHeap)));
+
+    ComPtr<ID3DBlob> vertexShaderBlob;
+    ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Kame\\VertexShader.cso", &vertexShaderBlob));
+    ComPtr<ID3DBlob> pixelShaderBlob;
+    ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Kame\\PixelShader.cso", &pixelShaderBlob));
+
+    D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
+      {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+      {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
+    };
+
+    D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
+    featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+    if (FAILED(_Device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))) {
+      featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+    }
+    D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
+      D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+      D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+      D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+      D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+      D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+
+    CD3DX12_ROOT_PARAMETER1 rootParameters[1];
+    rootParameters[0].InitAsConstants(sizeof(DirectX::XMMATRIX) / 4, 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+
+    CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
+    rootSignatureDescription.Init_1_1(_countof(rootParameters), rootParameters, 0, nullptr, rootSignatureFlags);
+
+    ComPtr<ID3DBlob> rootSignatureBlob;
+    ComPtr<ID3DBlob> errorBlob;
+    ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDescription, featureData.HighestVersion, &rootSignatureBlob, &errorBlob));
+    ThrowIfFailed(_Device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&_RootSignature)));
+
+    struct PipelineStateStream {
+      CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
+      CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
+      CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
+      CD3DX12_PIPELINE_STATE_STREAM_VS VS;
+      CD3DX12_PIPELINE_STATE_STREAM_PS PS;
+      CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
+      CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
+    } pipelineStateStream;
+
+    D3D12_RT_FORMAT_ARRAY rtvFormats = {};
+    rtvFormats.NumRenderTargets = 1;
+    rtvFormats.RTFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+    pipelineStateStream.pRootSignature = _RootSignature.Get();
+    pipelineStateStream.InputLayout = { inputLayout, _countof(inputLayout) };
+    pipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    pipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
+    pipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
+    pipelineStateStream.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+    pipelineStateStream.RTVFormats = rtvFormats;
+
+    D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = { sizeof(PipelineStateStream), &pipelineStateStream };
+    ThrowIfFailed(_Device->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&_PipelineState)));
+
+    initContext.Finish(true);
+
+    _ContentLoaded = true;
+
+    ResizeDepthBuffer(_ClientWidth, _ClientHeight);
+
+    return true;
+  }
+
+  void DX12Core::ResizeDepthBuffer(int width, int height) {
+
+    if (_ContentLoaded) {
+
+      _CommandManager->IdleGpu();
+
+      width = std::max(1, width);
+      height = std::max(1, height);
+
+      auto device = _Device;
+
+      // Resize screen dependent resources.
+      // Create a depth buffer.
+      D3D12_CLEAR_VALUE optimizedClearValue = {};
+      optimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+      optimizedClearValue.DepthStencil = { 1.0f, 0 };
+
+      ThrowIfFailed(device->CreateCommittedResource(
+        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+        D3D12_HEAP_FLAG_NONE,
+        &CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, width, height,
+          1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        &optimizedClearValue,
+        IID_PPV_ARGS(&_DepthBuffer)
+      ));
+
+      // Update the depth-stencil view.
+      D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
+      dsv.Format = DXGI_FORMAT_D32_FLOAT;
+      dsv.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+      dsv.Texture2D.MipSlice = 0;
+      dsv.Flags = D3D12_DSV_FLAG_NONE;
+
+      device->CreateDepthStencilView(_DepthBuffer.Get(), &dsv,
+        _DsvHeap->GetCPUDescriptorHandleForHeapStart());
+
+    }
+
+  }
+
+  void DX12Core::GameUpdate() {
+
+    const DirectX::XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
+    _ModelMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(0));
+
+    // Update the view matrix.
+    const DirectX::XMVECTOR eyePosition = DirectX::XMVectorSet(0, 0, -10, 1);
+    const DirectX::XMVECTOR focusPoint = DirectX::XMVectorSet(0, 0, 0, 1);
+    const DirectX::XMVECTOR upDirection = DirectX::XMVectorSet(0, 1, 0, 0);
+    _ViewMatrix = DirectX::XMMatrixLookAtLH(eyePosition, focusPoint, upDirection);
+
+    // Update the projection matrix.
+    float aspectRatio = _ClientWidth / static_cast<float>(_ClientHeight);
+    _ProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(_FoV), aspectRatio, 0.1f, 100.0f);
+
+  }
+
   void DX12Core::Render() {
+
+    GameUpdate();
+
     auto commandAllocator = g_CommandAllocator[g_CurrentBackBufferIndex];
     //auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
     auto backBuffer1 = g_BackBuffers1[g_CurrentBackBufferIndex];
@@ -355,6 +587,8 @@ namespace Kame {
 
     //commandAllocator->Reset();
     //g_CommandList->Reset(commandAllocator.Get(), nullptr);
+
+    auto dsv = _DsvHeap->GetCPUDescriptorHandleForHeapStart();
 
     // Clear the render target.
     {
@@ -381,7 +615,32 @@ namespace Kame {
       //g_CommandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
       //myContext.ClearColor(rtv, clearColor);
       myContext.ClearColor(backBuffer1, clearColor);
+
+      myContext.GetCommandList()->ClearDepthStencilView(dsv, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
     }
+
+    auto commandList = myContext.GetCommandList();
+
+    commandList->SetPipelineState(_PipelineState.Get());
+    commandList->SetGraphicsRootSignature(_RootSignature.Get());
+
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetVertexBuffers(0, 1, &_VertexBufferView);
+    commandList->IASetIndexBuffer(&_IndexBufferView);
+
+    commandList->RSSetViewports(1, &_Viewport);
+    commandList->RSSetScissorRects(1, &_ScissorRect);
+
+    commandList->OMSetRenderTargets(1, &backBuffer1.GetRtv(), FALSE, &dsv);
+
+    // Update the MVP matrix
+    DirectX::XMMATRIX mvpMatrix = DirectX::XMMatrixMultiply(_ModelMatrix, _ViewMatrix);
+    mvpMatrix = XMMatrixMultiply(mvpMatrix, _ProjectionMatrix);
+    commandList->SetGraphicsRoot32BitConstants(0, sizeof(DirectX::XMMATRIX) / 4, &mvpMatrix, 0);
+
+    commandList->DrawIndexedInstanced(_countof(_Indices), 1, 0, 0, 0);
+
+
 
     // Present
     {
@@ -437,12 +696,17 @@ namespace Kame {
 
       g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
-      UpdateRenderTargetViews(g_Device, g_SwapChain, g_RTVDescriptorHeap);
+      UpdateRenderTargetViews(_Device, g_SwapChain, g_RTVDescriptorHeap);
+
+      // Game.OnResize
+      _Viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(_ClientWidth), static_cast<float>(_ClientHeight));
+
+      ResizeDepthBuffer(_ClientWidth, _ClientHeight);
     }
   }
 
   void DX12Core::ShutDown() {
-    
+
     _CommandManager->IdleGpu();
 
     _CommandManager->Shutdown();

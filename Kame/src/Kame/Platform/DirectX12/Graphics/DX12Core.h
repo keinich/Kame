@@ -40,7 +40,7 @@ namespace Kame {
     inline static ContextManager* GetContextManager() { return _Instance->_ContextManager; }
     inline static CommandManager* GetCommandManager() { return _Instance->_CommandManager; }
     inline static GlobalDescriptorAllocator* GetGlobalDescriptorAllocator() { return _Instance->_GlobalDescriptorAllocator; }
-    inline static ID3D12Device* GetDevice() { return _Instance->g_Device.Get(); }
+    inline static ID3D12Device* GetDevice() { return _Instance->_Device.Get(); }
 
     inline static D3D12_CPU_DESCRIPTOR_HANDLE AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count = 1) {
       return g_DescriptorAllocators[type].Allocate(count);
@@ -81,6 +81,21 @@ namespace Kame {
     );
     void Flush(ComPtr<ID3D12CommandQueue> commandQueue, ComPtr<ID3D12Fence> fence, uint64_t& fenceValue, HANDLE fenceEvent);
 
+    void UpdateBufferResource(
+      ID3D12GraphicsCommandList* commandList,
+      ID3D12Resource** destinationResource,
+      ID3D12Resource** intermediateResource,
+      size_t numElements, size_t elementSize,
+      const void* buffeDatar,
+      D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE
+    );
+
+    bool LoadContent();
+
+    void ResizeDepthBuffer(int width, int height);
+
+    void GameUpdate();
+
   private: // Fields
     static const uint8_t c_NumFrames = 3;
     bool _UseWarp = false;
@@ -93,7 +108,7 @@ namespace Kame {
     RECT _WindowRect;
 
     // DX12 Core Object
-    ComPtr<ID3D12Device2> g_Device;
+    ComPtr<ID3D12Device2> _Device;
     CommandManager* _CommandManager;
     ContextManager* _ContextManager;
     GlobalDescriptorAllocator* _GlobalDescriptorAllocator;
@@ -108,10 +123,31 @@ namespace Kame {
 
     uint64_t g_FrameFenceValues[c_NumFrames] = {};
 
+    CD3DX12_RECT _ScissorRect;
+    CD3DX12_VIEWPORT _Viewport;
+    float _FoV;
+    bool _ContentLoaded;
+    D3D12_VERTEX_BUFFER_VIEW _VertexBufferView;
+    ComPtr<ID3D12Resource> _VertexBuffer;
+    D3D12_INDEX_BUFFER_VIEW _IndexBufferView;
+    ComPtr<ID3D12Resource> _IndexBuffer;
+
+    ComPtr<ID3D12Resource> _DepthBuffer;
+    ComPtr<ID3D12DescriptorHeap> _DsvHeap;
+
+    ComPtr<ID3D12RootSignature> _RootSignature;
+    ComPtr<ID3D12PipelineState> _PipelineState;
+
     bool g_VSync = true;
     bool _TearingSupported = false;
     bool _Fullscreen = false;
     bool _TogglingFullscreen = false;
+
+    float m_FoV;
+
+    DirectX::XMMATRIX _ModelMatrix;
+    DirectX::XMMATRIX _ViewMatrix;
+    DirectX::XMMATRIX _ProjectionMatrix;
 
   };
 

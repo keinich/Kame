@@ -197,4 +197,8 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.cpp" />
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Shaders\VertexShader.hlsl" />
+    <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Shaders\PixelShader.hlsl" />
+  </ItemGroup>
 </Project>

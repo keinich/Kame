@@ -44,9 +44,12 @@
 
 #ifdef KAME_PLATFORM_DIRECTX12
 
+#include <initguid.h>
+
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include "Kame/Platform/DirectX12/Graphics/dxd12.h"
+#include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include "Kame/Platform/DirectX12/Math/DX12Math.h"
 
@@ -54,6 +57,7 @@
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "D3DCompiler.lib")
 
 #include <DirectXMath.h>
 
