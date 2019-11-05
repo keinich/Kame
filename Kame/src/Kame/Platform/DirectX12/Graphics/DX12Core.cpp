@@ -86,10 +86,11 @@ namespace Kame {
 
     g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
-    g_RTVDescriptorHeap = CreateDescriptorHeap(_Device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, c_NumFrames);
-    g_RTVDescriptorSize = _Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    //g_RTVDescriptorHeap = CreateDescriptorHeap(_Device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, c_NumFrames);
+    //g_RTVDescriptorSize = _Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-    UpdateRenderTargetViews(_Device, g_SwapChain, g_RTVDescriptorHeap);
+    //UpdateRenderTargetViews(_Device, g_SwapChain, g_RTVDescriptorHeap);
+    UpdateRenderTargetViews(_Device, g_SwapChain);
 
     for (int i = 0; i < c_NumFrames; ++i) {
       g_CommandAllocator[i] = CreateCommandAllocator(_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
@@ -288,12 +289,11 @@ namespace Kame {
 
   void DX12Core::UpdateRenderTargetViews(
     ComPtr<ID3D12Device2> device,
-    ComPtr<IDXGISwapChain4> swapChain,
-    ComPtr<ID3D12DescriptorHeap> descriptorHeap
+    ComPtr<IDXGISwapChain4> swapChain
   ) {
     auto rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(descriptorHeap->GetCPUDescriptorHandleForHeapStart());
+    //CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(descriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
     for (int i = 0; i < c_NumFrames; ++i) {
       ComPtr<ID3D12Resource> backBuffer;
@@ -305,7 +305,7 @@ namespace Kame {
 
       //g_BackBuffers[i] = backBuffer;
 
-      rtvHandle.Offset(rtvDescriptorSize);
+      //rtvHandle.Offset(rtvDescriptorSize);
 
     }
   }
@@ -555,8 +555,11 @@ namespace Kame {
 
   void DX12Core::GameUpdate() {
 
+    static float angle = 0.0f;
+    angle += 0.1;
+
     const DirectX::XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
-    _ModelMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(0));
+    _ModelMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
 
     // Update the view matrix.
     const DirectX::XMVECTOR eyePosition = DirectX::XMVectorSet(0, 0, -10, 1);
@@ -607,10 +610,10 @@ namespace Kame {
 
       FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
       // the rtv is in the g_SceneColorBuffer
-      CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(
+      /*CD3DX12_CPU_DESCRIPTOR_HANDLE rtv(
         g_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-        g_CurrentBackBufferIndex, g_RTVDescriptorSize
-      );
+        g_CurrentBackBufferIndex
+      );*/
 
       //g_CommandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
       //myContext.ClearColor(rtv, clearColor);
@@ -696,7 +699,8 @@ namespace Kame {
 
       g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
-      UpdateRenderTargetViews(_Device, g_SwapChain, g_RTVDescriptorHeap);
+      //UpdateRenderTargetViews(_Device, g_SwapChain, g_RTVDescriptorHeap);
+      UpdateRenderTargetViews(_Device, g_SwapChain);
 
       // Game.OnResize
       _Viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(_ClientWidth), static_cast<float>(_ClientHeight));
