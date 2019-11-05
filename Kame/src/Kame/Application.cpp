@@ -102,8 +102,8 @@ namespace Kame {
       glClearColor(1, 0, 1, 1);
       glClear(GL_COLOR_BUFFER_BIT);
 #else
-      DX12Core* dxTest = DX12Core::Get();
-      dxTest->Init();
+      //DX12Core* dxTest = DX12Core::Get();
+      DX12Core::Get()->Init();
 #endif      
 
       _Window->Show();

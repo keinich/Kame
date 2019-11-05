@@ -422,7 +422,7 @@ namespace Kame {
   }
 
   bool DX12Core::LoadContent() {
-    CommandContext initContext = CommandContext::Begin(L"Test");
+    CommandContext& initContext = CommandContext::Begin(L"Test");
     ID3D12GraphicsCommandList* commandList = initContext.GetCommandList();
 
     ComPtr<ID3D12Resource> intermediateVertexBuffer;
