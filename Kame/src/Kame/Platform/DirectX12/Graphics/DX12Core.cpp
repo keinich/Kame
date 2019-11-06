@@ -529,6 +529,8 @@ namespace Kame {
       optimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
       optimizedClearValue.DepthStencil = { 1.0f, 0 };
 
+      _SceneDepthBuffer.Create(L"SceneDepthBuffer", width, height, DXGI_FORMAT_D32_FLOAT);
+
       ThrowIfFailed(device->CreateCommittedResource(
         &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
         D3D12_HEAP_FLAG_NONE,
@@ -592,6 +594,7 @@ namespace Kame {
     //g_CommandList->Reset(commandAllocator.Get(), nullptr);
 
     auto dsv = _DsvHeap->GetCPUDescriptorHandleForHeapStart();
+    //dsv = _SceneDepthBuffer.GetDsv();
 
     // Clear the render target.
     {
@@ -619,7 +622,8 @@ namespace Kame {
       //myContext.ClearColor(rtv, clearColor);
       myContext.ClearColor(backBuffer1, clearColor);
 
-      myContext.GetCommandList()->ClearDepthStencilView(dsv, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+      //myContext.GetCommandList()->ClearDepthStencilView(dsv, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+      myContext.ClearDepth(_SceneDepthBuffer);
     }
 
     auto commandList = myContext.GetCommandList();
@@ -634,7 +638,10 @@ namespace Kame {
     commandList->RSSetViewports(1, &_Viewport);
     commandList->RSSetScissorRects(1, &_ScissorRect);
 
-    commandList->OMSetRenderTargets(1, &backBuffer1.GetRtv(), FALSE, &dsv);
+    //commandList->OMSetRenderTargets(1, &backBuffer1.GetRtv(), FALSE, &dsv);
+    myContext.SetRenderTarget(backBuffer1.GetRtv(), _SceneDepthBuffer.GetDsv());
+    // TODO : egtl gfxContext.SetRenderTarget(g_SceneColorBuffer.GetRTV(), g_SceneDepthBuffer.GetDSV_DepthReadOnly());
+
 
     // Update the MVP matrix
     DirectX::XMMATRIX mvpMatrix = DirectX::XMMatrixMultiply(_ModelMatrix, _ViewMatrix);

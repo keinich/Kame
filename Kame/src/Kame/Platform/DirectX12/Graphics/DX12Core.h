@@ -5,6 +5,7 @@
 #include <cstdint>
 
 #include "ColorBuffer.h"
+#include "DepthBuffer.h"
 #include "DescriptorAllocator.h"
 
 namespace Kame {
@@ -137,6 +138,9 @@ namespace Kame {
     // Depth Stuff
     ComPtr<ID3D12Resource> _DepthBuffer;
     ComPtr<ID3D12DescriptorHeap> _DsvHeap;
+
+    DepthBuffer _SceneDepthBuffer;
+
 
     ComPtr<ID3D12RootSignature> _RootSignature;
     ComPtr<ID3D12PipelineState> _PipelineState;
