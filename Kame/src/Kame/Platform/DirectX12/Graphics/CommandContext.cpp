@@ -16,6 +16,8 @@ namespace Kame {
   }
 
   void CommandContext::Reset() {
+    assert(_CommandList != nullptr && _CurrentAllocator == nullptr);
+
     _CurrentAllocator = DX12Core::GetCommandManager()->GetQueue(_Type).RequestAllocator();
     _CommandList->Reset(_CurrentAllocator, nullptr);
   }

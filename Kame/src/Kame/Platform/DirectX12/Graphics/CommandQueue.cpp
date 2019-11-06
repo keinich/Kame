@@ -55,10 +55,10 @@ namespace Kame {
   }
 
   uint64_t CommandQueue::Signal() {
-    uint64_t fenceValueForSignal = ++_NextFenceValue;
+    //uint64_t fenceValueForSignal = ++_NextFenceValue;
     ThrowIfFailed(_CommandQueue->Signal(_Fence.Get(), _NextFenceValue));
 
-    return fenceValueForSignal;
+    return _NextFenceValue++;
   }
 
   void CommandQueue::WaitForFence(uint64_t fenceValue) {
