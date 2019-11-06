@@ -92,10 +92,10 @@ namespace Kame {
     //UpdateRenderTargetViews(_Device, g_SwapChain, g_RTVDescriptorHeap);
     UpdateRenderTargetViews(_Device, g_SwapChain);
 
-    for (int i = 0; i < c_NumFrames; ++i) {
-      g_CommandAllocator[i] = CreateCommandAllocator(_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
-    }
-    g_CommandList = CreateCommandList(_Device, g_CommandAllocator[g_CurrentBackBufferIndex], D3D12_COMMAND_LIST_TYPE_DIRECT);
+    //for (int i = 0; i < c_NumFrames; ++i) {
+    //  g_CommandAllocator[i] = CreateCommandAllocator(_Device, D3D12_COMMAND_LIST_TYPE_DIRECT);
+    //}
+    //g_CommandList = CreateCommandList(_Device, g_CommandAllocator[g_CurrentBackBufferIndex], D3D12_COMMAND_LIST_TYPE_DIRECT);
 
     _IsInitialized = true;
 
@@ -577,7 +577,7 @@ namespace Kame {
 
     GameUpdate();
 
-    auto commandAllocator = g_CommandAllocator[g_CurrentBackBufferIndex];
+    //auto commandAllocator = g_CommandAllocator[g_CurrentBackBufferIndex];
     //auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
     auto backBuffer1 = g_BackBuffers1[g_CurrentBackBufferIndex];
 
@@ -585,8 +585,8 @@ namespace Kame {
     GraphicsContext& myContext = GraphicsContext::Begin(L"Main Loop");
 
     // TODO zum rantasten
-    g_CommandList = myContext.GetCommandList();
-    commandAllocator = myContext.GetCurrentAllocator();
+    //g_CommandList = myContext.GetCommandList();
+    auto commandAllocator = myContext.GetCurrentAllocator();
 
     //commandAllocator->Reset();
     //g_CommandList->Reset(commandAllocator.Get(), nullptr);

@@ -113,25 +113,28 @@ namespace Kame {
     ContextManager* _ContextManager;
     GlobalDescriptorAllocator* _GlobalDescriptorAllocator;
     ComPtr<IDXGISwapChain4> g_SwapChain;
-    ComPtr<ID3D12Resource> g_BackBuffers[c_NumFrames];
+    //ComPtr<ID3D12Resource> g_BackBuffers[c_NumFrames];
     ColorBuffer g_BackBuffers1[c_NumFrames];
-    ComPtr<ID3D12GraphicsCommandList> g_CommandList;
-    ComPtr<ID3D12CommandAllocator> g_CommandAllocator[c_NumFrames];
-    ComPtr<ID3D12DescriptorHeap> g_RTVDescriptorHeap;
-    UINT g_RTVDescriptorSize;
+    //ComPtr<ID3D12GraphicsCommandList> g_CommandList;
+    //ComPtr<ID3D12CommandAllocator> g_CommandAllocator[c_NumFrames];
+    //ComPtr<ID3D12DescriptorHeap> g_RTVDescriptorHeap;
+    //UINT g_RTVDescriptorSize;
     UINT g_CurrentBackBufferIndex;
 
     uint64_t g_FrameFenceValues[c_NumFrames] = {};
 
     CD3DX12_RECT _ScissorRect;
     CD3DX12_VIEWPORT _Viewport;
-    float _FoV;
+
     bool _ContentLoaded;
+
+    // Mesh Stuff
     D3D12_VERTEX_BUFFER_VIEW _VertexBufferView;
     ComPtr<ID3D12Resource> _VertexBuffer;
     D3D12_INDEX_BUFFER_VIEW _IndexBufferView;
     ComPtr<ID3D12Resource> _IndexBuffer;
 
+    // Depth Stuff
     ComPtr<ID3D12Resource> _DepthBuffer;
     ComPtr<ID3D12DescriptorHeap> _DsvHeap;
 
@@ -142,8 +145,9 @@ namespace Kame {
     bool _TearingSupported = false;
     bool _Fullscreen = false;
     bool _TogglingFullscreen = false;
-
-    float m_FoV;
+    
+    // Camera Stuff
+    float _FoV;
 
     DirectX::XMMATRIX _ModelMatrix;
     DirectX::XMMATRIX _ViewMatrix;
