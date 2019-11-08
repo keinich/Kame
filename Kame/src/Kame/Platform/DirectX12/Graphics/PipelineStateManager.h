@@ -6,6 +6,8 @@ namespace Kame {
 
   class PipelineStateManager {
 
+    friend class GraphicsPipelineState;
+
   public: // Functions
 
     static PipelineStateManager* Get() {
@@ -14,9 +16,12 @@ namespace Kame {
       return _Instance;
     }
 
-    inline std::map<size_t, ComPtr<ID3D12PipelineState> >* GetGraphicsPsoHashMap() { return &_GraphicsPSOHashMap; }
 
     void DestroyAll();
+
+  private: // Functions
+
+    inline std::map<size_t, ComPtr<ID3D12PipelineState> >* GetGraphicsPsoHashMap() { return &_GraphicsPSOHashMap; }
 
   private: // Fields
 

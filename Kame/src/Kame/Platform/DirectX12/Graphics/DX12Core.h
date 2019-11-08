@@ -139,14 +139,14 @@ namespace Kame {
     ComPtr<ID3D12Resource> _IndexBuffer;
 
     // Depth Stuff
-    ComPtr<ID3D12Resource> _DepthBuffer;
-    ComPtr<ID3D12DescriptorHeap> _DsvHeap;
+    //ComPtr<ID3D12Resource> _DepthBuffer;
+    //ComPtr<ID3D12DescriptorHeap> _DsvHeap;
 
     DepthBuffer _SceneDepthBuffer;
 
 
     ComPtr<ID3D12RootSignature> _RootSignature;
-    ComPtr<ID3D12PipelineState> _PipelineState;
+    //ComPtr<ID3D12PipelineState> _PipelineState;
     GraphicsPipelineState _PipelineState1;
     PipelineStateManager* _PipelineStateManager;
     //GraphicsPipelineState _PipelineState2;

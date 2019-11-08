@@ -444,11 +444,11 @@ namespace Kame {
     _IndexBufferView.Format = DXGI_FORMAT_R16_UINT;
     _IndexBufferView.SizeInBytes = sizeof(_Indices);
 
-    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-    dsvHeapDesc.NumDescriptors = 1;
-    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-    dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    ThrowIfFailed(_Device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&_DsvHeap)));
+    //D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+    //dsvHeapDesc.NumDescriptors = 1;
+    //dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    //dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    //ThrowIfFailed(_Device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&_DsvHeap)));
 
     ComPtr<ID3DBlob> vertexShaderBlob;
     ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Kame\\VertexShader.cso", &vertexShaderBlob));
@@ -500,17 +500,17 @@ namespace Kame {
     rtvFormats.NumRenderTargets = 1;
     rtvFormats.RTFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-    pipelineStateStream.pRootSignature = _RootSignature.Get();
-    pipelineStateStream.InputLayout = { inputLayout, _countof(inputLayout) };
-    pipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    pipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
-    pipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
-    pipelineStateStream.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-    pipelineStateStream.RTVFormats = rtvFormats;
+    //pipelineStateStream.pRootSignature = _RootSignature.Get();
+    //pipelineStateStream.InputLayout = { inputLayout, _countof(inputLayout) };
+    //pipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    //pipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
+    //pipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
+    //pipelineStateStream.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+    //pipelineStateStream.RTVFormats = rtvFormats;
 
 
-    D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = { sizeof(PipelineStateStream), &pipelineStateStream };
-    ThrowIfFailed(_Device->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&_PipelineState)));
+    //D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = { sizeof(PipelineStateStream), &pipelineStateStream };
+    //ThrowIfFailed(_Device->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&_PipelineState)));
 
 
     _PipelineState1.SetRootSignature(_RootSignature.Get());
@@ -561,25 +561,25 @@ namespace Kame {
 
       _SceneDepthBuffer.Create(L"SceneDepthBuffer", width, height, DXGI_FORMAT_D32_FLOAT);
 
-      ThrowIfFailed(device->CreateCommittedResource(
-        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-        D3D12_HEAP_FLAG_NONE,
-        &CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, width, height,
-          1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        &optimizedClearValue,
-        IID_PPV_ARGS(&_DepthBuffer)
-      ));
+      //ThrowIfFailed(device->CreateCommittedResource(
+      //  &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+      //  D3D12_HEAP_FLAG_NONE,
+      //  &CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, width, height,
+      //    1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL),
+      //  D3D12_RESOURCE_STATE_DEPTH_WRITE,
+      //  &optimizedClearValue,
+      //  IID_PPV_ARGS(&_DepthBuffer)
+      //));
 
-      // Update the depth-stencil view.
-      D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
-      dsv.Format = DXGI_FORMAT_D32_FLOAT;
-      dsv.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-      dsv.Texture2D.MipSlice = 0;
-      dsv.Flags = D3D12_DSV_FLAG_NONE;
+      //// Update the depth-stencil view.
+      //D3D12_DEPTH_STENCIL_VIEW_DESC dsv = {};
+      //dsv.Format = DXGI_FORMAT_D32_FLOAT;
+      //dsv.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+      //dsv.Texture2D.MipSlice = 0;
+      //dsv.Flags = D3D12_DSV_FLAG_NONE;
 
-      device->CreateDepthStencilView(_DepthBuffer.Get(), &dsv,
-        _DsvHeap->GetCPUDescriptorHandleForHeapStart());
+      //device->CreateDepthStencilView(_DepthBuffer.Get(), &dsv,
+      //  _DsvHeap->GetCPUDescriptorHandleForHeapStart());
 
     }
 
@@ -623,7 +623,7 @@ namespace Kame {
     //commandAllocator->Reset();
     //g_CommandList->Reset(commandAllocator.Get(), nullptr);
 
-    auto dsv = _DsvHeap->GetCPUDescriptorHandleForHeapStart();
+    //auto dsv = _DsvHeap->GetCPUDescriptorHandleForHeapStart();
     //dsv = _SceneDepthBuffer.GetDsv();
 
     // Clear the render target.
@@ -658,8 +658,8 @@ namespace Kame {
 
     auto commandList = myContext.GetCommandList();
 
-    commandList->SetPipelineState(_PipelineState.Get());
-    //commandList->SetPipelineState(_PipelineState1.GetPipelineState());
+    //commandList->SetPipelineState(_PipelineState.Get());
+    commandList->SetPipelineState(_PipelineState1.GetPipelineState());
 
 
     commandList->SetGraphicsRootSignature(_RootSignature.Get());

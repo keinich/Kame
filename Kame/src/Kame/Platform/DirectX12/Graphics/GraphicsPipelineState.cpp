@@ -97,14 +97,14 @@ void Kame::GraphicsPipelineState::Finalize() {
     bool firstCompile = false;
     static std::mutex hashMapMutex;
     std::lock_guard <std::mutex> cs(hashMapMutex);
-    auto graphicsPsoHashMap = *DX12Core::GetPipelineStateManager()->GetGraphicsPsoHashMap();
+    //auto graphicsPsoHashMap = DX12Core::GetPipelineStateManager()->_GraphicsPSOHashMap;
     //auto graphicsPsoHashMap = s_GraphicsPSOHashMap;
     
-    auto entry = graphicsPsoHashMap.find(hashCode);
+    auto entry = DX12Core::GetPipelineStateManager()->_GraphicsPSOHashMap.find(hashCode);
 
-    if (entry == graphicsPsoHashMap.end()) {
+    if (entry == DX12Core::GetPipelineStateManager()->_GraphicsPSOHashMap.end()) {
       firstCompile = true;
-      psoRef = graphicsPsoHashMap[hashCode].GetAddressOf();
+      psoRef = DX12Core::GetPipelineStateManager()->_GraphicsPSOHashMap[hashCode].GetAddressOf();
     }
     else {
       psoRef = entry->second.GetAddressOf();
@@ -113,7 +113,7 @@ void Kame::GraphicsPipelineState::Finalize() {
     if (firstCompile) {
       D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = { sizeof(PipelineStateStream), &_PipelineStateStream };
       ThrowIfFailed(DX12Core::GetDevice()->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&_Pso)));
-      graphicsPsoHashMap[hashCode].Attach(_Pso);
+      DX12Core::GetPipelineStateManager()->_GraphicsPSOHashMap[hashCode].Attach(_Pso);
     }
     else {
       while (*psoRef == nullptr)

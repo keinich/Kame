@@ -10,8 +10,7 @@ namespace Kame {
     ColorBuffer() {
       _RtvHandle.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
     }
-
-    // TODO remove rtv
+    
     void CreateFromSwapChain(const std::wstring& name, ID3D12Resource* baseResource);
 
     const D3D12_CPU_DESCRIPTOR_HANDLE GetRtv() const { return _RtvHandle; };
