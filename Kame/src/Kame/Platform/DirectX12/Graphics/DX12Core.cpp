@@ -9,7 +9,8 @@
 #include "GraphicsContext.h"
 
 #include "ColorBuffer.h"
-
+#include "GraphicsCommon.h"
+#include "PipelineStateManager.h"
 
 
 namespace Kame {
@@ -56,6 +57,7 @@ namespace Kame {
     _CommandManager = new CommandManager();
     _ContextManager = new ContextManager();
     _GlobalDescriptorAllocator = GlobalDescriptorAllocator::Get();
+    _PipelineStateManager = PipelineStateManager::Get();
     _WindowRect = RECT();
     g_CurrentBackBufferIndex = 0;
 
@@ -66,6 +68,7 @@ namespace Kame {
     delete _CommandManager;
     delete _ContextManager;
     delete _GlobalDescriptorAllocator;
+    delete _PipelineStateManager;
   }
 
   void DX12Core::Init() {
@@ -98,6 +101,8 @@ namespace Kame {
     //g_CommandList = CreateCommandList(_Device, g_CommandAllocator[g_CurrentBackBufferIndex], D3D12_COMMAND_LIST_TYPE_DIRECT);
 
     _IsInitialized = true;
+
+    GraphicsCommon::InitializeCommonState();
 
     LoadContent();
 
@@ -478,6 +483,8 @@ namespace Kame {
     ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDescription, featureData.HighestVersion, &rootSignatureBlob, &errorBlob));
     ThrowIfFailed(_Device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&_RootSignature)));
 
+    // Pipeline State 
+
     struct PipelineStateStream {
       CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
       CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
@@ -486,6 +493,7 @@ namespace Kame {
       CD3DX12_PIPELINE_STATE_STREAM_PS PS;
       CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
       CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
+      CD3DX12_PIPELINE_STATE_STREAM_RASTERIZER RasterizerState;
     } pipelineStateStream;
 
     D3D12_RT_FORMAT_ARRAY rtvFormats = {};
@@ -500,8 +508,30 @@ namespace Kame {
     pipelineStateStream.DSVFormat = DXGI_FORMAT_D32_FLOAT;
     pipelineStateStream.RTVFormats = rtvFormats;
 
+
     D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = { sizeof(PipelineStateStream), &pipelineStateStream };
     ThrowIfFailed(_Device->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&_PipelineState)));
+
+
+    _PipelineState1.SetRootSignature(_RootSignature.Get());
+    _PipelineState1.SetRasterizerState(GraphicsCommon::RasterizerDefault);
+    //_PipelineState1.SetBlendState(BlendNoColorWrite);
+    //_PipelineState1.SetDepthStencilState(DepthStateReadWrite);
+    _PipelineState1.SetInputLayout(_countof(inputLayout), inputLayout);
+    _PipelineState1.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+    _PipelineState1.SetRenderTargetFormat(rtvFormats, DXGI_FORMAT_D32_FLOAT);
+    //_PipelineState1.SetVertexShader(vertexShaderBlob.Get(), sizeof(vertexShaderBlob.Get()));
+    _PipelineState1.SetVertexShader(CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get()));
+    //_PipelineState1.SetPixelShader(pixelShaderBlob.Get(), sizeof(pixelShaderBlob.Get()));
+    _PipelineState1.SetPixelShader(CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get()));
+    _PipelineState1.Finalize();
+
+    GraphicsPipelineState test;
+    test = _PipelineState1;
+    test.Finalize();
+    _PipelineState1 = test;
+
+    // Pipeline State Ende
 
     initContext.Finish(true);
 
@@ -629,6 +659,9 @@ namespace Kame {
     auto commandList = myContext.GetCommandList();
 
     commandList->SetPipelineState(_PipelineState.Get());
+    //commandList->SetPipelineState(_PipelineState1.GetPipelineState());
+
+
     commandList->SetGraphicsRootSignature(_RootSignature.Get());
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -718,11 +751,26 @@ namespace Kame {
 
   void DX12Core::ShutDown() {
 
+    //CommandContext::DestroyAllContexts(); // TODO
+
     _CommandManager->IdleGpu();
 
     _CommandManager->Shutdown();
 
     _GlobalDescriptorAllocator->Shutdown();
+
+    g_SwapChain->Release();
+
+    _PipelineStateManager->DestroyAll();
+
+    GraphicsPipelineState::DestroyAll();
+
+    //for (UINT i = 0; i < c_NumFrames; ++i) {
+    //  g_BackBuffers1[i].Destroy();
+    //}
+
+    _Device->Release();
+    _Device = nullptr;
 
     _IsInitialized = false;
   }

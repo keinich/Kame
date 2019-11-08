@@ -134,6 +134,12 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Math\Vector3.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Math\DX12Math.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DepthBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GraphicsPipelineState.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.h" />
+    <ClInclude Include="src\Kame\Utility\Hash.h" />
+    <ClInclude Include="src\Kame\Math\MathCommon.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -198,6 +204,10 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.cpp" />
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DepthBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsPipelineState.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Shaders\VertexShader.hlsl" />

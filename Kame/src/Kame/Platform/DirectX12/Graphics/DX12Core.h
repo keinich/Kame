@@ -7,11 +7,13 @@
 #include "ColorBuffer.h"
 #include "DepthBuffer.h"
 #include "DescriptorAllocator.h"
+#include "GraphicsPipelineState.h"
 
 namespace Kame {
 
   class CommandManager;
   class ContextManager;
+  class PipelineStateManager;
 
   extern DescriptorAllocator g_DescriptorAllocators[];
 
@@ -41,7 +43,8 @@ namespace Kame {
     inline static ContextManager* GetContextManager() { return _Instance->_ContextManager; }
     inline static CommandManager* GetCommandManager() { return _Instance->_CommandManager; }
     inline static GlobalDescriptorAllocator* GetGlobalDescriptorAllocator() { return _Instance->_GlobalDescriptorAllocator; }
-    inline static ID3D12Device* GetDevice() { return _Instance->_Device.Get(); }
+    inline static ID3D12Device2* GetDevice() { return _Instance->_Device.Get(); }
+    inline static PipelineStateManager* GetPipelineStateManager() { return _Instance->_PipelineStateManager; }
 
     inline static D3D12_CPU_DESCRIPTOR_HANDLE AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count = 1) {
       return g_DescriptorAllocators[type].Allocate(count);
@@ -144,6 +147,9 @@ namespace Kame {
 
     ComPtr<ID3D12RootSignature> _RootSignature;
     ComPtr<ID3D12PipelineState> _PipelineState;
+    GraphicsPipelineState _PipelineState1;
+    PipelineStateManager* _PipelineStateManager;
+    //GraphicsPipelineState _PipelineState2;
 
     bool g_VSync = true;
     bool _TearingSupported = false;
