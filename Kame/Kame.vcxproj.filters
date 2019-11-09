@@ -145,6 +145,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator_3dgep.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocation.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">

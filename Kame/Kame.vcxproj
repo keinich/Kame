@@ -158,6 +158,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocation.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator_3dgep.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h" />
     <ClInclude Include="src\Kame\Utility\Hash.h" />
