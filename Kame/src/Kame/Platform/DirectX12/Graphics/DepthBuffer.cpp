@@ -37,8 +37,8 @@ void Kame::DepthBuffer::CreateDerivedViews(DXGI_FORMAT format) {
   }
 
   if (_cpuDescriptorHandles[0].ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN) {
-    _cpuDescriptorHandles[0] = DX12Core::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-    _cpuDescriptorHandles[1] = DX12Core::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+    _cpuDescriptorHandles[0] = DX12Core::Get()->AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+    _cpuDescriptorHandles[1] = DX12Core::Get()->AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
   }
 
   dsvDesc.Flags = D3D12_DSV_FLAG_NONE;

@@ -7,6 +7,7 @@
 #include "ColorBuffer.h"
 #include "DepthBuffer.h"
 #include "DescriptorAllocator.h"
+#include "DescriptorAllocator_3dgep.h"
 #include "GraphicsPipelineState.h"
 
 namespace Kame {
@@ -14,8 +15,7 @@ namespace Kame {
   class CommandManager;
   class ContextManager;
   class PipelineStateManager;
-
-  extern DescriptorAllocator g_DescriptorAllocators[];
+  class DescriptorAllocator_3dgep;
 
   class KAME_API DX12Core {
 
@@ -46,9 +46,7 @@ namespace Kame {
     inline static ID3D12Device2* GetDevice() { return _Instance->_Device.Get(); }
     inline static PipelineStateManager* GetPipelineStateManager() { return _Instance->_PipelineStateManager; }
 
-    inline static D3D12_CPU_DESCRIPTOR_HANDLE AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count = 1) {
-      return g_DescriptorAllocators[type].Allocate(count);
-    }
+    inline D3D12_CPU_DESCRIPTOR_HANDLE AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count = 1);
 
     inline const bool IsTogglingFullscreen() const { return _TogglingFullscreen; }
     inline const void FinishTogglingFullscreen() { _TogglingFullscreen = false; }
@@ -100,6 +98,8 @@ namespace Kame {
 
     void GameUpdate();
 
+    void ReleaseStaleDescriptors(uint64_t finishedFrame);
+
   private: // Fields
     static const uint8_t c_NumFrames = 3;
     bool _UseWarp = false;
@@ -150,6 +150,8 @@ namespace Kame {
     GraphicsPipelineState _PipelineState1;
     PipelineStateManager* _PipelineStateManager;
     //GraphicsPipelineState _PipelineState2;
+
+    std::unique_ptr<DescriptorAllocator_3dgep> _DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
 
     bool g_VSync = true;
     bool _TearingSupported = false;

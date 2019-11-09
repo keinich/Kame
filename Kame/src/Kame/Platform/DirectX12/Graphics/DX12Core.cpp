@@ -6,6 +6,7 @@
 #include "CommandManager.h"
 #include "ContextManager.h"
 #include "DescriptorAllocator.h"
+#include "DescriptorAllocator_3dgep.h"
 #include "GraphicsContext.h"
 
 #include "ColorBuffer.h"
@@ -42,12 +43,12 @@ namespace Kame {
 
   DX12Core* DX12Core::_Instance = new DX12Core();
 
-  DescriptorAllocator g_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {
-    D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-    D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
-    D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
-    D3D12_DESCRIPTOR_HEAP_TYPE_DSV
-  };
+  //std::unique_ptr<DescriptorAllocator_3dgep> g_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {
+  //  D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+  //  D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
+  //  D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+  //  D3D12_DESCRIPTOR_HEAP_TYPE_DSV
+  //};
 
   DX12Core::DX12Core() :
     _ScissorRect(CD3DX12_RECT(0, 0, LONG_MAX, LONG_MAX)),
@@ -89,6 +90,10 @@ namespace Kame {
 
     g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
+    for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
+      _DescriptorAllocators[i] = std::make_unique<DescriptorAllocator_3dgep>(static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
+    }
+
     //g_RTVDescriptorHeap = CreateDescriptorHeap(_Device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, c_NumFrames);
     //g_RTVDescriptorSize = _Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
@@ -106,6 +111,10 @@ namespace Kame {
 
     LoadContent();
 
+  }
+
+  inline D3D12_CPU_DESCRIPTOR_HANDLE DX12Core::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count) {
+    return _DescriptorAllocators[type]->Allocate(count).GetDescriptorHandle();
   }
 
   void DX12Core::EnableDebugLayer() {
@@ -605,6 +614,14 @@ namespace Kame {
 
   }
 
+  void DX12Core::ReleaseStaleDescriptors(uint64_t finishedFrame) {
+
+    for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
+      _DescriptorAllocators[i]->ReleaseStaleDescriptors(finishedFrame);
+    }
+
+  }
+
   void DX12Core::Render() {
 
     GameUpdate();
@@ -713,6 +730,8 @@ namespace Kame {
       g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
       _CommandManager->GetGraphicsQueue().WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]); // TODO where does the Mini-Engine wait?
+
+      ReleaseStaleDescriptors(g_FrameFenceValues[g_CurrentBackBufferIndex]);
     }
   }
 
