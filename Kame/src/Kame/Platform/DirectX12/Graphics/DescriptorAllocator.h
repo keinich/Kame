@@ -8,7 +8,8 @@ namespace Kame {
 
     DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) :
       _Type(type),
-      _CurrentHeap(nullptr) {}
+      _CurrentHeap(nullptr) {
+    }
 
     ~DescriptorAllocator() {
 
@@ -18,7 +19,7 @@ namespace Kame {
   protected: // Functions
 
 
-  protected: // Fields    
+  protected: // Fields
 
     D3D12_DESCRIPTOR_HEAP_TYPE _Type;
     ID3D12DescriptorHeap* _CurrentHeap;

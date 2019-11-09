@@ -25,6 +25,8 @@ namespace Kame {
     KM_CORE_ASSERT(!s_Instance, "Application already exists!");
     s_Instance = this;
 
+    _FrameCount = 0;
+
     //_Window = std::unique_ptr<Window>(Window::Create());
     //_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
@@ -45,6 +47,8 @@ namespace Kame {
   }
 
   void Application::Update() {
+
+    ++_FrameCount;
 
     for (Layer* layer : _LayerStack)
       layer->OnUpdate();

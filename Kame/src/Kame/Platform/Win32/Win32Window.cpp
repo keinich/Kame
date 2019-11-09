@@ -121,6 +121,7 @@ namespace Kame {
       }
 
       case WM_PAINT:
+
         Application::Get().Update();
         Application::Get().Render();
         break;

@@ -154,7 +154,12 @@
   <ItemGroup>
     <ClInclude Include="src\Kame\Graphics\Mesh.h" />
     <ClInclude Include="src\Kame\Math\MathCommon.h" />
+    <ClInclude Include="src\Kame\Memory\Memory.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocation.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator_3dgep.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h" />
     <ClInclude Include="src\Kame\Utility\Hash.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ContextManager.h" />
@@ -213,7 +218,10 @@
     <ClCompile Include="src\Kame\LayerStack.cpp" />
     <ClCompile Include="src\Kame\Log.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DepthBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocation.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator_3dgep.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResource.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.cpp" />
@@ -222,6 +230,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PixelBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Input\DX12Input.cpp" />
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWInput.cpp" />

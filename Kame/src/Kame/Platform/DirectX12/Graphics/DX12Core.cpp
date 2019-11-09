@@ -555,9 +555,9 @@ namespace Kame {
 
       // Resize screen dependent resources.
       // Create a depth buffer.
-      D3D12_CLEAR_VALUE optimizedClearValue = {};
-      optimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
-      optimizedClearValue.DepthStencil = { 1.0f, 0 };
+      //D3D12_CLEAR_VALUE optimizedClearValue = {};
+      //optimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+      //optimizedClearValue.DepthStencil = { 1.0f, 0 };
 
       _SceneDepthBuffer.Create(L"SceneDepthBuffer", width, height, DXGI_FORMAT_D32_FLOAT);
 

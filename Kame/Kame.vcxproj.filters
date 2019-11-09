@@ -137,9 +137,14 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GraphicsPipelineState.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.h" />
-    <ClInclude Include="src\Kame\Utility\Hash.h" />
     <ClInclude Include="src\Kame\Math\MathCommon.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h" />
+    <ClInclude Include="src\Kame\Utility\Hash.h" />
+    <ClInclude Include="src\Kame\Memory\Memory.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator_3dgep.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocation.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -208,6 +213,10 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsPipelineState.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocation.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator_3dgep.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Shaders\VertexShader.hlsl" />
