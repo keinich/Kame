@@ -6,6 +6,8 @@
 #include <memory>
 #include <deque>
 
+#define DEFAULT_ALIGN 256
+
 namespace Kame {
 
   class UploadBuffer { // Mini-Engine : LinearAllocator
@@ -21,7 +23,7 @@ namespace Kame {
 
     size_t GetPageSize() const { return _PageSize; }
 
-    Allocation Allocate(size_t sizeInBytes, size_t alignment);
+    Allocation Allocate(size_t sizeInBytes, size_t alignment = DEFAULT_ALIGN);
     void Reset();
 
   private: // Fields

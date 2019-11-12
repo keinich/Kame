@@ -4,6 +4,7 @@
 #include "ContextManager.h"
 #include "DX12Core.h"
 #include "GpuResource.h"
+#include "UploadBuffer.h"
 
 namespace Kame {
 
@@ -13,6 +14,9 @@ namespace Kame {
     _CommandList(nullptr) {
 
     _NumBarriersToFlush = 0;
+
+    _UploadBuffer = std::make_unique<UploadBuffer>();
+    
   }
 
   void CommandContext::Reset() {
@@ -44,6 +48,8 @@ namespace Kame {
     uint64_t fenceValue = queue.ExecuteCommandList(_CommandList);
     queue.DiscardAllocator(fenceValue, _CurrentAllocator);
     _CurrentAllocator = nullptr;
+
+    _UploadBuffer->Reset();
 
     if (waitForCompletion)
       DX12Core::GetCommandManager()->WaitForFence(fenceValue);

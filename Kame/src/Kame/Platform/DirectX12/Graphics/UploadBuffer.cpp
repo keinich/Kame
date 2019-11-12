@@ -39,8 +39,9 @@ namespace Kame {
 
     std::shared_ptr<Page> page;
 
-    if (_AvailablePages.empty()) {
+    if (!_AvailablePages.empty()) {
       page = _AvailablePages.front();
+      _AvailablePages.pop_front();
     }
     else {
       page = std::make_shared<Page>(_PageSize);

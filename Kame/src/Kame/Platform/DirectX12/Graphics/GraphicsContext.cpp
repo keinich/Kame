@@ -2,6 +2,7 @@
 #include "GraphicsContext.h"
 #include "ColorBuffer.h"
 #include "DepthBuffer.h"
+#include "UploadBuffer.h"
 
 namespace Kame {
 
@@ -20,5 +21,12 @@ namespace Kame {
   void GraphicsContext::SetRenderTargets(UINT numRtvs, D3D12_CPU_DESCRIPTOR_HANDLE rtvs[], D3D12_CPU_DESCRIPTOR_HANDLE dsv) {
     _CommandList->OMSetRenderTargets(numRtvs, rtvs, FALSE, &dsv);
   }
+
+  void GraphicsContext::SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, size_t sizeInBytes, const void* bufferData) {
+    auto heapAllocation = _UploadBuffer->Allocate(sizeInBytes);
+    memcpy(heapAllocation.Cpu, bufferData, sizeInBytes);
+    _CommandList->SetGraphicsRootConstantBufferView(rootParameterIndex, heapAllocation.Gpu);
+  }
+
 
 }

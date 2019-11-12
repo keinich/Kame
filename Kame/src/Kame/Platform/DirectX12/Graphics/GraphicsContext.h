@@ -17,6 +17,11 @@ namespace Kame {
     void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(1, &rtv, dsv); }
     void SetRenderTargets(UINT numRtvs, D3D12_CPU_DESCRIPTOR_HANDLE rtvs[], D3D12_CPU_DESCRIPTOR_HANDLE dsv);
 
+    void SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, size_t sizeInBytes, const void* bufferData);
+    template<typename T>
+    void SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, const T& data) {
+      SetGraphicsDynamicConstantBuffer(rootParameterIndex, sizeof(T), &data);
+    }
 
   };
 

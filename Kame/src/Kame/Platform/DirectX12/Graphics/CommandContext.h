@@ -6,6 +6,7 @@ namespace Kame {
 
   class GraphicsContext;
   class GpuResource;
+  class UploadBuffer;
 
   class CommandContext {
 
@@ -47,6 +48,7 @@ namespace Kame {
     UINT _NumBarriersToFlush;
     D3D12_RESOURCE_BARRIER _ResourceBarrierBuffer[16];
 
+    std::unique_ptr<UploadBuffer> _UploadBuffer;
   };
 
 }
