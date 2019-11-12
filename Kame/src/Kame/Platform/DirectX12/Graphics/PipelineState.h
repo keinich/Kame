@@ -17,8 +17,7 @@ namespace Kame {
 
     static void DestroyAll();
 
-    // TODO wieder raus
-    ID3D12PipelineState* GetPipelineState() { return _Pso; }
+    ID3D12PipelineState* GetPipelineState() const { return _Pso; }
 
   protected: // Fields
 

@@ -678,8 +678,8 @@ namespace Kame {
     auto commandList = myContext.GetCommandList();
 
     //commandList->SetPipelineState(_PipelineState.Get());
-    commandList->SetPipelineState(_PipelineState1.GetPipelineState());
-
+    //commandList->SetPipelineState(_PipelineState1.GetPipelineState());
+    myContext.SetPipelineState(_PipelineState1);
 
     commandList->SetGraphicsRootSignature(_RootSignature1.GetRootSignature().Get());
 

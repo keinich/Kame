@@ -5,6 +5,7 @@
 #include "DX12Core.h"
 #include "GpuResource.h"
 #include "UploadBuffer.h"
+#include "PipelineState.h"
 
 namespace Kame {
 
@@ -16,6 +17,8 @@ namespace Kame {
     _NumBarriersToFlush = 0;
 
     _UploadBuffer = std::make_unique<UploadBuffer>();
+
+    _CurrentPipelineState = nullptr;
     
   }
 
@@ -24,6 +27,8 @@ namespace Kame {
 
     _CurrentAllocator = DX12Core::GetCommandManager()->GetQueue(_Type).RequestAllocator();
     _CommandList->Reset(_CurrentAllocator, nullptr);
+
+    _CurrentPipelineState = nullptr;
   }
 
   CommandContext::~CommandContext() {
@@ -109,6 +114,15 @@ namespace Kame {
       _CommandList->ResourceBarrier(_NumBarriersToFlush, _ResourceBarrierBuffer);
       _NumBarriersToFlush = 0;
     }
+  }
+
+  void CommandContext::SetPipelineState(const PipelineState& pipelineStateToSet) {
+    ID3D12PipelineState* pipelineState = pipelineStateToSet.GetPipelineState();
+    if (pipelineState == _CurrentPipelineState)
+      return;
+
+    _CommandList->SetPipelineState(pipelineState);
+    _CurrentPipelineState = pipelineState;
   }
 
 }

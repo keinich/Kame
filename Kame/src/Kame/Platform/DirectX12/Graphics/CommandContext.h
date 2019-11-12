@@ -7,6 +7,7 @@ namespace Kame {
   class GraphicsContext;
   class GpuResource;
   class UploadBuffer;
+  class PipelineState;
 
   class CommandContext {
 
@@ -34,6 +35,8 @@ namespace Kame {
 
     inline void FlushResourceBarriers();
 
+    void SetPipelineState(const PipelineState& pipelineState);
+
     // TODO nur fürs Rantasten gedacht
     inline ID3D12GraphicsCommandList* GetCommandList() { return _CommandList; };
     inline ID3D12CommandAllocator* GetCurrentAllocator() { return _CurrentAllocator; };
@@ -47,6 +50,8 @@ namespace Kame {
 
     UINT _NumBarriersToFlush;
     D3D12_RESOURCE_BARRIER _ResourceBarrierBuffer[16];
+
+    ID3D12PipelineState* _CurrentPipelineState;
 
     std::unique_ptr<UploadBuffer> _UploadBuffer;
   };
