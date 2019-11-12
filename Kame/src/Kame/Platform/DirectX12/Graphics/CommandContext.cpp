@@ -19,6 +19,7 @@ namespace Kame {
     _UploadBuffer = std::make_unique<UploadBuffer>();
 
     _CurrentPipelineState = nullptr;
+    _CurrentGraphicsRootSignature = nullptr;
     
   }
 
@@ -29,6 +30,8 @@ namespace Kame {
     _CommandList->Reset(_CurrentAllocator, nullptr);
 
     _CurrentPipelineState = nullptr;
+    _CurrentGraphicsRootSignature = nullptr;
+
   }
 
   CommandContext::~CommandContext() {
@@ -123,6 +126,17 @@ namespace Kame {
 
     _CommandList->SetPipelineState(pipelineState);
     _CurrentPipelineState = pipelineState;
+  }
+
+  void CommandContext::SetRootSignature(const RootSignature& rootSignatureToSet) {
+    
+    if (rootSignatureToSet.GetRootSignature().Get() == _CurrentGraphicsRootSignature)
+      return;
+
+    _CurrentGraphicsRootSignature = rootSignatureToSet.GetRootSignature().Get();
+    _CommandList->SetGraphicsRootSignature(_CurrentGraphicsRootSignature);
+
+    //TODO Parse Root Signature
   }
 
 }

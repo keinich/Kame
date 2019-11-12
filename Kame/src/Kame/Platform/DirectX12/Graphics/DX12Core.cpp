@@ -681,7 +681,8 @@ namespace Kame {
     //commandList->SetPipelineState(_PipelineState1.GetPipelineState());
     myContext.SetPipelineState(_PipelineState1);
 
-    commandList->SetGraphicsRootSignature(_RootSignature1.GetRootSignature().Get());
+    //commandList->SetGraphicsRootSignature(_RootSignature1.GetRootSignature().Get());
+    myContext.SetRootSignature(_RootSignature1);
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->IASetVertexBuffers(0, 1, &_VertexBufferView);

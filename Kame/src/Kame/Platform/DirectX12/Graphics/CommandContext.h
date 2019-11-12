@@ -8,6 +8,7 @@ namespace Kame {
   class GpuResource;
   class UploadBuffer;
   class PipelineState;
+  class RootSignature;
 
   class CommandContext {
 
@@ -36,6 +37,7 @@ namespace Kame {
     inline void FlushResourceBarriers();
 
     void SetPipelineState(const PipelineState& pipelineState);
+    void SetRootSignature(const RootSignature& rootSignatureToSet);
 
     // TODO nur fürs Rantasten gedacht
     inline ID3D12GraphicsCommandList* GetCommandList() { return _CommandList; };
@@ -52,6 +54,7 @@ namespace Kame {
     D3D12_RESOURCE_BARRIER _ResourceBarrierBuffer[16];
 
     ID3D12PipelineState* _CurrentPipelineState;
+    ID3D12RootSignature* _CurrentGraphicsRootSignature;
 
     std::unique_ptr<UploadBuffer> _UploadBuffer;
   };
