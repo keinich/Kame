@@ -488,10 +488,11 @@ namespace Kame {
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
     rootSignatureDescription.Init_1_1(_countof(rootParameters), rootParameters, 0, nullptr, rootSignatureFlags);
 
-    ComPtr<ID3DBlob> rootSignatureBlob;
-    ComPtr<ID3DBlob> errorBlob;
-    ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDescription, featureData.HighestVersion, &rootSignatureBlob, &errorBlob));
-    ThrowIfFailed(_Device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&_RootSignature)));
+    //ComPtr<ID3DBlob> rootSignatureBlob;
+    //ComPtr<ID3DBlob> errorBlob;
+    //ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDescription, featureData.HighestVersion, &rootSignatureBlob, &errorBlob));
+    //ThrowIfFailed(_Device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&_RootSignature)));
+    _RootSignature1.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
 
     // Pipeline State 
 
@@ -523,7 +524,7 @@ namespace Kame {
     //ThrowIfFailed(_Device->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&_PipelineState)));
 
 
-    _PipelineState1.SetRootSignature(_RootSignature.Get());
+    _PipelineState1.SetRootSignature(_RootSignature1);
     _PipelineState1.SetRasterizerState(GraphicsCommon::RasterizerDefault);
     //_PipelineState1.SetBlendState(BlendNoColorWrite);
     //_PipelineState1.SetDepthStencilState(DepthStateReadWrite);
@@ -680,7 +681,7 @@ namespace Kame {
     commandList->SetPipelineState(_PipelineState1.GetPipelineState());
 
 
-    commandList->SetGraphicsRootSignature(_RootSignature.Get());
+    commandList->SetGraphicsRootSignature(_RootSignature1.GetRootSignature().Get());
 
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->IASetVertexBuffers(0, 1, &_VertexBufferView);

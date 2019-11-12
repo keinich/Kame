@@ -82,7 +82,7 @@ void Kame::GraphicsPipelineState::SetPixelShader(const void* byteCode, size_t si
 void Kame::GraphicsPipelineState::Finalize() {
 
   //_PsoDesc.pRootSignature = _RootSignature;
-  _PipelineStateStream.pRootSignature = _RootSignature;
+  _PipelineStateStream.pRootSignature = _RootSignature->GetRootSignature().Get();
 
   //_PsoDesc.InputLayout.pInputElementDescs = nullptr;
   //_PsoDesc.InputLayout.pInputElementDescs = _InputLayouts.get();

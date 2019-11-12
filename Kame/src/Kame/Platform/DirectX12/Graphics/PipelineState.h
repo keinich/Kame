@@ -2,6 +2,8 @@
 
 namespace Kame {
 
+  class RootSignature;
+
   class PipelineState {
 
   public: // Functions
@@ -11,7 +13,7 @@ namespace Kame {
       _RootSignature = nullptr;
     }
 
-    void SetRootSignature(ID3D12RootSignature* rootSignature) { _RootSignature = rootSignature; }
+    void SetRootSignature(const RootSignature& rootSignature) { _RootSignature = &rootSignature; }
 
     static void DestroyAll();
 
@@ -22,7 +24,8 @@ namespace Kame {
 
     ID3D12PipelineState* _Pso;
 
-    ID3D12RootSignature* _RootSignature; // TODO RootSignature Class
+    //ID3D12RootSignature* _RootSignature; // TODO RootSignature Class
+    const RootSignature* _RootSignature;
 
     //static std::map<size_t, ComPtr<ID3D12PipelineState> > s_GraphicsPSOHashMap;
   };

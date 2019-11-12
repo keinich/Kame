@@ -9,6 +9,7 @@
 #include "DescriptorAllocator.h"
 #include "DescriptorAllocator_3dgep.h"
 #include "GraphicsPipelineState.h"
+#include "RootSignature.h"
 
 namespace Kame {
 
@@ -145,7 +146,8 @@ namespace Kame {
     DepthBuffer _SceneDepthBuffer;
 
 
-    ComPtr<ID3D12RootSignature> _RootSignature;
+    //ComPtr<ID3D12RootSignature> _RootSignature;
+    RootSignature _RootSignature1;
     //ComPtr<ID3D12PipelineState> _PipelineState;
     GraphicsPipelineState _PipelineState1;
     PipelineStateManager* _PipelineStateManager;
