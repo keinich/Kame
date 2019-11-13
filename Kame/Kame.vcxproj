@@ -225,6 +225,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator_3dgep.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResource.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsContext.cpp" />

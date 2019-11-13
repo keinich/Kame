@@ -39,11 +39,14 @@ namespace Kame {
     void SetPipelineState(const PipelineState& pipelineState);
     void SetRootSignature(const RootSignature& rootSignatureToSet);
 
+    void SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, ID3D12DescriptorHeap* heap);
+    void SetDescriptorHeaps(UINT numHeaps, D3D12_DESCRIPTOR_HEAP_TYPE types[], ID3D12DescriptorHeap* heaps[]);
+
     // TODO nur fürs Rantasten gedacht
     inline ID3D12GraphicsCommandList* GetCommandList() { return _CommandList; };
     inline ID3D12CommandAllocator* GetCurrentAllocator() { return _CurrentAllocator; };
 
-  protected:
+  protected: // Fields
 
     ID3D12GraphicsCommandList* _CommandList;
     ID3D12CommandAllocator* _CurrentAllocator;
@@ -57,6 +60,12 @@ namespace Kame {
     ID3D12RootSignature* _CurrentGraphicsRootSignature;
 
     std::unique_ptr<UploadBuffer> _UploadBuffer;
+
+    ID3D12DescriptorHeap* _CurrentDescriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+
+  protected: // Methods
+
+    void BindDescriptorHeaps();
   };
 
 }

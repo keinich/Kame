@@ -138,6 +138,8 @@ namespace Kame {
     }
 
     return descriptorTableBitMask;
+
+    // TODO Mini-Engine caches RootSignatures globally by the HashCode they produce !!!
   }
 
   uint32_t RootSignature::GetNumDescriptors(uint32_t rootIndex) const {

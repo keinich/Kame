@@ -42,7 +42,7 @@ namespace Kame {
 
       void Reset() {
         NumDescriptors = 0;
-        BaseDescriptor = nullptr
+        BaseDescriptor = nullptr;
       }
 
       uint32_t NumDescriptors;
@@ -69,8 +69,8 @@ namespace Kame {
     DescriptorHeapPool _AvailableDescriptorHeaps;
 
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _CurrentDescriptorHeap;
-    D3D12_GPU_DESCRIPTOR_HANDLE _CurrentGpuDescriptorHandle;
-    D3D12_CPU_DESCRIPTOR_HANDLE _CurrentCpuDescriptorHandle;
+    CD3DX12_CPU_DESCRIPTOR_HANDLE _CurrentCpuDescriptorHandle;
+    CD3DX12_GPU_DESCRIPTOR_HANDLE _CurrentGpuDescriptorHandle;
 
     uint32_t _NumFreeHandles;
 

@@ -20,7 +20,9 @@ namespace Kame {
 
     _CurrentPipelineState = nullptr;
     _CurrentGraphicsRootSignature = nullptr;
-    
+
+    ZeroMemory(_CurrentDescriptorHeaps, sizeof(_CurrentDescriptorHeaps));
+
   }
 
   void CommandContext::Reset() {
@@ -31,6 +33,10 @@ namespace Kame {
 
     _CurrentPipelineState = nullptr;
     _CurrentGraphicsRootSignature = nullptr;
+
+    _NumBarriersToFlush = 0;
+
+    BindDescriptorHeaps();
 
   }
 
@@ -129,7 +135,7 @@ namespace Kame {
   }
 
   void CommandContext::SetRootSignature(const RootSignature& rootSignatureToSet) {
-    
+
     if (rootSignatureToSet.GetRootSignature().Get() == _CurrentGraphicsRootSignature)
       return;
 
@@ -137,6 +143,45 @@ namespace Kame {
     _CommandList->SetGraphicsRootSignature(_CurrentGraphicsRootSignature);
 
     //TODO Parse Root Signature
+  }
+
+  void CommandContext::SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, ID3D12DescriptorHeap* heap) {
+    if (_CurrentDescriptorHeaps[type] != heap) {
+      _CurrentDescriptorHeaps[type] = heap;
+      BindDescriptorHeaps();
+    }
+  }
+
+  void CommandContext::SetDescriptorHeaps(UINT numHeaps, D3D12_DESCRIPTOR_HEAP_TYPE types[], ID3D12DescriptorHeap* heaps[]) {
+    bool anyChanged = false;
+
+    for (UINT i = 0; i < numHeaps; ++i) {
+      if (_CurrentDescriptorHeaps[i] != heaps[i]) {
+        _CurrentDescriptorHeaps[i] = heaps[i];
+        anyChanged = true;
+      }
+    }
+
+    if (anyChanged) {
+      BindDescriptorHeaps();
+    }
+  }
+
+  void CommandContext::BindDescriptorHeaps() {
+    UINT numNonNullHeaps = 0;
+    ID3D12DescriptorHeap* heapsToBind[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {};
+
+    for (UINT i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
+      ID3D12DescriptorHeap* heapIter = _CurrentDescriptorHeaps[i];
+      if (heapIter != nullptr) {
+        heapsToBind[numNonNullHeaps++] = heapIter;
+      }
+    }
+
+    if (numNonNullHeaps > 0) {
+      _CommandList->SetDescriptorHeaps(numNonNullHeaps, heapsToBind);
+    }
+
   }
 
 }
