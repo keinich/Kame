@@ -200,6 +200,8 @@ namespace Kame {
     ThrowIfFailed(device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap)));
 
     return descriptorHeap;
+
+    //TODO Mini Engin uses static cache
   }
 
   uint32_t DynamicDescriptorHeap::ComputeStaleDescriptorCount() const {

@@ -6,6 +6,7 @@
 #include "GpuResource.h"
 #include "UploadBuffer.h"
 #include "PipelineState.h"
+#include "ResourceStateTracker .h"
 
 namespace Kame {
 
@@ -20,6 +21,8 @@ namespace Kame {
 
     _CurrentPipelineState = nullptr;
     _CurrentGraphicsRootSignature = nullptr;
+
+    _ResourceStateTracker = std::make_unique<ResourceStateTracker>();
 
     ZeroMemory(_CurrentDescriptorHeaps, sizeof(_CurrentDescriptorHeaps));
 
@@ -118,11 +121,50 @@ namespace Kame {
       FlushResourceBarriers();
   }
 
+  void CommandContext::TransitionBarrier(const GpuResource& resource, D3D12_RESOURCE_STATES newSatate, UINT subResource, bool flushImmediate) {
+    auto d3d12Resource = resource.GetD3D12Resource();
+    if (d3d12Resource) {
+      auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(d3d12Resource.Get(), D3D12_RESOURCE_STATE_COMMON, newSatate, subResource);
+      _ResourceStateTracker->ResourceBarrier(barrier);
+    }
+
+    if (flushImmediate) {
+      FlushResourceBarriers3dgep();
+    }
+  }
+
+  void CommandContext::InsertUavBarrier3dgep(const GpuResource& resource, bool flushImmediate) {
+    auto d3d12Resource = resource.GetD3D12Resource();
+    auto barrier = CD3DX12_RESOURCE_BARRIER::UAV(d3d12Resource.Get());
+
+    _ResourceStateTracker->ResourceBarrier(barrier);
+
+    if (flushImmediate) {
+      FlushResourceBarriers();
+    }
+  }
+
+  void CommandContext::CopyResource3dgep(GpuResource& dstResource, const GpuResource& srcResource) {
+    TransitionBarrier(dstResource, D3D12_RESOURCE_STATE_COPY_DEST);
+    TransitionBarrier(dstResource, D3D12_RESOURCE_STATE_COPY_SOURCE);
+
+    FlushResourceBarriers();
+
+    _CommandList->CopyResource(dstResource.GetD3D12Resource().Get(), srcResource.GetD3D12Resource().Get());
+
+    TrackResource(dstResource);
+    TrackResource(srcResource);
+  }
+
   inline void CommandContext::FlushResourceBarriers() {
     if (_NumBarriersToFlush > 0) {
       _CommandList->ResourceBarrier(_NumBarriersToFlush, _ResourceBarrierBuffer);
       _NumBarriersToFlush = 0;
     }
+  }
+
+  inline void CommandContext::FlushResourceBarriers3dgep() {
+    _ResourceStateTracker->FlushResourceBarriers(*this);
   }
 
   void CommandContext::SetPipelineState(const PipelineState& pipelineStateToSet) {
@@ -165,6 +207,14 @@ namespace Kame {
     if (anyChanged) {
       BindDescriptorHeaps();
     }
+  }
+
+  void CommandContext::TrackObject(Microsoft::WRL::ComPtr<ID3D12Object> object) {
+    _TrackedObjects.push_back(object);
+  }
+
+  void CommandContext::TrackResource(const GpuResource& res) {
+    TrackObject(res.GetD3D12Resource());
   }
 
   void CommandContext::BindDescriptorHeaps() {

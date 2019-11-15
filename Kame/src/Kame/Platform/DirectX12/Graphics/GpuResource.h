@@ -17,6 +17,8 @@ public:
   };
   ~GpuResource() {};
   
+  ComPtr<ID3D12Resource> GetD3D12Resource() const { return _Resource1; }
+
   void Destroy();
 
 protected:

@@ -147,6 +147,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker .h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">
@@ -220,6 +221,8 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator_3dgep.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker .cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Shaders\VertexShader.hlsl" />

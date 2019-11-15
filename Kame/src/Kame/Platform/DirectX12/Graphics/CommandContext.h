@@ -9,6 +9,7 @@ namespace Kame {
   class UploadBuffer;
   class PipelineState;
   class RootSignature;
+  class ResourceStateTracker;
 
   class CommandContext {
 
@@ -33,8 +34,14 @@ namespace Kame {
 
     void TransitionResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES oldState, D3D12_RESOURCE_STATES newState, bool flushImmediate = false);
     void TransitionResource(GpuResource& resource, D3D12_RESOURCE_STATES newState, bool flushImmediate = false);
+    void TransitionBarrier(const GpuResource& resource, D3D12_RESOURCE_STATES newSatate, UINT subResource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, bool flushImmediate = false);
+
+    void InsertUavBarrier3dgep(const GpuResource& resource, bool flushImmediate = false);
+
+    void CopyResource3dgep(GpuResource& dstResource, const GpuResource& srcResource);
 
     inline void FlushResourceBarriers();
+    inline void FlushResourceBarriers3dgep();
 
     void SetPipelineState(const PipelineState& pipelineState);
     void SetRootSignature(const RootSignature& rootSignatureToSet);
@@ -47,6 +54,8 @@ namespace Kame {
     inline ID3D12CommandAllocator* GetCurrentAllocator() { return _CurrentAllocator; };
 
   protected: // Fields
+
+    using TrackedObjects = std::vector < Microsoft::WRL::ComPtr<ID3D12Object> >;
 
     ID3D12GraphicsCommandList* _CommandList;
     ID3D12CommandAllocator* _CurrentAllocator;
@@ -63,9 +72,14 @@ namespace Kame {
 
     ID3D12DescriptorHeap* _CurrentDescriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
 
+    std::unique_ptr<ResourceStateTracker> _ResourceStateTracker;
+    TrackedObjects _TrackedObjects;
+
   protected: // Methods
 
     void BindDescriptorHeaps();
+    void TrackObject(Microsoft::WRL::ComPtr<ID3D12Object> object);
+    void TrackResource(const GpuResource& res);
   };
 
 }
