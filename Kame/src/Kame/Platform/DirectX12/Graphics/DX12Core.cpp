@@ -702,6 +702,7 @@ namespace Kame {
     myContext.SetGraphicsDynamicConstantBuffer(0, mvpMatrix);
     //commandList->SetGraphicsRoot32BitConstants(0, sizeof(DirectX::XMMATRIX) / 4, &mvpMatrix, 0);
 
+    //myContext.FlushResourceBarriers3dgep(); // TODO this has to happen in the Draw-Function of the context
     commandList->DrawIndexedInstanced(_countof(_Indices), 1, 0, 0, 0);
 
 

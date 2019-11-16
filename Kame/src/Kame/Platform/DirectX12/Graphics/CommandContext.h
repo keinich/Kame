@@ -80,6 +80,8 @@ namespace Kame {
     void BindDescriptorHeaps();
     void TrackObject(Microsoft::WRL::ComPtr<ID3D12Object> object);
     void TrackResource(const GpuResource& res);
+
+    void ReleaseTrackedObjects();
   };
 
 }

@@ -148,6 +148,9 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker .h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Mesh.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GpuBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">

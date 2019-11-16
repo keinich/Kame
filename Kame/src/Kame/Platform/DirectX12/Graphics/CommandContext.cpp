@@ -38,6 +38,9 @@ namespace Kame {
     _CurrentGraphicsRootSignature = nullptr;
 
     _NumBarriersToFlush = 0;
+    _ResourceStateTracker->Reset();
+
+    ReleaseTrackedObjects();
 
     BindDescriptorHeaps();
 
@@ -215,6 +218,10 @@ namespace Kame {
 
   void CommandContext::TrackResource(const GpuResource& res) {
     TrackObject(res.GetD3D12Resource());
+  }
+
+  void CommandContext::ReleaseTrackedObjects() {
+    _TrackedObjects.clear();
   }
 
   void CommandContext::BindDescriptorHeaps() {

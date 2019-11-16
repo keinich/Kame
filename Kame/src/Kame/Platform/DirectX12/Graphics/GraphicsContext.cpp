@@ -11,7 +11,10 @@ namespace Kame {
   }
 
   void GraphicsContext::ClearColor(ColorBuffer& target, float* color) {
+    //TransitionBarrier(target, D3D12_RESOURCE_STATE_RENDER_TARGET);
     _CommandList->ClearRenderTargetView(target.GetRtv(), color, 0, nullptr);
+
+    //TrackResource(target);
   }
 
   void GraphicsContext::ClearDepth(DepthBuffer& target) {
