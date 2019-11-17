@@ -13,10 +13,15 @@
 #include <unordered_map>
 #include <map>
 #include <unordered_set>
+#include <filesystem>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 #include <chrono>
 
 #include "Kame/Log.h"
+#include <Kame/Math/MathCommon.h>
 
 //#include "Kame/VectorMath.h"
 
@@ -43,7 +48,7 @@
 
 #include <wrl.h>
 
-#ifdef KAME_PLATFORM_DIRECTX12
+//#ifdef KAME_PLATFORM_DIRECTX12
 
 #include <initguid.h>
 
@@ -68,7 +73,7 @@ using namespace Microsoft::WRL;
 #define D3D12_GPU_VIRTUAL_ADDRESS_NULL      ((D3D12_GPU_VIRTUAL_ADDRESS)0)
 #define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN   ((D3D12_GPU_VIRTUAL_ADDRESS)-1)
 
-#endif
+//#endif
 
 
 #endif

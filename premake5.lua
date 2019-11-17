@@ -14,10 +14,12 @@ IncludeDir["GLFW"] = "Kame/vendor/GLFW/include"
 IncludeDir["Glad"] = "Kame/vendor/GLAD/include"
 IncludeDir["ImGui"] = "Kame/vendor/imgui"
 IncludeDir["glm"] = "Kame/vendor/glm"
+IncludeDir["DirectXTex"] = "Kame/vendor/DirectXTex/DirectXTex"
 
 include "Kame/vendor/GLFW"
 include "Kame/vendor/Glad"
 include "Kame/vendor/imgui"
+include "Kame/vendor/DirectXTex/DirectXTex"
 
 project "Kame"
   location "Kame"
@@ -41,13 +43,15 @@ project "Kame"
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.Glad}",
     "%{IncludeDir.ImGui}",
-    "%{IncludeDir.glm}"
+    "%{IncludeDir.glm}",
+    "%{IncludeDir.DirectXTex}"
   }
 
   links {
     "GLFW",
     "Glad",
     "ImGui",
+    "DirectXTex",
     "opengl32.lib"
   }
 

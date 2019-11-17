@@ -10,6 +10,11 @@
 #include "DescriptorAllocator_3dgep.h"
 #include "GraphicsPipelineState.h"
 #include "RootSignature.h"
+#include "Texture.h"
+#include "RenderTarget.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "CommandQueue.h"
 
 namespace Kame {
 
@@ -41,13 +46,14 @@ namespace Kame {
 
     bool _IsInitialized = false;
 
-    inline static ContextManager* GetContextManager() { return _Instance->_ContextManager; }
-    inline static CommandManager* GetCommandManager() { return _Instance->_CommandManager; }
+    //inline static ContextManager* GetContextManager() { return _Instance->_ContextManager; }
+    //inline static CommandManager* GetCommandManager() { return _Instance->_CommandManager; }
+    std::shared_ptr<CommandQueue> GetCommandQueue(D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT) const;
     inline static GlobalDescriptorAllocator* GetGlobalDescriptorAllocator() { return _Instance->_GlobalDescriptorAllocator; }
     inline static ID3D12Device2* GetDevice() { return _Instance->_Device.Get(); }
     inline static PipelineStateManager* GetPipelineStateManager() { return _Instance->_PipelineStateManager; }
 
-    inline D3D12_CPU_DESCRIPTOR_HANDLE AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count = 1);
+    inline DescriptorAllocation AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count = 1);
 
     inline const bool IsTogglingFullscreen() const { return _TogglingFullscreen; }
     inline const void FinishTogglingFullscreen() { _TogglingFullscreen = false; }
@@ -101,6 +107,8 @@ namespace Kame {
 
     void ReleaseStaleDescriptors(uint64_t finishedFrame);
 
+    void Present(const Texture& texture = Texture());
+
   private: // Fields
     static const uint8_t c_NumFrames = 3;
     bool _UseWarp = false;
@@ -114,12 +122,22 @@ namespace Kame {
 
     // DX12 Core Object
     ComPtr<ID3D12Device2> _Device;
-    CommandManager* _CommandManager;
-    ContextManager* _ContextManager;
+
+    // Mini Engine Way for the Command Queues
+    //CommandManager* _CommandManager;
+    //ContextManager* _ContextManager;
+
+    // 3dgep Way
+    std::shared_ptr<CommandQueue> _DirectCommandQueue;
+    std::shared_ptr<CommandQueue> _ComputeCommandQueue;
+    std::shared_ptr<CommandQueue> _CopyCommandQueue;
+
     GlobalDescriptorAllocator* _GlobalDescriptorAllocator;
     ComPtr<IDXGISwapChain4> g_SwapChain;
     //ComPtr<ID3D12Resource> g_BackBuffers[c_NumFrames];
-    ColorBuffer g_BackBuffers1[c_NumFrames];
+    Texture g_BackBuffers1[c_NumFrames];
+    RenderTarget _HDRRenderTarget;
+
     //ComPtr<ID3D12GraphicsCommandList> g_CommandList;
     //ComPtr<ID3D12CommandAllocator> g_CommandAllocator[c_NumFrames];
     //ComPtr<ID3D12DescriptorHeap> g_RTVDescriptorHeap;
@@ -127,6 +145,7 @@ namespace Kame {
     UINT g_CurrentBackBufferIndex;
 
     uint64_t g_FrameFenceValues[c_NumFrames] = {};
+    uint64_t _FrameValues[c_NumFrames] = {};
 
     CD3DX12_RECT _ScissorRect;
     CD3DX12_VIEWPORT _Viewport;
@@ -134,22 +153,25 @@ namespace Kame {
     bool _ContentLoaded;
 
     // Mesh Stuff
-    D3D12_VERTEX_BUFFER_VIEW _VertexBufferView;
-    ComPtr<ID3D12Resource> _VertexBuffer;
-    D3D12_INDEX_BUFFER_VIEW _IndexBufferView;
-    ComPtr<ID3D12Resource> _IndexBuffer;
+    //D3D12_VERTEX_BUFFER_VIEW _VertexBufferView;
+    //ComPtr<ID3D12Resource> _VertexBuffer;
+    //D3D12_INDEX_BUFFER_VIEW _IndexBufferView;
+    //ComPtr<ID3D12Resource> _IndexBuffer;
+    VertexBuffer _VertexBuffer1;
+    IndexBuffer _IndexBuffer1;
 
     // Depth Stuff
     //ComPtr<ID3D12Resource> _DepthBuffer;
     //ComPtr<ID3D12DescriptorHeap> _DsvHeap;
 
-    DepthBuffer _SceneDepthBuffer;
+    Texture _SceneDepthBuffer;
 
 
     //ComPtr<ID3D12RootSignature> _RootSignature;
     RootSignature _RootSignature1;
     //ComPtr<ID3D12PipelineState> _PipelineState;
     GraphicsPipelineState _PipelineState1;
+    GraphicsPipelineState _HDRPipelineState;
     PipelineStateManager* _PipelineStateManager;
     //GraphicsPipelineState _PipelineState2;
 
@@ -167,6 +189,7 @@ namespace Kame {
     DirectX::XMMATRIX _ViewMatrix;
     DirectX::XMMATRIX _ProjectionMatrix;
 
+    uint64_t _FrameCount;
   };
 
 }

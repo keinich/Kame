@@ -24,6 +24,7 @@
 
 #if defined KAME_PLATFORM_WINDOWS
 #include <Windows.h>
+#include <vcruntime_exception.h>
 inline void ThrowIfFailed(HRESULT hr) {
   if (FAILED(hr)) {
     throw std::exception();

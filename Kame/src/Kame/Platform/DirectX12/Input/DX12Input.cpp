@@ -5,7 +5,7 @@
 #include "DX12Input.h"
 
 #include <GLFW/glfw3.h>
-#include <Kame/Application.h>
+#include <Kame/KameApplication.h>
 
 namespace Kame {
 

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "kmpch.h"
+//#include "kmpch.h"
+#include <d3d12.h>
 
 namespace Kame {
 

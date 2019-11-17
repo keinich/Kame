@@ -1,6 +1,6 @@
 #include "kmpch.h"
 
-#include "Kame/Application.h"
+#include "Kame/KameApplication.h"
 
 namespace Kame {
 

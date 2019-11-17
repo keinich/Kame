@@ -2,7 +2,7 @@
 
 // For use by Kame applications
 
-#include "Kame/Application.h"
+#include "Kame/KameApplication.h"
 #include "Kame/Layer.h"
 #include "Kame/Log.h"
 

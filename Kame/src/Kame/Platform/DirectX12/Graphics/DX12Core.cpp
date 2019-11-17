@@ -12,7 +12,8 @@
 #include "ColorBuffer.h"
 #include "GraphicsCommon.h"
 #include "PipelineStateManager.h"
-
+#include "ResourceStateTracker.h"
+#include "CommandList.h"
 
 namespace Kame {
 
@@ -55,19 +56,19 @@ namespace Kame {
     _Viewport(CD3DX12_VIEWPORT(0.0f, 0.0f, _ClientWidth, _ClientHeight)),
     _FoV(45.0f),
     _ContentLoaded(false) {
-    _CommandManager = new CommandManager();
-    _ContextManager = new ContextManager();
+    //_CommandManager = new CommandManager();
+    //_ContextManager = new ContextManager();
     _GlobalDescriptorAllocator = GlobalDescriptorAllocator::Get();
     _PipelineStateManager = PipelineStateManager::Get();
     _WindowRect = RECT();
     g_CurrentBackBufferIndex = 0;
-
+    _FrameCount = 0;
     // TODO Constructor verbessern
   }
 
   DX12Core::~DX12Core() {
-    delete _CommandManager;
-    delete _ContextManager;
+    //delete _CommandManager;
+    //delete _ContextManager;
     delete _GlobalDescriptorAllocator;
     delete _PipelineStateManager;
   }
@@ -84,9 +85,13 @@ namespace Kame {
 
     _Device = CreateDevice(dxgiAdapter4);
 
-    _CommandManager->Create(_Device.Get());
+    //_CommandManager->Create(_Device.Get());
 
-    g_SwapChain = CreateSwapChain(g_hWnd, _CommandManager->GetCommandQueue(), _ClientWidth, _ClientHeight, c_NumFrames);
+    _DirectCommandQueue = std::make_shared<CommandQueue>(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    _ComputeCommandQueue = std::make_shared<CommandQueue>(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+    _CopyCommandQueue = std::make_shared<CommandQueue>(D3D12_COMMAND_LIST_TYPE_COPY);
+
+    g_SwapChain = CreateSwapChain(g_hWnd, _DirectCommandQueue->GetCommandQueue(), _ClientWidth, _ClientHeight, c_NumFrames);
 
     g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
@@ -113,8 +118,27 @@ namespace Kame {
 
   }
 
-  inline D3D12_CPU_DESCRIPTOR_HANDLE DX12Core::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count) {
-    return _DescriptorAllocators[type]->Allocate(count).GetDescriptorHandle();
+  std::shared_ptr<CommandQueue> DX12Core::GetCommandQueue(D3D12_COMMAND_LIST_TYPE type) const {
+    std::shared_ptr<CommandQueue> commandQueue;
+    switch (type) {
+    case D3D12_COMMAND_LIST_TYPE_DIRECT:
+      commandQueue = _DirectCommandQueue;
+      break;
+    case D3D12_COMMAND_LIST_TYPE_COMPUTE:
+      commandQueue = _ComputeCommandQueue;
+      break;
+    case D3D12_COMMAND_LIST_TYPE_COPY:
+      commandQueue = _CopyCommandQueue;
+      break;
+    default:
+      assert(false && "Invalid command queue type.");
+    }
+
+    return commandQueue;
+  }
+
+  inline DescriptorAllocation DX12Core::AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, UINT count) {
+    return _DescriptorAllocators[type]->Allocate(count);
   }
 
   void DX12Core::EnableDebugLayer() {
@@ -313,7 +337,12 @@ namespace Kame {
       ComPtr<ID3D12Resource> backBuffer;
       ThrowIfFailed(swapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffer)));
 
-      g_BackBuffers1[i].CreateFromSwapChain(L"", backBuffer.Detach());
+      ResourceStateTracker::AddGlobalResourceState(backBuffer.Get(), D3D12_RESOURCE_STATE_COMMON);
+
+      g_BackBuffers1[i].SetD3D12Resource(backBuffer);
+      g_BackBuffers1[i].CreateViews();
+
+      //g_BackBuffers1[i].CreateFromSwapChain(L"", backBuffer.Detach());
 
       //device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtvHandle);
 
@@ -436,10 +465,15 @@ namespace Kame {
   }
 
   bool DX12Core::LoadContent() {
-    CommandContext& initContext = CommandContext::Begin(L"Test");
-    ID3D12GraphicsCommandList* commandList = initContext.GetCommandList();
+    //CommandContext& initContext = CommandContext::Begin(L"Test");
+    //ID3D12GraphicsCommandList* commandList = initContext.GetCommandList();
+    auto commandQueue1 = _CopyCommandQueue;
+    auto commandList1 = commandQueue1->GetCommandList();
 
-    ComPtr<ID3D12Resource> intermediateVertexBuffer;
+    commandList1->CopyVertexBuffer(_VertexBuffer1, _countof(_Vertices), sizeof(VertexPosColor), _Vertices);
+    commandList1->CopyIndexBuffer(_IndexBuffer1, _countof(_Indices), DXGI_FORMAT_R16_UINT, _Indices);
+
+    /*ComPtr<ID3D12Resource> intermediateVertexBuffer;
     UpdateBufferResource(commandList, &_VertexBuffer, &intermediateVertexBuffer, _countof(_Vertices), sizeof(VertexPosColor), _Vertices);
 
     _VertexBufferView.BufferLocation = _VertexBuffer->GetGPUVirtualAddress();
@@ -451,7 +485,7 @@ namespace Kame {
 
     _IndexBufferView.BufferLocation = _IndexBuffer->GetGPUVirtualAddress();
     _IndexBufferView.Format = DXGI_FORMAT_R16_UINT;
-    _IndexBufferView.SizeInBytes = sizeof(_Indices);
+    _IndexBufferView.SizeInBytes = sizeof(_Indices);*/
 
     //D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
     //dsvHeapDesc.NumDescriptors = 1;
@@ -469,6 +503,45 @@ namespace Kame {
       {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
     };
 
+    DXGI_FORMAT HDRFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+    DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D32_FLOAT;
+
+    // Create an off-screen render target with a single color buffer and a depth buffer.
+    auto colorDesc = CD3DX12_RESOURCE_DESC::Tex2D(HDRFormat, _ClientWidth, _ClientHeight);
+    colorDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
+    D3D12_CLEAR_VALUE colorClearValue;
+    colorClearValue.Format = colorDesc.Format;
+    colorClearValue.Color[0] = 0.4f;
+    colorClearValue.Color[1] = 0.6f;
+    colorClearValue.Color[2] = 0.9f;
+    colorClearValue.Color[3] = 1.0f;
+
+    Texture hdrTexture = Texture(colorDesc
+      , &colorClearValue,
+      TextureUsage::RenderTarget,
+      L"HDR Texture"
+    );
+
+    // Create a depth buffer for the HDR render target.
+    auto depthDesc = CD3DX12_RESOURCE_DESC::Tex2D(depthBufferFormat, _ClientWidth, _ClientHeight);
+    depthDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+    D3D12_CLEAR_VALUE depthClearValue;
+    depthClearValue.Format = depthDesc.Format;
+    depthClearValue.DepthStencil = { 1.0f, 0 };
+
+    Texture depthTexture = Texture(
+      depthDesc, &depthClearValue,
+      TextureUsage::Depth,
+      L"Depth Render Target"
+    );
+
+    // Attach the HDR texture to the HDR render target.
+    _HDRRenderTarget.AttachTexture(AttachmentPoint::Color0, hdrTexture);
+    _HDRRenderTarget.AttachTexture(AttachmentPoint::DepthStencil, depthTexture);
+
+    // Root Signature
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
     featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
     if (FAILED(_Device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))) {
@@ -537,14 +610,32 @@ namespace Kame {
     _PipelineState1.SetPixelShader(CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get()));
     _PipelineState1.Finalize();
 
+    //_HDRPipelineState
+
     GraphicsPipelineState test;
     test = _PipelineState1;
     test.Finalize();
     _PipelineState1 = test;
 
+
+    _HDRPipelineState.SetRootSignature(_RootSignature1);
+    _HDRPipelineState.SetRasterizerState(GraphicsCommon::RasterizerDefault);
+    //_PipelineState1.SetBlendState(BlendNoColorWrite);
+    //_PipelineState1.SetDepthStencilState(DepthStateReadWrite);
+    _HDRPipelineState.SetInputLayout(_countof(inputLayout), inputLayout);
+    _HDRPipelineState.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+    _HDRPipelineState.SetRenderTargetFormat(_HDRRenderTarget.GetRenderTargetFormats(), _HDRRenderTarget.GetDepthStencilFormat());
+    //_PipelineState1.SetVertexShader(vertexShaderBlob.Get(), sizeof(vertexShaderBlob.Get()));
+    _HDRPipelineState.SetVertexShader(CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get()));
+    //_PipelineState1.SetPixelShader(pixelShaderBlob.Get(), sizeof(pixelShaderBlob.Get()));
+    _HDRPipelineState.SetPixelShader(CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get()));
+    _HDRPipelineState.Finalize();
+
+
+
     // Pipeline State Ende
 
-    initContext.Finish(true);
+    //initContext.Finish(true);
 
     _ContentLoaded = true;
 
@@ -557,7 +648,10 @@ namespace Kame {
 
     if (_ContentLoaded) {
 
-      _CommandManager->IdleGpu();
+      //_CommandManager->IdleGpu();
+      _DirectCommandQueue->WaitForIdle();
+      _ComputeCommandQueue->WaitForIdle();
+      _CopyCommandQueue->WaitForIdle();
 
       width = std::max(1, width);
       height = std::max(1, height);
@@ -570,7 +664,25 @@ namespace Kame {
       //optimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
       //optimizedClearValue.DepthStencil = { 1.0f, 0 };
 
-      _SceneDepthBuffer.Create(L"SceneDepthBuffer", width, height, DXGI_FORMAT_D32_FLOAT);
+      //_SceneDepthBuffer.Create(L"SceneDepthBuffer", width, height, DXGI_FORMAT_D32_FLOAT);
+
+
+
+      auto depthDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, _ClientWidth, _ClientHeight);
+      depthDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+      D3D12_CLEAR_VALUE depthClearValue;
+      depthClearValue.Format = depthDesc.Format;
+      depthClearValue.DepthStencil = { 1.0f, 0 };
+
+      Texture depthTexture = Texture(
+        depthDesc, &depthClearValue,
+        TextureUsage::Depth,
+        L"Depth Render Target"
+      );
+
+
+
 
       //ThrowIfFailed(device->CreateCommittedResource(
       //  &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
@@ -601,6 +713,8 @@ namespace Kame {
     static float angle = 0.0f;
     angle += 0.1;
 
+    _FrameCount += 1;
+
     const DirectX::XMVECTOR rotationAxis = DirectX::XMVectorSet(0, 1, 1, 0);
     _ModelMatrix = DirectX::XMMatrixRotationAxis(rotationAxis, DirectX::XMConvertToRadians(angle));
 
@@ -624,20 +738,69 @@ namespace Kame {
 
   }
 
+  void DX12Core::Present(const Texture& texture) { // TODO this shoud be in a Display class
+
+    auto commandQueue = _DirectCommandQueue;
+    auto commandList = commandQueue->GetCommandList();
+
+    auto& backBuffer = g_BackBuffers1[g_CurrentBackBufferIndex];
+
+    if (texture.IsValid()) {
+      if (texture.GetD3D12ResourceDesc().SampleDesc.Count > 1) {
+        commandList->ResolveSubresource(backBuffer, texture);
+      }
+      else {
+        commandList->CopyResource(backBuffer, texture);
+      }
+    }
+
+    RenderTarget renderTarget;
+    renderTarget.AttachTexture(AttachmentPoint::Color0, backBuffer);
+
+    //m_GUI.Render(commandList, renderTarget);
+
+    commandList->TransitionBarrier(backBuffer, D3D12_RESOURCE_STATE_PRESENT);
+    commandQueue->ExecuteCommandList1(commandList);
+
+    UINT syncInterval = g_VSync ? 1 : 0;
+    UINT presentFlags = _TearingSupported && !g_VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
+    ThrowIfFailed(g_SwapChain->Present(syncInterval, presentFlags));
+
+    g_FrameFenceValues[g_CurrentBackBufferIndex] = commandQueue->Signal();
+    _FrameValues[g_CurrentBackBufferIndex] = _FrameCount;
+
+    g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
+
+    commandQueue->WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]);
+
+    ReleaseStaleDescriptors(_FrameValues[g_CurrentBackBufferIndex]);
+
+    //return g_CurrentBackBufferIndex;
+
+  }
+
   void DX12Core::Render() {
 
     GameUpdate();
 
     //auto commandAllocator = g_CommandAllocator[g_CurrentBackBufferIndex];
     //auto backBuffer = g_BackBuffers[g_CurrentBackBufferIndex];
-    auto backBuffer1 = g_BackBuffers1[g_CurrentBackBufferIndex];
+    //auto backBuffer1 = g_BackBuffers1[g_CurrentBackBufferIndex];
 
     // CommandContext::Begin will Reset allocator and reset commandList
-    GraphicsContext& myContext = GraphicsContext::Begin(L"Main Loop");
+    //GraphicsContext& myContext = GraphicsContext::Begin(L"Main Loop");
+
+
+
+    auto commandQueue = _DirectCommandQueue;
+    auto commandList = commandQueue->GetCommandList();
+
+
+
 
     // TODO zum rantasten
     //g_CommandList = myContext.GetCommandList();
-    auto commandAllocator = myContext.GetCurrentAllocator();
+    //auto commandAllocator = myContext.GetCurrentAllocator();
 
     //commandAllocator->Reset();
     //g_CommandList->Reset(commandAllocator.Get(), nullptr);
@@ -658,7 +821,7 @@ namespace Kame {
       //g_CommandList->ResourceBarrier(1, &barrier);
 
       //myContext.TransitionResource(backBuffer.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-      myContext.TransitionResource(backBuffer1, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+      //myContext.TransitionResource(backBuffer1, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
       FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
       // the rtv is in the g_SceneColorBuffer
@@ -669,41 +832,58 @@ namespace Kame {
 
       //g_CommandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
       //myContext.ClearColor(rtv, clearColor);
-      myContext.ClearColor(backBuffer1, clearColor);
+      //myContext.ClearColor(backBuffer1, clearColor);
 
       //myContext.GetCommandList()->ClearDepthStencilView(dsv, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-      myContext.ClearDepth(_SceneDepthBuffer);
+      //myContext.ClearDepth(_SceneDepthBuffer);
+
+      commandList->ClearTexture(_HDRRenderTarget.GetTexture(AttachmentPoint::Color0), clearColor);
+      commandList->ClearDepthStencilTexture(_HDRRenderTarget.GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
     }
 
-    auto commandList = myContext.GetCommandList();
+    //commandList->SetRenderTarget(_HDRRenderTarget);
+    RenderTarget testRenderTarget;
+    testRenderTarget.AttachTexture(
+      AttachmentPoint::Color0,
+      g_BackBuffers1[g_CurrentBackBufferIndex]
+    ); testRenderTarget.AttachTexture(
+      AttachmentPoint::DepthStencil,
+      _HDRRenderTarget.GetTexture(AttachmentPoint::DepthStencil)
+    );
+    commandList->SetRenderTarget(testRenderTarget);
+    commandList->SetViewport(_Viewport);
+    commandList->SetScissorRect(_ScissorRect);
+
+    //auto d3d12commandList = myContext.GetCommandList();
 
     //commandList->SetPipelineState(_PipelineState.Get());
     //commandList->SetPipelineState(_PipelineState1.GetPipelineState());
-    myContext.SetPipelineState(_PipelineState1);
+    commandList->SetPipelineState(_HDRPipelineState.GetPipelineState());
 
     //commandList->SetGraphicsRootSignature(_RootSignature1.GetRootSignature().Get());
-    myContext.SetRootSignature(_RootSignature1);
+    commandList->SetGraphicsRootSignature(_RootSignature1);
 
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList->IASetVertexBuffers(0, 1, &_VertexBufferView);
-    commandList->IASetIndexBuffer(&_IndexBufferView);
 
-    commandList->RSSetViewports(1, &_Viewport);
-    commandList->RSSetScissorRects(1, &_ScissorRect);
+
+
 
     //commandList->OMSetRenderTargets(1, &backBuffer1.GetRtv(), FALSE, &dsv);
-    myContext.SetRenderTarget(backBuffer1.GetRtv(), _SceneDepthBuffer.GetDsv());
+    commandList->SetRenderTarget(_HDRRenderTarget);
     // TODO : egtl gfxContext.SetRenderTarget(g_SceneColorBuffer.GetRTV(), g_SceneDepthBuffer.GetDSV_DepthReadOnly());
 
 
     // Update the MVP matrix
     DirectX::XMMATRIX mvpMatrix = DirectX::XMMatrixMultiply(_ModelMatrix, _ViewMatrix);
     mvpMatrix = XMMatrixMultiply(mvpMatrix, _ProjectionMatrix);
-    myContext.SetGraphicsDynamicConstantBuffer(0, mvpMatrix);
+    commandList->SetGraphicsDynamicConstantBuffer(0, mvpMatrix);
     //commandList->SetGraphicsRoot32BitConstants(0, sizeof(DirectX::XMMATRIX) / 4, &mvpMatrix, 0);
 
+    commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->SetVertexBuffer(0, _VertexBuffer1);
+    commandList->SetIndexBuffer(_IndexBuffer1);
+
     //myContext.FlushResourceBarriers3dgep(); // TODO this has to happen in the Draw-Function of the context
-    commandList->DrawIndexedInstanced(_countof(_Indices), 1, 0, 0, 0);
+    commandList->DrawIndexed(_countof(_Indices), 1, 0, 0, 0);
 
 
 
@@ -715,9 +895,10 @@ namespace Kame {
       //);
       //g_CommandList->ResourceBarrier(1, &barrier);
       //myContext.TransitionResource(backBuffer.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT, true);
-      myContext.TransitionResource(backBuffer1, D3D12_RESOURCE_STATE_PRESENT, true);
+      //myContext.TransitionResource(backBuffer1, D3D12_RESOURCE_STATE_PRESENT, true);
 
-      g_FrameFenceValues[g_CurrentBackBufferIndex] = myContext.Finish();
+      //g_FrameFenceValues[g_CurrentBackBufferIndex] = commandList->Exe Finish();
+      commandQueue->ExecuteCommandList1(commandList);
 
       //ThrowIfFailed(g_CommandList->Close());
 
@@ -728,15 +909,17 @@ namespace Kame {
 
       //g_FrameFenceValues[g_CurrentBackBufferIndex] = _CommandManager->GetGraphicsQueue().Signal();
 
-      UINT syncInterval = g_VSync ? 1 : 0;
-      UINT presentFlags = _TearingSupported && !g_VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
-      ThrowIfFailed(g_SwapChain->Present(syncInterval, presentFlags));
+      Present();
 
-      g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
+      //UINT syncInterval = g_VSync ? 1 : 0;
+      //UINT presentFlags = _TearingSupported && !g_VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
+      //ThrowIfFailed(g_SwapChain->Present(syncInterval, presentFlags));
 
-      _CommandManager->GetGraphicsQueue().WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]); // TODO where does the Mini-Engine wait?
+      //g_CurrentBackBufferIndex = g_SwapChain->GetCurrentBackBufferIndex();
 
-      ReleaseStaleDescriptors(g_FrameFenceValues[g_CurrentBackBufferIndex]);
+      //_DirectCommandQueue->WaitForFence(g_FrameFenceValues[g_CurrentBackBufferIndex]); // TODO where does the Mini-Engine wait?
+
+      //ReleaseStaleDescriptors(g_FrameFenceValues[g_CurrentBackBufferIndex]);
     }
   }
 
@@ -745,7 +928,10 @@ namespace Kame {
       _ClientWidth = std::max(1u, width);
       _ClientHeight = std::max(1u, height);
 
-      _CommandManager->IdleGpu();
+      //_CommandManager->IdleGpu();
+      _DirectCommandQueue->WaitForIdle();
+      _ComputeCommandQueue->WaitForIdle();
+      _CopyCommandQueue->WaitForIdle();
 
       for (int i = 0; i < c_NumFrames; ++i) {
         g_BackBuffers1[i].Destroy();
@@ -777,9 +963,15 @@ namespace Kame {
 
     //CommandContext::DestroyAllContexts(); // TODO
 
-    _CommandManager->IdleGpu();
+    //_CommandManager->IdleGpu();
+    _DirectCommandQueue->WaitForIdle();
+    _ComputeCommandQueue->WaitForIdle();
+    _CopyCommandQueue->WaitForIdle();
 
-    _CommandManager->Shutdown();
+    //_CommandManager->Shutdown();
+    _DirectCommandQueue->Shutdown();
+    _ComputeCommandQueue->Shutdown();
+    _CopyCommandQueue->Shutdown();
 
     _GlobalDescriptorAllocator->Shutdown();
 

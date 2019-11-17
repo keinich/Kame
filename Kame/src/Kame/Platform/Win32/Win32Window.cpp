@@ -11,7 +11,7 @@
 #include "Kame/Events/MouseEvent.h"
 #include "Kame/Events/KeyEvent.h"
 
-#include "Kame/Application.h"
+//#include "Kame/KameApplication.h"
 
 namespace Kame {
 

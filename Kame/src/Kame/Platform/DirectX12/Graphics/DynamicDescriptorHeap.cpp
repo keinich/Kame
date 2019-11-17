@@ -3,7 +3,7 @@
 
 #include "DX12Core.h"
 
-#include "CommandContext.h"
+#include "CommandList.h"
 
 namespace Kame {
 
@@ -45,7 +45,7 @@ namespace Kame {
   }
 
   void DynamicDescriptorHeap::CommitStagedDescriptors(
-    CommandContext& commandContext,
+    CommandList& commandList,
     std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc
   ) {
     uint32_t numDescriptorsToCommit = ComputeStaleDescriptorCount();
@@ -55,7 +55,7 @@ namespace Kame {
     }
 
     auto device = DX12Core::GetDevice();
-    auto d3D12GraphicsCommandList = commandContext.GetCommandList();
+    auto d3D12GraphicsCommandList = commandList.GetGraphicsCommandList().Get();
     assert(d3D12GraphicsCommandList != nullptr);
 
     if (!_CurrentDescriptorHeap || _NumFreeHandles < numDescriptorsToCommit) {
@@ -64,7 +64,7 @@ namespace Kame {
       _CurrentGpuDescriptorHandle = _CurrentDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
       _NumFreeHandles = _NumDescriptorsPerHeap;
 
-      commandContext.SetDescriptorHeap(_DescriptorHeapType, _CurrentDescriptorHeap.Get());
+      commandList.SetDescriptorHeap(_DescriptorHeapType, _CurrentDescriptorHeap.Get());
 
       _StaleDescriptorTableBitMask = _DescriptorTableBitMask;
     }
@@ -98,16 +98,16 @@ namespace Kame {
     }
   }
 
-  void DynamicDescriptorHeap::CommitStagedDescriptorsForDraw(CommandContext& commandContext) {
-    CommitStagedDescriptors(commandContext, &ID3D12GraphicsCommandList::SetGraphicsRootDescriptorTable);
+  void DynamicDescriptorHeap::CommitStagedDescriptorsForDraw(CommandList& commandList) {
+    CommitStagedDescriptors(commandList, &ID3D12GraphicsCommandList::SetGraphicsRootDescriptorTable);
   }
 
-  void DynamicDescriptorHeap::CommitStagedDescriptorsForDispatch(CommandContext& commandContext) {
-    CommitStagedDescriptors(commandContext, &ID3D12GraphicsCommandList::SetComputeRootDescriptorTable);
+  void DynamicDescriptorHeap::CommitStagedDescriptorsForDispatch(CommandList& commandList) {
+    CommitStagedDescriptors(commandList, &ID3D12GraphicsCommandList::SetComputeRootDescriptorTable);
   }
 
   D3D12_GPU_DESCRIPTOR_HANDLE DynamicDescriptorHeap::CopyDescriptor(
-    CommandContext& commandContext, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor
+    CommandList& commandList, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor
   ) {
     if (!_CurrentDescriptorHeap || _NumFreeHandles < 1) {
       _CurrentDescriptorHeap = RequestDescriptorHeap();
@@ -115,7 +115,7 @@ namespace Kame {
       _CurrentGpuDescriptorHandle = _CurrentDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
       _NumFreeHandles = _NumDescriptorsPerHeap;
 
-      commandContext.SetDescriptorHeap(_DescriptorHeapType, _CurrentDescriptorHeap.Get());
+      commandList.SetDescriptorHeap(_DescriptorHeapType, _CurrentDescriptorHeap.Get());
 
       _StaleDescriptorTableBitMask = _DescriptorTableBitMask;
     }

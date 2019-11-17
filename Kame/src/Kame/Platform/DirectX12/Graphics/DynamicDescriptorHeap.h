@@ -10,7 +10,7 @@
 
 namespace Kame {
 
-  class CommandContext;
+  class CommandList;
   class RootSignature;
 
   class DynamicDescriptorHeap {
@@ -22,11 +22,11 @@ namespace Kame {
 
     void StageDescriptors(uint32_t rootParameterIndex, uint32_t offset, uint32_t numDescriptors, const D3D12_CPU_DESCRIPTOR_HANDLE srcDescriptors);
 
-    void CommitStagedDescriptors(CommandContext& commandContext, std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc);
-    void CommitStagedDescriptorsForDraw(CommandContext& commandContext);
-    void CommitStagedDescriptorsForDispatch(CommandContext& commandContext);
+    void CommitStagedDescriptors(CommandList& commandContext, std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc);
+    void CommitStagedDescriptorsForDraw(CommandList& commandContext);
+    void CommitStagedDescriptorsForDispatch(CommandList& commandContext);
 
-    D3D12_GPU_DESCRIPTOR_HANDLE CopyDescriptor(CommandContext& commandContext, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor);
+    D3D12_GPU_DESCRIPTOR_HANDLE CopyDescriptor(CommandList& commandContext, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor);
 
     void ParseRootSignature(const RootSignature& rootSignature);
 

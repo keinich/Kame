@@ -7,6 +7,9 @@
 [submodule "Kame/vendor/imgui"]
 	path = Kame/vendor/imgui
 	url = https://github.com/TheCherno/imgui
-[submodule "Kame\\vendor\\glm"]
-	path = Kame\\vendor\\glm
+[submodule "Kame/vendor/glm"]
+	path = Kame/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "Kame\\vendor\\DirectXTex"]
+	path = Kame\\vendor\\DirectXTex
+	url = https://github.com/microsoft/DirectXTex
