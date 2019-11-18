@@ -1,14 +1,14 @@
 #include "kmpch.h"
 
 #include "DescriptorAllocatorPage.h"
-#include "Application.h"
+#include "DX12Core.h"
 
 namespace Kame {
 
   DescriptorAllocatorPage::DescriptorAllocatorPage(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors)
     : m_HeapType(type)
     , m_NumDescriptorsInHeap(numDescriptors) {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
     heapDesc.Type = m_HeapType;

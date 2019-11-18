@@ -2,7 +2,7 @@
 
 #include "StructuredBuffer.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "ResourceStateTracker.h"
 
 #include <d3dx12.h>
@@ -16,8 +16,8 @@ namespace Kame {
       1, 4, name + L" Counter")
     , m_NumElements(0)
     , m_ElementSize(0) {
-    m_SRV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    m_UAV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_SRV = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_UAV = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
   }
 
   StructuredBuffer::StructuredBuffer(const D3D12_RESOURCE_DESC& resDesc,
@@ -29,12 +29,12 @@ namespace Kame {
       1, 4, name + L" Counter")
     , m_NumElements(numElements)
     , m_ElementSize(elementSize) {
-    m_SRV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    m_UAV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_SRV = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_UAV = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
   }
 
   void StructuredBuffer::CreateViews(size_t numElements, size_t elementSize) {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     m_NumElements = numElements;
     m_ElementSize = elementSize;

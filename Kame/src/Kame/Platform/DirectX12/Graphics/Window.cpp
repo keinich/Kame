@@ -2,7 +2,7 @@
 
 #include "Window.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "CommandQueue.h"
 #include "CommandList.h"
 #include "Game.h"
@@ -23,7 +23,7 @@ namespace Kame {
     , m_FenceValues{ 0 }
     , m_FrameValues{ 0 }
   {
-    Application& app = Application::Get();
+    DX12Core& app = DX12Core::Get();
 
     m_IsTearingSupported = app.IsTearingSupported();
 
@@ -239,7 +239,7 @@ namespace Kame {
       m_ClientWidth = std::max(1, e.Width);
       m_ClientHeight = std::max(1, e.Height);
 
-      Application::Get().Flush();
+      DX12Core::Get().Flush();
 
       // Release all references to back buffer textures.
       m_RenderTarget.AttachTexture(Color0, Texture());
@@ -264,7 +264,7 @@ namespace Kame {
   }
 
   Microsoft::WRL::ComPtr<IDXGISwapChain4> Window::CreateSwapChain() {
-    Application& app = Application::Get();
+    DX12Core& app = DX12Core::Get();
 
     ComPtr<IDXGISwapChain4> dxgiSwapChain4;
     ComPtr<IDXGIFactory4> dxgiFactory4;
@@ -328,7 +328,7 @@ namespace Kame {
   }
 
   UINT Window::Present(const Texture& texture) {
-    auto commandQueue = Application::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    auto commandQueue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
     auto commandList = commandQueue->GetCommandList();
 
     auto& backBuffer = m_BackBufferTextures[m_CurrentBackBufferIndex];
@@ -355,13 +355,13 @@ namespace Kame {
     ThrowIfFailed(m_dxgiSwapChain->Present(syncInterval, presentFlags));
 
     m_FenceValues[m_CurrentBackBufferIndex] = commandQueue->Signal();
-    m_FrameValues[m_CurrentBackBufferIndex] = Application::GetFrameCount();
+    m_FrameValues[m_CurrentBackBufferIndex] = DX12Core::GetFrameCount();
 
     m_CurrentBackBufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
 
     commandQueue->WaitForFenceValue(m_FenceValues[m_CurrentBackBufferIndex]);
 
-    Application::Get().ReleaseStaleDescriptors(m_FrameValues[m_CurrentBackBufferIndex]);
+    DX12Core::Get().ReleaseStaleDescriptors(m_FrameValues[m_CurrentBackBufferIndex]);
 
     return m_CurrentBackBufferIndex;
   }

@@ -2,7 +2,7 @@
 
 #include "Texture.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "Helpers.h"
 #include "ResourceStateTracker.h"
 
@@ -67,7 +67,7 @@ namespace Kame {
       resDesc.Height = std::max(height, 1u);
       resDesc.DepthOrArraySize = depthOrArraySize;
 
-      auto device = Application::Get().GetDevice();
+      auto device = DX12Core::Get().GetDevice();
 
       ThrowIfFailed(device->CreateCommittedResource(
         &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
@@ -134,7 +134,7 @@ namespace Kame {
 
   void Texture::CreateViews() {
     if (m_d3d12Resource) {
-      auto& app = Application::Get();
+      auto& app = DX12Core::Get();
       auto device = app.GetDevice();
 
       CD3DX12_RESOURCE_DESC desc(m_d3d12Resource->GetDesc());
@@ -160,7 +160,7 @@ namespace Kame {
   }
 
   DescriptorAllocation Texture::CreateShaderResourceView(const D3D12_SHADER_RESOURCE_VIEW_DESC* srvDesc) const {
-    auto& app = Application::Get();
+    auto& app = DX12Core::Get();
     auto device = app.GetDevice();
     auto srv = app.AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
@@ -170,7 +170,7 @@ namespace Kame {
   }
 
   DescriptorAllocation Texture::CreateUnorderedAccessView(const D3D12_UNORDERED_ACCESS_VIEW_DESC* uavDesc) const {
-    auto& app = Application::Get();
+    auto& app = DX12Core::Get();
     auto device = app.GetDevice();
     auto uav = app.AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 

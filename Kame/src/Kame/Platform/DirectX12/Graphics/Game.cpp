@@ -1,6 +1,6 @@
 #include "kmpch.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "Game.h"
 #include "Window.h"
 
@@ -23,7 +23,7 @@ namespace Kame {
       return false;
     }
 
-    m_pWindow = Application::Get().CreateRenderWindow(m_Name, m_Width, m_Height, m_vSync);
+    m_pWindow = DX12Core::Get().CreateRenderWindow(m_Name, m_Width, m_Height, m_vSync);
     m_pWindow->RegisterCallbacks(shared_from_this());
     m_pWindow->Show();
 
@@ -31,7 +31,7 @@ namespace Kame {
   }
 
   void Game::Destroy() {
-    Application::Get().DestroyWindow(m_pWindow);
+    DX12Core::Get().DestroyWindow(m_pWindow);
     m_pWindow.reset();
   }
 

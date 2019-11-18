@@ -9,13 +9,13 @@
 
 namespace Kame {
 
-  class KAME_API Application {
+  class KAME_API DX12Core {
 
     friend class Window;
 
   public:
-    Application();
-    virtual ~Application();
+    DX12Core();
+    virtual ~DX12Core();
 
     void Run();
 
@@ -24,7 +24,7 @@ namespace Kame {
     void PushLayer(Layer* layer);
     void PushOverlay(Layer* layer);
 
-    inline static Application& Get() { return *s_Instance; }
+    inline static DX12Core& Get() { return *s_Instance; }
     inline Window& GetWindow() { return *_Window; }
 
     void Update();
@@ -49,11 +49,11 @@ namespace Kame {
     bool _Running = true;
     LayerStack _LayerStack;
 
-    static Application* s_Instance;
+    static DX12Core* s_Instance;
   };
 
   // to be defined in the client
-  Application* CreateApplication();
+  DX12Core* CreateApplication();
 
 }
 

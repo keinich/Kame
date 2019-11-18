@@ -7,7 +7,7 @@
 #include <shellapi.h>
 #include <Shlwapi.h>
 
-#include <Kame/Platform/DirectX12/Graphics/Application.h>
+#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include "Tutorial4.h"
 
 #include <dxgidebug.h>
@@ -44,12 +44,12 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR lpCmdL
         LocalFree(argv);
     }
 
-    Kame::Application::Create(hInstance);
+    Kame::DX12Core::Create(hInstance);
     {
         std::shared_ptr<Kame::Tutorial4> demo = std::make_shared<Kame::Tutorial4>(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
-        retCode = Kame::Application::Get().Run(demo);
+        retCode = Kame::DX12Core::Get().Run(demo);
     }
-    Kame::Application::Destroy();
+    Kame::DX12Core::Destroy();
 
     atexit(&ReportLiveObjects);
 

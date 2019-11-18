@@ -5,7 +5,7 @@
 #include "Kame/Core.h"
 #include "Tutorial4.h"
 
-#include "Kame/Platform/DirectX12/Graphics/Application.h"
+#include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 #include "Kame/Platform/DirectX12/Graphics/CommandQueue.h"
 #include "Kame/Platform/DirectX12/Graphics/CommandList.h"
 #include "Kame/Platform/DirectX12/Graphics/Helpers.h"
@@ -168,8 +168,8 @@ namespace Kame {
   }
 
   bool Tutorial4::LoadContent() {
-    auto device = Application::Get().GetDevice();
-    auto commandQueue = Application::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY);
+    auto device = DX12Core::Get().GetDevice();
+    auto commandQueue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY);
     auto commandList = commandQueue->GetCommandList();
 
     // Create a Cube mesh
@@ -741,7 +741,7 @@ namespace Kame {
   void Tutorial4::OnRender(RenderEventArgs& e) {
     super::OnRender(e);
 
-    auto commandQueue = Application::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    auto commandQueue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
     auto commandList = commandQueue->GetCommandList();
 
     // Clear the render targets.
@@ -975,7 +975,7 @@ namespace Kame {
     {*/
     switch (e.Key) {
     case KeyCode::Escape:
-      Application::Get().Quit(0);
+      DX12Core::Get().Quit(0);
       break;
     case KeyCode::Enter:
       if (e.Alt) {

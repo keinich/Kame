@@ -2,7 +2,7 @@
 
 #include "CommandList.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "ByteAddressBuffer.h"
 #include "ConstantBuffer.h"
 #include "CommandQueue.h"
@@ -29,7 +29,7 @@ namespace Kame {
 
   CommandList::CommandList(D3D12_COMMAND_LIST_TYPE type)
     : m_d3d12CommandListType(type) {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     ThrowIfFailed(device->CreateCommandAllocator(m_d3d12CommandListType, IID_PPV_ARGS(&m_d3d12CommandAllocator)));
 
@@ -126,7 +126,7 @@ namespace Kame {
 
 
   void CommandList::CopyBuffer(Buffer& buffer, size_t numElements, size_t elementSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags) {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     size_t bufferSize = numElements * elementSize;
 
@@ -271,7 +271,7 @@ namespace Kame {
         break;
       }
 
-      auto device = Application::Get().GetDevice();
+      auto device = DX12Core::Get().GetDevice();
       Microsoft::WRL::ComPtr<ID3D12Resource> textureResource;
 
       ThrowIfFailed(device->CreateCommittedResource(
@@ -318,7 +318,7 @@ namespace Kame {
   void CommandList::GenerateMips(Texture& texture) {
     if (m_d3d12CommandListType == D3D12_COMMAND_LIST_TYPE_COPY) {
       if (!m_ComputeCommandList) {
-        m_ComputeCommandList = Application::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)->GetCommandList();
+        m_ComputeCommandList = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)->GetCommandList();
       }
       m_ComputeCommandList->GenerateMips(texture);
       return;
@@ -352,7 +352,7 @@ namespace Kame {
     // the mipmap chain.
     if (!texture.CheckUAVSupport() ||
       (resourceDesc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS) == 0) {
-      auto device = Application::Get().GetDevice();
+      auto device = DX12Core::Get().GetDevice();
 
       // Describe an alias resource that is used to copy the original texture.
       auto aliasDesc = resourceDesc;
@@ -529,7 +529,7 @@ namespace Kame {
   void CommandList::PanoToCubemap(Texture& cubemapTexture, const Texture& panoTexture) {
     if (m_d3d12CommandListType == D3D12_COMMAND_LIST_TYPE_COPY) {
       if (!m_ComputeCommandList) {
-        m_ComputeCommandList = Application::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)->GetCommandList();
+        m_ComputeCommandList = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)->GetCommandList();
       }
       m_ComputeCommandList->PanoToCubemap(cubemapTexture, panoTexture);
       return;
@@ -539,7 +539,7 @@ namespace Kame {
       m_PanoToCubemapPSO = std::make_unique<PanoToCubemapPSO>();
     }
 
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     auto cubemapResource = cubemapTexture.GetD3D12Resource();
     if (!cubemapResource) return;
@@ -635,7 +635,7 @@ namespace Kame {
   }
 
   void CommandList::CopyTextureSubresource(Texture& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData) {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
     auto destinationResource = texture.GetD3D12Resource();
 
     if (destinationResource) {

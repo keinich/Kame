@@ -2,7 +2,7 @@
 
 #include "ConstantBuffer.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 
 #include "d3dx12.h"
 
@@ -11,7 +11,7 @@ namespace Kame {
   ConstantBuffer::ConstantBuffer(const std::wstring& name)
     : Buffer(name)
     , m_SizeInBytes(0) {
-    m_ConstantBufferView = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_ConstantBufferView = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
   }
 
   ConstantBuffer::~ConstantBuffer() {}
@@ -23,7 +23,7 @@ namespace Kame {
     d3d12ConstantBufferViewDesc.BufferLocation = m_d3d12Resource->GetGPUVirtualAddress();
     d3d12ConstantBufferViewDesc.SizeInBytes = static_cast<UINT>(Kame::Math::AlignUp(m_SizeInBytes, 16));
 
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     device->CreateConstantBufferView(&d3d12ConstantBufferViewDesc, m_ConstantBufferView.GetDescriptorHandle());
   }

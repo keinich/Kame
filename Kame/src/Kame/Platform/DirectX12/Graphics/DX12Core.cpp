@@ -1,5 +1,5 @@
 #include "kmpch.h"
-#include "Application.h"
+#include "DX12Core.h"
 //#include "..\resource.h"
 
 #include "CommandQueue.h"
@@ -15,11 +15,11 @@ namespace Kame {
   using WindowMap = std::map< HWND, WindowPtr >;
   using WindowNameMap = std::map< std::wstring, WindowPtr >;
 
-  static Application* gs_pSingelton = nullptr;
+  static DX12Core* gs_pSingelton = nullptr;
   static WindowMap gs_Windows;
   static WindowNameMap gs_WindowByName;
 
-  uint64_t Application::ms_FrameCount = 0;
+  uint64_t DX12Core::ms_FrameCount = 0;
 
   static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
   extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -32,7 +32,7 @@ namespace Kame {
       : Window(hWnd, windowName, clientWidth, clientHeight, vSync) {}
   };
 
-  Application::Application(HINSTANCE hInst)
+  DX12Core::DX12Core(HINSTANCE hInst)
     : m_hInstance(hInst)
     , m_TearingSupported(false) {
     // Windows 10 Creators update adds Per Monitor V2 DPI awareness context.
@@ -59,7 +59,7 @@ namespace Kame {
     }
   }
 
-  void Application::Initialize() {
+  void DX12Core::Initialize() {
 #if defined(_DEBUG)
     // Always enable the debug layer before doing anything DX12 related
     // so all possible errors generated while creating DX12 objects
@@ -100,19 +100,19 @@ namespace Kame {
     ms_FrameCount = 0;
   }
 
-  void Application::Create(HINSTANCE hInst) {
+  void DX12Core::Create(HINSTANCE hInst) {
     if (!gs_pSingelton) {
-      gs_pSingelton = new Application(hInst);
+      gs_pSingelton = new DX12Core(hInst);
       gs_pSingelton->Initialize();
     }
   }
 
-  Application& Application::Get() {
+  DX12Core& DX12Core::Get() {
     assert(gs_pSingelton);
     return *gs_pSingelton;
   }
 
-  void Application::Destroy() {
+  void DX12Core::Destroy() {
     if (gs_pSingelton) {
       assert(gs_Windows.empty() && gs_WindowByName.empty() &&
         "All windows should be destroyed before destroying the application instance.");
@@ -122,11 +122,11 @@ namespace Kame {
     }
   }
 
-  Application::~Application() {
+  DX12Core::~DX12Core() {
     Flush();
   }
 
-  Microsoft::WRL::ComPtr<IDXGIAdapter4> Application::GetAdapter(bool bUseWarp) {
+  Microsoft::WRL::ComPtr<IDXGIAdapter4> DX12Core::GetAdapter(bool bUseWarp) {
     ComPtr<IDXGIFactory4> dxgiFactory;
     UINT createFactoryFlags = 0;
 #if defined(_DEBUG)
@@ -163,7 +163,7 @@ namespace Kame {
 
     return dxgiAdapter4;
   }
-  Microsoft::WRL::ComPtr<ID3D12Device2> Application::CreateDevice(Microsoft::WRL::ComPtr<IDXGIAdapter4> adapter) {
+  Microsoft::WRL::ComPtr<ID3D12Device2> DX12Core::CreateDevice(Microsoft::WRL::ComPtr<IDXGIAdapter4> adapter) {
     ComPtr<ID3D12Device2> d3d12Device2;
     ThrowIfFailed(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&d3d12Device2)));
     //    NAME_D3D12_OBJECT(d3d12Device2);
@@ -208,7 +208,7 @@ namespace Kame {
     return d3d12Device2;
   }
 
-  bool Application::CheckTearingSupport() {
+  bool DX12Core::CheckTearingSupport() {
     BOOL allowTearing = FALSE;
 
     // Rather than create the DXGI 1.5 factory interface directly, we create the
@@ -227,11 +227,11 @@ namespace Kame {
     return allowTearing == TRUE;
   }
 
-  bool Application::IsTearingSupported() const {
+  bool DX12Core::IsTearingSupported() const {
     return m_TearingSupported;
   }
 
-  DXGI_SAMPLE_DESC Application::GetMultisampleQualityLevels(DXGI_FORMAT format, UINT numSamples, D3D12_MULTISAMPLE_QUALITY_LEVEL_FLAGS flags) const {
+  DXGI_SAMPLE_DESC DX12Core::GetMultisampleQualityLevels(DXGI_FORMAT format, UINT numSamples, D3D12_MULTISAMPLE_QUALITY_LEVEL_FLAGS flags) const {
     DXGI_SAMPLE_DESC sampleDesc = { 1, 0 };
 
     D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS qualityLevels;
@@ -253,7 +253,7 @@ namespace Kame {
   }
 
 
-  std::shared_ptr<Window> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
+  std::shared_ptr<Window> DX12Core::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
     // First check if a window with the given name already exists.
     WindowNameMap::iterator windowIter = gs_WindowByName.find(windowName);
     if (windowIter != gs_WindowByName.end()) {
@@ -283,18 +283,18 @@ namespace Kame {
     return pWindow;
   }
 
-  void Application::DestroyWindow(std::shared_ptr<Window> window) {
+  void DX12Core::DestroyWindow(std::shared_ptr<Window> window) {
     if (window) window->Destroy();
   }
 
-  void Application::DestroyWindow(const std::wstring& windowName) {
+  void DX12Core::DestroyWindow(const std::wstring& windowName) {
     WindowPtr pWindow = GetWindowByName(windowName);
     if (pWindow) {
       DestroyWindow(pWindow);
     }
   }
 
-  std::shared_ptr<Window> Application::GetWindowByName(const std::wstring& windowName) {
+  std::shared_ptr<Window> DX12Core::GetWindowByName(const std::wstring& windowName) {
     std::shared_ptr<Window> window;
     WindowNameMap::iterator iter = gs_WindowByName.find(windowName);
     if (iter != gs_WindowByName.end()) {
@@ -305,7 +305,7 @@ namespace Kame {
   }
 
 
-  int Application::Run(std::shared_ptr<Game> pGame) {
+  int DX12Core::Run(std::shared_ptr<Game> pGame) {
     if (!pGame->Initialize()) return 1;
     if (!pGame->LoadContent()) return 2;
 
@@ -326,15 +326,15 @@ namespace Kame {
     return static_cast<int>(msg.wParam);
   }
 
-  void Application::Quit(int exitCode) {
+  void DX12Core::Quit(int exitCode) {
     PostQuitMessage(exitCode);
   }
 
-  Microsoft::WRL::ComPtr<ID3D12Device2> Application::GetDevice() const {
+  Microsoft::WRL::ComPtr<ID3D12Device2> DX12Core::GetDevice() const {
     return m_d3d12Device;
   }
 
-  std::shared_ptr<CommandQueue> Application::GetCommandQueue(D3D12_COMMAND_LIST_TYPE type) const {
+  std::shared_ptr<CommandQueue> DX12Core::GetCommandQueue(D3D12_COMMAND_LIST_TYPE type) const {
     std::shared_ptr<CommandQueue> commandQueue;
     switch (type) {
     case D3D12_COMMAND_LIST_TYPE_DIRECT:
@@ -353,23 +353,23 @@ namespace Kame {
     return commandQueue;
   }
 
-  void Application::Flush() {
+  void DX12Core::Flush() {
     m_DirectCommandQueue->Flush();
     m_ComputeCommandQueue->Flush();
     m_CopyCommandQueue->Flush();
   }
 
-  DescriptorAllocation Application::AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors) {
+  DescriptorAllocation DX12Core::AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors) {
     return m_DescriptorAllocators[type]->Allocate(numDescriptors);
   }
 
-  void Application::ReleaseStaleDescriptors(uint64_t finishedFrame) {
+  void DX12Core::ReleaseStaleDescriptors(uint64_t finishedFrame) {
     for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
       m_DescriptorAllocators[i]->ReleaseStaleDescriptors(finishedFrame);
     }
   }
 
-  Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> Application::CreateDescriptorHeap(UINT numDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE type) {
+  Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DX12Core::CreateDescriptorHeap(UINT numDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE type) {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
     desc.Type = type;
     desc.NumDescriptors = numDescriptors;
@@ -382,7 +382,7 @@ namespace Kame {
     return descriptorHeap;
   }
 
-  UINT Application::GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE type) const {
+  UINT DX12Core::GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE type) const {
     return m_d3d12Device->GetDescriptorHandleIncrementSize(type);
   }
 
@@ -445,12 +445,12 @@ namespace Kame {
       switch (message) {
       case WM_PAINT:
       {
-        ++Application::ms_FrameCount;
+        ++DX12Core::ms_FrameCount;
 
         // Delta time will be filled in by the Window.
-        UpdateEventArgs updateEventArgs(0.0f, 0.0f, Application::ms_FrameCount);
+        UpdateEventArgs updateEventArgs(0.0f, 0.0f, DX12Core::ms_FrameCount);
         pWindow->OnUpdate(updateEventArgs);
-        RenderEventArgs renderEventArgs(0.0f, 0.0f, Application::ms_FrameCount);
+        RenderEventArgs renderEventArgs(0.0f, 0.0f, DX12Core::ms_FrameCount);
         // Delta time will be filled in by the Window.
         pWindow->OnRender(renderEventArgs);
       }

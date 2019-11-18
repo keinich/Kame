@@ -2,7 +2,7 @@
 
 #include "DescriptorAllocation.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "DescriptorAllocatorPage.h"
 
 namespace Kame {
@@ -53,7 +53,7 @@ namespace Kame {
 
   void DescriptorAllocation::Free() {
     if (!IsNull() && m_Page) {
-      m_Page->Free(std::move(*this), Application::GetFrameCount());
+      m_Page->Free(std::move(*this), DX12Core::GetFrameCount());
 
       m_Descriptor.ptr = 0;
       m_NumHandles = 0;

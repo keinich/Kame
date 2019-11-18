@@ -1,7 +1,7 @@
 #include "kmpch.h"
 #include "Mesh.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 
 
 using namespace DirectX;

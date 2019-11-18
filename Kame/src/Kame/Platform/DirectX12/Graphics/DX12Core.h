@@ -46,7 +46,7 @@ namespace Kame {
   class Game;
   class Window;
 
-  class KAME_API Application {
+  class KAME_API DX12Core {
   public:
 
     /**
@@ -61,7 +61,7 @@ namespace Kame {
     /**
     * Get the application singleton.
     */
-    static Application& Get();
+    static DX12Core& Get();
 
     /**
      * Check to see if VSync-off is supported.
@@ -149,9 +149,9 @@ namespace Kame {
   protected:
 
     // Create an application instance.
-    Application(HINSTANCE hInst);
+    DX12Core(HINSTANCE hInst);
     // Destroy the application instance and all windows associated with this application.
-    virtual ~Application();
+    virtual ~DX12Core();
 
     // Initialize the application instance.
     void Initialize();
@@ -162,8 +162,8 @@ namespace Kame {
 
   private:
     friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-    Application(const Application& copy) = delete;
-    Application& operator=(const Application& other) = delete;
+    DX12Core(const DX12Core& copy) = delete;
+    DX12Core& operator=(const DX12Core& other) = delete;
 
     HINSTANCE m_hInstance;
 

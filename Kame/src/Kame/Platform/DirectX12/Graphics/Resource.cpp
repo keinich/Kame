@@ -2,7 +2,7 @@
 
 #include "Resource.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "ResourceStateTracker.h"
 
 namespace Kame {
@@ -16,7 +16,7 @@ namespace Kame {
       m_d3d12ClearValue = std::make_unique<D3D12_CLEAR_VALUE>(*clearValue);
     }
 
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     ThrowIfFailed(device->CreateCommittedResource(
       &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
@@ -118,7 +118,7 @@ namespace Kame {
   void Resource::CheckFeatureSupport() {
     if (m_d3d12Resource) {
       auto desc = m_d3d12Resource->GetDesc();
-      auto device = Application::Get().GetDevice();
+      auto device = DX12Core::Get().GetDevice();
 
       m_FormatSupport.Format = desc.Format;
       ThrowIfFailed(device->CheckFeatureSupport(

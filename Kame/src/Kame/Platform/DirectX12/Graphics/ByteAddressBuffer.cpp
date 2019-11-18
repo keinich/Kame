@@ -2,15 +2,15 @@
 
 #include "ByteAddressBuffer.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "Kame/Math/MathCommon.h"
 
 namespace Kame {
 
   ByteAddressBuffer::ByteAddressBuffer(const std::wstring& name)
     : Buffer(name) {
-    m_SRV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    m_UAV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_SRV = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_UAV = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
   }
 
   ByteAddressBuffer::ByteAddressBuffer(const D3D12_RESOURCE_DESC& resDesc,
@@ -19,7 +19,7 @@ namespace Kame {
     : Buffer(resDesc, numElements, elementSize, name) {}
 
   void ByteAddressBuffer::CreateViews(size_t numElements, size_t elementSize) {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     // Make sure buffer size is aligned to 4 bytes.
     m_BufferSize = Kame::Math::AlignUp(numElements * elementSize, 4);

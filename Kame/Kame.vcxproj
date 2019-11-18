@@ -170,7 +170,7 @@
     <ClInclude Include="src\Kame\Math\MathCommon.h" />
     <ClInclude Include="src\Kame\Memory\Memory.h" />
     <ClInclude Include="src\Kame\MouseButtonCodes.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Application.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Buffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ByteAddressBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandList.h" />
@@ -231,7 +231,7 @@
     <ClCompile Include="src\Kame\Layer.cpp" />
     <ClCompile Include="src\Kame\LayerStack.cpp" />
     <ClCompile Include="src\Kame\Log.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Application.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Buffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ByteAddressBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandList.cpp" />

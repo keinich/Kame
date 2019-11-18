@@ -125,7 +125,7 @@ namespace Kame {
     friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     // Only the application can create a window.
-    friend class Application;
+    friend class DX12Core;
     // The DirectXTemplate class needs to register itself with a window.
     friend class Game;
 

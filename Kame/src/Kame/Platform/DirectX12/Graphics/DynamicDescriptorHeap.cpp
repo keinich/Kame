@@ -2,7 +2,7 @@
 
 #include "DynamicDescriptorHeap.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "CommandList.h"
 #include "RootSignature.h"
 
@@ -16,7 +16,7 @@ namespace Kame {
     , m_CurrentCPUDescriptorHandle(D3D12_DEFAULT)
     , m_CurrentGPUDescriptorHandle(D3D12_DEFAULT)
     , m_NumFreeHandles(0) {
-    m_DescriptorHandleIncrementSize = Application::Get().GetDescriptorHandleIncrementSize(heapType);
+    m_DescriptorHandleIncrementSize = DX12Core::Get().GetDescriptorHandleIncrementSize(heapType);
 
     // Allocate space for staging CPU visible descriptors.
     m_DescriptorHandleCache = std::make_unique<D3D12_CPU_DESCRIPTOR_HANDLE[]>(m_NumDescriptorsPerHeap);
@@ -108,7 +108,7 @@ namespace Kame {
   }
 
   Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> DynamicDescriptorHeap::CreateDescriptorHeap() {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
     descriptorHeapDesc.Type = m_DescriptorHeapType;
@@ -126,7 +126,7 @@ namespace Kame {
     uint32_t numDescriptorsToCommit = ComputeStaleDescriptorCount();
 
     if (numDescriptorsToCommit > 0) {
-      auto device = Application::Get().GetDevice();
+      auto device = DX12Core::Get().GetDevice();
       auto d3d12GraphicsCommandList = commandList.GetGraphicsCommandList().Get();
       assert(d3d12GraphicsCommandList != nullptr);
 
@@ -200,7 +200,7 @@ namespace Kame {
       m_StaleDescriptorTableBitMask = m_DescriptorTableBitMask;
     }
 
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     D3D12_GPU_DESCRIPTOR_HANDLE hGPU = m_CurrentGPUDescriptorHandle;
     device->CopyDescriptorsSimple(1, m_CurrentCPUDescriptorHandle, cpuDescriptor, m_DescriptorHeapType);

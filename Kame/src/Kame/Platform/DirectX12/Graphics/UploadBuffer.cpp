@@ -2,7 +2,7 @@
 
 #include "UploadBuffer.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "Helpers.h"
 
 namespace Kame {
@@ -57,7 +57,7 @@ namespace Kame {
     , m_Offset(0)
     , m_CPUPtr(nullptr)
     , m_GPUPtr(D3D12_GPU_VIRTUAL_ADDRESS(0)) {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     ThrowIfFailed(device->CreateCommittedResource(
       &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),

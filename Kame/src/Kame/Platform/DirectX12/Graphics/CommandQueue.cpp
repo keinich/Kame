@@ -2,7 +2,7 @@
 
 #include "CommandQueue.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "CommandList.h"
 #include "ResourceStateTracker.h"
 
@@ -12,7 +12,7 @@ namespace Kame {
     : m_FenceValue(0)
     , m_CommandListType(type)
     , m_bProcessInFlightCommandLists(true) {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     D3D12_COMMAND_QUEUE_DESC desc = {};
     desc.Type = type;
@@ -147,7 +147,7 @@ namespace Kame {
     // If there are any command lists that generate mips then execute those
     // after the initial resource command lists have finished.
     if (generateMipsCommandLists.size() > 0) {
-      auto computeQueue = Application::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+      auto computeQueue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
       computeQueue->Wait(*this);
       computeQueue->ExecuteCommandLists(generateMipsCommandLists);
     }

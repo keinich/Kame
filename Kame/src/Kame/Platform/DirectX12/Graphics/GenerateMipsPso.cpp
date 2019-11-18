@@ -4,7 +4,7 @@
 
 #include "GenerateMips_CS.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 #include "Helpers.h"
 
 #include "d3dx12.h"
@@ -12,7 +12,7 @@
 namespace Kame {
 
   GenerateMipsPSO::GenerateMipsPSO() {
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
     featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
@@ -62,7 +62,7 @@ namespace Kame {
     ThrowIfFailed(device->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&m_PipelineState)));
 
     // Create some default texture UAV's to pad any unused UAV's during mip map generation.
-    m_DefaultUAV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 4);
+    m_DefaultUAV = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 4);
 
     for (UINT i = 0; i < 4; ++i) {
       D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};

@@ -2,7 +2,7 @@
 
 #include "RootSignature.h"
 
-#include "Application.h"
+#include "DX12Core.h"
 
 namespace Kame {
 
@@ -57,7 +57,7 @@ namespace Kame {
     // up first.
     Destroy();
 
-    auto device = Application::Get().GetDevice();
+    auto device = DX12Core::Get().GetDevice();
 
     UINT numParameters = rootSignatureDesc.NumParameters;
     D3D12_ROOT_PARAMETER1* pParameters = numParameters > 0 ? new D3D12_ROOT_PARAMETER1[numParameters] : nullptr;
