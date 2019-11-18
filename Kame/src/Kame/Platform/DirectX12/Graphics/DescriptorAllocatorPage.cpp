@@ -1,156 +1,198 @@
 #include "kmpch.h"
+
 #include "DescriptorAllocatorPage.h"
+#include "Application.h"
 
-#include "DX12Core.h"
+DescriptorAllocatorPage::DescriptorAllocatorPage( D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors )
+    : m_HeapType( type )
+    , m_NumDescriptorsInHeap( numDescriptors )
+{
+    auto device = Application::Get().GetDevice();
 
-Kame::DescriptorAllocatorPage::DescriptorAllocatorPage(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors) {
-  _HeapType = type;
-  _NumDescriptorsInHeap = numDescriptors;
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+    heapDesc.Type = m_HeapType;
+    heapDesc.NumDescriptors = m_NumDescriptorsInHeap;
 
-  auto device = DX12Core::GetDevice();
+    ThrowIfFailed( device->CreateDescriptorHeap( &heapDesc, IID_PPV_ARGS( &m_d3d12DescriptorHeap ) ) );
 
-  D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-  heapDesc.Type = _HeapType;
-  heapDesc.NumDescriptors = _NumDescriptorsInHeap;
+    m_BaseDescriptor = m_d3d12DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+    m_DescriptorHandleIncrementSize = device->GetDescriptorHandleIncrementSize( m_HeapType );
+    m_NumFreeHandles = m_NumDescriptorsInHeap;
 
-  ThrowIfFailed(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&_D3D12DescriptorHeap)));
-
-  _BaseDescriptor = _D3D12DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-  _DescriptorHandleIncrementSize = device->GetDescriptorHandleIncrementSize(_HeapType);
-  _NumFreeHandles = _NumDescriptorsInHeap;
-
-  AddNewBlock(0, _NumFreeHandles);
+    // Initialize the free lists
+    AddNewBlock( 0, m_NumFreeHandles );
 }
 
-D3D12_DESCRIPTOR_HEAP_TYPE Kame::DescriptorAllocatorPage::GetHeapType() const {
-  return _HeapType;
+D3D12_DESCRIPTOR_HEAP_TYPE DescriptorAllocatorPage::GetHeapType() const
+{
+    return m_HeapType;
 }
 
-bool Kame::DescriptorAllocatorPage::HasSpace(uint32_t numDescriptors) const {
-  return _FreeListBySize.lower_bound(numDescriptors) != _FreeListBySize.end();
+uint32_t DescriptorAllocatorPage::NumFreeHandles() const
+{
+    return m_NumFreeHandles;
 }
 
-uint32_t Kame::DescriptorAllocatorPage::GetNumFreeHandles() const {
-  return _NumFreeHandles;
+bool DescriptorAllocatorPage::HasSpace( uint32_t numDescriptors ) const
+{
+    return m_FreeListBySize.lower_bound(numDescriptors) != m_FreeListBySize.end();
 }
 
-Kame::DescriptorAllocation Kame::DescriptorAllocatorPage::Allocate(uint32_t numDescriptors) {
-
-  std::lock_guard<std::mutex> lock(_AllocationMutex);
-
-  if (numDescriptors > _NumFreeHandles) {
-    return DescriptorAllocation();
-  }
-
-  auto smallestBlockIt = _FreeListBySize.lower_bound(numDescriptors);
-  if (smallestBlockIt == _FreeListBySize.end()) {
-    return DescriptorAllocation();
-  }
-
-
-  auto blockSize = smallestBlockIt->first;
-  auto offsetIt = smallestBlockIt->second;
-  auto offset = offsetIt->first;
-
-  _FreeListBySize.erase(smallestBlockIt);
-  _FreeListByOffset.erase(offsetIt);
-
-  auto newOffset = offset + numDescriptors;
-  auto newSize = blockSize - numDescriptors;
-
-  if (newSize > 0) {
-    AddNewBlock(newOffset, newSize);
-  }
-
-  _NumFreeHandles -= numDescriptors;
-
-  return DescriptorAllocation(
-    CD3DX12_CPU_DESCRIPTOR_HANDLE(_BaseDescriptor, offset, _DescriptorHandleIncrementSize),
-    numDescriptors, _DescriptorHandleIncrementSize, shared_from_this()
-  );
+void DescriptorAllocatorPage::AddNewBlock( uint32_t offset, uint32_t numDescriptors )
+{
+    auto offsetIt = m_FreeListByOffset.emplace( offset, numDescriptors );
+    auto sizeIt = m_FreeListBySize.emplace( numDescriptors, offsetIt.first );
+    offsetIt.first->second.FreeListBySizeIt = sizeIt;
 }
 
-void Kame::DescriptorAllocatorPage::Free(DescriptorAllocation&& descriptor, uint64_t frameNumber) {
-  auto offset = ComputeOffset(descriptor.GetDescriptorHandle());
+DescriptorAllocation DescriptorAllocatorPage::Allocate( uint32_t numDescriptors )
+{
+    std::lock_guard<std::mutex> lock( m_AllocationMutex );
 
-  std::lock_guard < std::mutex> lock(_AllocationMutex);
+    // There are less than the requested number of descriptors left in the heap.
+    // Return a NULL descriptor and try another heap.
+    if ( numDescriptors > m_NumFreeHandles )
+    {
+        return DescriptorAllocation();
+    }
 
-  _StaleDescriptors.emplace(offset, descriptor.GetNumHandles(), frameNumber);
+    // Get the first block that is large enough to satisfy the request.
+    auto smallestBlockIt = m_FreeListBySize.lower_bound( numDescriptors );
+    if ( smallestBlockIt == m_FreeListBySize.end() )
+    {
+        // There was no free block that could satisfy the request.
+        return DescriptorAllocation();
+    }
 
+    // The size of the smallest block that satisfies the request.
+    auto blockSize = smallestBlockIt->first;
+
+    // The pointer to the same entry in the FreeListByOffset map.
+    auto offsetIt = smallestBlockIt->second;
+
+    // The offset in the descriptor heap.
+    auto offset = offsetIt->first;
+
+    // Remove the existing free block from the free list.
+    m_FreeListBySize.erase( smallestBlockIt );
+    m_FreeListByOffset.erase( offsetIt );
+
+    // Compute the new free block that results from splitting this block.
+    auto newOffset = offset + numDescriptors;
+    auto newSize = blockSize - numDescriptors;
+
+    if ( newSize > 0 )
+    {
+        // If the allocation didn't exactly match the requested size,
+        // return the left-over to the free list.
+        AddNewBlock( newOffset, newSize );
+    }
+
+    // Decrement free handles.
+    m_NumFreeHandles -= numDescriptors;
+
+    return DescriptorAllocation(
+        CD3DX12_CPU_DESCRIPTOR_HANDLE( m_BaseDescriptor, offset, m_DescriptorHandleIncrementSize ),
+        numDescriptors, m_DescriptorHandleIncrementSize, shared_from_this() );
 }
 
-void Kame::DescriptorAllocatorPage::ReleaseStaleDescriptors(uint64_t frameNumber) {
-
-  std::lock_guard<std::mutex> lock(_AllocationMutex);
-
-  while (!_StaleDescriptors.empty() && _StaleDescriptors.front().FrameNumber <= frameNumber) {
-    auto& staleDescriptor = _StaleDescriptors.front();
-
-    auto offset = staleDescriptor.Offset;
-    auto numDescriptors = staleDescriptor.Size;
-
-    FreeBlock(offset, numDescriptors);
-    _StaleDescriptors.pop();
-  }
-
+uint32_t DescriptorAllocatorPage::ComputeOffset( D3D12_CPU_DESCRIPTOR_HANDLE handle )
+{
+    return static_cast<uint32_t>( handle.ptr - m_BaseDescriptor.ptr ) / m_DescriptorHandleIncrementSize;
 }
 
-uint32_t Kame::DescriptorAllocatorPage::ComputeOffset(D3D12_CPU_DESCRIPTOR_HANDLE handle) {
-  return static_cast<uint32_t>(handle.ptr - _BaseDescriptor.ptr) / _DescriptorHandleIncrementSize;
+void DescriptorAllocatorPage::Free( DescriptorAllocation&& descriptor, uint64_t frameNumber )
+{
+    // Compute the offset of the descriptor within the descriptor heap.
+    auto offset = ComputeOffset( descriptor.GetDescriptorHandle() );
+
+    std::lock_guard<std::mutex> lock( m_AllocationMutex );
+
+    // Don't add the block directly to the free list until the frame has completed.
+    m_StaleDescriptors.emplace( offset, descriptor.GetNumHandles(), frameNumber );
 }
 
-void Kame::DescriptorAllocatorPage::AddNewBlock(uint32_t offset, uint32_t numDescriptors) {
-  auto offsetIt = _FreeListByOffset.emplace(offset, numDescriptors);
-  auto sizeIt = _FreeListBySize.emplace(numDescriptors, offsetIt.first);
-  offsetIt.first->second.FreeListBySizeIterator = sizeIt;
+void DescriptorAllocatorPage::FreeBlock( uint32_t offset, uint32_t numDescriptors )
+{
+    // Find the first element whose offset is greater than the specified offset.
+    // This is the block that should appear after the block that is being freed.
+    auto nextBlockIt = m_FreeListByOffset.upper_bound( offset );
+
+    // Find the block that appears before the block being freed.
+    auto prevBlockIt = nextBlockIt;
+    // If it's not the first block in the list.
+    if ( prevBlockIt != m_FreeListByOffset.begin() )
+    {
+        // Go to the previous block in the list.
+        --prevBlockIt;
+    }
+    else
+    {
+        // Otherwise, just set it to the end of the list to indicate that no
+        // block comes before the one being freed.
+        prevBlockIt = m_FreeListByOffset.end();
+    }
+
+    // Add the number of free handles back to the heap.
+    // This needs to be done before merging any blocks since merging
+    // blocks modifies the numDescriptors variable.
+    m_NumFreeHandles += numDescriptors;
+
+    if ( prevBlockIt != m_FreeListByOffset.end() &&
+         offset == prevBlockIt->first + prevBlockIt->second.Size )
+    {
+        // The previous block is exactly behind the block that is to be freed.
+        //
+        // PrevBlock.Offset           Offset
+        // |                          |
+        // |<-----PrevBlock.Size----->|<------Size-------->|
+        //
+
+        // Increase the block size by the size of merging with the previous block.
+        offset = prevBlockIt->first;
+        numDescriptors += prevBlockIt->second.Size;
+
+        // Remove the previous block from the free list.
+        m_FreeListBySize.erase( prevBlockIt->second.FreeListBySizeIt );
+        m_FreeListByOffset.erase( prevBlockIt );
+    }
+
+    if ( nextBlockIt != m_FreeListByOffset.end() &&
+         offset + numDescriptors == nextBlockIt->first )
+    {
+        // The next block is exactly in front of the block that is to be freed.
+        //
+        // Offset               NextBlock.Offset 
+        // |                    |
+        // |<------Size-------->|<-----NextBlock.Size----->|
+
+        // Increase the block size by the size of merging with the next block.
+        numDescriptors += nextBlockIt->second.Size;
+
+        // Remove the next block from the free list.
+        m_FreeListBySize.erase( nextBlockIt->second.FreeListBySizeIt );
+        m_FreeListByOffset.erase( nextBlockIt );
+    }
+
+    // Add the freed block to the free list.
+    AddNewBlock( offset, numDescriptors );
 }
 
-void Kame::DescriptorAllocatorPage::FreeBlock(uint32_t offset, uint32_t numDescriptors) {
+void DescriptorAllocatorPage::ReleaseStaleDescriptors( uint64_t frameNumber )
+{
+    std::lock_guard<std::mutex> lock( m_AllocationMutex );
 
-  auto nextBlockIt = _FreeListByOffset.upper_bound(offset);
-  auto prevBlockIt = nextBlockIt;
+    while ( !m_StaleDescriptors.empty() && m_StaleDescriptors.front().FrameNumber <= frameNumber )
+    {
+        auto& staleDescriptor = m_StaleDescriptors.front();
 
-  if (prevBlockIt != _FreeListByOffset.begin()) {
-    --prevBlockIt;
-  }
-  else {
-    prevBlockIt = _FreeListByOffset.end();
-  }
+        // The offset of the descriptor in the heap.
+        auto offset = staleDescriptor.Offset;
+        // The number of descriptors that were allocated.
+        auto numDescriptors = staleDescriptor.Size;
 
-  _NumFreeHandles += numDescriptors;
+        FreeBlock( offset, numDescriptors );
 
-  if (
-    prevBlockIt != _FreeListByOffset.end() &&
-    offset == prevBlockIt->first + prevBlockIt->second.Size
-    ) {
-    // The previous block is exactly in front of the block that is to be freed.
-    //
-    // PrevBlock.Offset           Offset
-    // |                          |
-    // |<-----PrevBlock.Size----->|<------Size-------->|    
-
-    offset = prevBlockIt->first;
-    numDescriptors += prevBlockIt->second.Size;
-
-    _FreeListBySize.erase(prevBlockIt->second.FreeListBySizeIterator);
-    _FreeListByOffset.erase(prevBlockIt);
-  }
-
-  if (
-    nextBlockIt != _FreeListByOffset.end() &&
-    offset + numDescriptors == nextBlockIt->first
-    ) {
-    // The next block is exactly behind the block that is to be freed.
-    //
-    // Offset               NextBlock.Offset 
-    // |                    |
-    // |<------Size-------->|<-----NextBlock.Size----->|
-
-    numDescriptors += nextBlockIt->second.Size;
-
-    _FreeListBySize.erase(nextBlockIt->second.FreeListBySizeIterator);
-    _FreeListByOffset.erase(nextBlockIt);
-  }
-
-  AddNewBlock(offset, numDescriptors);
+        m_StaleDescriptors.pop();
+    }
 }

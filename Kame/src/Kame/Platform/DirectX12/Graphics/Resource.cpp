@@ -1,9 +1,9 @@
 #include "kmpch.h"
 
-#include <Resource.h>
+#include "Resource.h"
 
-#include <Application.h>
-#include <ResourceStateTracker.h>
+#include "Application.h"
+#include "ResourceStateTracker.h"
 
 Resource::Resource(const std::wstring& name)
     : m_ResourceName(name)

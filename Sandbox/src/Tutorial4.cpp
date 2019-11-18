@@ -5,18 +5,18 @@
 #include "Kame/Core.h"
 #include "Tutorial4.h"
          
-#include "Kame/Platform/DirectX12/3dgep/Application.h"
-#include "Kame/Platform/DirectX12/3dgep/CommandQueue.h"
-#include "Kame/Platform/DirectX12/3dgep/CommandList.h"
-#include "Kame/Platform/DirectX12/3dgep/Helpers.h"
+#include "Kame/Platform/DirectX12/Graphics/Application.h"
+#include "Kame/Platform/DirectX12/Graphics/CommandQueue.h"
+#include "Kame/Platform/DirectX12/Graphics/CommandList.h"
+#include "Kame/Platform/DirectX12/Graphics/Helpers.h"
 #include "Light.h"
 #include "Material.h"
-#include "Kame/Platform/DirectX12/3dgep/Window.h"
+#include "Kame/Platform/DirectX12/Graphics/Window.h"
 
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
-#include <Kame/Platform/DirectX12/3dgep/d3dx12.h>
+#include <Kame/Platform/DirectX12/Graphics/d3dx12.h>
 #include <d3dcompiler.h>
 #include <DirectXColors.h>
 #include <DirectXMath.h>

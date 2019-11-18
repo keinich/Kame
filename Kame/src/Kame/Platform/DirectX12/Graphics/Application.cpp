@@ -1,11 +1,11 @@
 #include "kmpch.h"
-#include <Application.h>
+#include "Application.h"
 //#include "..\resource.h"
 
-#include <CommandQueue.h>
-#include <Game.h>
-#include <DescriptorAllocator.h>
-#include <Window.h>
+#include "CommandQueue.h"
+#include "Game.h"
+#include "DescriptorAllocator.h"
+#include "Window.h"
 
 constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 

@@ -112,9 +112,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Shaders\Compiled\PanoToCumbemap_CS.h">
       <Filter>Kame\Platform\DirectX12\Graphics\Shaders\Compiled</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Shaders\GenerateMips_CS.h">
-      <Filter>Kame\Platform\DirectX12\Graphics\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.h">
       <Filter>Kame\Platform\DirectX12\ImGui</Filter>
     </ClInclude>
@@ -146,47 +143,47 @@
       <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Application.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Buffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\ByteAddressBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\CommandList.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\CommandQueue.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\ConstantBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\d3dx12.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Defines.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\DescriptorAllocation.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\DescriptorAllocator.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\DescriptorAllocatorPage.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\DX12LibPCH.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\DynamicDescriptorHeap.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Events.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Game.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\GenerateMipsPSO.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\GUI.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Helpers.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\HighResolutionClock.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\imconfig.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\imgui.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\imgui_impl_win32.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\imgui_internal.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\imstb_rectpack.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\imstb_textedit.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\imstb_truetype.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\IndexBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\KeyCodes.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Mesh.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\PanoToCubemapPSO.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\RenderTarget.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Resource.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\ResourceStateTracker.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\RootSignature.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\StructuredBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Texture.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\TextureUsage.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\ThreadSafeQueue.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\UploadBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\VertexBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\3dgep\Window.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Application.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Buffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ByteAddressBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandList.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\CommandQueue.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ConstantBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\d3dx12.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Defines.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocation.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12LibPCH.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Events.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Game.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPSO.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GUI.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Helpers.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\HighResolutionClock.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imconfig.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imgui.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imgui_impl_win32.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imgui_internal.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imstb_rectpack.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imstb_textedit.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imstb_truetype.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\KeyCodes.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Mesh.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderTarget.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Resource.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\StructuredBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Texture.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\TextureUsage.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ThreadSafeQueue.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp">
@@ -217,43 +214,43 @@
       <Filter>Kame\Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\Application.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\Buffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\ByteAddressBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\CommandList.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\CommandQueue.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\ConstantBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\DescriptorAllocation.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\DescriptorAllocator.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\DescriptorAllocatorPage.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\DX12LibPCH.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\DynamicDescriptorHeap.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\Game.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\GenerateMipsPSO.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\GUI.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\HighResolutionClock.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\imgui.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\imgui_demo.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\imgui_draw.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\imgui_impl_win32.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\imgui_widgets.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\IndexBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\Mesh.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\PanoToCubemapPSO.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\RenderTarget.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\Resource.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\ResourceStateTracker.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\RootSignature.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\StructuredBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\Texture.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\UploadBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\VertexBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\3dgep\Window.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Application.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Buffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ByteAddressBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandList.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\CommandQueue.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ConstantBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocation.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocator.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12LibPCH.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Game.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPSO.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GUI.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\HighResolutionClock.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui_demo.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui_draw.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui_widgets.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Mesh.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderTarget.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Resource.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\StructuredBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="src\Kame\Platform\DirectX12\3dgep\Resources\Shaders\GenerateMips_CS.hlsl" />
-    <FxCompile Include="src\Kame\Platform\DirectX12\3dgep\Resources\Shaders\ImGUI_PS.hlsl" />
-    <FxCompile Include="src\Kame\Platform\DirectX12\3dgep\Resources\Shaders\ImGUI_VS.hlsl" />
-    <FxCompile Include="src\Kame\Platform\DirectX12\3dgep\Resources\Shaders\PanoToCubemap_CS.hlsl" />
+    <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl" />
+    <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\ImGUI_PS.hlsl" />
+    <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\ImGUI_VS.hlsl" />
+    <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\PanoToCubemap_CS.hlsl" />
   </ItemGroup>
 </Project>

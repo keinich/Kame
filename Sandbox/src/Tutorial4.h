@@ -32,15 +32,15 @@
 
 
 #include "Camera.h"
-#include "Kame/Platform/DirectX12/3dgep/Game.h"
-#include "Kame/Platform/DirectX12/3dgep/IndexBuffer.h"
+#include "Kame/Platform/DirectX12/Graphics/Game.h"
+#include "Kame/Platform/DirectX12/Graphics/IndexBuffer.h"
 #include "Light.h"
-#include "Kame/Platform/DirectX12/3dgep/Window.h"
-#include "Kame/Platform/DirectX12/3dgep/Mesh.h"
-#include "Kame/Platform/DirectX12/3dgep/RenderTarget.h"
-#include "Kame/Platform/DirectX12/3dgep/RootSignature.h"
-#include "Kame/Platform/DirectX12/3dgep/Texture.h"
-#include "Kame/Platform/DirectX12/3dgep/VertexBuffer.h"
+#include "Kame/Platform/DirectX12/Graphics/Window.h"
+#include "Kame/Platform/DirectX12/Graphics/Mesh.h"
+#include "Kame/Platform/DirectX12/Graphics/RenderTarget.h"
+#include "Kame/Platform/DirectX12/Graphics/RootSignature.h"
+#include "Kame/Platform/DirectX12/Graphics/Texture.h"
+#include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
 
 #include <DirectXMath.h>
 

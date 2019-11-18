@@ -1,45 +1,76 @@
 #include "kmpch.h"
+
 #include "DescriptorAllocator.h"
+#include "DescriptorAllocatorPage.h"
 
-#include "DX12Core.h"
+DescriptorAllocator::DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptorsPerHeap)
+    : m_HeapType(type)
+    , m_NumDescriptorsPerHeap(numDescriptorsPerHeap)
+{
+}
 
-namespace Kame {
+DescriptorAllocator::~DescriptorAllocator()
+{}
 
-  GlobalDescriptorAllocator* GlobalDescriptorAllocator::_Instance = nullptr;
+std::shared_ptr<DescriptorAllocatorPage> DescriptorAllocator::CreateAllocatorPage()
+{
+    auto newPage = std::make_shared<DescriptorAllocatorPage>( m_HeapType, m_NumDescriptorsPerHeap );
 
-  D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(uint32_t count) {
+    m_HeapPool.emplace_back( newPage );
+    m_AvailableHeaps.insert( m_HeapPool.size() - 1 );
 
-    if (_CurrentHeap == nullptr || _RemainingFreeHandles < count) {      
-      _CurrentHeap = DX12Core::GetGlobalDescriptorAllocator()->RequestNewHeap(_Type);
-      _CurrentHandle = _CurrentHeap->GetCPUDescriptorHandleForHeapStart();
-      _RemainingFreeHandles = DX12Core::GetGlobalDescriptorAllocator()->_NumDescriptorsPerHeap;
+    return newPage;
+}
 
-      if (_DescriptorSize == 0)
-        _DescriptorSize = DX12Core::GetDevice()->GetDescriptorHandleIncrementSize(_Type);
+DescriptorAllocation DescriptorAllocator::Allocate(uint32_t numDescriptors)
+{
+    std::lock_guard<std::mutex> lock( m_AllocationMutex );
+
+    DescriptorAllocation allocation;
+
+    for ( auto iter = m_AvailableHeaps.begin(); iter != m_AvailableHeaps.end(); ++iter )
+    {
+        auto allocatorPage = m_HeapPool[*iter];
+
+        allocation = allocatorPage->Allocate( numDescriptors );
+
+        if ( allocatorPage->NumFreeHandles() == 0 )
+        {
+            iter = m_AvailableHeaps.erase( iter );
+        }
+
+        // A valid allocation has been found.
+        if ( !allocation.IsNull() )
+        {
+            break;
+        }
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE result = _CurrentHandle;
-    _CurrentHandle.ptr += (count * _DescriptorSize);
-    _RemainingFreeHandles -= count;
-    return result;
+    // No available heap could satisfy the requested number of descriptors.
+    if ( allocation.IsNull() )
+    {
+        m_NumDescriptorsPerHeap = std::max( m_NumDescriptorsPerHeap, numDescriptors );
+        auto newPage = CreateAllocatorPage();
 
-  }
+        allocation = newPage->Allocate( numDescriptors );
+    }
 
-  ID3D12DescriptorHeap* GlobalDescriptorAllocator::RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type) {
+    return allocation;
+}
 
-    std::lock_guard<std::mutex> LockGuard(_AllocationMutex);
+void DescriptorAllocator::ReleaseStaleDescriptors( uint64_t frameNumber )
+{
+    std::lock_guard<std::mutex> lock( m_AllocationMutex );
 
-    D3D12_DESCRIPTOR_HEAP_DESC desc;
-    desc.Type = type;
-    desc.NumDescriptors = _NumDescriptorsPerHeap;
-    desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    desc.NodeMask = 1;
+    for ( size_t i = 0; i < m_HeapPool.size(); ++i )
+    {
+        auto page = m_HeapPool[i];
 
-    ComPtr<ID3D12DescriptorHeap> heap;
-    ThrowIfFailed(DX12Core::GetDevice()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
-    _DescriptorHeapPool.emplace_back(heap);
+        page->ReleaseStaleDescriptors( frameNumber );
 
-    return heap.Get();
-  }
-
+        if ( page->NumFreeHandles() > 0 )
+        {
+            m_AvailableHeaps.insert( i );
+        }
+    }
 }

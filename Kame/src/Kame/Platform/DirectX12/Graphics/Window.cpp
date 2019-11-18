@@ -1,15 +1,15 @@
 #include "kmpch.h"
 
-#include <Window.h>
+#include "Window.h"
 
-#include <Application.h>
-#include <CommandQueue.h>
-#include <CommandList.h>
-#include <Game.h>
-#include <GUI.h>
-#include <RenderTarget.h>
-#include <ResourceStateTracker.h>
-#include <Texture.h>
+#include "Application.h"
+#include "CommandQueue.h"
+#include "CommandList.h"
+#include "Game.h"
+#include "GUI.h"
+#include "RenderTarget.h"
+#include "ResourceStateTracker.h"
+#include "Texture.h"
 
 Window::Window(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync )
     : m_hWnd(hWnd)

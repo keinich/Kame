@@ -37,11 +37,11 @@
 #include <d3d12.h>
 #include <dxgi1_5.h>
 
-#include <Events.h>
-#include <GUI.h>
-#include <HighResolutionClock.h>
-#include <RenderTarget.h>
-#include <Texture.h>
+#include "Events.h"
+#include "GUI.h"
+#include "HighResolutionClock.h"
+#include "RenderTarget.h"
+#include "Texture.h"
 
 #include <memory>
 

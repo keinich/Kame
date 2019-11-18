@@ -1,5 +1,5 @@
 #include "kmpch.h"
-#include <HighResolutionClock.h>
+#include "HighResolutionClock.h"
 
 HighResolutionClock::HighResolutionClock()
     : m_DeltaTime(0)

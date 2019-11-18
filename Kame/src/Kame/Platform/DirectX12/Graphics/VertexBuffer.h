@@ -22,21 +22,20 @@
  *  IN THE SOFTWARE.
  */
 
- /**
-  *  @file VertexBuffer.h
-  *  @date October 24, 2018
-  *  @author Jeremiah van Oosten
-  *
-  *  @brief Vertex buffer resource.
-  */
+/**
+ *  @file VertexBuffer.h
+ *  @date October 24, 2018
+ *  @author Jeremiah van Oosten
+ *
+ *  @brief Vertex buffer resource.
+ */
 
 
-#include "GpuBuffer.h"
+#include "Buffer.h"
 
-namespace Kame {
-
-  class VertexBuffer : public GpuBuffer {
-  public:
+class VertexBuffer : public Buffer
+{
+public:
     VertexBuffer(const std::wstring& name = L"");
     virtual ~VertexBuffer();
 
@@ -46,16 +45,19 @@ namespace Kame {
     /**
      * Get the vertex buffer view for binding to the Input Assembler stage.
      */
-    D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const {
-      return _VertexBufferView;
+    D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const
+    {
+        return m_VertexBufferView;
     }
 
-    size_t GetNumVertices() const {
-      return _NumVertices;
+    size_t GetNumVertices() const
+    {
+        return m_NumVertices;
     }
 
-    size_t GetVertexStride() const {
-      return _VertexStride;
+    size_t GetVertexStride() const
+    {
+        return m_VertexStride;
     }
 
     /**
@@ -68,13 +70,11 @@ namespace Kame {
     */
     virtual D3D12_CPU_DESCRIPTOR_HANDLE GetUnorderedAccessView(const D3D12_UNORDERED_ACCESS_VIEW_DESC* uavDesc = nullptr) const override;
 
-  protected:
+protected:
 
-  private:
-    size_t _NumVertices;
-    size_t _VertexStride;
+private:
+    size_t m_NumVertices;
+    size_t m_VertexStride;
 
-    D3D12_VERTEX_BUFFER_VIEW _VertexBufferView;
-  };
-
-}
+    D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView;
+};

@@ -1,10 +1,10 @@
 #include "kmpch.h"
 
-#include <ConstantBuffer.h>
+#include "ConstantBuffer.h"
 
-#include <Application.h>
+#include "Application.h"
 
-#include <d3dx12.h>
+#include "d3dx12.h"
 
 ConstantBuffer::ConstantBuffer(const std::wstring & name)
     : Buffer(name)
