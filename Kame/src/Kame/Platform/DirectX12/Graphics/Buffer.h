@@ -22,32 +22,35 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file Buffer.h
- *  @date October 22, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief Abstract base class for buffer resources.
- */
+ /**
+  *  @file Buffer.h
+  *  @date October 22, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief Abstract base class for buffer resources.
+  */
 
 #include "Resource.h"
 
-class Buffer : public Resource
-{
-public:
+namespace Kame {
+
+  class Buffer : public Resource {
+  public:
     explicit Buffer(const std::wstring& name = L"");
-    explicit Buffer( const D3D12_RESOURCE_DESC& resDesc,
-        size_t numElements, size_t elementSize,
-        const std::wstring& name = L"" );
-    
+    explicit Buffer(const D3D12_RESOURCE_DESC& resDesc,
+      size_t numElements, size_t elementSize,
+      const std::wstring& name = L"");
+
     /**
      * Create the views for the buffer resource.
      * Used by the CommandList when setting the buffer contents.
      */
     virtual void CreateViews(size_t numElements, size_t elementSize) = 0;
 
-protected:
+  protected:
 
-private:
+  private:
 
-};
+  };
+
+}

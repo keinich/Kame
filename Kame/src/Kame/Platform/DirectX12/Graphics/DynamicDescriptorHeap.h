@@ -22,17 +22,17 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file DynamicDescriptorHeap.h
- *  @date October 22, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief The DynamicDescriptorHeap is a GPU visible descriptor heap that allows for
- *  staging of CPU visible descriptors that need to be uploaded before a Draw
- *  or Dispatch command is executed.
- *  The DynamicDescriptorHeap class is based on the one provided by the MiniEngine:
- *  https://github.com/Microsoft/DirectX-Graphics-Samples
- */
+ /**
+  *  @file DynamicDescriptorHeap.h
+  *  @date October 22, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief The DynamicDescriptorHeap is a GPU visible descriptor heap that allows for
+  *  staging of CPU visible descriptors that need to be uploaded before a Draw
+  *  or Dispatch command is executed.
+  *  The DynamicDescriptorHeap class is based on the one provided by the MiniEngine:
+  *  https://github.com/Microsoft/DirectX-Graphics-Samples
+  */
 
 #include "d3dx12.h"
 
@@ -42,15 +42,16 @@
 #include <memory>
 #include <queue>
 
-class CommandList;
-class RootSignature;
+namespace Kame {
 
-class KAME_API DynamicDescriptorHeap
-{
-public:
+  class CommandList;
+  class RootSignature;
+
+  class KAME_API DynamicDescriptorHeap {
+  public:
     DynamicDescriptorHeap(
-        D3D12_DESCRIPTOR_HEAP_TYPE heapType,
-        uint32_t numDescriptorsPerHeap = 1024);
+      D3D12_DESCRIPTOR_HEAP_TYPE heapType,
+      uint32_t numDescriptorsPerHeap = 1024);
 
     virtual ~DynamicDescriptorHeap();
 
@@ -68,11 +69,11 @@ public:
      * on the command list. Two possible functions are:
      *   * Before a draw    : ID3D12GraphicsCommandList::SetGraphicsRootDescriptorTable
      *   * Before a dispatch: ID3D12GraphicsCommandList::SetComputeRootDescriptorTable
-     * 
+     *
      * Since the DynamicDescriptorHeap can't know which function will be used, it must
      * be passed as an argument to the function.
      */
-    void CommitStagedDescriptors( CommandList& commandList, std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc );
+    void CommitStagedDescriptors(CommandList& commandList, std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc);
     void CommitStagedDescriptorsForDraw(CommandList& commandList);
     void CommitStagedDescriptorsForDispatch(CommandList& commandList);
 
@@ -81,35 +82,35 @@ public:
      * This is useful for the
      *   * ID3D12GraphicsCommandList::ClearUnorderedAccessViewFloat
      *   * ID3D12GraphicsCommandList::ClearUnorderedAccessViewUint
-     * methods which require both a CPU and GPU visible descriptors for a UAV 
+     * methods which require both a CPU and GPU visible descriptors for a UAV
      * resource.
-     * 
+     *
      * @param commandList The command list is required in case the GPU visible
      * descriptor heap needs to be updated on the command list.
-     * @param cpuDescriptor The CPU descriptor to copy into a GPU visible 
+     * @param cpuDescriptor The CPU descriptor to copy into a GPU visible
      * descriptor heap.
-     * 
+     *
      * @return The GPU visible descriptor.
      */
-    D3D12_GPU_DESCRIPTOR_HANDLE CopyDescriptor( CommandList& comandList, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor);
+    D3D12_GPU_DESCRIPTOR_HANDLE CopyDescriptor(CommandList& comandList, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor);
 
     /**
      * Parse the root signature to determine which root parameters contain
      * descriptor tables and determine the number of descriptors needed for
      * each table.
      */
-    void ParseRootSignature( const RootSignature& rootSignature);
+    void ParseRootSignature(const RootSignature& rootSignature);
 
     /**
      * Reset used descriptors. This should only be done if any descriptors
-     * that are being referenced by a command list has finished executing on the 
+     * that are being referenced by a command list has finished executing on the
      * command queue.
      */
     void Reset();
 
-protected:
+  protected:
 
-private:
+  private:
     // Request a descriptor heap if one is available.
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> RequestDescriptorHeap();
     // Create a new descriptor heap of no descriptor heap is available.
@@ -129,24 +130,21 @@ private:
     /**
      * A structure that represents a descriptor table entry in the root signature.
      */
-    struct DescriptorTableCache
-    {
-        DescriptorTableCache()
-            : NumDescriptors(0)
-            , BaseDescriptor(nullptr)
-        {}
+    struct DescriptorTableCache {
+      DescriptorTableCache()
+        : NumDescriptors(0)
+        , BaseDescriptor(nullptr) {}
 
-        // Reset the table cache.
-        void Reset()
-        {
-            NumDescriptors = 0;
-            BaseDescriptor = nullptr;
-        }
+      // Reset the table cache.
+      void Reset() {
+        NumDescriptors = 0;
+        BaseDescriptor = nullptr;
+      }
 
-        // The number of descriptors in this descriptor table.
-        uint32_t NumDescriptors;
-        // The pointer to the descriptor in the descriptor handle cache.
-        D3D12_CPU_DESCRIPTOR_HANDLE* BaseDescriptor;
+      // The number of descriptors in this descriptor table.
+      uint32_t NumDescriptors;
+      // The pointer to the descriptor in the descriptor handle cache.
+      D3D12_CPU_DESCRIPTOR_HANDLE* BaseDescriptor;
     };
 
     // Describes the type of descriptors that can be staged using this 
@@ -188,5 +186,7 @@ private:
     CD3DX12_CPU_DESCRIPTOR_HANDLE m_CurrentCPUDescriptorHandle;
 
     uint32_t m_NumFreeHandles;
-    
-};
+
+  };
+
+}

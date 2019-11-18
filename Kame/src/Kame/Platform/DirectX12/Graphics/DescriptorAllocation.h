@@ -22,49 +22,50 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file DescriptorAllocation.h
- *  @date October 22, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief A single allocation for the descriptor allocator.
- *
- *  Variable sized memory allocation strategy based on:
- *  http://diligentgraphics.com/diligent-engine/architecture/d3d12/variable-size-memory-allocations-manager/
- *  Date Accessed: May 9, 2018
- */
+ /**
+  *  @file DescriptorAllocation.h
+  *  @date October 22, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief A single allocation for the descriptor allocator.
+  *
+  *  Variable sized memory allocation strategy based on:
+  *  http://diligentgraphics.com/diligent-engine/architecture/d3d12/variable-size-memory-allocations-manager/
+  *  Date Accessed: May 9, 2018
+  */
 
 #include <d3d12.h>
 
 #include <cstdint>
 #include <memory>
 
-class DescriptorAllocatorPage;
+namespace Kame {
 
-class DescriptorAllocation
-{
-public:
+  class DescriptorAllocatorPage;
+
+  class DescriptorAllocation {
+  public:
     // Creates a NULL descriptor.
     DescriptorAllocation();
 
-    DescriptorAllocation( D3D12_CPU_DESCRIPTOR_HANDLE descriptor, uint32_t numHandles, uint32_t descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page );
+    DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, uint32_t numHandles, uint32_t descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page);
 
     // The destructor will automatically free the allocation.
     ~DescriptorAllocation();
 
     // Copies are not allowed.
-    DescriptorAllocation( const DescriptorAllocation& ) = delete;
-    DescriptorAllocation& operator=( const DescriptorAllocation& ) = delete;
+    DescriptorAllocation(const DescriptorAllocation&) = delete;
+    DescriptorAllocation& operator=(const DescriptorAllocation&) = delete;
 
     // Move is allowed.
-    DescriptorAllocation( DescriptorAllocation&& allocation );
-    DescriptorAllocation& operator=( DescriptorAllocation&& other );
+    DescriptorAllocation(DescriptorAllocation&& allocation);
+    DescriptorAllocation& operator=(DescriptorAllocation&& other);
 
     // Check if this a valid descriptor.
     bool IsNull() const;
 
     // Get a descriptor at a particular offset in the allocation.
-    D3D12_CPU_DESCRIPTOR_HANDLE GetDescriptorHandle( uint32_t offset = 0 ) const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDescriptorHandle(uint32_t offset = 0) const;
 
     // Get the number of (consecutive) handles for this allocation.
     uint32_t GetNumHandles() const;
@@ -73,7 +74,7 @@ public:
     // (For internal use only).
     std::shared_ptr<DescriptorAllocatorPage> GetDescriptorAllocatorPage() const;
 
-private:
+  private:
     // Free the descriptor back to the heap it came from.
     void Free();
 
@@ -86,4 +87,6 @@ private:
 
     // A pointer back to the original page where this allocation came from.
     std::shared_ptr<DescriptorAllocatorPage> m_Page;
-};
+  };
+
+}

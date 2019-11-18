@@ -22,16 +22,16 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file RootSignature.h
- *  @date October 24, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief The RootSignature class encapsulates both the ID3D12RootSignature and 
- *  the D3D12_ROOT_SIGNATURE_DESC used to create it. This provides the 
- *  functionality necessary for the DynamicDescriptorHeap to determine the 
- *  layout of the root signature at runtime.
- */
+ /**
+  *  @file RootSignature.h
+  *  @date October 24, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief The RootSignature class encapsulates both the ID3D12RootSignature and
+  *  the D3D12_ROOT_SIGNATURE_DESC used to create it. This provides the
+  *  functionality necessary for the DynamicDescriptorHeap to determine the
+  *  layout of the root signature at runtime.
+  */
 
 
 #include "d3dx12.h"
@@ -40,41 +40,40 @@
 
 #include <vector>
 
-class KAME_API RootSignature
-{
-public:
+namespace Kame {
+
+  class KAME_API RootSignature {
+  public:
     // TODO: Add (deep) copy/move constructors and assignment operators!
     RootSignature();
     RootSignature(
-        const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc, 
-        D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
+      const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
+      D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
     );
 
     virtual ~RootSignature();
 
     void Destroy();
 
-    Microsoft::WRL::ComPtr<ID3D12RootSignature> GetRootSignature() const
-    {
-        return m_RootSignature;
+    Microsoft::WRL::ComPtr<ID3D12RootSignature> GetRootSignature() const {
+      return m_RootSignature;
     }
 
     void SetRootSignatureDesc(
-        const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
-        D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
+      const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
+      D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
     );
 
-    const D3D12_ROOT_SIGNATURE_DESC1& GetRootSignatureDesc() const
-    {
-        return m_RootSignatureDesc;
+    const D3D12_ROOT_SIGNATURE_DESC1& GetRootSignatureDesc() const {
+      return m_RootSignatureDesc;
     }
 
     uint32_t GetDescriptorTableBitMask(D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType) const;
     uint32_t GetNumDescriptors(uint32_t rootIndex) const;
 
-protected:
+  protected:
 
-private:
+  private:
     D3D12_ROOT_SIGNATURE_DESC1 m_RootSignatureDesc;
     Microsoft::WRL::ComPtr<ID3D12RootSignature> m_RootSignature;
 
@@ -89,4 +88,6 @@ private:
     // A bit mask that represents the root parameter indices that are 
     // CBV, UAV, and SRV descriptor tables.
     uint32_t m_DescriptorTableBitMask;
-};
+  };
+
+}

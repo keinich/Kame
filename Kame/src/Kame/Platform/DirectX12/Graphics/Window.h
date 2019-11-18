@@ -22,13 +22,13 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file Window.h
- *  @date October 24, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief A window for our application.
- */
+ /**
+  *  @file Window.h
+  *  @date October 24, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief A window for our application.
+  */
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -45,12 +45,13 @@
 
 #include <memory>
 
-class Game;
-class Texture;
+namespace Kame {
 
-class KAME_API Window : public std::enable_shared_from_this<Window>
-{
-public:
+  class Game;
+  class Texture;
+
+  class KAME_API Window : public std::enable_shared_from_this<Window> {
+  public:
     // Number of swapchain back buffers.
     static const UINT BufferCount = 3;
 
@@ -103,7 +104,7 @@ public:
 
     /**
      * Get the render target of the window. This method should be called every
-     * frame since the color attachment point changes depending on the window's 
+     * frame since the color attachment point changes depending on the window's
      * current back buffer.
      */
     const RenderTarget& GetRenderTarget() const;
@@ -111,15 +112,15 @@ public:
     /**
      * Present the swapchain's back buffer to the screen.
      * Returns the current back buffer index after the present.
-     * 
+     *
      * @param texture The texture to copy to the swap chain's backbuffer before
-     * presenting. By default, this is an empty texture. In this case, no copy 
+     * presenting. By default, this is an empty texture. In this case, no copy
      * will be performed. Use the Window::GetRenderTarget method to get a render
-     * target for the window's color buffer. 
+     * target for the window's color buffer.
      */
-    UINT Present( const Texture& texture = Texture() );
+    UINT Present(const Texture& texture = Texture());
 
-protected:
+  protected:
     // The Window procedure needs to call protected methods of this class.
     friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -129,12 +130,12 @@ protected:
     friend class Game;
 
     Window() = delete;
-    Window(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync );
+    Window(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync);
     virtual ~Window();
 
     // Register a Game with this window. This allows
     // the window to callback functions in the Game class.
-    void RegisterCallbacks( std::shared_ptr<Game> pGame );
+    void RegisterCallbacks(std::shared_ptr<Game> pGame);
 
     // Update and Draw can only be called by the application.
     virtual void OnUpdate(UpdateEventArgs& e);
@@ -163,7 +164,7 @@ protected:
     // Update the render target views for the swapchain back buffers.
     void UpdateRenderTargetViews();
 
-private:
+  private:
     // Windows should not be copied.
     Window(const Window& copy) = delete;
     Window& operator=(const Window& other) = delete;
@@ -171,7 +172,7 @@ private:
     HWND m_hWnd;
 
     std::wstring m_WindowName;
-    
+
     int m_ClientWidth;
     int m_ClientHeight;
     bool m_VSync;
@@ -200,4 +201,6 @@ private:
 
     //GUI m_GUI;
 
-};
+  };
+
+}

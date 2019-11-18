@@ -22,13 +22,13 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file Tutorial4.h
- *  @date October 24, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief Tutorial 4.
- */
+ /**
+  *  @file Tutorial4.h
+  *  @date October 24, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief Tutorial 4.
+  */
 
 
 #include "Camera.h"
@@ -44,9 +44,10 @@
 
 #include <DirectXMath.h>
 
-class Tutorial4 : public Game
-{
-public:
+namespace Kame {
+
+  class Tutorial4 : public Game {
+  public:
     using super = Game;
 
     Tutorial4(const std::wstring& name, int width, int height, bool vSync = false);
@@ -61,7 +62,7 @@ public:
      *  Unload demo specific content that was loaded in LoadContent.
      */
     virtual void UnloadContent() override;
-protected:
+  protected:
     /**
      *  Update the game logic.
      */
@@ -94,12 +95,12 @@ protected:
     virtual void OnMouseWheel(MouseWheelEventArgs& e) override;
 
     void RescaleHDRRenderTarget(float scale);
-    virtual void OnResize(ResizeEventArgs& e) override; 
+    virtual void OnResize(ResizeEventArgs& e) override;
 
 
     void OnGUI();
 
-private:
+  private:
     // Some geometry to render.
     std::unique_ptr<Mesh> m_CubeMesh;
     std::unique_ptr<Mesh> m_SphereMesh;
@@ -134,11 +135,10 @@ private:
     D3D12_RECT m_ScissorRect;
 
     Camera m_Camera;
-    struct alignas( 16 ) CameraData
-    {
-        DirectX::XMVECTOR m_InitialCamPos;
-        DirectX::XMVECTOR m_InitialCamRot;
-        float m_InitialFov;
+    struct alignas(16) CameraData {
+      DirectX::XMVECTOR m_InitialCamPos;
+      DirectX::XMVECTOR m_InitialCamRot;
+      float m_InitialFov;
     };
     CameraData* m_pAlignedCameraData;
 
@@ -167,4 +167,6 @@ private:
     // Define some lights.
     std::vector<PointLight> m_PointLights;
     std::vector<SpotLight> m_SpotLights;
-};
+  };
+
+}

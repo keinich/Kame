@@ -22,31 +22,31 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file Material.h
- *  @date October 24, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief Material structure that matches HLSL constant buffer padding rules.
- */
+ /**
+  *  @file Material.h
+  *  @date October 24, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief Material structure that matches HLSL constant buffer padding rules.
+  */
 
 #include <DirectXMath.h>
 
-struct Material
-{
+namespace Kame {
+
+  struct Material {
     Material(
-        DirectX::XMFLOAT4 emissive = { 0.0f, 0.0f, 0.0f, 1.0f },
-        DirectX::XMFLOAT4 ambient = { 0.1f, 0.1f, 0.1f, 1.0f },
-        DirectX::XMFLOAT4 diffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
-        DirectX::XMFLOAT4 specular = { 1.0f, 1.0f, 1.0f, 1.0f },
-        float specularPower = 128.0f
+      DirectX::XMFLOAT4 emissive = { 0.0f, 0.0f, 0.0f, 1.0f },
+      DirectX::XMFLOAT4 ambient = { 0.1f, 0.1f, 0.1f, 1.0f },
+      DirectX::XMFLOAT4 diffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
+      DirectX::XMFLOAT4 specular = { 1.0f, 1.0f, 1.0f, 1.0f },
+      float specularPower = 128.0f
     )
-        : Emissive( emissive )
-        , Ambient( ambient )
-        , Diffuse( diffuse )
-        , Specular( specular )
-        , SpecularPower( specularPower ) 
-    {}
+      : Emissive(emissive)
+      , Ambient(ambient)
+      , Diffuse(diffuse)
+      , Specular(specular)
+      , SpecularPower(specularPower) {}
 
     DirectX::XMFLOAT4 Emissive;
     //----------------------------------- (16 byte boundary)
@@ -60,7 +60,7 @@ struct Material
     uint32_t          Padding[3];
     //----------------------------------- (16 byte boundary)
     // Total:                              16 * 5 = 80 bytes
-    
+
     // Define some interesting materials.
     static const Material Red;
     static const Material Green;
@@ -94,4 +94,6 @@ struct Material
     static const Material RedRubber;
     static const Material WhiteRubber;
     static const Material YellowRubber;
-};
+  };
+
+}

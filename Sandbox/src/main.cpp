@@ -44,12 +44,12 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR lpCmdL
         LocalFree(argv);
     }
 
-    Application::Create(hInstance);
+    Kame::Application::Create(hInstance);
     {
-        std::shared_ptr<Tutorial4> demo = std::make_shared<Tutorial4>(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
-        retCode = Application::Get().Run(demo);
+        std::shared_ptr<Kame::Tutorial4> demo = std::make_shared<Kame::Tutorial4>(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
+        retCode = Kame::Application::Get().Run(demo);
     }
-    Application::Destroy();
+    Kame::Application::Destroy();
 
     atexit(&ReportLiveObjects);
 

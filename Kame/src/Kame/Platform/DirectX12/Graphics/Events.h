@@ -22,43 +22,40 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file Events.h
- *  @date October 22, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief Events for window / user messages.
- */
+ /**
+  *  @file Events.h
+  *  @date October 22, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief Events for window / user messages.
+  */
 
 #include "KeyCodes.h"
 
-// Base class for all event args
-class EventArgs
-{
-public:
-    EventArgs()
-    {}
+namespace Kame {
 
-};
+  // Base class for all event args
+  class EventArgs {
+  public:
+    EventArgs() {}
 
-class KeyEventArgs : public EventArgs
-{
-public:
-    enum KeyState
-    {
-        Released = 0,
-        Pressed = 1
+  };
+
+  class KeyEventArgs : public EventArgs {
+  public:
+    enum KeyState {
+      Released = 0,
+      Pressed = 1
     };
 
     typedef EventArgs base;
-    KeyEventArgs( KeyCode::Key key, unsigned int c, KeyState state, bool control, bool shift, bool alt )
-        : Key(key)
-        , Char(c)
-        , State(state)
-        , Control(control)
-        , Shift(shift)
-        , Alt(alt)
-    {}
+    KeyEventArgs(KeyCode::Key key, unsigned int c, KeyState state, bool control, bool shift, bool alt)
+      : Key(key)
+      , Char(c)
+      , State(state)
+      , Control(control)
+      , Shift(shift)
+      , Alt(alt) {}
 
     KeyCode::Key    Key;    // The Key Code that was pressed or released.
     unsigned int    Char;   // The 32-bit character code that was pressed. This value will be 0 if it is a non-printable character.
@@ -66,21 +63,19 @@ public:
     bool            Control;// Is the Control modifier pressed
     bool            Shift;  // Is the Shift modifier pressed
     bool            Alt;    // Is the Alt modifier pressed
-};
+  };
 
-class MouseMotionEventArgs : public EventArgs
-{
-public:
+  class MouseMotionEventArgs : public EventArgs {
+  public:
     typedef EventArgs base;
-    MouseMotionEventArgs( bool leftButton, bool middleButton, bool rightButton, bool control, bool shift, int x, int y )
-        : LeftButton( leftButton )
-        , MiddleButton( middleButton )
-        , RightButton( rightButton )
-        , Control( control )
-        , Shift( shift )
-        , X( x )
-        , Y( y )
-    {}
+    MouseMotionEventArgs(bool leftButton, bool middleButton, bool rightButton, bool control, bool shift, int x, int y)
+      : LeftButton(leftButton)
+      , MiddleButton(middleButton)
+      , RightButton(rightButton)
+      , Control(control)
+      , Shift(shift)
+      , X(x)
+      , Y(y) {}
 
     bool LeftButton;    // Is the left mouse button down?
     bool MiddleButton;  // Is the middle mouse button down?
@@ -93,36 +88,32 @@ public:
     int RelX;           // How far the mouse moved since the last event.
     int RelY;           // How far the mouse moved since the last event.
 
-};
+  };
 
-class MouseButtonEventArgs : public EventArgs
-{
-public:
-    enum MouseButton
-    {
-        None = 0,
-        Left = 1,
-        Right = 2,
-        Middel = 3
+  class MouseButtonEventArgs : public EventArgs {
+  public:
+    enum MouseButton {
+      None = 0,
+      Left = 1,
+      Right = 2,
+      Middel = 3
     };
-    enum ButtonState
-    {
-        Released = 0,
-        Pressed = 1
+    enum ButtonState {
+      Released = 0,
+      Pressed = 1
     };
 
     typedef EventArgs base;
-    MouseButtonEventArgs( MouseButton buttonID, ButtonState state, bool leftButton, bool middleButton, bool rightButton, bool control, bool shift, int x, int y )
-        : Button( buttonID )
-        , State( state )
-        , LeftButton( leftButton )
-        , MiddleButton( middleButton )
-        , RightButton( rightButton )
-        , Control( control )
-        , Shift( shift )
-        , X( x )
-        , Y( y )
-    {}
+    MouseButtonEventArgs(MouseButton buttonID, ButtonState state, bool leftButton, bool middleButton, bool rightButton, bool control, bool shift, int x, int y)
+      : Button(buttonID)
+      , State(state)
+      , LeftButton(leftButton)
+      , MiddleButton(middleButton)
+      , RightButton(rightButton)
+      , Control(control)
+      , Shift(shift)
+      , X(x)
+      , Y(y) {}
 
     MouseButton Button; // The mouse button that was pressed or released.
     ButtonState State;  // Was the button pressed or released?
@@ -134,22 +125,20 @@ public:
 
     int X;              // The X-position of the cursor relative to the upper-left corner of the client area.
     int Y;              // The Y-position of the cursor relative to the upper-left corner of the client area.
-};
+  };
 
-class MouseWheelEventArgs: public EventArgs
-{
-public:
+  class MouseWheelEventArgs : public EventArgs {
+  public:
     typedef EventArgs base;
-    MouseWheelEventArgs( float wheelDelta, bool leftButton, bool middleButton, bool rightButton, bool control, bool shift, int x, int y )
-        : WheelDelta( wheelDelta )
-        , LeftButton( leftButton )
-        , MiddleButton( middleButton )
-        , RightButton( rightButton )
-        , Control( control )
-        , Shift( shift )
-        , X( x )
-        , Y( y )
-    {}
+    MouseWheelEventArgs(float wheelDelta, bool leftButton, bool middleButton, bool rightButton, bool control, bool shift, int x, int y)
+      : WheelDelta(wheelDelta)
+      , LeftButton(leftButton)
+      , MiddleButton(middleButton)
+      , RightButton(rightButton)
+      , Control(control)
+      , Shift(shift)
+      , X(x)
+      , Y(y) {}
 
     float WheelDelta;   // How much the mouse wheel has moved. A positive value indicates that the wheel was moved to the right. A negative value indicates the wheel was moved to the left.
     bool LeftButton;    // Is the left mouse button down?
@@ -161,65 +150,59 @@ public:
     int X;              // The X-position of the cursor relative to the upper-left corner of the client area.
     int Y;              // The Y-position of the cursor relative to the upper-left corner of the client area.
 
-};
+  };
 
-class ResizeEventArgs : public EventArgs
-{
-public:
+  class ResizeEventArgs : public EventArgs {
+  public:
     typedef EventArgs base;
-    ResizeEventArgs( int width, int height )
-        : Width( width )
-        , Height( height )
-    {}
+    ResizeEventArgs(int width, int height)
+      : Width(width)
+      , Height(height) {}
 
     // The new width of the window
     int Width;
     // The new height of the window.
     int Height;
 
-};
+  };
 
-class UpdateEventArgs : public EventArgs
-{
-public:
+  class UpdateEventArgs : public EventArgs {
+  public:
     typedef EventArgs base;
     UpdateEventArgs(double fDeltaTime, double fTotalTime, uint64_t frameNumber)
-        : ElapsedTime(fDeltaTime)
-        , TotalTime(fTotalTime)
-        , FrameNumber(frameNumber)
-    {}
+      : ElapsedTime(fDeltaTime)
+      , TotalTime(fTotalTime)
+      , FrameNumber(frameNumber) {}
 
     double ElapsedTime;
     double TotalTime;
     uint64_t FrameNumber;
-};
+  };
 
-class RenderEventArgs : public EventArgs
-{
-public:
+  class RenderEventArgs : public EventArgs {
+  public:
     typedef EventArgs base;
     RenderEventArgs(double fDeltaTime, double fTotalTime, uint64_t frameNumber)
-        : ElapsedTime(fDeltaTime)
-        , TotalTime(fTotalTime)
-        , FrameNumber(frameNumber)
-    {}
+      : ElapsedTime(fDeltaTime)
+      , TotalTime(fTotalTime)
+      , FrameNumber(frameNumber) {}
 
     double ElapsedTime;
     double TotalTime;
     uint64_t FrameNumber;
-};
+  };
 
-class UserEventArgs : public EventArgs
-{
-public:
+  class UserEventArgs : public EventArgs {
+  public:
     typedef EventArgs base;
-    UserEventArgs( int code, void* data1, void* data2 )
-        : Code( code )
-        , Data1( data1 )
-        , Data2( data2 )
-    {}
+    UserEventArgs(int code, void* data1, void* data2)
+      : Code(code)
+      , Data1(data1)
+      , Data2(data2) {}
 
     int     Code;
-    void*   Data1;
-    void*   Data2;
-};
+    void* Data1;
+    void* Data2;
+  };
+
+}

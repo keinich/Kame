@@ -22,40 +22,39 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file Game.h
- *  @date October 22, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief The Game class is the abstract base class for DirecX 12 demos.
- */
+ /**
+  *  @file Game.h
+  *  @date October 22, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief The Game class is the abstract base class for DirecX 12 demos.
+  */
 
 #include "Events.h"
 
 #include "memory"
 #include "string"
 
-//#include <imgui.h>
+  //#include <imgui.h>
 
-class Window;
+namespace Kame {
 
-class KAME_API Game : public std::enable_shared_from_this<Game>
-{
-public:
+  class Window;
+
+  class KAME_API Game : public std::enable_shared_from_this<Game> {
+  public:
     /**
      * Create the DirectX demo using the specified window dimensions.
      */
     Game(const std::wstring& name, int width, int height, bool vSync);
     virtual ~Game();
 
-    int GetClientWidth() const
-    {
-        return m_Width;
+    int GetClientWidth() const {
+      return m_Width;
     }
 
-    int GetClientHeight() const
-    {
-        return m_Height;
+    int GetClientHeight() const {
+      return m_Height;
     }
 
     /**
@@ -78,7 +77,7 @@ public:
      */
     virtual void Destroy();
 
-protected:
+  protected:
     friend class Window;
 
     /**
@@ -134,9 +133,11 @@ protected:
 
     std::shared_ptr<Window> m_pWindow;
 
-private:
+  private:
     std::wstring m_Name;
     int m_Width;
     int m_Height;
     bool m_vSync;
-};
+  };
+
+}

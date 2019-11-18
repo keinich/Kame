@@ -22,13 +22,13 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file CommandQueue.h
- *  @date October 22, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief Wrapper class for a ID3D12CommandQueue.
- */
+ /**
+  *  @file CommandQueue.h
+  *  @date October 22, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief Wrapper class for a ID3D12CommandQueue.
+  */
 
 
 #include <d3d12.h>              // For ID3D12CommandQueue, ID3D12Device2, and ID3D12Fence
@@ -40,11 +40,12 @@
 
 #include "ThreadSafeQueue.h"
 
-class CommandList;
+namespace Kame {
 
-class KAME_API CommandQueue
-{
-public:
+  class CommandList;
+
+  class KAME_API CommandQueue {
+  public:
     CommandQueue(D3D12_COMMAND_LIST_TYPE type);
     virtual ~CommandQueue();
 
@@ -54,7 +55,7 @@ public:
     // Execute a command list.
     // Returns the fence value to wait for for this command list.
     uint64_t ExecuteCommandList(std::shared_ptr<CommandList> commandList);
-    uint64_t ExecuteCommandLists( const std::vector<std::shared_ptr<CommandList> >& commandLists );
+    uint64_t ExecuteCommandLists(const std::vector<std::shared_ptr<CommandList> >& commandLists);
 
     uint64_t Signal();
     bool IsFenceComplete(uint64_t fenceValue);
@@ -62,11 +63,11 @@ public:
     void Flush();
 
     // Wait for another command queue to finish.
-    void Wait( const CommandQueue& other );
+    void Wait(const CommandQueue& other);
 
     Microsoft::WRL::ComPtr<ID3D12CommandQueue> GetD3D12CommandQueue() const;
 
-private:
+  private:
     // Free any command lists that are finished processing on the command queue.
     void ProccessInFlightCommandLists();
 
@@ -88,4 +89,6 @@ private:
     std::atomic_bool m_bProcessInFlightCommandLists;
     std::mutex m_ProcessInFlightCommandListsThreadMutex;
     std::condition_variable m_ProcessInFlightCommandListsThreadCV;
-};
+  };
+
+}

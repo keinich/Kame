@@ -22,13 +22,13 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file Application.h
- *  @date October 22, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief The application class is used to create windows for our application.
- */
+ /**
+  *  @file Application.h
+  *  @date October 22, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief The application class is used to create windows for our application.
+  */
 
 #include "DescriptorAllocation.h"
 
@@ -39,14 +39,15 @@
 #include <memory>
 #include <string>
 
-class CommandQueue;
-class DescriptorAllocator;
-class Game;
-class Window;
+namespace Kame {
 
-class KAME_API Application
-{
-public:
+  class CommandQueue;
+  class DescriptorAllocator;
+  class Game;
+  class Window;
+
+  class KAME_API Application {
+  public:
 
     /**
     * Create the application singleton with the application instance handle.
@@ -70,7 +71,7 @@ public:
     /**
      * Check if the requested multisample quality is supported for the given format.
      */
-    DXGI_SAMPLE_DESC GetMultisampleQualityLevels( DXGI_FORMAT format, UINT numSamples, D3D12_MULTISAMPLE_QUALITY_LEVEL_FLAGS flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE ) const;
+    DXGI_SAMPLE_DESC GetMultisampleQualityLevels(DXGI_FORMAT format, UINT numSamples, D3D12_MULTISAMPLE_QUALITY_LEVEL_FLAGS flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE) const;
 
     /**
     * Create a new DirectX11 render window instance.
@@ -83,7 +84,7 @@ public:
     * window instance is returned. If a window with the given name already exists, that window will be
     * returned.
     */
-    std::shared_ptr<Window> CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync = true );
+    std::shared_ptr<Window> CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync = true);
 
     /**
     * Destroy a window given the window name.
@@ -136,17 +137,16 @@ public:
     /**
      * Release stale descriptors. This should only be called with a completed frame counter.
      */
-    void ReleaseStaleDescriptors( uint64_t finishedFrame );
+    void ReleaseStaleDescriptors(uint64_t finishedFrame);
 
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(UINT numDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE type);
     UINT GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE type) const;
 
-    static uint64_t GetFrameCount()
-    {
-        return ms_FrameCount;
+    static uint64_t GetFrameCount() {
+      return ms_FrameCount;
     }
 
-protected:
+  protected:
 
     // Create an application instance.
     Application(HINSTANCE hInst);
@@ -160,7 +160,7 @@ protected:
     Microsoft::WRL::ComPtr<ID3D12Device2> CreateDevice(Microsoft::WRL::ComPtr<IDXGIAdapter4> adapter);
     bool CheckTearingSupport();
 
-private:
+  private:
     friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
     Application(const Application& copy) = delete;
     Application& operator=(const Application& other) = delete;
@@ -178,4 +178,6 @@ private:
     bool m_TearingSupported;
 
     static uint64_t ms_FrameCount;
-};
+  };
+
+}

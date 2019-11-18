@@ -5,25 +5,24 @@
 #include "Application.h"
 #include "Kame/Math/MathCommon.h"
 
-ByteAddressBuffer::ByteAddressBuffer( const std::wstring& name )
-    : Buffer(name)
-{
-    m_SRV = Application::Get().AllocateDescriptors( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV );
-    m_UAV = Application::Get().AllocateDescriptors( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV );
-}
+namespace Kame {
 
-ByteAddressBuffer::ByteAddressBuffer(const D3D12_RESOURCE_DESC& resDesc,
+  ByteAddressBuffer::ByteAddressBuffer(const std::wstring& name)
+    : Buffer(name) {
+    m_SRV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_UAV = Application::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+  }
+
+  ByteAddressBuffer::ByteAddressBuffer(const D3D12_RESOURCE_DESC& resDesc,
     size_t numElements, size_t elementSize,
-    const std::wstring& name )
-    : Buffer(resDesc, numElements, elementSize, name)
-{}
+    const std::wstring& name)
+    : Buffer(resDesc, numElements, elementSize, name) {}
 
-void ByteAddressBuffer::CreateViews( size_t numElements, size_t elementSize )
-{
+  void ByteAddressBuffer::CreateViews(size_t numElements, size_t elementSize) {
     auto device = Application::Get().GetDevice();
 
     // Make sure buffer size is aligned to 4 bytes.
-    m_BufferSize = Kame::Math::AlignUp( numElements * elementSize, 4 );
+    m_BufferSize = Kame::Math::AlignUp(numElements * elementSize, 4);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
@@ -32,7 +31,7 @@ void ByteAddressBuffer::CreateViews( size_t numElements, size_t elementSize )
     srvDesc.Buffer.NumElements = (UINT)m_BufferSize / 4;
     srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
 
-    device->CreateShaderResourceView( m_d3d12Resource.Get(), &srvDesc, m_SRV.GetDescriptorHandle() );
+    device->CreateShaderResourceView(m_d3d12Resource.Get(), &srvDesc, m_SRV.GetDescriptorHandle());
 
     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
     uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
@@ -40,5 +39,7 @@ void ByteAddressBuffer::CreateViews( size_t numElements, size_t elementSize )
     uavDesc.Buffer.NumElements = (UINT)m_BufferSize / 4;
     uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_RAW;
 
-    device->CreateUnorderedAccessView( m_d3d12Resource.Get(), nullptr, &uavDesc, m_UAV.GetDescriptorHandle() );
+    device->CreateUnorderedAccessView(m_d3d12Resource.Get(), nullptr, &uavDesc, m_UAV.GetDescriptorHandle());
+  }
+
 }

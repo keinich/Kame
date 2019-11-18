@@ -22,20 +22,20 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file DescriptorAllocator.h
- *  @date October 22, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief This is an allocator for CPU visible descriptors.
- *  CPU visible descriptors must be copied to a GPU visible descriptor heap before
- *  being used in a shader. The DynamicDescriptorHeap class is used to upload
- *  CPU visible descriptors to a GPU visible descriptor heap.
- *
- *  Variable sized memory allocation strategy based on:
- *  http://diligentgraphics.com/diligent-engine/architecture/d3d12/variable-size-memory-allocations-manager/
- *  Date Accessed: May 9, 2018
- */
+ /**
+  *  @file DescriptorAllocator.h
+  *  @date October 22, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief This is an allocator for CPU visible descriptors.
+  *  CPU visible descriptors must be copied to a GPU visible descriptor heap before
+  *  being used in a shader. The DynamicDescriptorHeap class is used to upload
+  *  CPU visible descriptors to a GPU visible descriptor heap.
+  *
+  *  Variable sized memory allocation strategy based on:
+  *  http://diligentgraphics.com/diligent-engine/architecture/d3d12/variable-size-memory-allocations-manager/
+  *  Date Accessed: May 9, 2018
+  */
 
 #include "DescriptorAllocation.h"
 
@@ -47,18 +47,19 @@
 #include <set>
 #include <vector>
 
-class DescriptorAllocatorPage;
+namespace Kame {
 
-class KAME_API KAME_API DescriptorAllocator
-{
-public:
+  class DescriptorAllocatorPage;
+
+  class KAME_API KAME_API DescriptorAllocator {
+  public:
     DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptorsPerHeap = 256);
     virtual ~DescriptorAllocator();
 
     /**
      * Allocate a number of contiguous descriptors from a CPU visible descriptor heap.
-     * 
-     * @param numDescriptors The number of contiguous descriptors to allocate. 
+     *
+     * @param numDescriptors The number of contiguous descriptors to allocate.
      * Cannot be more than the number of descriptors per descriptor heap.
      */
     DescriptorAllocation Allocate(uint32_t numDescriptors = 1);
@@ -66,9 +67,9 @@ public:
     /**
      * When the frame has completed, the stale descriptors can be released.
      */
-    void ReleaseStaleDescriptors( uint64_t frameNumber );
+    void ReleaseStaleDescriptors(uint64_t frameNumber);
 
-private:
+  private:
     using DescriptorHeapPool = std::vector< std::shared_ptr<DescriptorAllocatorPage> >;
 
     // Create a new heap with a specific number of descriptors.
@@ -82,4 +83,6 @@ private:
     std::set<size_t> m_AvailableHeaps;
 
     std::mutex m_AllocationMutex;
-};
+  };
+
+}

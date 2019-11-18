@@ -22,20 +22,21 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file HighResolutionClock.h
- *  @date October 24, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief High resolution clock used for performing timings.
- */
+ /**
+  *  @file HighResolutionClock.h
+  *  @date October 24, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief High resolution clock used for performing timings.
+  */
 
 
 #include <chrono>
 
-class HighResolutionClock
-{
-public:
+namespace Kame {
+
+  class HighResolutionClock {
+  public:
     HighResolutionClock();
 
     // Tick the high resolution clock.
@@ -57,10 +58,12 @@ public:
     double GetTotalMilliSeconds() const;
     double GetTotalSeconds() const;
 
-private:
+  private:
     // Initial time point.
     std::chrono::high_resolution_clock::time_point m_T0;
     // Time since last tick.
     std::chrono::high_resolution_clock::duration m_DeltaTime;
     std::chrono::high_resolution_clock::duration m_TotalTime;
-};
+  };
+
+}

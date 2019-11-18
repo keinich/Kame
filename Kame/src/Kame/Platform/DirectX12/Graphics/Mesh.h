@@ -21,13 +21,13 @@
  *  IN THE SOFTWARE.
  */
 
-/**
- *  @file Mesh.h
- *  @date October 24, 2018
- *  @author Jeremiah van Oosten
- *
- *  @brief A mesh class encapsulates the index and vertex buffers for a geometric primitive.
- */
+ /**
+  *  @file Mesh.h
+  *  @date October 24, 2018
+  *  @author Jeremiah van Oosten
+  *
+  *  @brief A mesh class encapsulates the index and vertex buffers for a geometric primitive.
+  */
 
 #include "CommandList.h"
 #include "VertexBuffer.h"
@@ -41,23 +41,21 @@
 #include <memory> // For std::unique_ptr
 #include <vector>
 
- // Vertex struct holding position, normal vector, and texture mapping information.
-struct KAME_API VertexPositionNormalTexture
-{
-    VertexPositionNormalTexture()
-    { }
+namespace Kame {
+
+  // Vertex struct holding position, normal vector, and texture mapping information.
+  struct KAME_API VertexPositionNormalTexture {
+    VertexPositionNormalTexture() {}
 
     VertexPositionNormalTexture(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& normal, const DirectX::XMFLOAT2& textureCoordinate)
-        : position(position),
-        normal(normal),
-        textureCoordinate(textureCoordinate)
-    { }
+      : position(position),
+      normal(normal),
+      textureCoordinate(textureCoordinate) {}
 
-    VertexPositionNormalTexture(DirectX::FXMVECTOR position, DirectX::FXMVECTOR normal, DirectX::FXMVECTOR textureCoordinate)
-    {
-        XMStoreFloat3(&this->position, position);
-        XMStoreFloat3(&this->normal, normal);
-        XMStoreFloat2(&this->textureCoordinate, textureCoordinate);
+    VertexPositionNormalTexture(DirectX::FXMVECTOR position, DirectX::FXMVECTOR normal, DirectX::FXMVECTOR textureCoordinate) {
+      XMStoreFloat3(&this->position, position);
+      XMStoreFloat3(&this->normal, normal);
+      XMStoreFloat2(&this->textureCoordinate, textureCoordinate);
     }
 
     DirectX::XMFLOAT3 position;
@@ -66,14 +64,13 @@ struct KAME_API VertexPositionNormalTexture
 
     static const int InputElementCount = 3;
     static const D3D12_INPUT_ELEMENT_DESC InputElements[InputElementCount];
-};
+  };
 
-using VertexCollection = std::vector<VertexPositionNormalTexture>;
-using IndexCollection = std::vector<uint16_t>;
+  using VertexCollection = std::vector<VertexPositionNormalTexture>;
+  using IndexCollection = std::vector<uint16_t>;
 
-class KAME_API Mesh
-{
-public:
+  class KAME_API Mesh {
+  public:
 
     void Draw(CommandList& commandList);
 
@@ -83,9 +80,9 @@ public:
     static std::unique_ptr<Mesh> CreateTorus(CommandList& commandList, float diameter = 1, float thickness = 0.333f, size_t tessellation = 32, bool rhcoords = false);
     static std::unique_ptr<Mesh> CreatePlane(CommandList& commandList, float width = 1, float height = 1, bool rhcoords = false);
 
-protected:
+  protected:
 
-private:
+  private:
     friend struct std::default_delete<Mesh>;
 
     Mesh();
@@ -98,4 +95,6 @@ private:
     IndexBuffer m_IndexBuffer;
 
     UINT m_IndexCount;
-};
+  };
+
+}
