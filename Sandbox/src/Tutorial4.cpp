@@ -6,6 +6,7 @@
 #include "Tutorial4.h"
 
 #include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
+#include "Kame/Application.h"
 #include "Kame/Platform/DirectX12/Graphics/CommandQueue.h"
 #include "Kame/Platform/DirectX12/Graphics/CommandList.h"
 #include "Kame/Platform/DirectX12/Graphics/Helpers.h"
@@ -975,7 +976,7 @@ namespace Kame {
     {*/
     switch (e.Key) {
     case KeyCode::Escape:
-      DX12Core::Get().Quit(0);
+      Application::Get().Quit(0);
       break;
     case KeyCode::Enter:
       if (e.Alt) {

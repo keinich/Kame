@@ -28,7 +28,7 @@ namespace Kame {
 
   void Application::Create(HINSTANCE hInst) {
     assert(!_Instance, "Application is already initialized");
-    _Instance = new Application(hInst);
+    _Instance = new Application(hInst);    
     _Instance->Initialize();
   }
 

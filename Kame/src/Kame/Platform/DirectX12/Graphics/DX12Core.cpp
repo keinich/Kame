@@ -32,31 +32,31 @@ namespace Kame {
       : Window(hWnd, windowName, clientWidth, clientHeight, vSync) {}
   };
 
-  DX12Core::DX12Core(HINSTANCE hInst)
-    : m_hInstance(hInst)
-    , m_TearingSupported(false) {
-    // Windows 10 Creators update adds Per Monitor V2 DPI awareness context.
-    // Using this awareness context allows the client area of the window 
-    // to achieve 100% scaling while still allowing non-client window content to 
-    // be rendered in a DPI sensitive fashion.
-    SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+  DX12Core::DX12Core()
+    //: m_hInstance(hInst)
+    : m_TearingSupported(false) {
+    //// Windows 10 Creators update adds Per Monitor V2 DPI awareness context.
+    //// Using this awareness context allows the client area of the window 
+    //// to achieve 100% scaling while still allowing non-client window content to 
+    //// be rendered in a DPI sensitive fashion.
+    //SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
-    WNDCLASSEXW wndClass = { 0 };
+    //WNDCLASSEXW wndClass = { 0 };
 
-    wndClass.cbSize = sizeof(WNDCLASSEX);
-    wndClass.style = CS_HREDRAW | CS_VREDRAW;
-    wndClass.lpfnWndProc = &WndProc;
-    wndClass.hInstance = m_hInstance;
-    wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    //wndClass.hIcon = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
-    wndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wndClass.lpszMenuName = nullptr;
-    wndClass.lpszClassName = WINDOW_CLASS_NAME;
-    //wndClass.hIconSm = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
+    //wndClass.cbSize = sizeof(WNDCLASSEX);
+    //wndClass.style = CS_HREDRAW | CS_VREDRAW;
+    //wndClass.lpfnWndProc = &WndProc;
+    //wndClass.hInstance = m_hInstance;
+    //wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    ////wndClass.hIcon = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
+    //wndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    //wndClass.lpszMenuName = nullptr;
+    //wndClass.lpszClassName = WINDOW_CLASS_NAME;
+    ////wndClass.hIconSm = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
 
-    if (!RegisterClassExW(&wndClass)) {
-      MessageBoxA(NULL, "Unable to register the window class.", "Error", MB_OK | MB_ICONERROR);
-    }
+    //if (!RegisterClassExW(&wndClass)) {
+    //  MessageBoxA(NULL, "Unable to register the window class.", "Error", MB_OK | MB_ICONERROR);
+    //}
   }
 
   void DX12Core::Initialize() {
@@ -100,14 +100,17 @@ namespace Kame {
     ms_FrameCount = 0;
   }
 
-  void DX12Core::Create(HINSTANCE hInst) {
-    if (!gs_pSingelton) {
-      gs_pSingelton = new DX12Core(hInst);
-      gs_pSingelton->Initialize();
-    }
-  }
+  //void DX12Core::Create(HINSTANCE hInst) {
+  //  if (!gs_pSingelton) {
+  //    gs_pSingelton = new DX12Core();
+  //    gs_pSingelton->Initialize();
+  //  }
+  //}
 
   DX12Core& DX12Core::Get() {
+    if (!gs_pSingelton) {
+      gs_pSingelton = new DX12Core();
+    }
     assert(gs_pSingelton);
     return *gs_pSingelton;
   }
@@ -253,82 +256,82 @@ namespace Kame {
   }
 
 
-  std::shared_ptr<Window> DX12Core::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
-    // First check if a window with the given name already exists.
-    WindowNameMap::iterator windowIter = gs_WindowByName.find(windowName);
-    if (windowIter != gs_WindowByName.end()) {
-      return windowIter->second;
-    }
+  //std::shared_ptr<Window> DX12Core::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
+  //  // First check if a window with the given name already exists.
+  //  WindowNameMap::iterator windowIter = gs_WindowByName.find(windowName);
+  //  if (windowIter != gs_WindowByName.end()) {
+  //    return windowIter->second;
+  //  }
 
-    RECT windowRect = { 0, 0, clientWidth, clientHeight };
-    AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+  //  RECT windowRect = { 0, 0, clientWidth, clientHeight };
+  //  AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
-    HWND hWnd = CreateWindowW(WINDOW_CLASS_NAME, windowName.c_str(),
-      WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-      windowRect.right - windowRect.left,
-      windowRect.bottom - windowRect.top,
-      nullptr, nullptr, m_hInstance, nullptr);
+  //  HWND hWnd = CreateWindowW(WINDOW_CLASS_NAME, windowName.c_str(),
+  //    WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+  //    windowRect.right - windowRect.left,
+  //    windowRect.bottom - windowRect.top,
+  //    nullptr, nullptr, m_hInstance, nullptr);
 
-    if (!hWnd) {
-      MessageBoxA(NULL, "Could not create the render window.", "Error", MB_OK | MB_ICONERROR);
-      return nullptr;
-    }
+  //  if (!hWnd) {
+  //    MessageBoxA(NULL, "Could not create the render window.", "Error", MB_OK | MB_ICONERROR);
+  //    return nullptr;
+  //  }
 
-    WindowPtr pWindow = std::make_shared<MakeWindow>(hWnd, windowName, clientWidth, clientHeight, vSync);
-    pWindow->Initialize();
+  //  WindowPtr pWindow = std::make_shared<MakeWindow>(hWnd, windowName, clientWidth, clientHeight, vSync);
+  //  pWindow->Initialize();
 
-    gs_Windows.insert(WindowMap::value_type(hWnd, pWindow));
-    gs_WindowByName.insert(WindowNameMap::value_type(windowName, pWindow));
+  //  gs_Windows.insert(WindowMap::value_type(hWnd, pWindow));
+  //  gs_WindowByName.insert(WindowNameMap::value_type(windowName, pWindow));
 
-    return pWindow;
-  }
+  //  return pWindow;
+  //}
 
-  void DX12Core::DestroyWindow(std::shared_ptr<Window> window) {
-    if (window) window->Destroy();
-  }
+  //void DX12Core::DestroyWindow(std::shared_ptr<Window> window) {
+  //  if (window) window->Destroy();
+  //}
 
-  void DX12Core::DestroyWindow(const std::wstring& windowName) {
-    WindowPtr pWindow = GetWindowByName(windowName);
-    if (pWindow) {
-      DestroyWindow(pWindow);
-    }
-  }
+  //void DX12Core::DestroyWindow(const std::wstring& windowName) {
+  //  WindowPtr pWindow = GetWindowByName(windowName);
+  //  if (pWindow) {
+  //    DestroyWindow(pWindow);
+  //  }
+  //}
 
-  std::shared_ptr<Window> DX12Core::GetWindowByName(const std::wstring& windowName) {
-    std::shared_ptr<Window> window;
-    WindowNameMap::iterator iter = gs_WindowByName.find(windowName);
-    if (iter != gs_WindowByName.end()) {
-      window = iter->second;
-    }
+  //std::shared_ptr<Window> DX12Core::GetWindowByName(const std::wstring& windowName) {
+  //  std::shared_ptr<Window> window;
+  //  WindowNameMap::iterator iter = gs_WindowByName.find(windowName);
+  //  if (iter != gs_WindowByName.end()) {
+  //    window = iter->second;
+  //  }
 
-    return window;
-  }
+  //  return window;
+  //}
 
 
-  int DX12Core::Run(std::shared_ptr<Game> pGame) {
-    if (!pGame->Initialize()) return 1;
-    if (!pGame->LoadContent()) return 2;
+  //int DX12Core::Run(std::shared_ptr<Game> pGame) {
+  //  if (!pGame->Initialize()) return 1;
+  //  if (!pGame->LoadContent()) return 2;
 
-    MSG msg = { 0 };
-    while (msg.message != WM_QUIT) {
-      if (PeekMessageW(&msg, 0, 0, 0, PM_REMOVE)) {
-        TranslateMessage(&msg);
-        DispatchMessageW(&msg);
-      }
-    }
+  //  MSG msg = { 0 };
+  //  while (msg.message != WM_QUIT) {
+  //    if (PeekMessageW(&msg, 0, 0, 0, PM_REMOVE)) {
+  //      TranslateMessage(&msg);
+  //      DispatchMessageW(&msg);
+  //    }
+  //  }
 
-    // Flush any commands in the commands queues before quiting.
-    Flush();
+  //  // Flush any commands in the commands queues before quiting.
+  //  Flush();
 
-    pGame->UnloadContent();
-    pGame->Destroy();
+  //  pGame->UnloadContent();
+  //  pGame->Destroy();
 
-    return static_cast<int>(msg.wParam);
-  }
+  //  return static_cast<int>(msg.wParam);
+  //}
 
-  void DX12Core::Quit(int exitCode) {
+  /*void DX12Core::Quit(int exitCode) {
     PostQuitMessage(exitCode);
-  }
+  }*/
 
   Microsoft::WRL::ComPtr<ID3D12Device2> DX12Core::GetDevice() const {
     return m_d3d12Device;

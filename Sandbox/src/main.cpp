@@ -8,6 +8,7 @@
 #include <Shlwapi.h>
 
 #include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
+#include "Kame/Application.h"
 #include "Tutorial4.h"
 
 #include <dxgidebug.h>
@@ -44,12 +45,12 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR lpCmdL
         LocalFree(argv);
     }
 
-    Kame::DX12Core::Create(hInstance);
+    Kame::Application::Create(hInstance);
     {
         std::shared_ptr<Kame::Tutorial4> demo = std::make_shared<Kame::Tutorial4>(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
-        retCode = Kame::DX12Core::Get().Run(demo);
+        retCode = Kame::Application::Get().Run(demo);
     }
-    Kame::DX12Core::Destroy();
+    Kame::Application::Destroy();
 
     atexit(&ReportLiveObjects);
 
