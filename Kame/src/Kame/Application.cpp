@@ -151,7 +151,7 @@ namespace Kame {
   }
 
   void Application::DestroyWindow(std::shared_ptr<Window> window) {
-    if (window) window->GetDisplay().Destroy();
+    if (window) window->Destroy();
   }
 
   void Application::DestroyWindow(const std::wstring& windowName) {
@@ -200,7 +200,7 @@ namespace Kame {
     WindowMap::iterator windowIter = s_Windows.find(hWnd);
     if (windowIter != s_Windows.end()) {
       WindowPtr pWindow = windowIter->second;
-      s_WindowByName.erase(pWindow->GetDisplay().GetWindowName());
+      s_WindowByName.erase(pWindow->GetWindowName());
       s_Windows.erase(windowIter);
     }
   }
@@ -227,10 +227,10 @@ namespace Kame {
 
         // Delta time will be filled in by the Window.
         UpdateEventArgs updateEventArgs(0.0f, 0.0f, Application::Get().GetFrameCount());
-        pWindow->GetDisplay().OnUpdate(updateEventArgs);
+        pWindow->OnUpdate(updateEventArgs);
         RenderEventArgs renderEventArgs(0.0f, 0.0f, Application::Get().GetFrameCount());
         // Delta time will be filled in by the Window.
-        pWindow->GetDisplay().OnRender(renderEventArgs);
+        pWindow->OnRender(renderEventArgs);
       }
       break;
       case WM_SYSKEYDOWN:
@@ -255,7 +255,7 @@ namespace Kame {
         KeyCode::Key key = (KeyCode::Key)wParam;
         unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
         KeyEventArgs keyEventArgs(key, c, KeyEventArgs::Pressed, shift, control, alt);
-        pWindow->GetDisplay().OnKeyPressed(keyEventArgs);
+        pWindow->OnKeyPressed(keyEventArgs);
       }
       break;
       case WM_SYSKEYUP:
@@ -279,7 +279,7 @@ namespace Kame {
         }
 
         KeyEventArgs keyEventArgs(key, c, KeyEventArgs::Released, shift, control, alt);
-        pWindow->GetDisplay().OnKeyReleased(keyEventArgs);
+        pWindow->OnKeyReleased(keyEventArgs);
       }
       break;
       // The default window procedure will play a system notification sound 
@@ -299,7 +299,7 @@ namespace Kame {
         int y = ((int)(short)HIWORD(lParam));
 
         MouseMotionEventArgs mouseMotionEventArgs(lButton, mButton, rButton, control, shift, x, y);
-        pWindow->GetDisplay().OnMouseMoved(mouseMotionEventArgs);
+        pWindow->OnMouseMoved(mouseMotionEventArgs);
       }
       break;
       case WM_LBUTTONDOWN:
@@ -316,7 +316,7 @@ namespace Kame {
         int y = ((int)(short)HIWORD(lParam));
 
         MouseButtonEventArgs mouseButtonEventArgs(DecodeMouseButton2(message), MouseButtonEventArgs::Pressed, lButton, mButton, rButton, control, shift, x, y);
-        pWindow->GetDisplay().OnMouseButtonPressed(mouseButtonEventArgs);
+        pWindow->OnMouseButtonPressed(mouseButtonEventArgs);
       }
       break;
       case WM_LBUTTONUP:
@@ -333,7 +333,7 @@ namespace Kame {
         int y = ((int)(short)HIWORD(lParam));
 
         MouseButtonEventArgs mouseButtonEventArgs(DecodeMouseButton2(message), MouseButtonEventArgs::Released, lButton, mButton, rButton, control, shift, x, y);
-        pWindow->GetDisplay().OnMouseButtonReleased(mouseButtonEventArgs);
+        pWindow->OnMouseButtonReleased(mouseButtonEventArgs);
       }
       break;
       case WM_MOUSEWHEEL:
@@ -360,7 +360,7 @@ namespace Kame {
         ScreenToClient(hwnd, &clientToScreenPoint);
 
         MouseWheelEventArgs mouseWheelEventArgs(zDelta, lButton, mButton, rButton, control, shift, (int)clientToScreenPoint.x, (int)clientToScreenPoint.y);
-        pWindow->GetDisplay().OnMouseWheel(mouseWheelEventArgs);
+        pWindow->OnMouseWheel(mouseWheelEventArgs);
       }
       break;
       case WM_SIZE:
@@ -369,7 +369,7 @@ namespace Kame {
         int height = ((int)(short)HIWORD(lParam));
 
         ResizeEventArgs resizeEventArgs(width, height);
-        pWindow->GetDisplay().OnResize(resizeEventArgs);
+        pWindow->OnResize(resizeEventArgs);
       }
       break;
       case WM_DESTROY:

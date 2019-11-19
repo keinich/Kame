@@ -6,12 +6,13 @@
 #include "Game.h"
 #include "DescriptorAllocator.h"
 #include "Display.h"
+#include "Kame/Window.h"
 
 namespace Kame {
 
   constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 
-  using WindowPtr = std::shared_ptr<Display>;
+  using WindowPtr = std::shared_ptr<Window>;
   using WindowMap = std::map< HWND, WindowPtr >;
   using WindowNameMap = std::map< std::wstring, WindowPtr >;
 

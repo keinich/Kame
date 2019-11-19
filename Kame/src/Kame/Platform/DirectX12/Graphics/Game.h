@@ -78,7 +78,8 @@ namespace Kame {
     virtual void Destroy();
 
   protected:
-    friend class Display;
+    //friend class Display;
+    friend class Window;
 
     /**
      *  Update the game logic.

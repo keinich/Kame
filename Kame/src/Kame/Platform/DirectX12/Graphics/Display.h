@@ -69,13 +69,6 @@ namespace Kame {
      */
     void Initialize();
 
-    /**
-    * Destroy this window.
-    */
-    void Destroy();
-
-    const std::wstring& GetWindowName() const;
-
     int GetClientWidth() const;
     int GetClientHeight() const;
 
@@ -124,8 +117,6 @@ namespace Kame {
     UINT Present(const Texture& texture = Texture());
 
   protected:
-    // The Window procedure needs to call protected methods of this class.
-    friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     // Only the application can create a window.
     friend class DX12Core;
@@ -134,29 +125,7 @@ namespace Kame {
 
     Display() = delete;
     Display(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync);
-    virtual ~Display();
-
-    // Register a Game with this window. This allows
-    // the window to callback functions in the Game class.
-    void RegisterCallbacks(std::shared_ptr<Game> pGame);
-
-    // Update and Draw can only be called by the application.
-    virtual void OnUpdate(UpdateEventArgs& e);
-    virtual void OnRender(RenderEventArgs& e);
-
-    // A keyboard key was pressed
-    virtual void OnKeyPressed(KeyEventArgs& e);
-    // A keyboard key was released
-    virtual void OnKeyReleased(KeyEventArgs& e);
-
-    // The mouse was moved
-    virtual void OnMouseMoved(MouseMotionEventArgs& e);
-    // A button on the mouse was pressed
-    virtual void OnMouseButtonPressed(MouseButtonEventArgs& e);
-    // A button on the mouse was released
-    virtual void OnMouseButtonReleased(MouseButtonEventArgs& e);
-    // The mouse wheel was moved.
-    virtual void OnMouseWheel(MouseWheelEventArgs& e);
+    virtual ~Display();    
 
     // The window was resized.
     virtual void OnResize(ResizeEventArgs& e);
@@ -174,20 +143,13 @@ namespace Kame {
 
     HWND m_hWnd;
 
-    std::wstring m_WindowName;
-
     int m_ClientWidth;
     int m_ClientHeight;
     bool m_VSync;
     bool m_Fullscreen;
 
-    HighResolutionClock m_UpdateClock;
-    HighResolutionClock m_RenderClock;
-
     UINT64 m_FenceValues[BufferCount];
-    uint64_t m_FrameValues[BufferCount];
-
-    std::weak_ptr<Game> m_pGame;
+    uint64_t m_FrameValues[BufferCount];    
 
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_dxgiSwapChain;
     Texture m_BackBufferTextures[BufferCount];
@@ -199,8 +161,7 @@ namespace Kame {
     RECT m_WindowRect;
     bool m_IsTearingSupported;
 
-    int m_PreviousMouseX;
-    int m_PreviousMouseY;
+    
 
     //GUI m_GUI;
 

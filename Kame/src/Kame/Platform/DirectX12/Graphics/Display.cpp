@@ -15,7 +15,6 @@ namespace Kame {
 
   Display::Display(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
     : m_hWnd(hWnd)
-    , m_WindowName(windowName)
     , m_ClientWidth(clientWidth)
     , m_ClientHeight(clientHeight)
     , m_VSync(vSync)
@@ -50,10 +49,6 @@ namespace Kame {
     return m_hWnd;
   }
 
-  const std::wstring& Display::GetWindowName() const {
-    return m_WindowName;
-  }
-
   void Display::Show() {
     ::ShowWindow(m_hWnd, SW_SHOW);
   }
@@ -63,20 +58,6 @@ namespace Kame {
   */
   void Display::Hide() {
     ::ShowWindow(m_hWnd, SW_HIDE);
-  }
-
-  void Display::Destroy() {
-    //m_GUI.Destroy();
-
-    if (auto pGame = m_pGame.lock()) {
-      // Notify the registered game that the window is being destroyed.
-      pGame->OnWindowDestroy();
-    }
-
-    if (m_hWnd) {
-      DestroyWindow(m_hWnd);
-      m_hWnd = nullptr;
-    }
   }
 
   int Display::GetClientWidth() const {
@@ -157,82 +138,6 @@ namespace Kame {
     SetFullscreen(!m_Fullscreen);
   }
 
-
-  void Display::RegisterCallbacks(std::shared_ptr<Game> pGame) {
-    m_pGame = pGame;
-
-    return;
-  }
-
-  void Display::OnUpdate(UpdateEventArgs& e) {
-    //m_GUI.NewFrame();
-
-    m_UpdateClock.Tick();
-
-    if (auto pGame = m_pGame.lock()) {
-      UpdateEventArgs updateEventArgs(m_UpdateClock.GetDeltaSeconds(), m_UpdateClock.GetTotalSeconds(), e.FrameNumber);
-      pGame->OnUpdate(updateEventArgs);
-    }
-  }
-
-  void Display::OnRender(RenderEventArgs& e) {
-    m_RenderClock.Tick();
-
-    if (auto pGame = m_pGame.lock()) {
-      RenderEventArgs renderEventArgs(m_RenderClock.GetDeltaSeconds(), m_RenderClock.GetTotalSeconds(), e.FrameNumber);
-      pGame->OnRender(renderEventArgs);
-    }
-  }
-
-  void Display::OnKeyPressed(KeyEventArgs& e) {
-    if (auto pGame = m_pGame.lock()) {
-      pGame->OnKeyPressed(e);
-    }
-  }
-
-  void Display::OnKeyReleased(KeyEventArgs& e) {
-    if (auto pGame = m_pGame.lock()) {
-      pGame->OnKeyReleased(e);
-    }
-  }
-
-  // The mouse was moved
-  void Display::OnMouseMoved(MouseMotionEventArgs& e) {
-    e.RelX = e.X - m_PreviousMouseX;
-    e.RelY = e.Y - m_PreviousMouseY;
-
-    m_PreviousMouseX = e.X;
-    m_PreviousMouseY = e.Y;
-
-    if (auto pGame = m_pGame.lock()) {
-      pGame->OnMouseMoved(e);
-    }
-  }
-
-  // A button on the mouse was pressed
-  void Display::OnMouseButtonPressed(MouseButtonEventArgs& e) {
-    m_PreviousMouseX = e.X;
-    m_PreviousMouseY = e.Y;
-
-    if (auto pGame = m_pGame.lock()) {
-      pGame->OnMouseButtonPressed(e);
-    }
-  }
-
-  // A button on the mouse was released
-  void Display::OnMouseButtonReleased(MouseButtonEventArgs& e) {
-    if (auto pGame = m_pGame.lock()) {
-      pGame->OnMouseButtonReleased(e);
-    }
-  }
-
-  // The mouse wheel was moved.
-  void Display::OnMouseWheel(MouseWheelEventArgs& e) {
-    if (auto pGame = m_pGame.lock()) {
-      pGame->OnMouseWheel(e);
-    }
-  }
-
   void Display::OnResize(ResizeEventArgs& e) {
     // Update the client size.
     if (m_ClientWidth != e.Width || m_ClientHeight != e.Height) {
@@ -257,10 +162,7 @@ namespace Kame {
 
       UpdateRenderTargetViews();
     }
-
-    if (auto pGame = m_pGame.lock()) {
-      pGame->OnResize(e);
-    }
+    
   }
 
   Microsoft::WRL::ComPtr<IDXGISwapChain4> Display::CreateSwapChain() {
