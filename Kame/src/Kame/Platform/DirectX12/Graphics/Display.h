@@ -50,7 +50,7 @@ namespace Kame {
   class Game;
   class Texture;
 
-  class KAME_API Window : public std::enable_shared_from_this<Window> {
+  class KAME_API Display : public std::enable_shared_from_this<Display> {
   public:
     // Number of swapchain back buffers.
     static const UINT BufferCount = 3;
@@ -129,9 +129,9 @@ namespace Kame {
     // The DirectXTemplate class needs to register itself with a window.
     friend class Game;
 
-    Window() = delete;
-    Window(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync);
-    virtual ~Window();
+    Display() = delete;
+    Display(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync);
+    virtual ~Display();
 
     // Register a Game with this window. This allows
     // the window to callback functions in the Game class.
@@ -166,8 +166,8 @@ namespace Kame {
 
   private:
     // Windows should not be copied.
-    Window(const Window& copy) = delete;
-    Window& operator=(const Window& other) = delete;
+    Display(const Display& copy) = delete;
+    Display& operator=(const Display& other) = delete;
 
     HWND m_hWnd;
 

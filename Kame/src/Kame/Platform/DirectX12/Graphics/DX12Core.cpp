@@ -5,13 +5,13 @@
 #include "CommandQueue.h"
 #include "Game.h"
 #include "DescriptorAllocator.h"
-#include "Window.h"
+#include "Display.h"
 
 namespace Kame {
 
   constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 
-  using WindowPtr = std::shared_ptr<Window>;
+  using WindowPtr = std::shared_ptr<Display>;
   using WindowMap = std::map< HWND, WindowPtr >;
   using WindowNameMap = std::map< std::wstring, WindowPtr >;
 
@@ -27,9 +27,9 @@ namespace Kame {
   // A wrapper struct to allow shared pointers for the window class.
   // This is needed because the constructor and destructor for the Window
   // class are protected and not accessible by the std::make_shared method.
-  struct MakeWindow : public Window {
+  struct MakeWindow : public Display {
     MakeWindow(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-      : Window(hWnd, windowName, clientWidth, clientHeight, vSync) {}
+      : Display(hWnd, windowName, clientWidth, clientHeight, vSync) {}
   };
 
   DX12Core::DX12Core()

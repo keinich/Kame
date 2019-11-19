@@ -211,7 +211,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ThreadSafeQueue.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Window.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Display.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Shaders\Compiled\GenerateMips_CS.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Shaders\Compiled\PanoToCumbemap_CS.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.h" />
@@ -264,7 +264,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Texture.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Window.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Display.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.cpp" />
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWInput.cpp" />
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWWindow.cpp" />

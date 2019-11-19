@@ -3,7 +3,7 @@
 namespace Kame {
 
   class Game;
-  class Window;
+  class Display;
 
   class KAME_API Application {
 
@@ -18,10 +18,10 @@ namespace Kame {
     inline uint64_t GetFrameCount() { return _FrameCount; }
     inline void IncrementFrameCount() { ++_FrameCount; }
 
-    std::shared_ptr<Window> CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync = true);
+    std::shared_ptr<Display> CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync = true);
     void DestroyWindow(const std::wstring& windowName);
-    void DestroyWindow(std::shared_ptr<Window> window);
-    std::shared_ptr<Window> GetWindowByName(const std::wstring& windowName);
+    void DestroyWindow(std::shared_ptr<Display> window);
+    std::shared_ptr<Display> GetWindowByName(const std::wstring& windowName);
 
     int Run(std::shared_ptr<Game> game);
     void Quit(int exitCode = 0);

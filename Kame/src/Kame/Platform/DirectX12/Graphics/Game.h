@@ -39,7 +39,7 @@
 
 namespace Kame {
 
-  class Window;
+  class Display;
 
   class KAME_API Game : public std::enable_shared_from_this<Game> {
   public:
@@ -78,7 +78,7 @@ namespace Kame {
     virtual void Destroy();
 
   protected:
-    friend class Window;
+    friend class Display;
 
     /**
      *  Update the game logic.
@@ -131,7 +131,7 @@ namespace Kame {
      */
     virtual void OnWindowDestroy();
 
-    std::shared_ptr<Window> m_pWindow;
+    std::shared_ptr<Display> m_pWindow;
 
   private:
     std::wstring m_Name;

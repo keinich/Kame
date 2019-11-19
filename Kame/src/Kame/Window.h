@@ -21,11 +21,11 @@ namespace Kame {
 
   };
 
-  class KAME_API Window {
+  class KAME_API Display {
   public:
     using EventCallbackFn = std::function<void(Event&)>;
 
-    virtual ~Window() {}
+    virtual ~Display() {}
 
     virtual void OnUpdate() = 0;
 
@@ -40,7 +40,7 @@ namespace Kame {
 
     virtual void Show() const = 0;
 
-    static Window* Create(const WindowProperties& props = WindowProperties());
+    static Display* Create(const WindowProperties& props = WindowProperties());
   };
 
 }

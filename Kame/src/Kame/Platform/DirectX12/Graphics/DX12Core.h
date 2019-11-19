@@ -44,7 +44,7 @@ namespace Kame {
   class CommandQueue;
   class DescriptorAllocator;
   class Game;
-  class Window;
+  class Display;
 
   class KAME_API DX12Core {
 

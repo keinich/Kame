@@ -12,7 +12,7 @@
 #include "Kame/Platform/DirectX12/Graphics/Helpers.h"
 #include "Light.h"
 #include "Material.h"
-#include "Kame/Platform/DirectX12/Graphics/Window.h"
+#include "Kame/Platform/DirectX12/Graphics/Display.h"
 
 #include <wrl.h>
 using namespace Microsoft::WRL;

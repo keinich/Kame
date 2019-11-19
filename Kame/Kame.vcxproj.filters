@@ -182,9 +182,9 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ThreadSafeQueue.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Window.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.h" />
     <ClInclude Include="src\Kame\Application.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Display.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp">
@@ -245,9 +245,9 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Texture.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Window.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.cpp" />
     <ClCompile Include="src\Kame\Application.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Display.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl" />

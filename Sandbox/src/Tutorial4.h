@@ -35,7 +35,7 @@
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
 #include "Kame/Platform/DirectX12/Graphics/IndexBuffer.h"
 #include "Light.h"
-#include "Kame/Platform/DirectX12/Graphics/Window.h"
+#include "Kame/Platform/DirectX12/Graphics/Display.h"
 #include "Kame/Platform/DirectX12/Graphics/Mesh.h"
 #include "Kame/Platform/DirectX12/Graphics/RenderTarget.h"
 #include "Kame/Platform/DirectX12/Graphics/RootSignature.h"

@@ -3,7 +3,7 @@
 #include "DX12Core.h"
 #include "Kame/Application.h"
 #include "Game.h"
-#include "Window.h"
+#include "Display.h"
 
 namespace Kame {
 

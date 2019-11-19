@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Window.h"
+#include "Display.h"
 #include "Kame/Layer.h"
 #include "Kame/LayerStack.h"
 #include "Core.h"
@@ -11,7 +11,7 @@ namespace Kame {
 
   class KAME_API DX12Core {
 
-    friend class Window;
+    friend class Display;
 
   public:
     DX12Core();
@@ -25,7 +25,7 @@ namespace Kame {
     void PushOverlay(Layer* layer);
 
     inline static DX12Core& Get() { return *s_Instance; }
-    inline Window& GetWindow() { return *_Window; }
+    inline Display& GetWindow() { return *_Window; }
 
     void Update();
     void Render();
@@ -45,7 +45,7 @@ namespace Kame {
   private:
 
 
-    std::unique_ptr<Window> _Window;
+    std::unique_ptr<Display> _Window;
     bool _Running = true;
     LayerStack _LayerStack;
 

@@ -1,6 +1,6 @@
 #include "kmpch.h"
 
-#include "Window.h"
+#include "Display.h"
 
 #include "DX12Core.h"
 #include "CommandQueue.h"
@@ -13,7 +13,7 @@
 
 namespace Kame {
 
-  Window::Window(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
+  Display::Display(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
     : m_hWnd(hWnd)
     , m_WindowName(windowName)
     , m_ClientWidth(clientWidth)
@@ -35,37 +35,37 @@ namespace Kame {
     UpdateRenderTargetViews();
   }
 
-  Window::~Window() {
+  Display::~Display() {
     // Window should be destroyed with Application::DestroyWindow before
     // the window goes out of scope.
     assert(!m_hWnd && "Use Application::DestroyWindow before destruction.");
   }
 
-  void Window::Initialize() {
+  void Display::Initialize() {
     //m_GUI.Initialize( shared_from_this() );
   }
 
 
-  HWND Window::GetWindowHandle() const {
+  HWND Display::GetWindowHandle() const {
     return m_hWnd;
   }
 
-  const std::wstring& Window::GetWindowName() const {
+  const std::wstring& Display::GetWindowName() const {
     return m_WindowName;
   }
 
-  void Window::Show() {
+  void Display::Show() {
     ::ShowWindow(m_hWnd, SW_SHOW);
   }
 
   /**
   * Hide the window.
   */
-  void Window::Hide() {
+  void Display::Hide() {
     ::ShowWindow(m_hWnd, SW_HIDE);
   }
 
-  void Window::Destroy() {
+  void Display::Destroy() {
     //m_GUI.Destroy();
 
     if (auto pGame = m_pGame.lock()) {
@@ -79,32 +79,32 @@ namespace Kame {
     }
   }
 
-  int Window::GetClientWidth() const {
+  int Display::GetClientWidth() const {
     return m_ClientWidth;
   }
 
-  int Window::GetClientHeight() const {
+  int Display::GetClientHeight() const {
     return m_ClientHeight;
   }
 
-  bool Window::IsVSync() const {
+  bool Display::IsVSync() const {
     return m_VSync;
   }
 
-  void Window::SetVSync(bool vSync) {
+  void Display::SetVSync(bool vSync) {
     m_VSync = vSync;
   }
 
-  void Window::ToggleVSync() {
+  void Display::ToggleVSync() {
     SetVSync(!m_VSync);
   }
 
-  bool Window::IsFullScreen() const {
+  bool Display::IsFullScreen() const {
     return m_Fullscreen;
   }
 
   // Set the fullscreen state of the window.
-  void Window::SetFullscreen(bool fullscreen) {
+  void Display::SetFullscreen(bool fullscreen) {
     if (m_Fullscreen != fullscreen) {
       m_Fullscreen = fullscreen;
 
@@ -153,18 +153,18 @@ namespace Kame {
     }
   }
 
-  void Window::ToggleFullscreen() {
+  void Display::ToggleFullscreen() {
     SetFullscreen(!m_Fullscreen);
   }
 
 
-  void Window::RegisterCallbacks(std::shared_ptr<Game> pGame) {
+  void Display::RegisterCallbacks(std::shared_ptr<Game> pGame) {
     m_pGame = pGame;
 
     return;
   }
 
-  void Window::OnUpdate(UpdateEventArgs& e) {
+  void Display::OnUpdate(UpdateEventArgs& e) {
     //m_GUI.NewFrame();
 
     m_UpdateClock.Tick();
@@ -175,7 +175,7 @@ namespace Kame {
     }
   }
 
-  void Window::OnRender(RenderEventArgs& e) {
+  void Display::OnRender(RenderEventArgs& e) {
     m_RenderClock.Tick();
 
     if (auto pGame = m_pGame.lock()) {
@@ -184,20 +184,20 @@ namespace Kame {
     }
   }
 
-  void Window::OnKeyPressed(KeyEventArgs& e) {
+  void Display::OnKeyPressed(KeyEventArgs& e) {
     if (auto pGame = m_pGame.lock()) {
       pGame->OnKeyPressed(e);
     }
   }
 
-  void Window::OnKeyReleased(KeyEventArgs& e) {
+  void Display::OnKeyReleased(KeyEventArgs& e) {
     if (auto pGame = m_pGame.lock()) {
       pGame->OnKeyReleased(e);
     }
   }
 
   // The mouse was moved
-  void Window::OnMouseMoved(MouseMotionEventArgs& e) {
+  void Display::OnMouseMoved(MouseMotionEventArgs& e) {
     e.RelX = e.X - m_PreviousMouseX;
     e.RelY = e.Y - m_PreviousMouseY;
 
@@ -210,7 +210,7 @@ namespace Kame {
   }
 
   // A button on the mouse was pressed
-  void Window::OnMouseButtonPressed(MouseButtonEventArgs& e) {
+  void Display::OnMouseButtonPressed(MouseButtonEventArgs& e) {
     m_PreviousMouseX = e.X;
     m_PreviousMouseY = e.Y;
 
@@ -220,20 +220,20 @@ namespace Kame {
   }
 
   // A button on the mouse was released
-  void Window::OnMouseButtonReleased(MouseButtonEventArgs& e) {
+  void Display::OnMouseButtonReleased(MouseButtonEventArgs& e) {
     if (auto pGame = m_pGame.lock()) {
       pGame->OnMouseButtonReleased(e);
     }
   }
 
   // The mouse wheel was moved.
-  void Window::OnMouseWheel(MouseWheelEventArgs& e) {
+  void Display::OnMouseWheel(MouseWheelEventArgs& e) {
     if (auto pGame = m_pGame.lock()) {
       pGame->OnMouseWheel(e);
     }
   }
 
-  void Window::OnResize(ResizeEventArgs& e) {
+  void Display::OnResize(ResizeEventArgs& e) {
     // Update the client size.
     if (m_ClientWidth != e.Width || m_ClientHeight != e.Height) {
       m_ClientWidth = std::max(1, e.Width);
@@ -263,7 +263,7 @@ namespace Kame {
     }
   }
 
-  Microsoft::WRL::ComPtr<IDXGISwapChain4> Window::CreateSwapChain() {
+  Microsoft::WRL::ComPtr<IDXGISwapChain4> Display::CreateSwapChain() {
     DX12Core& app = DX12Core::Get();
 
     ComPtr<IDXGISwapChain4> dxgiSwapChain4;
@@ -310,7 +310,7 @@ namespace Kame {
     return dxgiSwapChain4;
   }
 
-  void Window::UpdateRenderTargetViews() {
+  void Display::UpdateRenderTargetViews() {
     for (int i = 0; i < BufferCount; ++i) {
       ComPtr<ID3D12Resource> backBuffer;
       ThrowIfFailed(m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffer)));
@@ -322,12 +322,12 @@ namespace Kame {
     }
   }
 
-  const RenderTarget& Window::GetRenderTarget() const {
+  const RenderTarget& Display::GetRenderTarget() const {
     m_RenderTarget.AttachTexture(AttachmentPoint::Color0, m_BackBufferTextures[m_CurrentBackBufferIndex]);
     return m_RenderTarget;
   }
 
-  UINT Window::Present(const Texture& texture) {
+  UINT Display::Present(const Texture& texture) {
     auto commandQueue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
     auto commandList = commandQueue->GetCommandList();
 

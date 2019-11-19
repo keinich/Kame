@@ -1,6 +1,6 @@
 #include "kmpch.h"
 #include "Application.h"
-#include "Kame/Platform/DirectX12/Graphics/Window.h"
+#include "Kame/Platform/DirectX12/Graphics/Display.h"
 
 #include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
@@ -9,7 +9,7 @@ namespace Kame {
 
   constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 
-  using WindowPtr = std::shared_ptr<Window>;
+  using WindowPtr = std::shared_ptr<Display>;
   using WindowMap = std::map< HWND, WindowPtr >;
   using WindowNameMap = std::map< std::wstring, WindowPtr >;
 
@@ -28,7 +28,7 @@ namespace Kame {
 
   void Application::Create(HINSTANCE hInst) {
     assert(!_Instance, "Application is already initialized");
-    _Instance = new Application(hInst);    
+    _Instance = new Application(hInst);
     _Instance->Initialize();
   }
 
@@ -112,12 +112,12 @@ namespace Kame {
     return mouseButton;
   }
 
-  struct MakeWindow : public Window {
+  struct MakeWindow : public Display {
     MakeWindow(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-      : Window(hWnd, windowName, clientWidth, clientHeight, vSync) {}
+      : Display(hWnd, windowName, clientWidth, clientHeight, vSync) {}
   };
 
-  std::shared_ptr<Window> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
+  std::shared_ptr<Display> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
     // First check if a window with the given name already exists.
     WindowNameMap::iterator windowIter = s_WindowByName.find(windowName);
     if (windowIter != s_WindowByName.end()) {
@@ -149,7 +149,7 @@ namespace Kame {
     return pWindow;
   }
 
-  void Application::DestroyWindow(std::shared_ptr<Window> window) {
+  void Application::DestroyWindow(std::shared_ptr<Display> window) {
     if (window) window->Destroy();
   }
 
@@ -160,8 +160,8 @@ namespace Kame {
     }
   }
 
-  std::shared_ptr<Window> Application::GetWindowByName(const std::wstring& windowName) {
-    std::shared_ptr<Window> window;
+  std::shared_ptr<Display> Application::GetWindowByName(const std::wstring& windowName) {
+    std::shared_ptr<Display> window;
     WindowNameMap::iterator iter = s_WindowByName.find(windowName);
     if (iter != s_WindowByName.end()) {
       window = iter->second;
