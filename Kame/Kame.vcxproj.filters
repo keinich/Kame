@@ -184,6 +184,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Window.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.h" />
+    <ClInclude Include="src\Kame\Application.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp">
@@ -246,6 +247,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Window.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.cpp" />
+    <ClCompile Include="src\Kame\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl" />

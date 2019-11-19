@@ -47,6 +47,9 @@ namespace Kame {
   class Window;
 
   class KAME_API DX12Core {
+
+    friend class Application;
+
   public:
 
     /**
