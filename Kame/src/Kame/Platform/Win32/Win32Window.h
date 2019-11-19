@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef KAME_PLATFORM_WIN32
+//#ifdef KAME_PLATFORM_WIN32
 
 #include "Kame/Window.h"
 
@@ -48,4 +48,4 @@ namespace Kame {
 
 }
 
-#endif
+//#endif

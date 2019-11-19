@@ -5,7 +5,27 @@
 #include "Kame/Core.h"
 #include "Kame/Events/Event.h"
 
+#include "Kame/Platform/DirectX12/Graphics/Display.h"
+
 namespace Kame {
+
+  class Window {
+
+  public:
+
+    // TODO : make this protected
+    Display& GetDisplay() { return _Display; }
+
+  protected: // Methods
+
+    Window() = delete;
+    Window(HWND hWnd, const std::wstring& name, int width, int height, bool vSync);
+    virtual ~Window();
+
+  protected: // Fields
+
+    Display _Display; // TODO can a Window contain multiple Displays?
+  };
 
   struct WindowProperties {
     std::string Title;
@@ -16,16 +36,15 @@ namespace Kame {
       const std::string& title = "Kame Engine",
       unsigned int width = 1280,
       unsigned int height = 720
-    ) : Title(title), Width(width), Height(height) {
-    }
+    ) : Title(title), Width(width), Height(height) {}
 
   };
 
-  class KAME_API Display {
+  class KAME_API DisplayOld {
   public:
     using EventCallbackFn = std::function<void(Event&)>;
 
-    virtual ~Display() {}
+    virtual ~DisplayOld() {}
 
     virtual void OnUpdate() = 0;
 

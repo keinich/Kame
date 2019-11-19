@@ -3,7 +3,7 @@
 #include "DX12Core.h"
 #include "Kame/Application.h"
 #include "Game.h"
-#include "Display.h"
+#include "Kame/Window.h"
 
 namespace Kame {
 
@@ -25,8 +25,8 @@ namespace Kame {
     }
 
     m_pWindow = Application::Get().CreateRenderWindow(m_Name, m_Width, m_Height, m_vSync);
-    m_pWindow->RegisterCallbacks(shared_from_this());
-    m_pWindow->Show();
+    m_pWindow->GetDisplay().RegisterCallbacks(shared_from_this());
+    m_pWindow->GetDisplay().Show();
 
     return true;
   }

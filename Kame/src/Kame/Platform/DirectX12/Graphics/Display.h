@@ -51,6 +51,9 @@ namespace Kame {
   class Texture;
 
   class KAME_API Display : public std::enable_shared_from_this<Display> {
+
+    friend class Window;
+
   public:
     // Number of swapchain back buffers.
     static const UINT BufferCount = 3;

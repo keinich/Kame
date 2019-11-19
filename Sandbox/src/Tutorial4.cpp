@@ -13,6 +13,7 @@
 #include "Light.h"
 #include "Material.h"
 #include "Kame/Platform/DirectX12/Graphics/Display.h"
+#include "Kame/Window.h"
 
 #include <wrl.h>
 using namespace Microsoft::WRL;
@@ -393,7 +394,7 @@ namespace Kame {
       sdrPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
       sdrPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
       sdrPipelineStateStream.Rasterizer = rasterizerDesc;
-      sdrPipelineStateStream.RTVFormats = m_pWindow->GetRenderTarget().GetRenderTargetFormats();
+      sdrPipelineStateStream.RTVFormats = m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats();
 
       D3D12_PIPELINE_STATE_STREAM_DESC sdrPipelineStateStreamDesc = {
           sizeof(SDRPipelineStateStream), &sdrPipelineStateStream
@@ -948,8 +949,8 @@ namespace Kame {
     }
 
     // Perform HDR -> SDR tonemapping directly to the Window's render target.
-    commandList->SetRenderTarget(m_pWindow->GetRenderTarget());
-    commandList->SetViewport(m_pWindow->GetRenderTarget().GetViewport());
+    commandList->SetRenderTarget(m_pWindow->GetDisplay().GetRenderTarget());
+    commandList->SetViewport(m_pWindow->GetDisplay().GetRenderTarget().GetViewport());
     commandList->SetPipelineState(m_SDRPipelineState);
     commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->SetGraphicsRootSignature(m_SDRRootSignature);
@@ -964,7 +965,7 @@ namespace Kame {
     OnGUI();
 
     // Present
-    m_pWindow->Present();
+    m_pWindow->GetDisplay().Present();
   }
 
   static bool g_AllowFullscreenToggle = true;
@@ -982,13 +983,13 @@ namespace Kame {
       if (e.Alt) {
     case KeyCode::F11:
       if (g_AllowFullscreenToggle) {
-        m_pWindow->ToggleFullscreen();
+        m_pWindow->GetDisplay().ToggleFullscreen();
         g_AllowFullscreenToggle = false;
       }
       break;
       }
     case KeyCode::V:
-      m_pWindow->ToggleVSync();
+      m_pWindow->GetDisplay().ToggleVSync();
       break;
     case KeyCode::R:
       // Reset camera transform

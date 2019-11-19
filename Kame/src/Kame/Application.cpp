@@ -1,6 +1,7 @@
 #include "kmpch.h"
 #include "Application.h"
-#include "Kame/Platform/DirectX12/Graphics/Display.h"
+//#include "Kame/Platform/DirectX12/Graphics/Display.h"
+#include "Kame/Window.h"
 
 #include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
@@ -9,7 +10,7 @@ namespace Kame {
 
   constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 
-  using WindowPtr = std::shared_ptr<Display>;
+  using WindowPtr = std::shared_ptr<Window>;
   using WindowMap = std::map< HWND, WindowPtr >;
   using WindowNameMap = std::map< std::wstring, WindowPtr >;
 
@@ -112,12 +113,12 @@ namespace Kame {
     return mouseButton;
   }
 
-  struct MakeWindow : public Display {
+  struct MakeWindow : public Window {
     MakeWindow(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-      : Display(hWnd, windowName, clientWidth, clientHeight, vSync) {}
+      : Window(hWnd, windowName, clientWidth, clientHeight, vSync) {}
   };
 
-  std::shared_ptr<Display> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
+  std::shared_ptr<Window> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
     // First check if a window with the given name already exists.
     WindowNameMap::iterator windowIter = s_WindowByName.find(windowName);
     if (windowIter != s_WindowByName.end()) {
@@ -141,7 +142,7 @@ namespace Kame {
     }
 
     WindowPtr pWindow = std::make_shared<MakeWindow>(hWnd, windowName, clientWidth, clientHeight, vSync);
-    pWindow->Initialize();
+    pWindow->GetDisplay().Initialize();
 
     s_Windows.insert(WindowMap::value_type(hWnd, pWindow));
     s_WindowByName.insert(WindowNameMap::value_type(windowName, pWindow));
@@ -149,8 +150,8 @@ namespace Kame {
     return pWindow;
   }
 
-  void Application::DestroyWindow(std::shared_ptr<Display> window) {
-    if (window) window->Destroy();
+  void Application::DestroyWindow(std::shared_ptr<Window> window) {
+    if (window) window->GetDisplay().Destroy();
   }
 
   void Application::DestroyWindow(const std::wstring& windowName) {
@@ -160,8 +161,8 @@ namespace Kame {
     }
   }
 
-  std::shared_ptr<Display> Application::GetWindowByName(const std::wstring& windowName) {
-    std::shared_ptr<Display> window;
+  std::shared_ptr<Window> Application::GetWindowByName(const std::wstring& windowName) {
+    std::shared_ptr<Window> window;
     WindowNameMap::iterator iter = s_WindowByName.find(windowName);
     if (iter != s_WindowByName.end()) {
       window = iter->second;
@@ -199,7 +200,7 @@ namespace Kame {
     WindowMap::iterator windowIter = s_Windows.find(hWnd);
     if (windowIter != s_Windows.end()) {
       WindowPtr pWindow = windowIter->second;
-      s_WindowByName.erase(pWindow->GetWindowName());
+      s_WindowByName.erase(pWindow->GetDisplay().GetWindowName());
       s_Windows.erase(windowIter);
     }
   }
@@ -222,14 +223,14 @@ namespace Kame {
       switch (message) {
       case WM_PAINT:
       {
-        Application::Get().IncrementFrameCount();
+        Application::Get().IncrementFrameCount(); // TODO is this correct with multiple windows?
 
         // Delta time will be filled in by the Window.
         UpdateEventArgs updateEventArgs(0.0f, 0.0f, Application::Get().GetFrameCount());
-        pWindow->OnUpdate(updateEventArgs);
+        pWindow->GetDisplay().OnUpdate(updateEventArgs);
         RenderEventArgs renderEventArgs(0.0f, 0.0f, Application::Get().GetFrameCount());
         // Delta time will be filled in by the Window.
-        pWindow->OnRender(renderEventArgs);
+        pWindow->GetDisplay().OnRender(renderEventArgs);
       }
       break;
       case WM_SYSKEYDOWN:
@@ -254,7 +255,7 @@ namespace Kame {
         KeyCode::Key key = (KeyCode::Key)wParam;
         unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
         KeyEventArgs keyEventArgs(key, c, KeyEventArgs::Pressed, shift, control, alt);
-        pWindow->OnKeyPressed(keyEventArgs);
+        pWindow->GetDisplay().OnKeyPressed(keyEventArgs);
       }
       break;
       case WM_SYSKEYUP:
@@ -278,7 +279,7 @@ namespace Kame {
         }
 
         KeyEventArgs keyEventArgs(key, c, KeyEventArgs::Released, shift, control, alt);
-        pWindow->OnKeyReleased(keyEventArgs);
+        pWindow->GetDisplay().OnKeyReleased(keyEventArgs);
       }
       break;
       // The default window procedure will play a system notification sound 
@@ -298,7 +299,7 @@ namespace Kame {
         int y = ((int)(short)HIWORD(lParam));
 
         MouseMotionEventArgs mouseMotionEventArgs(lButton, mButton, rButton, control, shift, x, y);
-        pWindow->OnMouseMoved(mouseMotionEventArgs);
+        pWindow->GetDisplay().OnMouseMoved(mouseMotionEventArgs);
       }
       break;
       case WM_LBUTTONDOWN:
@@ -315,7 +316,7 @@ namespace Kame {
         int y = ((int)(short)HIWORD(lParam));
 
         MouseButtonEventArgs mouseButtonEventArgs(DecodeMouseButton2(message), MouseButtonEventArgs::Pressed, lButton, mButton, rButton, control, shift, x, y);
-        pWindow->OnMouseButtonPressed(mouseButtonEventArgs);
+        pWindow->GetDisplay().OnMouseButtonPressed(mouseButtonEventArgs);
       }
       break;
       case WM_LBUTTONUP:
@@ -332,7 +333,7 @@ namespace Kame {
         int y = ((int)(short)HIWORD(lParam));
 
         MouseButtonEventArgs mouseButtonEventArgs(DecodeMouseButton2(message), MouseButtonEventArgs::Released, lButton, mButton, rButton, control, shift, x, y);
-        pWindow->OnMouseButtonReleased(mouseButtonEventArgs);
+        pWindow->GetDisplay().OnMouseButtonReleased(mouseButtonEventArgs);
       }
       break;
       case WM_MOUSEWHEEL:
@@ -359,7 +360,7 @@ namespace Kame {
         ScreenToClient(hwnd, &clientToScreenPoint);
 
         MouseWheelEventArgs mouseWheelEventArgs(zDelta, lButton, mButton, rButton, control, shift, (int)clientToScreenPoint.x, (int)clientToScreenPoint.y);
-        pWindow->OnMouseWheel(mouseWheelEventArgs);
+        pWindow->GetDisplay().OnMouseWheel(mouseWheelEventArgs);
       }
       break;
       case WM_SIZE:
@@ -368,7 +369,7 @@ namespace Kame {
         int height = ((int)(short)HIWORD(lParam));
 
         ResizeEventArgs resizeEventArgs(width, height);
-        pWindow->OnResize(resizeEventArgs);
+        pWindow->GetDisplay().OnResize(resizeEventArgs);
       }
       break;
       case WM_DESTROY:
