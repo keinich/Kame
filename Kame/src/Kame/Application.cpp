@@ -27,9 +27,9 @@ namespace Kame {
     return *_Instance;
   }
 
-  void Application::Create(HINSTANCE hInst) {
+  void Application::Create() {
     assert(!_Instance, "Application is already initialized");
-    _Instance = new Application(hInst);
+    _Instance = new Application();
     _Instance->Initialize();
   }
 
@@ -45,8 +45,7 @@ namespace Kame {
     }
   }
 
-  Application::Application(HINSTANCE hInst) {
-    _hInstance = hInst;
+  Application::Application() {
     _FrameCount = 0;
   }
 
@@ -67,7 +66,7 @@ namespace Kame {
     wndClass.cbSize = sizeof(WNDCLASSEX);
     wndClass.style = CS_HREDRAW | CS_VREDRAW;
     wndClass.lpfnWndProc = &WndProc;
-    wndClass.hInstance = _Instance->_hInstance;
+    wndClass.hInstance = GetModuleHandle(NULL);
     wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
     //wndClass.hIcon = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
     wndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
@@ -114,8 +113,8 @@ namespace Kame {
   }
 
   struct MakeWindow : public Window {
-    MakeWindow(HINSTANCE hInstance, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-      : Window(hInstance, windowName, clientWidth, clientHeight, vSync) {}
+    MakeWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
+      : Window(windowName, clientWidth, clientHeight, vSync) {}
   };
 
   std::shared_ptr<Window> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
@@ -125,7 +124,7 @@ namespace Kame {
       return windowIter->second;
     }
 
-    WindowPtr pWindow = std::make_shared<MakeWindow>(_hInstance, windowName, clientWidth, clientHeight, vSync);
+    WindowPtr pWindow = std::make_shared<MakeWindow>(windowName, clientWidth, clientHeight, vSync);
     pWindow->GetDisplay().Initialize();
 
     s_Windows.insert(WindowMap::value_type(pWindow->GetWindowHandle(), pWindow));

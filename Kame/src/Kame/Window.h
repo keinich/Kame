@@ -46,7 +46,7 @@ namespace Kame {
     friend class Game;
 
     Window() = delete;
-    Window(HINSTANCE hInstance, const std::wstring& name, int width, int height, bool vSync);
+    Window(const std::wstring& name, int width, int height, bool vSync);
     virtual ~Window();
 
     inline HWND GetWindowHandle() { return _hWnd; }

@@ -10,7 +10,7 @@ namespace Kame {
   public:
 
     static Application& Get();
-    static void Create(HINSTANCE hInst);
+    static void Create();
     static void Destroy();
 
     void Initialize();
@@ -27,12 +27,11 @@ namespace Kame {
     void Quit(int exitCode = 0);
 
   protected: // Methods
-    Application(HINSTANCE hInst);
+    Application();
     virtual ~Application();
 
-  protected: // Fields    
+  protected: // Fields
 
-    HINSTANCE _hInstance;
     uint64_t _FrameCount;
   };
 

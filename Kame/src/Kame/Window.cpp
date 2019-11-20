@@ -7,11 +7,17 @@ namespace Kame {
 
   constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 
-  Window::Window(HINSTANCE hInstance, const std::wstring& name, int width, int height, bool vSync) :
+  Window::Window(const std::wstring& name, int width, int height, bool vSync) :
+    _hWnd(nullptr),
     _Display(name, width, height, vSync),
     _WindowName(name),
     _PreviousMouseX(0),
-    _PreviousMouseY(0) {
+    _PreviousMouseY(0),
+    _Fullscreen(false),
+    _WindowRect() {
+
+    HINSTANCE hInstance = GetModuleHandle(NULL); //TODO think about if there is a situation where this is not correct
+        
 
     RECT windowRect = { 0, 0, width, height };
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);

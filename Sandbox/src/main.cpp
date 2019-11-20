@@ -45,7 +45,7 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR lpCmdL
         LocalFree(argv);
     }
 
-    Kame::Application::Create(hInstance);
+    Kame::Application::Create();
     {
         std::shared_ptr<Kame::Tutorial4> demo = std::make_shared<Kame::Tutorial4>(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
         retCode = Kame::Application::Get().Run(demo);
