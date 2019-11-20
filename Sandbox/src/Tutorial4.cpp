@@ -983,7 +983,7 @@ namespace Kame {
       if (e.Alt) {
     case KeyCode::F11:
       if (g_AllowFullscreenToggle) {
-        m_pWindow->GetDisplay().ToggleFullscreen();
+        m_pWindow->ToggleFullscreen();
         g_AllowFullscreenToggle = false;
       }
       break;

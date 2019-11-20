@@ -9,7 +9,7 @@
 
 namespace Kame {
 
-  class Window {
+  class KAME_API Window {
 
   public:
 
@@ -17,6 +17,25 @@ namespace Kame {
     Display& GetDisplay() { return _Display; }
 
     const std::wstring& GetWindowName() const;
+
+    /**
+    * Is this a windowed window or full-screen?
+    */
+    bool IsFullScreen() const;
+
+    // Set the fullscreen state of the window.
+    void SetFullscreen(bool fullscreen);
+    void ToggleFullscreen();
+
+    /**
+     * Show this window.
+     */
+    void Show();
+
+    /**
+     * Hide the window.
+     */
+    void Hide();
 
   protected: // Methods
 
@@ -27,8 +46,10 @@ namespace Kame {
     friend class Game;
 
     Window() = delete;
-    Window(HWND hWnd, const std::wstring& name, int width, int height, bool vSync);
+    Window(HINSTANCE hInstance, const std::wstring& name, int width, int height, bool vSync);
     virtual ~Window();
+
+    inline HWND GetWindowHandle() { return _hWnd; }
 
     /**
     * Destroy this window.
@@ -74,6 +95,9 @@ namespace Kame {
     HighResolutionClock _RenderClock;
 
     std::wstring _WindowName;
+
+    RECT _WindowRect;
+    bool _Fullscreen;
 
   };
 

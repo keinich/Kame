@@ -13,15 +13,16 @@
 
 namespace Kame {
 
-  Display::Display(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-    : m_hWnd(hWnd)
-    , m_ClientWidth(clientWidth)
+  Display::Display(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) :
+    m_ClientWidth(clientWidth)
     , m_ClientHeight(clientHeight)
     , m_VSync(vSync)
-    , m_Fullscreen(false)
     , m_FenceValues{ 0 }
     , m_FrameValues{ 0 }
-  {
+  {}
+
+  void Display::Initialize(HWND hWnd) {
+
     DX12Core& app = DX12Core::Get();
 
     m_IsTearingSupported = app.IsTearingSupported();
@@ -30,34 +31,14 @@ namespace Kame {
       m_BackBufferTextures[i].SetName(L"Backbuffer[" + std::to_wstring(i) + L"]");
     }
 
-    m_dxgiSwapChain = CreateSwapChain();
+    m_dxgiSwapChain = CreateSwapChain(hWnd);
     UpdateRenderTargetViews();
   }
 
-  Display::~Display() {
-    // Window should be destroyed with Application::DestroyWindow before
-    // the window goes out of scope.
-    assert(!m_hWnd && "Use Application::DestroyWindow before destruction.");
-  }
+  Display::~Display() {}
 
   void Display::Initialize() {
     //m_GUI.Initialize( shared_from_this() );
-  }
-
-
-  HWND Display::GetWindowHandle() const {
-    return m_hWnd;
-  }
-
-  void Display::Show() {
-    ::ShowWindow(m_hWnd, SW_SHOW);
-  }
-
-  /**
-  * Hide the window.
-  */
-  void Display::Hide() {
-    ::ShowWindow(m_hWnd, SW_HIDE);
   }
 
   int Display::GetClientWidth() const {
@@ -78,64 +59,6 @@ namespace Kame {
 
   void Display::ToggleVSync() {
     SetVSync(!m_VSync);
-  }
-
-  bool Display::IsFullScreen() const {
-    return m_Fullscreen;
-  }
-
-  // Set the fullscreen state of the window.
-  void Display::SetFullscreen(bool fullscreen) {
-    if (m_Fullscreen != fullscreen) {
-      m_Fullscreen = fullscreen;
-
-      if (m_Fullscreen) // Switching to fullscreen.
-      {
-        // Store the current window dimensions so they can be restored 
-        // when switching out of fullscreen state.
-        ::GetWindowRect(m_hWnd, &m_WindowRect);
-
-        // Set the window style to a borderless window so the client area fills
-        // the entire screen.
-        UINT windowStyle = WS_OVERLAPPEDWINDOW & ~(WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
-
-        ::SetWindowLongW(m_hWnd, GWL_STYLE, windowStyle);
-
-        // Query the name of the nearest display device for the window.
-        // This is required to set the fullscreen dimensions of the window
-        // when using a multi-monitor setup.
-        HMONITOR hMonitor = ::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
-        MONITORINFOEX monitorInfo = {};
-        monitorInfo.cbSize = sizeof(MONITORINFOEX);
-        ::GetMonitorInfo(hMonitor, &monitorInfo);
-
-        ::SetWindowPos(m_hWnd, HWND_TOP,
-          monitorInfo.rcMonitor.left,
-          monitorInfo.rcMonitor.top,
-          monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
-          monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top,
-          SWP_FRAMECHANGED | SWP_NOACTIVATE);
-
-        ::ShowWindow(m_hWnd, SW_MAXIMIZE);
-      }
-      else {
-        // Restore all the window decorators.
-        ::SetWindowLong(m_hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
-
-        ::SetWindowPos(m_hWnd, HWND_NOTOPMOST,
-          m_WindowRect.left,
-          m_WindowRect.top,
-          m_WindowRect.right - m_WindowRect.left,
-          m_WindowRect.bottom - m_WindowRect.top,
-          SWP_FRAMECHANGED | SWP_NOACTIVATE);
-
-        ::ShowWindow(m_hWnd, SW_NORMAL);
-      }
-    }
-  }
-
-  void Display::ToggleFullscreen() {
-    SetFullscreen(!m_Fullscreen);
   }
 
   void Display::OnResize(ResizeEventArgs& e) {
@@ -162,10 +85,10 @@ namespace Kame {
 
       UpdateRenderTargetViews();
     }
-    
+
   }
 
-  Microsoft::WRL::ComPtr<IDXGISwapChain4> Display::CreateSwapChain() {
+  Microsoft::WRL::ComPtr<IDXGISwapChain4> Display::CreateSwapChain(HWND hWnd) {
     DX12Core& app = DX12Core::Get();
 
     ComPtr<IDXGISwapChain4> dxgiSwapChain4;
@@ -195,7 +118,7 @@ namespace Kame {
     ComPtr<IDXGISwapChain1> swapChain1;
     ThrowIfFailed(dxgiFactory4->CreateSwapChainForHwnd(
       pCommandQueue,
-      m_hWnd,
+      hWnd,
       &swapChainDesc,
       nullptr,
       nullptr,
@@ -203,7 +126,7 @@ namespace Kame {
 
     // Disable the Alt+Enter fullscreen toggle feature. Switching to fullscreen
     // will be handled manually.
-    ThrowIfFailed(dxgiFactory4->MakeWindowAssociation(m_hWnd, DXGI_MWA_NO_ALT_ENTER));
+    ThrowIfFailed(dxgiFactory4->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER));
 
     ThrowIfFailed(swapChain1.As(&dxgiSwapChain4));
 

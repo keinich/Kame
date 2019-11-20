@@ -114,8 +114,8 @@ namespace Kame {
   }
 
   struct MakeWindow : public Window {
-    MakeWindow(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-      : Window(hWnd, windowName, clientWidth, clientHeight, vSync) {}
+    MakeWindow(HINSTANCE hInstance, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
+      : Window(hInstance, windowName, clientWidth, clientHeight, vSync) {}
   };
 
   std::shared_ptr<Window> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
@@ -125,26 +125,10 @@ namespace Kame {
       return windowIter->second;
     }
 
-    RECT windowRect = { 0, 0, clientWidth, clientHeight };
-    AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
-
-    HWND hWnd = CreateWindowW(
-      WINDOW_CLASS_NAME, windowName.c_str(),
-      WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-      windowRect.right - windowRect.left,
-      windowRect.bottom - windowRect.top,
-      nullptr, nullptr, _hInstance, nullptr
-    );
-
-    if (!hWnd) {
-      MessageBoxA(NULL, "Could not create the render window.", "Error", MB_OK | MB_ICONERROR);
-      return nullptr;
-    }
-
-    WindowPtr pWindow = std::make_shared<MakeWindow>(hWnd, windowName, clientWidth, clientHeight, vSync);
+    WindowPtr pWindow = std::make_shared<MakeWindow>(_hInstance, windowName, clientWidth, clientHeight, vSync);
     pWindow->GetDisplay().Initialize();
 
-    s_Windows.insert(WindowMap::value_type(hWnd, pWindow));
+    s_Windows.insert(WindowMap::value_type(pWindow->GetWindowHandle(), pWindow));
     s_WindowByName.insert(WindowNameMap::value_type(windowName, pWindow));
 
     return pWindow;

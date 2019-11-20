@@ -28,10 +28,10 @@ namespace Kame {
   // A wrapper struct to allow shared pointers for the window class.
   // This is needed because the constructor and destructor for the Window
   // class are protected and not accessible by the std::make_shared method.
-  struct MakeWindow : public Display {
-    MakeWindow(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-      : Display(hWnd, windowName, clientWidth, clientHeight, vSync) {}
-  };
+  //struct MakeWindow : public Display {
+  //  MakeWindow(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
+  //    : Display(hWnd, windowName, clientWidth, clientHeight, vSync) {}
+  //};
 
   DX12Core::DX12Core()
     //: m_hInstance(hInst)

@@ -59,12 +59,6 @@ namespace Kame {
     static const UINT BufferCount = 3;
 
     /**
-    * Get a handle to this window's instance.
-    * @returns The handle to the window instance or nullptr if this is not a valid window.
-    */
-    HWND GetWindowHandle() const;
-
-    /**
      * Initialize the window.
      */
     void Initialize();
@@ -78,25 +72,6 @@ namespace Kame {
     bool IsVSync() const;
     void SetVSync(bool vSync);
     void ToggleVSync();
-
-    /**
-    * Is this a windowed window or full-screen?
-    */
-    bool IsFullScreen() const;
-
-    // Set the fullscreen state of the window.
-    void SetFullscreen(bool fullscreen);
-    void ToggleFullscreen();
-
-    /**
-     * Show this window.
-     */
-    void Show();
-
-    /**
-     * Hide the window.
-     */
-    void Hide();
 
     /**
      * Get the render target of the window. This method should be called every
@@ -124,14 +99,16 @@ namespace Kame {
     friend class Game;
 
     Display() = delete;
-    Display(HWND hWnd, const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync);
-    virtual ~Display();    
+    Display(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync);
+    virtual ~Display();
+
+    void Initialize(HWND hWnd);
 
     // The window was resized.
     virtual void OnResize(ResizeEventArgs& e);
 
     // Create the swapchian.
-    Microsoft::WRL::ComPtr<IDXGISwapChain4> CreateSwapChain();
+    Microsoft::WRL::ComPtr<IDXGISwapChain4> CreateSwapChain(HWND hWnd);
 
     // Update the render target views for the swapchain back buffers.
     void UpdateRenderTargetViews();
@@ -141,15 +118,12 @@ namespace Kame {
     Display(const Display& copy) = delete;
     Display& operator=(const Display& other) = delete;
 
-    HWND m_hWnd;
-
     int m_ClientWidth;
     int m_ClientHeight;
     bool m_VSync;
-    bool m_Fullscreen;
 
     UINT64 m_FenceValues[BufferCount];
-    uint64_t m_FrameValues[BufferCount];    
+    uint64_t m_FrameValues[BufferCount];
 
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_dxgiSwapChain;
     Texture m_BackBufferTextures[BufferCount];
@@ -158,10 +132,9 @@ namespace Kame {
 
     UINT m_CurrentBackBufferIndex;
 
-    RECT m_WindowRect;
     bool m_IsTearingSupported;
 
-    
+
 
     //GUI m_GUI;
 
