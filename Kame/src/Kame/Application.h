@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef KAME_PLATFORM_WIN32
+#define KAME_NATIVE_WINDOW HWND
+#endif
+
 namespace Kame {
 
   class Game;
@@ -25,6 +29,8 @@ namespace Kame {
 
     int Run(std::shared_ptr<Game> game);
     void Quit(int exitCode = 0);
+
+    static void RegisterWindow(std::shared_ptr<Window> window);
 
   protected: // Methods
     Application();

@@ -11,16 +11,19 @@ namespace Kame {
   constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 
   using WindowPtr = std::shared_ptr<Window>;
-  using WindowMap = std::map< HWND, WindowPtr >;
   using WindowNameMap = std::map< std::wstring, WindowPtr >;
 
   static Application* _Instance = nullptr;
-  static WindowMap s_Windows;
   static WindowNameMap s_WindowByName;
+
+
+
+  using WindowMap = std::map< KAME_NATIVE_WINDOW, WindowPtr >;
+  static WindowMap s_Windows;
 
   //uint64_t Application::ms_FrameCount = 0;
 
-  static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+  static LRESULT CALLBACK WndProc(KAME_NATIVE_WINDOW hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
   Application& Application::Get() {
     assert(_Instance);
@@ -127,8 +130,7 @@ namespace Kame {
     WindowPtr pWindow = std::make_shared<MakeWindow>(windowName, clientWidth, clientHeight, vSync);
     pWindow->GetDisplay().Initialize();
 
-    s_Windows.insert(WindowMap::value_type(pWindow->GetWindowHandle(), pWindow));
-    s_WindowByName.insert(WindowNameMap::value_type(windowName, pWindow));
+    RegisterWindow(pWindow);   
 
     return pWindow;
   }
@@ -179,8 +181,8 @@ namespace Kame {
   }
 
   // Remove a window from our window lists.
-  static void RemoveWindow(HWND hWnd) {
-    WindowMap::iterator windowIter = s_Windows.find(hWnd);
+  static void RemoveWindow(KAME_NATIVE_WINDOW nativeWindow) {
+    WindowMap::iterator windowIter = s_Windows.find(nativeWindow);
     if (windowIter != s_Windows.end()) {
       WindowPtr pWindow = windowIter->second;
       s_WindowByName.erase(pWindow->GetWindowName());
@@ -188,7 +190,14 @@ namespace Kame {
     }
   }
 
-  static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
+  void Application::RegisterWindow(std::shared_ptr<Window> window) {
+    s_Windows.insert(WindowMap::value_type(window->GetWindowHandle(), window));
+    s_WindowByName.insert(WindowNameMap::value_type(window->GetName(), window));
+  }
+
+  // WIN32:
+
+  static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     //if ( ImGui_ImplWin32_WndProcHandler( hwnd, message, wParam, lParam ) )
     //{
     //    return true;
@@ -196,7 +205,7 @@ namespace Kame {
 
     WindowPtr pWindow;
     {
-      WindowMap::iterator iter = s_Windows.find(hwnd);
+      WindowMap::iterator iter = s_Windows.find(hWnd);
       if (iter != s_Windows.end()) {
         pWindow = iter->second;
       }
@@ -225,8 +234,8 @@ namespace Kame {
         // For printable characters, the next message will be WM_CHAR.
         // This message contains the character code we need to send the KeyPressed event.
         // Inspired by the SDL 1.2 implementation.
-        if (PeekMessageW(&charMsg, hwnd, 0, 0, PM_NOREMOVE) && charMsg.message == WM_CHAR) {
-          GetMessage(&charMsg, hwnd, 0, 0);
+        if (PeekMessageW(&charMsg, hWnd, 0, 0, PM_NOREMOVE) && charMsg.message == WM_CHAR) {
+          GetMessage(&charMsg, hWnd, 0, 0);
           c = static_cast<unsigned int>(charMsg.wParam);
 
           //if ( charMsg.wParam > 0 && charMsg.wParam < 0x10000 )
@@ -340,7 +349,7 @@ namespace Kame {
         POINT clientToScreenPoint;
         clientToScreenPoint.x = x;
         clientToScreenPoint.y = y;
-        ScreenToClient(hwnd, &clientToScreenPoint);
+        ScreenToClient(hWnd, &clientToScreenPoint);
 
         MouseWheelEventArgs mouseWheelEventArgs(zDelta, lButton, mButton, rButton, control, shift, (int)clientToScreenPoint.x, (int)clientToScreenPoint.y);
         pWindow->OnMouseWheel(mouseWheelEventArgs);
@@ -359,7 +368,7 @@ namespace Kame {
       {
         // If a window is being destroyed, remove it from the 
         // window maps.
-        RemoveWindow(hwnd);
+        RemoveWindow(hWnd);
 
         if (s_Windows.empty()) {
           // If there are no more windows, quit the application.
@@ -368,11 +377,11 @@ namespace Kame {
       }
       break;
       default:
-        return DefWindowProcW(hwnd, message, wParam, lParam);
+        return DefWindowProcW(hWnd, message, wParam, lParam);
       }
     }
     else {
-      return DefWindowProcW(hwnd, message, wParam, lParam);
+      return DefWindowProcW(hWnd, message, wParam, lParam);
     }
 
     return 0;

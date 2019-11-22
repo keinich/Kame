@@ -37,6 +37,8 @@ namespace Kame {
      */
     void Hide();
 
+    const inline std::wstring GetName() { return _WindowName; }
+
   protected: // Methods
 
     // The Window procedure needs to call protected methods of this class.
@@ -98,7 +100,6 @@ namespace Kame {
 
     RECT _WindowRect;
     bool _Fullscreen;
-
   };
 
   struct WindowProperties {
