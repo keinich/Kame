@@ -249,6 +249,7 @@
     <ClCompile Include="src\Kame\Application.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Display.cpp" />
     <ClCompile Include="src\Kame\Window.cpp" />
+    <ClCompile Include="src\Kame\Platform\Win32\Win32Application.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl" />

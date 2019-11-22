@@ -8,11 +8,6 @@
 
 namespace Kame {
 
-  constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
-
-  using WindowPtr = std::shared_ptr<Window>;
-  using WindowNameMap = std::map< std::wstring, WindowPtr >;
-
   static Application* _Instance = nullptr;
   static WindowNameMap s_WindowByName;
 
@@ -22,8 +17,6 @@ namespace Kame {
   static WindowMap s_Windows;
 
   //uint64_t Application::ms_FrameCount = 0;
-
-  static LRESULT CALLBACK WndProc(KAME_NATIVE_WINDOW hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
   Application& Application::Get() {
     assert(_Instance);
@@ -58,32 +51,110 @@ namespace Kame {
 
   void Application::Initialize() { // Windows Application Init
 
-    // Windows 10 Creators update adds Per Monitor V2 DPI awareness context.
-    // Using this awareness context allows the client area of the window 
-    // to achieve 100% scaling while still allowing non-client window content to 
-    // be rendered in a DPI sensitive fashion.
-    SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
-    WNDCLASSEXW wndClass = { 0 };
-
-    wndClass.cbSize = sizeof(WNDCLASSEX);
-    wndClass.style = CS_HREDRAW | CS_VREDRAW;
-    wndClass.lpfnWndProc = &WndProc;
-    wndClass.hInstance = GetModuleHandle(NULL);
-    wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    //wndClass.hIcon = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
-    wndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wndClass.lpszMenuName = nullptr;
-    wndClass.lpszClassName = WINDOW_CLASS_NAME;
-    //wndClass.hIconSm = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
-
-    if (!RegisterClassExW(&wndClass)) {
-      MessageBoxA(NULL, "Unable to register the window class.", "Error", MB_OK | MB_ICONERROR);
-    }
+    PlatformInitialize();
 
     DX12Core::Get().Initialize();
 
   }
+
+  struct MakeWindow : public Window {
+    MakeWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
+      : Window(windowName, clientWidth, clientHeight, vSync) {}
+  };
+
+  std::shared_ptr<Window> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
+    // First check if a window with the given name already exists.
+    WindowNameMap::iterator windowIter = s_WindowByName.find(windowName);
+    if (windowIter != s_WindowByName.end()) {
+      return windowIter->second;
+    }
+
+    WindowPtr pWindow = std::make_shared<MakeWindow>(windowName, clientWidth, clientHeight, vSync);
+    pWindow->GetDisplay().Initialize();
+
+    RegisterWindow(pWindow);
+
+    return pWindow;
+  }
+
+  void Application::DestroyWindow(std::shared_ptr<Window> window) {
+    if (window) window->Destroy();
+  }
+
+  void Application::DestroyWindow(const std::wstring& windowName) {
+    WindowPtr pWindow = GetWindowByName(windowName);
+    if (pWindow) {
+      DestroyWindow(pWindow);
+    }
+  }
+
+  std::shared_ptr<Window> Application::GetWindowByName(const std::wstring& windowName) {
+    std::shared_ptr<Window> window;
+    WindowNameMap::iterator iter = s_WindowByName.find(windowName);
+    if (iter != s_WindowByName.end()) {
+      window = iter->second;
+    }
+    return window;
+  }
+
+  std::shared_ptr<Window> Application::GetWindow(KAME_NATIVE_WINDOW nativeWindow) {
+    WindowMap::iterator iter = s_Windows.find(nativeWindow);
+    if (iter != s_Windows.end()) {
+      return iter->second;
+    }
+    else {
+      return nullptr;
+    }
+  }
+
+  int Application::Run(std::shared_ptr<Game> game) {
+    if (!game->Initialize()) return 1;
+    if (!game->LoadContent()) return 2;
+
+    MSG msg = { 0 };
+    while (msg.message != WM_QUIT) {
+      if (PeekMessageW(&msg, 0, 0, 0, PM_REMOVE)) {
+        TranslateMessage(&msg);
+        DispatchMessageW(&msg);
+      }
+    }
+
+    // Flush any commands in the commands queues before quiting.
+    DX12Core::Get().Flush();
+
+    game->UnloadContent();
+    game->Destroy();
+
+    return static_cast<int>(msg.wParam);
+  }
+
+  void Application::Quit(int exitCode) {
+    PostQuitMessage(exitCode);
+  }
+
+  // Remove a window from our window lists.
+  void Application::RemoveWindow(KAME_NATIVE_WINDOW nativeWindow) {
+    WindowMap::iterator windowIter = s_Windows.find(nativeWindow);
+    if (windowIter != s_Windows.end()) {
+      WindowPtr pWindow = windowIter->second;
+      s_WindowByName.erase(pWindow->GetWindowName());
+      s_Windows.erase(windowIter);
+    }
+  }
+
+  const bool Application::NoWindowsLeft() {
+    return s_Windows.empty();
+  }
+
+  void Application::RegisterWindow(std::shared_ptr<Window> window) {
+    s_Windows.insert(WindowMap::value_type(window->GetWindowHandle(), window));
+    s_WindowByName.insert(WindowNameMap::value_type(window->GetName(), window));
+  }
+
+  // WIN32:
+
+  constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 
   // Convert the message ID into a MouseButton ID
   MouseButtonEventArgs::MouseButton DecodeMouseButton2(UINT messageID) {
@@ -115,87 +186,32 @@ namespace Kame {
     return mouseButton;
   }
 
-  struct MakeWindow : public Window {
-    MakeWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-      : Window(windowName, clientWidth, clientHeight, vSync) {}
-  };
+  static LRESULT CALLBACK WndProc(KAME_NATIVE_WINDOW hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-  std::shared_ptr<Window> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
-    // First check if a window with the given name already exists.
-    WindowNameMap::iterator windowIter = s_WindowByName.find(windowName);
-    if (windowIter != s_WindowByName.end()) {
-      return windowIter->second;
-    }
+  void Application::PlatformInitialize() {
+    // Windows 10 Creators update adds Per Monitor V2 DPI awareness context.
+    // Using this awareness context allows the client area of the window 
+    // to achieve 100% scaling while still allowing non-client window content to 
+    // be rendered in a DPI sensitive fashion.
+    SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
-    WindowPtr pWindow = std::make_shared<MakeWindow>(windowName, clientWidth, clientHeight, vSync);
-    pWindow->GetDisplay().Initialize();
+    WNDCLASSEXW wndClass = { 0 };
 
-    RegisterWindow(pWindow);   
+    wndClass.cbSize = sizeof(WNDCLASSEX);
+    wndClass.style = CS_HREDRAW | CS_VREDRAW;
+    wndClass.lpfnWndProc = &WndProc;
+    wndClass.hInstance = GetModuleHandle(NULL);
+    wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    //wndClass.hIcon = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
+    wndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wndClass.lpszMenuName = nullptr;
+    wndClass.lpszClassName = WINDOW_CLASS_NAME;
+    //wndClass.hIconSm = LoadIcon( m_hInstance, MAKEINTRESOURCE( APP_ICON ) );
 
-    return pWindow;
-  }
-
-  void Application::DestroyWindow(std::shared_ptr<Window> window) {
-    if (window) window->Destroy();
-  }
-
-  void Application::DestroyWindow(const std::wstring& windowName) {
-    WindowPtr pWindow = GetWindowByName(windowName);
-    if (pWindow) {
-      DestroyWindow(pWindow);
+    if (!RegisterClassExW(&wndClass)) {
+      MessageBoxA(NULL, "Unable to register the window class.", "Error", MB_OK | MB_ICONERROR);
     }
   }
-
-  std::shared_ptr<Window> Application::GetWindowByName(const std::wstring& windowName) {
-    std::shared_ptr<Window> window;
-    WindowNameMap::iterator iter = s_WindowByName.find(windowName);
-    if (iter != s_WindowByName.end()) {
-      window = iter->second;
-    }
-    return window;
-  }
-
-  int Application::Run(std::shared_ptr<Game> game) {
-    if (!game->Initialize()) return 1;
-    if (!game->LoadContent()) return 2;
-
-    MSG msg = { 0 };
-    while (msg.message != WM_QUIT) {
-      if (PeekMessageW(&msg, 0, 0, 0, PM_REMOVE)) {
-        TranslateMessage(&msg);
-        DispatchMessageW(&msg);
-      }
-    }
-
-    // Flush any commands in the commands queues before quiting.
-    DX12Core::Get().Flush();
-
-    game->UnloadContent();
-    game->Destroy();
-
-    return static_cast<int>(msg.wParam);
-  }
-
-  void Application::Quit(int exitCode) {
-    PostQuitMessage(exitCode);
-  }
-
-  // Remove a window from our window lists.
-  static void RemoveWindow(KAME_NATIVE_WINDOW nativeWindow) {
-    WindowMap::iterator windowIter = s_Windows.find(nativeWindow);
-    if (windowIter != s_Windows.end()) {
-      WindowPtr pWindow = windowIter->second;
-      s_WindowByName.erase(pWindow->GetWindowName());
-      s_Windows.erase(windowIter);
-    }
-  }
-
-  void Application::RegisterWindow(std::shared_ptr<Window> window) {
-    s_Windows.insert(WindowMap::value_type(window->GetWindowHandle(), window));
-    s_WindowByName.insert(WindowNameMap::value_type(window->GetName(), window));
-  }
-
-  // WIN32:
 
   static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     //if ( ImGui_ImplWin32_WndProcHandler( hwnd, message, wParam, lParam ) )
@@ -203,13 +219,10 @@ namespace Kame {
     //    return true;
     //}
 
-    WindowPtr pWindow;
-    {
-      WindowMap::iterator iter = s_Windows.find(hWnd);
-      if (iter != s_Windows.end()) {
-        pWindow = iter->second;
-      }
-    }
+    WindowPtr pWindow = Application::GetWindow(hWnd);
+    
+     
+    
 
     if (pWindow) {
       switch (message) {
@@ -368,9 +381,9 @@ namespace Kame {
       {
         // If a window is being destroyed, remove it from the 
         // window maps.
-        RemoveWindow(hWnd);
+        Application::RemoveWindow(hWnd);
 
-        if (s_Windows.empty()) {
+        if (Application::NoWindowsLeft()) {
           // If there are no more windows, quit the application.
           PostQuitMessage(0);
         }
