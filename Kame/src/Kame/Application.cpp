@@ -49,11 +49,9 @@ namespace Kame {
     DX12Core::Get().Flush();
   }
 
-  void Application::Initialize() { // Windows Application Init
-
+  void Application::Initialize() {
 
     PlatformInitialize();
-
     DX12Core::Get().Initialize();
 
   }
