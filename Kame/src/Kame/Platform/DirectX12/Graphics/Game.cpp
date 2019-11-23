@@ -31,6 +31,15 @@ namespace Kame {
     return true;
   }
 
+  void Game::OnEvent(Event& event) {
+    //TODO Layers
+    //for (auto it = _LayerStack.end(); it != _LayerStack.begin();) {
+    //  (*--it)->OnEvent(e);
+    //  if (e.IsHandled())
+    //    break;
+    //}
+  }
+
   void Game::Destroy() {
     Application::Get().DestroyWindow(m_pWindow);
     m_pWindow.reset();

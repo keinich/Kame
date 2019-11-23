@@ -7,6 +7,8 @@
 #include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
 
+#include "Kame/Events/Event.h"
+
 namespace Kame {
 
   static Application* _Instance = nullptr;
@@ -109,6 +111,9 @@ namespace Kame {
   }
 
   int Application::Run(std::shared_ptr<Game> game) {
+
+    _Game = game;
+
     if (!game->Initialize()) return 1;
     if (!game->LoadContent()) return 2;
 
@@ -127,6 +132,16 @@ namespace Kame {
 
   void Application::Quit(int exitCode) {
     PostQuitMessage(exitCode);
+  }
+
+  void Application::RaiseEvent(Event& event) {
+    //KM_CORE_INFO("{0}", e);
+
+    //EventDispatcher dispatcher(e);
+    //dispatcher.Dispatch<KeyPressedEvent>(KM_BIND_EVENT_FN(Application::OnKeyPressedEvent));
+
+    _Game->OnEvent(event);
+    
   }
 
   // Remove a window from our window lists.

@@ -71,4 +71,5 @@ namespace Kame {
     EVENT_CLASS_TYPE(KeyTyped)
 
   };
+
 }

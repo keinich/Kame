@@ -40,6 +40,7 @@
 namespace Kame {
 
   class Window;
+  class Event;
 
   class KAME_API Game : public std::enable_shared_from_this<Game> {
   public:
@@ -61,6 +62,8 @@ namespace Kame {
      *  Initialize the DirectX Runtime.
      */
     virtual bool Initialize();
+
+    virtual void OnEvent(Event& event);
 
     /**
      *  Load content required for the demo.

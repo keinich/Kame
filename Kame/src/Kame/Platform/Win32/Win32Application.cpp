@@ -2,6 +2,7 @@
 
 #include "Kame/Application.h"
 #include "Kame/Platform/DirectX12/Graphics/Events.h"
+#include "Kame/Events/KeyEvent.h"
 #include "Win32Window.h"
 
 namespace Kame {
@@ -113,6 +114,12 @@ namespace Kame {
         unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
         KeyEventArgs keyEventArgs(key, c, KeyEventArgs::Pressed, shift, control, alt);
         pWindow->OnKeyPressed(keyEventArgs);
+
+
+
+        //KeyPressedEvent event(wParam, 0);
+        //pWindow->OnKeyPressed(event);
+
       }
       break;
       case WM_SYSKEYUP:
