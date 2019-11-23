@@ -38,8 +38,13 @@ namespace Kame {
   // Base class for all event args
   class EventArgs {
   public:
-    EventArgs() {}
+    EventArgs() :
+      _Handled(false) {}
 
+    inline bool IsHandled() { return _Handled; }
+
+  protected:
+    bool _Handled;
   };
 
   class KeyEventArgs : public EventArgs {
