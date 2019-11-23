@@ -155,7 +155,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12LibPCH.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Events.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Game.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPSO.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GUI.h" />
@@ -185,6 +184,7 @@
     <ClInclude Include="src\Kame\Application.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Display.h" />
     <ClInclude Include="src\Kame\Platform\Win32\Win32Window.h" />
+    <ClInclude Include="src\Kame\Events\EventArgs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp">

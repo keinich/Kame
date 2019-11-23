@@ -184,7 +184,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DescriptorAllocatorPage.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12LibPCH.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DynamicDescriptorHeap.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Events.h" />
+    <ClInclude Include="src\Kame\Events\EventArgs.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Game.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPSO.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GUI.h" />

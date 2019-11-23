@@ -30,7 +30,7 @@
   *  @brief The Game class is the abstract base class for DirecX 12 demos.
   */
 
-#include "Events.h"
+#include "Kame/Events/EventArgs.h"
 
 #include "memory"
 #include "string"

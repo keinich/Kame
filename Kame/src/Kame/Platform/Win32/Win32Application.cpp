@@ -1,7 +1,7 @@
 #include "kmpch.h"
 
 #include "Kame/Application.h"
-#include "Kame/Platform/DirectX12/Graphics/Events.h"
+#include "Kame/Events/EventArgs.h"
 #include "Kame/Events/KeyEvent.h"
 #include "Win32Window.h"
 

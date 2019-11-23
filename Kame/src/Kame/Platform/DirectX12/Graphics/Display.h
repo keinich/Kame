@@ -37,7 +37,7 @@
 #include <d3d12.h>
 #include <dxgi1_5.h>
 
-#include "Events.h"
+#include "Kame/Events/EventArgs.h"
 #include "GUI.h"
 #include "HighResolutionClock.h"
 #include "RenderTarget.h"
