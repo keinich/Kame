@@ -976,22 +976,22 @@ namespace Kame {
     /*if (!ImGui::GetIO().WantCaptureKeyboard)
     {*/
     switch (e.Key) {
-    case KeyCode::Escape:
+    case Kame::Key::Escape:
       Application::Get().Quit(0);
       break;
-    case KeyCode::Enter:
+    case Kame::Key::ENTER:
       if (e.Alt) {
-    case KeyCode::F11:
+    case Kame::Key::F11:
       if (g_AllowFullscreenToggle) {
         m_pWindow->ToggleFullscreen();
         g_AllowFullscreenToggle = false;
       }
       break;
       }
-    case KeyCode::V:
+    case Kame::Key::V:
       m_pWindow->GetDisplay().ToggleVSync();
       break;
-    case KeyCode::R:
+    case Kame::Key::R:
       // Reset camera transform
       m_Camera.set_Translation(m_pAlignedCameraData->m_InitialCamPos);
       m_Camera.set_Rotation(m_pAlignedCameraData->m_InitialCamRot);
@@ -999,32 +999,32 @@ namespace Kame {
       m_Pitch = 0.0f;
       m_Yaw = 0.0f;
       break;
-    case KeyCode::Up:
-    case KeyCode::W:
+    case Kame::Key::UP:
+    case Kame::Key::W:
       m_Forward = 1.0f;
       break;
-    case KeyCode::Left:
-    case KeyCode::A:
+    case Kame::Key::LEFT:
+    case Kame::Key::A:
       m_Left = 1.0f;
       break;
-    case KeyCode::Down:
-    case KeyCode::S:
+    case Kame::Key::DOWN:
+    case Kame::Key::S:
       m_Backward = 1.0f;
       break;
-    case KeyCode::Right:
-    case KeyCode::D:
+    case Kame::Key::RIGHT:
+    case Kame::Key::D:
       m_Right = 1.0f;
       break;
-    case KeyCode::Q:
+    case Kame::Key::Q:
       m_Down = 1.0f;
       break;
-    case KeyCode::E:
+    case Kame::Key::E:
       m_Up = 1.0f;
       break;
-    case KeyCode::Space:
+    case Kame::Key::SPACE:
       m_AnimateLights = !m_AnimateLights;
       break;
-    case KeyCode::ShiftKey:
+    case Kame::Key::LSHIFT:
       m_Shift = true;
       break;
     }
@@ -1037,35 +1037,35 @@ namespace Kame {
     /*if (!ImGui::GetIO().WantCaptureKeyboard)
     {*/
     switch (e.Key) {
-    case KeyCode::Enter:
+    case Kame::Key::ENTER:
       if (e.Alt) {
-    case KeyCode::F11:
+    case Kame::Key::F11:
       g_AllowFullscreenToggle = true;
       }
       break;
-    case KeyCode::Up:
-    case KeyCode::W:
+    case Kame::Key::UP:
+    case Kame::Key::W:
       m_Forward = 0.0f;
       break;
-    case KeyCode::Left:
-    case KeyCode::A:
+    case Kame::Key::LEFT:
+    case Kame::Key::A:
       m_Left = 0.0f;
       break;
-    case KeyCode::Down:
-    case KeyCode::S:
+    case Kame::Key::DOWN:
+    case Kame::Key::S:
       m_Backward = 0.0f;
       break;
-    case KeyCode::Right:
-    case KeyCode::D:
+    case Kame::Key::RIGHT:
+    case Kame::Key::D:
       m_Right = 0.0f;
       break;
-    case KeyCode::Q:
+    case Kame::Key::Q:
       m_Down = 0.0f;
       break;
-    case KeyCode::E:
+    case Kame::Key::E:
       m_Up = 0.0f;
       break;
-    case KeyCode::ShiftKey:
+    case Kame::Key::LSHIFT:
       m_Shift = false;
       break;
     }

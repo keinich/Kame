@@ -30,7 +30,8 @@
   *  @brief Events for window / user messages.
   */
 
-#include "KeyCodes.h"
+#include "Kame/KeyCodes.h"
+#include <cstdint>
 
 namespace Kame {
 
@@ -49,7 +50,7 @@ namespace Kame {
     };
 
     typedef EventArgs base;
-    KeyEventArgs(KeyCode::Key key, unsigned int c, KeyState state, bool control, bool shift, bool alt)
+    KeyEventArgs(Kame::Key key, unsigned int c, KeyState state, bool control, bool shift, bool alt)
       : Key(key)
       , Char(c)
       , State(state)
@@ -57,7 +58,7 @@ namespace Kame {
       , Shift(shift)
       , Alt(alt) {}
 
-    KeyCode::Key    Key;    // The Key Code that was pressed or released.
+    Kame::Key    Key;    // The Key Code that was pressed or released.
     unsigned int    Char;   // The 32-bit character code that was pressed. This value will be 0 if it is a non-printable character.
     KeyState        State;  // Was the key pressed or released?
     bool            Control;// Is the Control modifier pressed

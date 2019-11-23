@@ -169,7 +169,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imstb_textedit.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imstb_truetype.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\KeyCodes.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Mesh.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderTarget.h" />

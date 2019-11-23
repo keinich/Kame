@@ -109,7 +109,7 @@ namespace Kame {
         bool shift = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
         bool control = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
         bool alt = (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
-        KeyCode::Key key = (KeyCode::Key)wParam;
+        Kame::Key key = (Kame::Key)wParam;
         unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
         KeyEventArgs keyEventArgs(key, c, KeyEventArgs::Pressed, shift, control, alt);
         pWindow->OnKeyPressed(keyEventArgs);
@@ -121,7 +121,7 @@ namespace Kame {
         bool shift = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
         bool control = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
         bool alt = (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
-        KeyCode::Key key = (KeyCode::Key)wParam;
+        Kame::Key key = (Kame::Key)wParam;
         unsigned int c = 0;
         unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
 
