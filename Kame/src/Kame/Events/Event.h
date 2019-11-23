@@ -8,16 +8,41 @@ namespace Kame {
 
   //#define HANDLER(T) std::function<bool(T&)>
 
+  struct  EventHandle {
+
+  public:
+
+    friend class EventBase;
+
+    UINT GetHandle() { return _Handle; }
+
+  protected: // Methods
+
+    EventHandle(UINT handle, EventBase* owner) {
+      _Handle = handle;
+      _Owner = owner;
+    }
+  protected: // Fields
+
+    EventBase* _Owner;
+    UINT _Handle;
+  };
+
   class EventBase {
+
+  public:
+
+    friend class EventHandle;
 
     template<typename T>
     using EventHandler = std::function<bool(T&)>;
 
   protected: // Methods
     EventBase() : _Handled(false) {};
+    virtual void RemoveHandler(EventHandle handle) = 0;
+    inline EventHandle CreateEventHandle(UINT handle, EventBase* owner) { return EventHandle(handle, owner); }
 
   protected: // Fields
-
     bool _Handled;
 
   };
@@ -25,12 +50,20 @@ namespace Kame {
   template<class T>
   class Event : public EventBase {
 
+    friend class EventHandle;
+
   public:
 
-    Event() {}
+    Event() :
+      _MaxHandle(0) {}
 
-    void AddHandler(UINT uniqueIdentifier, EventHandler<T> handler);
-    void RemoveHandler(UINT uniqueIdentifier);
+    ~Event() {
+      RemoveAllHandlers();
+    }
+
+    EventHandle AddHandler(EventHandler<T> handler);
+    void RemoveHandler(EventHandle handle) override;
+    void RemoveAllHandlers();
     void Raise(T args);
 
   protected:
@@ -38,21 +71,37 @@ namespace Kame {
     //std::vector<EventHandler<T>> _Handlers;
     std::map<UINT, EventHandler<T>> _Handlers;
 
+    UINT _MaxHandle;
+    std::queue<UINT> _FreeHandles;
   };
 
   template<class T>
-  inline void Event<T>::AddHandler(UINT uniqueIdentifier, EventHandler<T> handler) {
+  EventHandle Event<T>::AddHandler(EventHandler<T> handler) {
+    UINT uniqueIdentifier;
+    if (_FreeHandles.empty()) {
+      uniqueIdentifier = _MaxHandle;
+      _MaxHandle++;
+    }
+    else {
+      uniqueIdentifier = _FreeHandles.back();
+      _FreeHandles.pop();
+    }
     _Handlers.insert(std::map<UINT, EventHandler<T>>::value_type(uniqueIdentifier, handler));
+    return CreateEventHandle(uniqueIdentifier, this);
   }
 
   template<class T>
-  inline void Event<T>::RemoveHandler(UINT uniqueIdentifier) {
-    _Handlers.erase(uniqueIdentifier);
-    //_Handlers.find(uniqueIdentifier);
-    //std::vector<EventHandler<T>>::iterator it = std::find(_Handlers.begin(), _Handlers.end(), handler);
-    /*   if (it != _Handlers.end()) {
-         _Handlers.erase(it);
-       }*/
+  inline void Event<T>::RemoveHandler(EventHandle handle) {
+    _Handlers.erase(handle.GetHandle());
+    _FreeHandles.push(handle.GetHandle());
+  }
+
+  template<class T>
+  inline void Event<T>::RemoveAllHandlers() {
+    _Handlers.clear();
+    _MaxHandle = 0;
+    std::queue<UINT> empty;
+    std::swap(_FreeHandles, empty);
   }
 
   template<class T>

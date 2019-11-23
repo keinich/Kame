@@ -16,11 +16,15 @@ namespace Kame {
     _Fullscreen(false),
     _WindowRect() {
 
-    _MyTestEvent.AddHandler(1, BIND_FUNCTION(Window::TestEventFunction));
+    EventHandle handle = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
+    EventHandle handle2 = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
+    
     _MyTestEvent.Raise(2);
-    _MyTestEvent.RemoveHandler(1);
+    _MyTestEvent.RemoveHandler(handle);
     _MyTestEvent.Raise(2);
 
+    EventHandle handle3 = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
+    _MyTestEvent.Raise(2);
   }
 
   Window::~Window() {
