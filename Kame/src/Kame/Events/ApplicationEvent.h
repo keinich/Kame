@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Event.h"
+#include "Event_Cherno.h"
 
 namespace Kame {
 
-  class KAME_API WindowResizedEvent : public Event {
+  class KAME_API WindowResizedEvent : public ChernoEvent {
 
     public:
     WindowResizedEvent(unsigned int width, unsigned int height)
@@ -28,7 +28,7 @@ namespace Kame {
 
   };
 
-  class KAME_API WindowCloseEvent : public Event {
+  class KAME_API WindowCloseEvent : public ChernoEvent {
     public:
     WindowCloseEvent() {}
 
@@ -36,7 +36,7 @@ namespace Kame {
       EVENT_CLASS_CATEGORY(EventCategoryApplication)
   };
 
-  class KAME_API AppTickEvent : public Event {
+  class KAME_API AppTickEvent : public ChernoEvent {
     public:
     AppTickEvent() {}
 
@@ -44,7 +44,7 @@ namespace Kame {
       EVENT_CLASS_CATEGORY(EventCategoryApplication)
   };
 
-  class KAME_API AppUpdateEvent : public Event {
+  class KAME_API AppUpdateEvent : public ChernoEvent {
     public:
     AppUpdateEvent() {}
 
@@ -52,7 +52,7 @@ namespace Kame {
       EVENT_CLASS_CATEGORY(EventCategoryApplication)
   };
 
-  class KAME_API AppRenderEvent : public Event {
+  class KAME_API AppRenderEvent : public ChernoEvent {
     public:
     AppRenderEvent() {}
 

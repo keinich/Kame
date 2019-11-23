@@ -75,6 +75,7 @@ using namespace Microsoft::WRL;
 
 //#endif
 
+#define BIND_FUNCTION(x) std::bind(&x, this, std::placeholders::_1)
 
 #endif
 

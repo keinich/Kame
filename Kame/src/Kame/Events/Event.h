@@ -1,72 +1,67 @@
 #pragma once
 
-#include "kmpch.h"
-
+#include <map>
+//#include <functional>
 #include "Kame/Core.h"
 
 namespace Kame {
 
-  enum class EventType {
-    None = 0,
-    WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-    AppTick, AppUpdate, AppRender,
-    KeyPressed, KeyReleased, KeyTyped,
-    MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
-  };
+  //#define HANDLER(T) std::function<bool(T&)>
 
-  enum EventCategory {
-    None = 0,
-    EventCategoryApplication = BIT(0),
-    EventCategoryInput = BIT(1),
-    EventCategoryKeybord = BIT(2),
-    EventCategoryMouse = BIT(3),
-    EventCategoryMouseButton = BIT(4)
-  };
-
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
-                                virtual EventType GetEventType() const override { return GetStaticType(); } \
-                                virtual const char* GetName() const override { return #type; }
-
-#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
-
-  class KAME_API Event {
-    friend class EventDispatcher;
-
-    public:
-    virtual EventType GetEventType() const = 0;
-    virtual const char* GetName() const = 0;
-    virtual int GetCategoryFlags() const = 0;
-    virtual std::string ToString() const { return GetName(); }
-
-    inline bool IsInCategory(EventCategory category) { return GetCategoryFlags() & category; }
-    inline bool IsHandled() { return _Handled; }
-
-    protected:
-    bool _Handled = false;
-  };
-
-  class EventDispatcher {
-    template<typename T>
-    using EventFn = std::function<bool(T&)>;
-
-    public:
-    EventDispatcher(Event& event) : _Event(event) {}
+  class EventBase {
 
     template<typename T>
-    bool Dispatch(EventFn<T> func) {
-      if (_Event.GetEventType() == T::GetStaticType()) {
-        _Event._Handled = func(*(T*)&_Event);
-        return true;
-      }
-      return false;
+    using EventHandler = std::function<bool(T&)>;
+
+  protected: // Methods
+    EventBase() : _Handled(false) {};
+
+  protected: // Fields
+
+    bool _Handled;
+
+  };
+
+  template<class T>
+  class Event : public EventBase {
+
+  public:
+
+    Event() {}
+
+    void AddHandler(UINT uniqueIdentifier, EventHandler<T> handler);
+    void RemoveHandler(UINT uniqueIdentifier);
+    void Raise(T args);
+
+  protected:
+
+    //std::vector<EventHandler<T>> _Handlers;
+    std::map<UINT, EventHandler<T>> _Handlers;
+
+  };
+
+  template<class T>
+  inline void Event<T>::AddHandler(UINT uniqueIdentifier, EventHandler<T> handler) {
+    _Handlers.insert(std::map<UINT, EventHandler<T>>::value_type(uniqueIdentifier, handler));
+  }
+
+  template<class T>
+  inline void Event<T>::RemoveHandler(UINT uniqueIdentifier) {
+    _Handlers.erase(uniqueIdentifier);
+    //_Handlers.find(uniqueIdentifier);
+    //std::vector<EventHandler<T>>::iterator it = std::find(_Handlers.begin(), _Handlers.end(), handler);
+    /*   if (it != _Handlers.end()) {
+         _Handlers.erase(it);
+       }*/
+  }
+
+  template<class T>
+  inline void Event<T>::Raise(T args) {
+    std::map<UINT, EventHandler<T>>::iterator it = _Handlers.begin();
+    while (it != _Handlers.end()) {
+      _Handled = it->second(*(T*)&args);
+      it++;
     }
-
-    private:
-    Event& _Event;
-  };
-
-  inline std::ostream& operator<<(std::ostream& os, const Event& e) {
-    return os << e.ToString();
   }
 
 }

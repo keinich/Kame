@@ -159,6 +159,7 @@
     <ClInclude Include="src\Kame\Entrypoint.h" />
     <ClInclude Include="src\Kame\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Kame\Events\Event.h" />
+    <ClInclude Include="src\Kame\Events\Event_Cherno.h" />
     <ClInclude Include="src\Kame\Events\KeyEvent.h" />
     <ClInclude Include="src\Kame\Events\MouseEvent.h" />
     <ClInclude Include="src\Kame\Graphics\Mesh.h" />

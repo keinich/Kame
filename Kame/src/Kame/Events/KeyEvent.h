@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Event.h"
+#include "Event_Cherno.h"
 
 namespace Kame {
 
-  class KAME_API KeyEvent : public Event {
+  class KAME_API KeyEvent : public ChernoEvent {
 
   public:
     inline int GetKeyCode() const { return _KeyCode; }

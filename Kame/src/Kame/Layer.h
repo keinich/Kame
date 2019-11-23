@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Kame/Core.h"
-#include "Kame/Events/Event.h"
+#include "Kame/Events/Event_Cherno.h"
 
 namespace Kame {
 
@@ -13,7 +13,7 @@ namespace Kame {
     virtual void OnAttach() {}
     virtual void OnDetach() {}
     virtual void OnUpdate() {}
-    virtual void OnEvent(Event& event) {}
+    virtual void OnEvent(ChernoEvent& event) {}
 
     inline const std::string& GetName() const { return _DebugName; }
 

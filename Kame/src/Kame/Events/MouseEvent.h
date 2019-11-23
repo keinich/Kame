@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Event.h"
-
+#include "Event_Cherno.h"
 #include <sstream>
 
 namespace Kame {
 
-class KAME_API MouseMovedEvent : public Event {
+class KAME_API MouseMovedEvent : public ChernoEvent {
 
   public:
   MouseMovedEvent(float x, float y)
@@ -30,7 +29,7 @@ class KAME_API MouseMovedEvent : public Event {
 
 };
 
-class KAME_API MouseScrolledEvent : public Event {
+class KAME_API MouseScrolledEvent : public ChernoEvent {
 
   public:
   MouseScrolledEvent(float xOffset, float yOffset)
@@ -54,7 +53,7 @@ class KAME_API MouseScrolledEvent : public Event {
 
 };
 
-class KAME_API MouseButtonEvent : public Event {
+class KAME_API MouseButtonEvent : public ChernoEvent {
 
   public:
   inline int GetMouseButton() const { return _Button; }

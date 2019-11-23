@@ -67,9 +67,6 @@
     <ClInclude Include="src\Kame\Events\ApplicationEvent.h">
       <Filter>Kame\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Events\Event.h">
-      <Filter>Kame\Events</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Events\KeyEvent.h">
       <Filter>Kame\Events</Filter>
     </ClInclude>
@@ -185,6 +182,10 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Display.h" />
     <ClInclude Include="src\Kame\Platform\Win32\Win32Window.h" />
     <ClInclude Include="src\Kame\Events\EventArgs.h" />
+    <ClInclude Include="src\Kame\Events\Event_Cherno.h">
+      <Filter>Kame\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Events\Event.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp">

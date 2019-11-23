@@ -7,7 +7,7 @@
 #include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
 
-#include "Kame/Events/Event.h"
+//#include "Kame/Events/Event.h"
 
 namespace Kame {
 
@@ -132,16 +132,6 @@ namespace Kame {
 
   void Application::Quit(int exitCode) {
     PostQuitMessage(exitCode);
-  }
-
-  void Application::RaiseEvent(Event& event) {
-    //KM_CORE_INFO("{0}", e);
-
-    //EventDispatcher dispatcher(e);
-    //dispatcher.Dispatch<KeyPressedEvent>(KM_BIND_EVENT_FN(Application::OnKeyPressedEvent));
-
-    _Game->OnEvent(event);
-    
   }
 
   // Remove a window from our window lists.

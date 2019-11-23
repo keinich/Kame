@@ -14,7 +14,14 @@ namespace Kame {
     _PreviousMouseX(0),
     _PreviousMouseY(0),
     _Fullscreen(false),
-    _WindowRect() {}
+    _WindowRect() {
+
+    _MyTestEvent.AddHandler(1, BIND_FUNCTION(Window::TestEventFunction));
+    _MyTestEvent.Raise(2);
+    _MyTestEvent.RemoveHandler(1);
+    _MyTestEvent.Raise(2);
+
+  }
 
   Window::~Window() {
   }

@@ -93,6 +93,12 @@ namespace Kame {
 
     virtual void OnResize(ResizeEventArgs& e);
 
+
+    virtual bool TestEventFunction(int i) {
+      int x = i;
+      return true;
+    }
+
   protected: // Fields
 
     KAME_NATIVE_WINDOW _NativeWindow;
@@ -111,6 +117,9 @@ namespace Kame {
 
     RECT _WindowRect;
     bool _Fullscreen;
+
+    Event<int> _MyTestEvent;
+
   };
 
   struct WindowProperties {
@@ -126,9 +135,9 @@ namespace Kame {
 
   };
 
-  class KAME_API DisplayOld {
+ /* class KAME_API DisplayOld {
   public:
-    using EventCallbackFn = std::function<void(Event&)>;
+    using EventCallbackFn = std::function<void(ChernoEvent&)>;
 
     virtual ~DisplayOld() {}
 
@@ -146,6 +155,6 @@ namespace Kame {
     virtual void Show() const = 0;
 
     static Display* Create(const WindowProperties& props = WindowProperties());
-  };
+  };*/
 
 }
