@@ -53,6 +53,7 @@ namespace Kame {
   class KAME_API Display : public std::enable_shared_from_this<Display> {
 
     friend class Window;
+    friend class Win32Window;
 
   public:
     // Number of swapchain back buffers.

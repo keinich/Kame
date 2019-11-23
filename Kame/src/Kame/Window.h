@@ -7,6 +7,10 @@
 
 #include "Kame/Platform/DirectX12/Graphics/Display.h"
 
+#ifdef KAME_PLATFORM_WIN32
+#define KAME_NATIVE_WINDOW HWND
+#endif
+
 namespace Kame {
 
   class KAME_API Window {
@@ -25,35 +29,40 @@ namespace Kame {
 
     // Set the fullscreen state of the window.
     void SetFullscreen(bool fullscreen);
+    virtual void PlatformSetFullscreen() = 0;
     void ToggleFullscreen();
 
     /**
      * Show this window.
      */
     void Show();
+    virtual void PlatformShow() = 0;
 
     /**
      * Hide the window.
      */
     void Hide();
+    virtual void PlatformHide() = 0;
 
     const inline std::wstring GetName() { return _WindowName; }
 
   protected: // Methods
 
     // The Window procedure needs to call protected methods of this class.
-    friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+    //friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     friend class Application;
     friend class Game;
 
     Window() = delete;
     Window(const std::wstring& name, int width, int height, bool vSync);
+    virtual void PlatformCreate(int width, int height, const std::wstring& name) = 0;
     virtual ~Window();
 
-    void Unregister();
+    inline KAME_NATIVE_WINDOW GetNativeWindow() { return _NativeWindow; };
 
-    inline HWND GetWindowHandle() { return _hWnd; }
+    virtual void PlatformDestroyWindow() = 0;
+    void Unregister();
 
     /**
     * Destroy this window.
@@ -86,9 +95,9 @@ namespace Kame {
 
   protected: // Fields
 
-    Display _Display; // TODO can a Window contain multiple Displays?
+    KAME_NATIVE_WINDOW _NativeWindow;
 
-    HWND _hWnd;
+    Display _Display; // TODO can a Window contain multiple Displays?
 
     int _PreviousMouseX;
     int _PreviousMouseY;

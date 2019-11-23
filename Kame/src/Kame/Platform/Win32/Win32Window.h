@@ -7,9 +7,25 @@
 namespace Kame {
 
   class Win32Window : public Window {
-  protected:
+
+  public: // Methods
+
+    virtual void PlatformShow() override;
+    virtual void PlatformHide() override;
+
+  protected: // Methods
     friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
     Win32Window(const std::wstring& name, int width, int height, bool vSync);
+    virtual ~Win32Window();
+
+    virtual void PlatformDestroyWindow() override;
+
+    inline HWND GetWindowHandle() { return _NativeWindow; }
+
+    virtual void PlatformCreate(int width, int height, const std::wstring& name) override;
+    virtual void PlatformSetFullscreen() override;
+
+  protected: // Fields
 
   };
 

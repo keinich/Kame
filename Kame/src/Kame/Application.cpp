@@ -151,7 +151,7 @@ namespace Kame {
     //std::shared_ptr<Win32Window> test; /*= std::make_shared<Win32Window>(L"Test", 100, 100, true);*/
     //s_Windows.insert(WindowMap::value_type(test->GetWindowHandle(), test));
 
-    s_Windows.insert(WindowMap::value_type(window->GetWindowHandle(), window));
+    s_Windows.insert(WindowMap::value_type(window->GetNativeWindow(), window));
     s_WindowByName.insert(WindowNameMap::value_type(window->GetName(), window));
   }
 

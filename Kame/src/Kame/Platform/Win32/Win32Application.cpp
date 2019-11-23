@@ -71,7 +71,7 @@ namespace Kame {
     //    return true;
     //}
 
-    WindowPtr pWindow = Application::GetWindow(hWnd);
+    std::shared_ptr<Win32Window> pWindow = Application::GetWindow(hWnd);
 
 
 
