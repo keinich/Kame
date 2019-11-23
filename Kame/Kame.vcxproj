@@ -220,6 +220,7 @@
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWInput.h" />
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWWindow.h" />
     <ClInclude Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="src\Kame\Platform\Win32\Win32Window.h" />
     <ClInclude Include="src\Kame\Utility\Hash.h" />
     <ClInclude Include="src\Kame\Utility\ThreadSafeQueue.h" />
     <ClInclude Include="src\Kame\VectorMath.h" />
@@ -270,6 +271,7 @@
     <ClCompile Include="src\Kame\Platform\GLFW\GLFWWindow.cpp" />
     <ClCompile Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="src\Kame\Platform\Win32\Win32Application.cpp" />
+    <ClCompile Include="src\Kame\Platform\Win32\Win32Window.cpp" />
     <ClCompile Include="src\Kame\Window.cpp" />
     <ClCompile Include="src\kmpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

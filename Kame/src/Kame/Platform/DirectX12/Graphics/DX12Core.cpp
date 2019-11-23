@@ -12,13 +12,13 @@ namespace Kame {
 
   constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
 
-  using WindowPtr = std::shared_ptr<Window>;
-  using WindowMap = std::map< HWND, WindowPtr >;
-  using WindowNameMap = std::map< std::wstring, WindowPtr >;
+  //using WindowPtr = std::shared_ptr<Window>;
+  //using WindowMap = std::map< HWND, WindowPtr >;
+  //using WindowNameMap = std::map< std::wstring, WindowPtr >;
 
   static DX12Core* gs_pSingelton = nullptr;
-  static WindowMap gs_Windows;
-  static WindowNameMap gs_WindowByName;
+  //static WindowMap gs_Windows;
+  //static WindowNameMap gs_WindowByName;
 
   uint64_t DX12Core::ms_FrameCount = 0;
 
@@ -116,15 +116,15 @@ namespace Kame {
     return *gs_pSingelton;
   }
 
-  void DX12Core::Destroy() {
-    if (gs_pSingelton) {
-      assert(gs_Windows.empty() && gs_WindowByName.empty() &&
-        "All windows should be destroyed before destroying the application instance.");
+  //void DX12Core::Destroy() {
+  //  if (gs_pSingelton) {
+  //    assert(gs_Windows.empty() && gs_WindowByName.empty() &&
+  //      "All windows should be destroyed before destroying the application instance.");
 
-      delete gs_pSingelton;
-      gs_pSingelton = nullptr;
-    }
-  }
+  //    delete gs_pSingelton;
+  //    gs_pSingelton = nullptr;
+  //  }
+  //}
 
   DX12Core::~DX12Core() {
     Flush();

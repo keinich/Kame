@@ -60,7 +60,7 @@ namespace Kame {
     /**
     * Destroy the application instance and all windows created by this application instance.
     */
-    static void Destroy();
+    //static void Destroy();
     /**
     * Get the application singleton.
     */

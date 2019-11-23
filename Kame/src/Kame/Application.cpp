@@ -2,6 +2,7 @@
 #include "Application.h"
 //#include "Kame/Platform/DirectX12/Graphics/Display.h"
 #include "Kame/Window.h"
+#include "Kame/Platform/Win32/Win32Window.h"
 
 #include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
@@ -13,7 +14,8 @@ namespace Kame {
 
 
 
-  using WindowMap = std::map< KAME_NATIVE_WINDOW, WindowPtr >;
+  //using WindowMap = std::map< KAME_NATIVE_WINDOW, WindowPtr >;
+  using WindowMap = std::map< KAME_NATIVE_WINDOW, std::shared_ptr<Win32Window> >;
   static WindowMap s_Windows;
 
   //uint64_t Application::ms_FrameCount = 0;
@@ -56,9 +58,9 @@ namespace Kame {
 
   }
 
-  struct MakeWindow : public Window {
+  struct MakeWindow : public KAME_WINDOW {
     MakeWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync)
-      : Window(windowName, clientWidth, clientHeight, vSync) {}
+      : KAME_WINDOW(windowName, clientWidth, clientHeight, vSync) {}
   };
 
   std::shared_ptr<Window> Application::CreateRenderWindow(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) {
@@ -68,7 +70,7 @@ namespace Kame {
       return windowIter->second;
     }
 
-    WindowPtr pWindow = std::make_shared<MakeWindow>(windowName, clientWidth, clientHeight, vSync);
+    std::shared_ptr<KAME_WINDOW> pWindow = std::make_shared<MakeWindow>(windowName, clientWidth, clientHeight, vSync);
     pWindow->GetDisplay().Initialize();
 
     RegisterWindow(pWindow);
@@ -96,7 +98,7 @@ namespace Kame {
     return window;
   }
 
-  std::shared_ptr<Window> Application::GetWindow(KAME_NATIVE_WINDOW nativeWindow) {
+  std::shared_ptr<KAME_WINDOW> Application::GetWindow(KAME_NATIVE_WINDOW nativeWindow) {
     WindowMap::iterator iter = s_Windows.find(nativeWindow);
     if (iter != s_Windows.end()) {
       return iter->second;
@@ -145,7 +147,10 @@ namespace Kame {
     return s_Windows.empty();
   }
 
-  void Application::RegisterWindow(std::shared_ptr<Window> window) {
+  void Application::RegisterWindow(std::shared_ptr<KAME_WINDOW> window) {
+    //std::shared_ptr<Win32Window> test; /*= std::make_shared<Win32Window>(L"Test", 100, 100, true);*/
+    //s_Windows.insert(WindowMap::value_type(test->GetWindowHandle(), test));
+
     s_Windows.insert(WindowMap::value_type(window->GetWindowHandle(), window));
     s_WindowByName.insert(WindowNameMap::value_type(window->GetName(), window));
   }

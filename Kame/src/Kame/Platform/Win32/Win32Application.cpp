@@ -2,7 +2,7 @@
 
 #include "Kame/Application.h"
 #include "Kame/Platform/DirectX12/Graphics/Events.h"
-#include "Kame/Window.h"
+#include "Win32Window.h"
 
 namespace Kame {
 
@@ -233,7 +233,8 @@ namespace Kame {
       {
         // If a window is being destroyed, remove it from the 
         // window maps.
-        Application::RemoveWindow(hWnd);
+        pWindow->Unregister();
+        //Application::RemoveWindow(hWnd);
 
         if (Application::NoWindowsLeft()) {
           // If there are no more windows, quit the application.

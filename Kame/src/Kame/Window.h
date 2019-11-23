@@ -51,6 +51,8 @@ namespace Kame {
     Window(const std::wstring& name, int width, int height, bool vSync);
     virtual ~Window();
 
+    void Unregister();
+
     inline HWND GetWindowHandle() { return _hWnd; }
 
     /**

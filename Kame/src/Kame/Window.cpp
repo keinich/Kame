@@ -3,6 +3,8 @@
 
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
 
+#include "Kame/Application.h"
+
 namespace Kame {
 
   constexpr wchar_t WINDOW_CLASS_NAME[] = L"DX12RenderWindowClass";
@@ -42,6 +44,10 @@ namespace Kame {
     // Window should be destroyed with Application::DestroyWindow before
     // the window goes out of scope.
     assert(!_hWnd && "Use Application::DestroyWindow before destruction.");
+  }
+
+  void Window::Unregister() {
+    Application::RemoveWindow(_hWnd);
   }
 
   const std::wstring& Window::GetWindowName() const {
