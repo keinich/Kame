@@ -112,13 +112,9 @@ namespace Kame {
     if (!game->Initialize()) return 1;
     if (!game->LoadContent()) return 2;
 
-    MSG msg = { 0 };
-    while (msg.message != WM_QUIT) {
-      if (PeekMessageW(&msg, 0, 0, 0, PM_REMOVE)) {
-        TranslateMessage(&msg);
-        DispatchMessageW(&msg);
-      }
-    }
+    int returnCode;
+
+    PlatformMainLoop(returnCode);
 
     // Flush any commands in the commands queues before quiting.
     DX12Core::Get().Flush();
@@ -126,7 +122,7 @@ namespace Kame {
     game->UnloadContent();
     game->Destroy();
 
-    return static_cast<int>(msg.wParam);
+    return returnCode;
   }
 
   void Application::Quit(int exitCode) {

@@ -44,6 +44,7 @@ namespace Kame {
     const static bool NoWindowsLeft();
 
     int Run(std::shared_ptr<Game> game);
+    void PlatformMainLoop(int& returnCode);
     void Quit(int exitCode = 0);
 
   protected: // Methods

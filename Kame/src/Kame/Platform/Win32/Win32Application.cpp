@@ -252,15 +252,16 @@ namespace Kame {
 
     return 0;
   }
-  //void Application::PlatformMainLoop() {
-  //     
-  //  MSG msg = {};
-  //  while (msg.message != WM_QUIT) {
-  //    if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-  //      ::TranslateMessage(&msg);
-  //      ::DispatchMessage(&msg);
-  //    }
-  //  } 
-  //}
+
+  void Application::PlatformMainLoop(int& returnCode) {
+    MSG msg = { 0 };
+    while (msg.message != WM_QUIT) {
+      if (PeekMessageW(&msg, 0, 0, 0, PM_REMOVE)) {
+        TranslateMessage(&msg);
+        DispatchMessageW(&msg);
+      }
+    }
+    returnCode = static_cast<int>(msg.wParam);
+  }
 
 }
