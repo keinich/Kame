@@ -167,9 +167,9 @@
     <ClInclude Include="src\Kame\Graphics\Material.h" />
     <ClInclude Include="src\Kame\Graphics\Mesh.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\Kame\Input.h" />
+    <ClInclude Include="src\Kame\Input\Input.h" />
     <ClInclude Include="src\Kame\KameApplication.h" />
-    <ClInclude Include="src\Kame\KeyCodes.h" />
+    <ClInclude Include="src\Kame\Input\KeyCodes.h" />
     <ClInclude Include="src\Kame\Layer.h" />
     <ClInclude Include="src\Kame\LayerStack.h" />
     <ClInclude Include="src\Kame\Log.h" />

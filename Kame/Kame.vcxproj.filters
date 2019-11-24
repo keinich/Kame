@@ -100,13 +100,7 @@
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h">
       <Filter>Kame\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Input.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\KameApplication.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\KeyCodes.h">
       <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Layer.h">
@@ -344,6 +338,12 @@
       <Filter>Kame</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
+    <ClInclude Include="src\Kame\Input\Input.h">
+      <Filter>Kame</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Input\KeyCodes.h">
+      <Filter>Kame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp">

@@ -30,7 +30,7 @@
   *  @brief Events for window / user messages.
   */
 
-#include "Kame/KeyCodes.h"
+#include <Kame/Input/KeyCodes.h>
 #include <cstdint>
 
 namespace Kame {

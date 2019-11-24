@@ -2,7 +2,7 @@
 
 #ifdef KAME_PLATFORM_DIRECTX12
 
-#include "Kame/Input.h"
+#include <Kame/Input/Input.h>
 
 namespace Kame {
   
@@ -16,7 +16,6 @@ namespace Kame {
     virtual float GetMouseXImpl();
     virtual float GetMouseYImpl();
     virtual std::pair<float, float> GetMousePositionImpl();
-
 
   };
 
