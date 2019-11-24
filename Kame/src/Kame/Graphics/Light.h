@@ -30,8 +30,7 @@
   *  @brief Light structures that match HLSL constant buffer padding rules.
   */
 
-
-#include <DirectXMath.h>
+#include "Kame/Math/Vector4.h"
 
 namespace Kame {
 
@@ -43,11 +42,11 @@ namespace Kame {
       , Intensity(1.0f)
       , Attenuation(0.0f) {}
 
-    DirectX::XMFLOAT4    PositionWS; // Light position in world space.
+    Kame::Math::Float4    PositionWS; // Light position in world space.
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4    PositionVS; // Light position in view space.
+    Kame::Math::Float4    PositionVS; // Light position in view space.
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4    Color;
+    Kame::Math::Float4    Color;
     //----------------------------------- (16 byte boundary)
     float       Intensity;
     float       Attenuation;
@@ -67,15 +66,15 @@ namespace Kame {
       , SpotAngle(DirectX::XM_PIDIV2)
       , Attenuation(0.0f) {}
 
-    DirectX::XMFLOAT4    PositionWS; // Light position in world space.
+    Kame::Math::Float4    PositionWS; // Light position in world space.
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4    PositionVS; // Light position in view space.
+    Kame::Math::Float4    PositionVS; // Light position in view space.
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4    DirectionWS; // Light direction in world space.
+    Kame::Math::Float4    DirectionWS; // Light direction in world space.
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4    DirectionVS; // Light direction in view space.
+    Kame::Math::Float4    DirectionVS; // Light direction in view space.
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4    Color;
+    Kame::Math::Float4    Color;
     //----------------------------------- (16 byte boundary)
     float       Intensity;
     float       SpotAngle;
@@ -91,11 +90,11 @@ namespace Kame {
       , DirectionVS(0.0f, 0.0f, 1.0f, 0.0f)
       , Color(1.0f, 1.0f, 1.0f, 1.0f) {}
 
-    DirectX::XMFLOAT4    DirectionWS; // Light direction in world space.
+    Kame::Math::Float4    DirectionWS; // Light direction in world space.
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4    DirectionVS; // Light direction in view space.
+    Kame::Math::Float4    DirectionVS; // Light direction in view space.
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4    Color;
+    Kame::Math::Float4    Color;
     //----------------------------------- (16 byte boundary)
     // Total:                              16 * 3 = 48 bytes 
   };

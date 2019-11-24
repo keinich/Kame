@@ -106,29 +106,27 @@ namespace Kame {
     // This data must be aligned otherwise the SSE intrinsics fail
     // and throw exceptions.
     __declspec(align(16)) struct AlignedData {
-      // World-space position of the camera.
-      //DirectX::XMVECTOR m_Translation;
-      Kame::Math::Vector4 m_Translation;
+      // World-space position of the camera.      
+      Kame::Math::Vector4 _Translation;
       // World-space rotation of the camera.
-      // THIS IS A QUATERNION!!!!
-      //DirectX::XMVECTOR m_Rotation;
-      Kame::Math::Vector4 m_Rotation;
+      // THIS IS A QUATERNION!!!!      
+      Kame::Math::Vector4 _Rotation;
 
-      Kame::Math::Matrix4x4 m_ViewMatrix, m_InverseViewMatrix;
-      Kame::Math::Matrix4x4 m_ProjectionMatrix, m_InverseProjectionMatrix;
+      Kame::Math::Matrix4x4 _ViewMatrix, _InverseViewMatrix;
+      Kame::Math::Matrix4x4 _ProjectionMatrix, _InverseProjectionMatrix;
     };
     AlignedData* pData;
 
     // projection parameters
-    float m_vFoV;   // Vertical field of view.
-    float m_AspectRatio; // Aspect ratio
-    float m_zNear;      // Near clip distance
-    float m_zFar;       // Far clip distance.
+    float _vFoV;   // Vertical field of view.
+    float _AspectRatio; // Aspect ratio
+    float _zNear;      // Near clip distance
+    float _zFar;       // Far clip distance.
 
     // True if the view matrix needs to be updated.
-    mutable bool m_ViewDirty, m_InverseViewDirty;
+    mutable bool _ViewDirty, _InverseViewDirty;
     // True if the projection matrix needs to be updated.
-    mutable bool m_ProjectionDirty, m_InverseProjectionDirty;
+    mutable bool _ProjectionDirty, _InverseProjectionDirty;
 
   private:
 

@@ -9,17 +9,17 @@ namespace Kame {
 using namespace Math;
 
   Camera::Camera()
-    : m_ViewDirty(true)
-    , m_InverseViewDirty(true)
-    , m_ProjectionDirty(true)
-    , m_InverseProjectionDirty(true)
-    , m_vFoV(45.0f)
-    , m_AspectRatio(1.0f)
-    , m_zNear(0.1f)
-    , m_zFar(100.0f) {
+    : _ViewDirty(true)
+    , _InverseViewDirty(true)
+    , _ProjectionDirty(true)
+    , _InverseProjectionDirty(true)
+    , _vFoV(45.0f)
+    , _AspectRatio(1.0f)
+    , _zNear(0.1f)
+    , _zFar(100.0f) {
     pData = (AlignedData*)_aligned_malloc(sizeof(AlignedData), 16);
-    pData->m_Translation = Kame::Math::Vector4::VectorZero();
-    pData->m_Rotation = Kame::Math::Vector4::QuaternionIdentity();
+    pData->_Translation = Kame::Math::Vector4::VectorZero();
+    pData->_Rotation = Kame::Math::Vector4::QuaternionIdentity();
   }
 
   Camera::~Camera() {
@@ -27,147 +27,147 @@ using namespace Math;
   }
 
   void CALLCONV Camera::set_LookAt(Vector4 eye, Vector4 target, Vector4 up) {
-    pData->m_ViewMatrix = Kame::Math::MatrixLookAtLh(eye, target, up);
+    pData->_ViewMatrix = Kame::Math::MatrixLookAtLh(eye, target, up);
 
-    pData->m_Translation = eye;
-    pData->m_Rotation = Kame::Math::QuaternionRotationMatrix(Kame::Math::MatrixTranspose(pData->m_ViewMatrix));
+    pData->_Translation = eye;
+    pData->_Rotation = Kame::Math::QuaternionRotationMatrix(Kame::Math::MatrixTranspose(pData->_ViewMatrix));
 
-    m_InverseViewDirty = true;
-    m_ViewDirty = false;
+    _InverseViewDirty = true;
+    _ViewDirty = false;
   }
 
   Matrix4x4 Camera::get_ViewMatrix() const {
-    if (m_ViewDirty) {
+    if (_ViewDirty) {
       UpdateViewMatrix();
     }
-    return pData->m_ViewMatrix;
+    return pData->_ViewMatrix;
   }
 
   Matrix4x4 Camera::get_InverseViewMatrix() const {
-    if (m_InverseViewDirty) {
-      pData->m_InverseViewMatrix = Kame::Math::MatrixInverse(nullptr, pData->m_ViewMatrix);
-      m_InverseViewDirty = false;
+    if (_InverseViewDirty) {
+      pData->_InverseViewMatrix = Kame::Math::MatrixInverse(nullptr, pData->_ViewMatrix);
+      _InverseViewDirty = false;
     }
 
-    return pData->m_InverseViewMatrix;
+    return pData->_InverseViewMatrix;
   }
 
   void Camera::set_Projection(float fovy, float aspect, float zNear, float zFar) {
-    m_vFoV = fovy;
-    m_AspectRatio = aspect;
-    m_zNear = zNear;
-    m_zFar = zFar;
+    _vFoV = fovy;
+    _AspectRatio = aspect;
+    _zNear = zNear;
+    _zFar = zFar;
 
-    m_ProjectionDirty = true;
-    m_InverseProjectionDirty = true;
+    _ProjectionDirty = true;
+    _InverseProjectionDirty = true;
   }
 
   Matrix4x4 Camera::get_ProjectionMatrix() const {
-    if (m_ProjectionDirty) {
+    if (_ProjectionDirty) {
       UpdateProjectionMatrix();
     }
 
-    return pData->m_ProjectionMatrix;
+    return pData->_ProjectionMatrix;
   }
 
   Matrix4x4 Camera::get_InverseProjectionMatrix() const {
-    if (m_InverseProjectionDirty) {
+    if (_InverseProjectionDirty) {
       UpdateInverseProjectionMatrix();
     }
 
-    return pData->m_InverseProjectionMatrix;
+    return pData->_InverseProjectionMatrix;
   }
 
   void Camera::set_FoV(float fovy) {
-    if (m_vFoV != fovy) {
-      m_vFoV = fovy;
-      m_ProjectionDirty = true;
-      m_InverseProjectionDirty = true;
+    if (_vFoV != fovy) {
+      _vFoV = fovy;
+      _ProjectionDirty = true;
+      _InverseProjectionDirty = true;
     }
   }
 
   float Camera::get_FoV() const {
-    return m_vFoV;
+    return _vFoV;
   }
 
 
   void CALLCONV Camera::set_Translation(Vector4 translation) {
-    pData->m_Translation = translation;
-    m_ViewDirty = true;
+    pData->_Translation = translation;
+    _ViewDirty = true;
   }
 
   Vector4 Camera::get_Translation() const {
-    return pData->m_Translation;
+    return pData->_Translation;
   }
 
   void Camera::set_Rotation(Vector4 rotation) {
-    pData->m_Rotation = rotation;
+    pData->_Rotation = rotation;
   }
 
   Vector4 Camera::get_Rotation() const {
-    return pData->m_Rotation;
+    return pData->_Rotation;
   }
 
   void CALLCONV Camera::Translate(Vector4 translation, Space space) {
     switch (space) {
     case Space::Local:
     {
-      pData->m_Translation += Kame::Math::Vector3Rotate(translation, pData->m_Rotation);
+      pData->_Translation += Kame::Math::Vector3Rotate(translation, pData->_Rotation);
     }
     break;
     case Space::World:
     {
-      pData->m_Translation += translation;
+      pData->_Translation += translation;
     }
     break;
     }
 
-    pData->m_Translation = Kame::Math::VectorSetW(pData->m_Translation, 1.0f);
+    pData->_Translation = Kame::Math::VectorSetW(pData->_Translation, 1.0f);
 
-    m_ViewDirty = true;
-    m_InverseViewDirty = true;
+    _ViewDirty = true;
+    _InverseViewDirty = true;
   }
 
   void Camera::Rotate(Vector4 quaternion) {
-    pData->m_Rotation = Kame::Math::QuaternionMultiply(pData->m_Rotation, quaternion);
+    pData->_Rotation = Kame::Math::QuaternionMultiply(pData->_Rotation, quaternion);
 
-    m_ViewDirty = true;
-    m_InverseViewDirty = true;
+    _ViewDirty = true;
+    _InverseViewDirty = true;
   }
 
   void Camera::UpdateViewMatrix() const {
-    Matrix4x4 rotationMatrix = MatrixTranspose(MatrixRotationQuaternion(pData->m_Rotation));
-    Matrix4x4 translationMatrix = MatrixTranslationFromVector(-(pData->m_Translation));
+    Matrix4x4 rotationMatrix = MatrixTranspose(MatrixRotationQuaternion(pData->_Rotation));
+    Matrix4x4 translationMatrix = MatrixTranslationFromVector(-(pData->_Translation));
 
-    pData->m_ViewMatrix = translationMatrix * rotationMatrix;
+    pData->_ViewMatrix = translationMatrix * rotationMatrix;
 
-    m_InverseViewDirty = true;
-    m_ViewDirty = false;
+    _InverseViewDirty = true;
+    _ViewDirty = false;
   }
 
   void Camera::UpdateInverseViewMatrix() const {
-    if (m_ViewDirty) {
+    if (_ViewDirty) {
       UpdateViewMatrix();
     }
 
-    pData->m_InverseViewMatrix = MatrixInverse(nullptr, pData->m_ViewMatrix);
-    m_InverseViewDirty = false;
+    pData->_InverseViewMatrix = MatrixInverse(nullptr, pData->_ViewMatrix);
+    _InverseViewDirty = false;
   }
 
   void Camera::UpdateProjectionMatrix() const {
-    pData->m_ProjectionMatrix = MatrixPerspectiveFovLH(ConvertToRadians(m_vFoV), m_AspectRatio, m_zNear, m_zFar);
+    pData->_ProjectionMatrix = MatrixPerspectiveFovLH(ConvertToRadians(_vFoV), _AspectRatio, _zNear, _zFar);
 
-    m_ProjectionDirty = false;
-    m_InverseProjectionDirty = true;
+    _ProjectionDirty = false;
+    _InverseProjectionDirty = true;
   }
 
   void Camera::UpdateInverseProjectionMatrix() const {
-    if (m_ProjectionDirty) {
+    if (_ProjectionDirty) {
       UpdateProjectionMatrix();
     }
 
-    pData->m_InverseProjectionMatrix = MatrixInverse(nullptr, pData->m_ProjectionMatrix);
-    m_InverseProjectionDirty = false;
+    pData->_InverseProjectionMatrix = MatrixInverse(nullptr, pData->_ProjectionMatrix);
+    _InverseProjectionDirty = false;
   }
 
 }

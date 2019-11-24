@@ -30,16 +30,16 @@
   *  @brief Material structure that matches HLSL constant buffer padding rules.
   */
 
-#include <DirectXMath.h>
+#include <Kame/Math/Vector4.h>
 
 namespace Kame {
 
   struct KAME_API Material {
     Material(
-      DirectX::XMFLOAT4 emissive = { 0.0f, 0.0f, 0.0f, 1.0f },
-      DirectX::XMFLOAT4 ambient = { 0.1f, 0.1f, 0.1f, 1.0f },
-      DirectX::XMFLOAT4 diffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
-      DirectX::XMFLOAT4 specular = { 1.0f, 1.0f, 1.0f, 1.0f },
+      Kame::Math::Float4 emissive = { 0.0f, 0.0f, 0.0f, 1.0f },
+      Kame::Math::Float4 ambient = { 0.1f, 0.1f, 0.1f, 1.0f },
+      Kame::Math::Float4 diffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
+      Kame::Math::Float4 specular = { 1.0f, 1.0f, 1.0f, 1.0f },
       float specularPower = 128.0f
     )
       : Emissive(emissive)
@@ -48,13 +48,13 @@ namespace Kame {
       , Specular(specular)
       , SpecularPower(specularPower) {}
 
-    DirectX::XMFLOAT4 Emissive;
+    Kame::Math::Float4 Emissive;
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4 Ambient;
+    Kame::Math::Float4 Ambient;
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4 Diffuse;
+    Kame::Math::Float4 Diffuse;
     //----------------------------------- (16 byte boundary)
-    DirectX::XMFLOAT4 Specular;
+    Kame::Math::Float4 Specular;
     //----------------------------------- (16 byte boundary)
     float             SpecularPower;
     uint32_t          Padding[3];
