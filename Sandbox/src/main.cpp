@@ -11,6 +11,8 @@
 #include "Kame/Application.h"
 #include "Tutorial4.h"
 
+#include "Kame/Log.h"
+
 #include <dxgidebug.h>
 
 void ReportLiveObjects()
@@ -22,37 +24,57 @@ void ReportLiveObjects()
     //dxgiDebug->Release();
 }
 
-int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR lpCmdLine, int nCmdShow)
-//int main(int argc, char** argv)
-{
-    int retCode = 0;
+//int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR lpCmdLine, int nCmdShow)
+////int main(int argc, char** argv)
+//{
+//    int retCode = 0;
+//
+//    WCHAR path[MAX_PATH];
+//
+//    int argc = 0;
+//    LPWSTR* argv = CommandLineToArgvW(lpCmdLine, &argc);
+//    if (argv)
+//    {
+//        for (int i = 0; i < argc; ++i)
+//        {
+//            // -wd Specify the Working Directory.
+//            if (wcscmp(argv[i], L"-wd") == 0)
+//            {
+//                wcscpy_s(path, argv[++i]);
+//                SetCurrentDirectoryW(path);
+//            }
+//        }
+//        LocalFree(argv);
+//    }
+//
+//    Kame::Application::Create();
+//    {
+//        std::shared_ptr<Kame::Tutorial4> demo = std::make_shared<Kame::Tutorial4>(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
+//        retCode = Kame::Application::Get().Run(demo);
+//    }
+//    Kame::Application::Destroy();
+//
+//    atexit(&ReportLiveObjects);
+//
+//    return retCode;
+//}
 
-    WCHAR path[MAX_PATH];
 
-    int argc = 0;
-    LPWSTR* argv = CommandLineToArgvW(lpCmdLine, &argc);
-    if (argv)
-    {
-        for (int i = 0; i < argc; ++i)
-        {
-            // -wd Specify the Working Directory.
-            if (wcscmp(argv[i], L"-wd") == 0)
-            {
-                wcscpy_s(path, argv[++i]);
-                SetCurrentDirectoryW(path);
-            }
-        }
-        LocalFree(argv);
-    }
+int main(int argc, char** argv) {
 
-    Kame::Application::Create();
-    {
-        std::shared_ptr<Kame::Tutorial4> demo = std::make_shared<Kame::Tutorial4>(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
-        retCode = Kame::Application::Get().Run(demo);
-    }
-    Kame::Application::Destroy();
+  int retCode = 0;  
 
-    atexit(&ReportLiveObjects);
+  Kame::Log::Init();
+  KM_CORE_WARN("Initialized Log!");
 
-    return retCode;
+  Kame::Application::Create();
+  {
+    std::shared_ptr<Kame::Tutorial4> demo = std::make_shared<Kame::Tutorial4>(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
+    retCode = Kame::Application::Get().Run(demo);
+  }
+  Kame::Application::Destroy();
+
+  atexit(&ReportLiveObjects);
+
+  return retCode;
 }

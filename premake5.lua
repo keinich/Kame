@@ -34,7 +34,8 @@ project "Kame"
 
   files {
     "%{prj.name}/src/**.h",
-    "%{prj.name}/src/**.cpp"
+    "%{prj.name}/src/**.cpp",
+    "%{prj.name}/src/**.hlsl"
   }
 
   includedirs {
@@ -64,8 +65,8 @@ project "Kame"
       "KAME_PLATFORM_WINDOWS",
       "KAME_BUILD_DLL",
       "GLFW_INCLUDE_NONE",
-	  "KAME_PLATFORM_WIN32",
-	  "KAME_PLATFORM_DIRECTX12"
+	    "KAME_PLATFORM_WIN32",
+	    "KAME_PLATFORM_DIRECTX12"
     }
 
     postbuildcommands {
@@ -86,7 +87,19 @@ project "Kame"
     defines "KAME_DIST"
     buildoptions "/MD"
     optimize "On"
-  
+
+  filter { "files:**.hlsl" }
+    shadermodel "6.0"
+    shadervariablename "g_%{file.basename}"
+    shaderheaderfileoutput "D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/%{file.basename}.h"
+    shaderobjectfileoutput "D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/%{file.basename}.cso"
+  filter { "files:**_PS.hlsl" }
+    shadertype "Pixel"
+  filter { "files:**_CS.hlsl" }
+    shadertype "Compute"
+  filter { "files:**_VS.hlsl" }
+    shadertype "Vertex"
+
 project "Sandbox"
   location "Sandbox"
   kind "ConsoleApp"
@@ -97,7 +110,8 @@ project "Sandbox"
 
   files {
     "%{prj.name}/src/**.h",
-    "%{prj.name}/src/**.cpp"
+    "%{prj.name}/src/**.cpp",
+    "%{prj.name}/src/**.hlsl"
   }
 
   includedirs {
@@ -133,3 +147,14 @@ project "Sandbox"
     defines "KAME_DIST"
     buildoptions "/MD"
     optimize "On"
+
+  filter { "files:**.hlsl" }
+    shadermodel "6.0"
+    shadervariablename "g_%{file.basename}"
+    shaderheaderfileoutput "D:/Raftek/Kame/Sandbox/src/%{file.basename}.h"
+  filter { "files:**_PS.hlsl" }
+    shadertype "Pixel"
+  filter { "files:**_CS.hlsl" }
+    shadertype "Compute"
+  filter { "files:**_VS.hlsl" }
+    shadertype "Vertex"

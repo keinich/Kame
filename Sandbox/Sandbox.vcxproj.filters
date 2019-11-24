@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{0F45D591-7B24-542D-843C-DF03F09ABA8E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\HDR_PS.h" />
+    <ClInclude Include="src\HDR_VS.h" />
+    <ClInclude Include="src\HDRtoSDR_PS.h" />
+    <ClInclude Include="src\HDRtoSDR_VS.h" />
+    <ClInclude Include="src\Skybox_PS.h" />
+    <ClInclude Include="src\Skybox_VS.h" />
+    <ClInclude Include="src\Tutorial4.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\SandboxApp.cpp" />
+    <ClCompile Include="src\Tutorial4.cpp" />
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\shaders\HDR_PS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\shaders\HDR_VS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\shaders\HDRtoSDR_PS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\shaders\HDRtoSDR_VS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\shaders\Skybox_PS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\shaders\Skybox_VS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
