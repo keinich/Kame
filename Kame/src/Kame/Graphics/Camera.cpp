@@ -27,10 +27,10 @@ using namespace Math;
   }
 
   void XM_CALLCONV Camera::set_LookAt(Vector4 eye, Vector4 target, Vector4 up) {
-    pData->m_ViewMatrix = XMMatrixLookAtLH(eye.GetXmVector(), target.GetXmVector(), up.GetXmVector());
+    pData->m_ViewMatrix = Kame::Math::MatrixLookAtLh(eye, target, up);
 
     pData->m_Translation = eye;
-    pData->m_Rotation = XMQuaternionRotationMatrix(XMMatrixTranspose(pData->m_ViewMatrix.GetXmMatrix()));
+    pData->m_Rotation = Kame::Math::QuaternionRotationMatrix(Kame::Math::MatrixTranspose(pData->m_ViewMatrix));
 
     m_InverseViewDirty = true;
     m_ViewDirty = false;

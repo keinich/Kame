@@ -20,6 +20,18 @@ namespace Kame {
       return Vector4DX(DirectX::XMVector3Transform(v.GetXmVector(), m.GetXmMatrix()));
     }
 
+    inline Matrix4x4DX XM_CALLCONV MatrixLookAtLh(
+      Vector4DX eyePosition,
+      Vector4DX focusPosition,
+      Vector4DX upDirection
+    ) {
+      return Matrix4x4DX(DirectX::XMMatrixLookAtLH(eyePosition.GetXmVector(), focusPosition.GetXmVector(), upDirection.GetXmVector()));
+    }
+
+    inline Vector4DX XM_CALLCONV QuaternionRotationMatrix(Matrix4x4DX m) {
+      return Vector4DX(DirectX::XMQuaternionRotationMatrix(m.GetXmMatrix()));
+    }
+
   }
 
 }
