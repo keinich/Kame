@@ -173,6 +173,7 @@
     <ClInclude Include="src\Kame\LayerStack.h" />
     <ClInclude Include="src\Kame\Log.h" />
     <ClInclude Include="src\Kame\Math\MathCommon.h" />
+    <ClInclude Include="src\Kame\Math\Vector4.h" />
     <ClInclude Include="src\Kame\Memory\Memory.h" />
     <ClInclude Include="src\Kame\MouseButtonCodes.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\DX12Core.h" />
@@ -220,6 +221,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\ImGui\ImGuiDX12Renderer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Math\DX12Math.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Math\Vector3.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Math\Vector4DX.h" />
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWInput.h" />
     <ClInclude Include="src\Kame\Platform\GLFW\GLFWWindow.h" />
     <ClInclude Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.h" />

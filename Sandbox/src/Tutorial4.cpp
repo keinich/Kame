@@ -15,6 +15,8 @@
 #include "Kame/Platform/DirectX12/Graphics/Display.h"
 #include "Kame/Window.h"
 
+#include "Kame/Math/Vector4.h"
+
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
@@ -151,6 +153,7 @@ namespace Kame {
     , m_Height(0)
     , m_RenderScale(1.0f) {
 
+    Kame::Math::Vector4 cameraPos1(0, 5, -20, 1);
     XMVECTOR cameraPos = XMVectorSet(0, 5, -20, 1);
     XMVECTOR cameraTarget = XMVectorSet(0, 5, 0, 1);
     XMVECTOR cameraUp = XMVectorSet(0, 1, 0, 0);
