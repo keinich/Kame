@@ -1,3 +1,4 @@
+#include "kmpch.h"
 #include "Material.h"
 
 namespace Kame {

@@ -43,7 +43,7 @@ namespace Kame {
     World,
   };
 
-  class Camera {
+  class KAME_API Camera {
   public:
 
     Camera();

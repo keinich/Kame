@@ -34,7 +34,7 @@
 
 namespace Kame {
 
-  struct Material {
+  struct KAME_API Material {
     Material(
       DirectX::XMFLOAT4 emissive = { 0.0f, 0.0f, 0.0f, 1.0f },
       DirectX::XMFLOAT4 ambient = { 0.1f, 0.1f, 0.1f, 1.0f },

@@ -10,8 +10,8 @@
 #include "Kame/Platform/DirectX12/Graphics/CommandQueue.h"
 #include "Kame/Platform/DirectX12/Graphics/CommandList.h"
 #include "Kame/Platform/DirectX12/Graphics/Helpers.h"
-#include "Light.h"
-#include "Material.h"
+#include "Kame/Graphics/Light.h"
+#include "Kame/Graphics/Material.h"
 #include "Kame/Platform/DirectX12/Graphics/Display.h"
 #include "Kame/Window.h"
 

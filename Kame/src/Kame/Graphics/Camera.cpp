@@ -1,3 +1,4 @@
+#include "kmpch.h"
 #include "Camera.h"
 
 using namespace DirectX;

@@ -136,10 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\SandboxApp.cpp" />
     <ClCompile Include="src\Tutorial4.cpp" />
   </ItemGroup>
@@ -149,9 +146,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\Light.h" />
-    <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Tutorial4.h" />
   </ItemGroup>
   <ItemGroup>

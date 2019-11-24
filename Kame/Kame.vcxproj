@@ -162,6 +162,9 @@
     <ClInclude Include="src\Kame\Events\Event_Cherno.h" />
     <ClInclude Include="src\Kame\Events\KeyEvent.h" />
     <ClInclude Include="src\Kame\Events\MouseEvent.h" />
+    <ClInclude Include="src\Kame\Graphics\Camera.h" />
+    <ClInclude Include="src\Kame\Graphics\Light.h" />
+    <ClInclude Include="src\Kame\Graphics\Material.h" />
     <ClInclude Include="src\Kame\Graphics\Mesh.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input.h" />
@@ -229,6 +232,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Camera.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Light.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Material.cpp" />
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Layer.cpp" />
