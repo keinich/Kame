@@ -45,9 +45,18 @@ namespace Kame {
         return *this;
       }
 
+      Vector4DX XM_CALLCONV operator += (Vector4DX& const other) {
+        _XmVector += other.GetXmVector();
+        return *this;
+      }
+
       Vector4DX XM_CALLCONV operator += (DirectX::FXMVECTOR& const other) {
         _XmVector += other;
         return *this;
+      }
+
+      Vector4DX XM_CALLCONV operator - () {
+        return Vector4DX(-_XmVector);
       }
 
     protected:

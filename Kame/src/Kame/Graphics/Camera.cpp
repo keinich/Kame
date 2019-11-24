@@ -45,7 +45,7 @@ using namespace Math;
 
   Matrix4x4 Camera::get_InverseViewMatrix() const {
     if (m_InverseViewDirty) {
-      pData->m_InverseViewMatrix = XMMatrixInverse(nullptr, pData->m_ViewMatrix.GetXmMatrix());
+      pData->m_InverseViewMatrix = Kame::Math::MatrixInverse(nullptr, pData->m_ViewMatrix);
       m_InverseViewDirty = false;
     }
 
@@ -112,7 +112,7 @@ using namespace Math;
     switch (space) {
     case Space::Local:
     {
-      pData->m_Translation += XMVector3Rotate(translation.GetXmVector(), pData->m_Rotation.GetXmVector());
+      pData->m_Translation += Kame::Math::Vector3Rotate(translation, pData->m_Rotation);
     }
     break;
     case Space::World:
@@ -122,14 +122,14 @@ using namespace Math;
     break;
     }
 
-    pData->m_Translation = XMVectorSetW(pData->m_Translation.GetXmVector(), 1.0f);
+    pData->m_Translation = Kame::Math::VectorSetW(pData->m_Translation, 1.0f);
 
     m_ViewDirty = true;
     m_InverseViewDirty = true;
   }
 
   void Camera::Rotate(Vector4 quaternion) {
-    pData->m_Rotation = XMQuaternionMultiply(pData->m_Rotation.GetXmVector(), quaternion.GetXmVector());
+    pData->m_Rotation = Kame::Math::QuaternionMultiply(pData->m_Rotation, quaternion);
 
     m_ViewDirty = true;
     m_InverseViewDirty = true;
@@ -137,7 +137,7 @@ using namespace Math;
 
   void Camera::UpdateViewMatrix() const {
     Matrix4x4 rotationMatrix = MatrixTranspose(MatrixRotationQuaternion(pData->m_Rotation));
-    Matrix4x4 translationMatrix = XMMatrixTranslationFromVector(-(pData->m_Translation.GetXmVector()));
+    Matrix4x4 translationMatrix = MatrixTranslationFromVector(-(pData->m_Translation));
 
     pData->m_ViewMatrix = translationMatrix * rotationMatrix;
 
