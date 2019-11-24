@@ -7,6 +7,7 @@
 #include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
 
+#include "Kame/Input/Input.h"
 //#include "Kame/Events/Event.h"
 
 namespace Kame {
@@ -47,10 +48,13 @@ namespace Kame {
 
   Application::Application() {
     _FrameCount = 0;
+    _Input = new Input();
   }
 
   Application::~Application() {
     DX12Core::Get().Flush();
+    delete _Input;
+    _Input = nullptr;
   }
 
   void Application::Initialize() {

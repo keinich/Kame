@@ -530,6 +530,7 @@
       <Filter>Kame</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
+    <ClCompile Include="src\Kame\Input\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

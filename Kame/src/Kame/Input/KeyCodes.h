@@ -526,6 +526,7 @@ namespace Kame {
     VOLUME_UP = KAME_KEY_VOLUME_UP,
     Xbutton1 = KAME_KEY_XBUTTON1,
     Xbutton2 = KAME_KEY_XBUTTON2
+
   };
 
 }

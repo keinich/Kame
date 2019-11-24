@@ -57,7 +57,7 @@ namespace Kame {
     Event() :
       _MaxHandle(0) {}
 
-    ~Event() {
+    virtual ~Event() {
       RemoveAllHandlers();
     }
 

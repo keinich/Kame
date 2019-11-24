@@ -4,6 +4,7 @@
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
 
 #include "Kame/Application.h"
+#include "Kame/Input/Input.h"
 
 namespace Kame {
 
@@ -16,15 +17,15 @@ namespace Kame {
     _Fullscreen(false),
     _WindowRect() {
 
-    EventHandle handle = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
-    EventHandle handle2 = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
-    
-    _MyTestEvent.Raise(2);
-    _MyTestEvent.RemoveHandler(handle);
-    _MyTestEvent.Raise(2);
+    //EventHandle handle = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
+    //EventHandle handle2 = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
+    //
+    //_MyTestEvent.Raise(2);
+    //_MyTestEvent.RemoveHandler(handle);
+    //_MyTestEvent.Raise(2);
 
-    EventHandle handle3 = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
-    _MyTestEvent.Raise(2);
+    //EventHandle handle3 = _MyTestEvent.AddHandler(BIND_FUNCTION(Window::TestEventFunction));
+    //_MyTestEvent.Raise(2);
   }
 
   Window::~Window() {
@@ -97,12 +98,15 @@ namespace Kame {
   }
 
   void Window::OnKeyPressed(KeyEventArgs& e) {
+    //TODO kann man so den KeyState realisieren? Was wenn ein Released-Event nicht korrekt gefeuert wird?
+    //Application::Get().GetInput()->OnKeyEvent(e);
     if (auto pGame = _pGame.lock()) {
       pGame->OnKeyPressed(e);
     }
   }
 
   void Window::OnKeyReleased(KeyEventArgs& e) {
+    //Application::Get().GetInput()->OnKeyEvent(e);
     if (auto pGame = _pGame.lock()) {
       pGame->OnKeyReleased(e);
     }

@@ -81,6 +81,10 @@ namespace Kame {
      */
     virtual void OnKeyPressed(KeyEventArgs& e) override;
 
+    //Test des neuen Event Systems
+    bool OnKeyF(KeyEventArgs& e);
+    bool Shoot(KeyEventArgs& e);
+
     /**
      * Invoked when a key on the keyboard is released.
      */

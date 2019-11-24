@@ -18,6 +18,8 @@
 #include "Kame/Math/Vector4.h"
 #include "Kame/Math/VectorMath.h"
 
+#include "Kame/Input/Input.h"
+
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
@@ -167,6 +169,10 @@ namespace Kame {
     m_pAlignedCameraData->m_InitialCamPos = m_Camera.get_Translation();
     m_pAlignedCameraData->m_InitialCamRot = m_Camera.get_Rotation();
     m_pAlignedCameraData->m_InitialFov = m_Camera.get_FoV();
+
+    Input::KeyEvent(Kame::Key::F)->AddHandler(BIND_FUNCTION(Tutorial4::OnKeyF));
+    Input::MapKeyToCustomEvent(Kame::Key::G, L"Shoot");
+    Input::CustomEvent(L"Shoot")->AddHandler(BIND_FUNCTION(Tutorial4::Shoot));
   }
 
   Tutorial4::~Tutorial4() {
@@ -1033,6 +1039,20 @@ namespace Kame {
       break;
     }
     //}
+  }
+
+  bool Tutorial4::OnKeyF(KeyEventArgs& e) {
+    if (e.State == KeyEventArgs::KeyState::Released) {
+      m_pWindow->ToggleFullscreen();
+    }
+    return true;
+  }
+
+  bool Tutorial4::Shoot(KeyEventArgs& e) {
+    if (e.State == KeyEventArgs::KeyState::Released) {
+      m_pWindow->ToggleFullscreen();
+    }
+    return true;
   }
 
   void Tutorial4::OnKeyReleased(KeyEventArgs& e) {

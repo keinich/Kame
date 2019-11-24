@@ -257,6 +257,7 @@
     <ClCompile Include="src\Kame\Graphics\Material.cpp" />
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Kame\Input\Input.cpp" />
     <ClCompile Include="src\Kame\KameApplication.cpp" />
     <ClCompile Include="src\Kame\Layer.cpp" />
     <ClCompile Include="src\Kame\LayerStack.cpp" />

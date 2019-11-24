@@ -14,6 +14,7 @@ namespace Kame {
 
   class Game;
   class Window;
+  class Input;
 
   using WindowPtr = std::shared_ptr<Window>;
   using WindowNameMap = std::map< std::wstring, WindowPtr >;
@@ -47,6 +48,8 @@ namespace Kame {
     void PlatformMainLoop(int& returnCode);
     void Quit(int exitCode = 0);
 
+    inline Input* GetInput() { return _Input; }
+
   protected: // Methods
 
     Application();
@@ -59,6 +62,7 @@ namespace Kame {
 
     uint64_t _FrameCount;
     std::shared_ptr<Game> _Game;
+    Input* _Input;
   };
 
 }

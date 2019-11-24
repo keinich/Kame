@@ -4,6 +4,7 @@
 #include "Kame/Events/EventArgs.h"
 #include "Kame/Events/KeyEvent.h"
 #include "Win32Window.h"
+#include "Kame/Input/Input.h"
 
 namespace Kame {
 
@@ -114,6 +115,7 @@ namespace Kame {
         unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
         KeyEventArgs keyEventArgs(key, c, KeyEventArgs::Pressed, shift, control, alt);
         pWindow->OnKeyPressed(keyEventArgs);
+        Input::KeyEvent(key)->Raise(keyEventArgs);
 
 
 
@@ -144,6 +146,7 @@ namespace Kame {
 
         KeyEventArgs keyEventArgs(key, c, KeyEventArgs::Released, shift, control, alt);
         pWindow->OnKeyReleased(keyEventArgs);
+        Input::KeyEvent(key)->Raise(keyEventArgs);
       }
       break;
       // The default window procedure will play a system notification sound 
