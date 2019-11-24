@@ -32,6 +32,8 @@
 
 
 #include <DirectXMath.h>
+#include "Kame/Math/Vector4.h"
+#include <Kame\Math\Vector4.h>
 
 namespace Kame {
 
@@ -104,10 +106,12 @@ namespace Kame {
     // and throw exceptions.
     __declspec(align(16)) struct AlignedData {
       // World-space position of the camera.
-      DirectX::XMVECTOR m_Translation;
+      //DirectX::XMVECTOR m_Translation;
+      Kame::Math::Vector4 m_Translation;
       // World-space rotation of the camera.
       // THIS IS A QUATERNION!!!!
-      DirectX::XMVECTOR m_Rotation;
+      //DirectX::XMVECTOR m_Rotation;
+      Kame::Math::Vector4 m_Rotation;
 
       DirectX::XMMATRIX m_ViewMatrix, m_InverseViewMatrix;
       DirectX::XMMATRIX m_ProjectionMatrix, m_InverseProjectionMatrix;

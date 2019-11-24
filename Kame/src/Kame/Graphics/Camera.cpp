@@ -94,7 +94,7 @@ namespace Kame {
   }
 
   XMVECTOR Camera::get_Translation() const {
-    return pData->m_Translation;
+    return pData->m_Translation.GetXmVector();
   }
 
   void Camera::set_Rotation(FXMVECTOR rotation) {
@@ -102,14 +102,14 @@ namespace Kame {
   }
 
   XMVECTOR Camera::get_Rotation() const {
-    return pData->m_Rotation;
+    return pData->m_Rotation.GetXmVector();
   }
 
   void XM_CALLCONV Camera::Translate(FXMVECTOR translation, Space space) {
     switch (space) {
     case Space::Local:
     {
-      pData->m_Translation += XMVector3Rotate(translation, pData->m_Rotation);
+      pData->m_Translation += XMVector3Rotate(translation, pData->m_Rotation.GetXmVector());
     }
     break;
     case Space::World:
@@ -119,22 +119,22 @@ namespace Kame {
     break;
     }
 
-    pData->m_Translation = XMVectorSetW(pData->m_Translation, 1.0f);
+    pData->m_Translation = XMVectorSetW(pData->m_Translation.GetXmVector(), 1.0f);
 
     m_ViewDirty = true;
     m_InverseViewDirty = true;
   }
 
   void Camera::Rotate(FXMVECTOR quaternion) {
-    pData->m_Rotation = XMQuaternionMultiply(pData->m_Rotation, quaternion);
+    pData->m_Rotation = XMQuaternionMultiply(pData->m_Rotation.GetXmVector(), quaternion);
 
     m_ViewDirty = true;
     m_InverseViewDirty = true;
   }
 
   void Camera::UpdateViewMatrix() const {
-    XMMATRIX rotationMatrix = XMMatrixTranspose(XMMatrixRotationQuaternion(pData->m_Rotation));
-    XMMATRIX translationMatrix = XMMatrixTranslationFromVector(-(pData->m_Translation));
+    XMMATRIX rotationMatrix = XMMatrixTranspose(XMMatrixRotationQuaternion(pData->m_Rotation.GetXmVector()));
+    XMMATRIX translationMatrix = XMMatrixTranslationFromVector(-(pData->m_Translation.GetXmVector()));
 
     pData->m_ViewMatrix = translationMatrix * rotationMatrix;
 
