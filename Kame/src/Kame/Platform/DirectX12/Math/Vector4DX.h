@@ -19,8 +19,22 @@ namespace Kame {
         _XmVector = xmVector;
       }
 
+      static inline Vector4DX XM_CALLCONV VectorZero() {
+        return DirectX::XMVectorZero();
+      }
+
+      static inline Vector4DX XM_CALLCONV QuaternionIdentity() {
+        return DirectX::XMQuaternionIdentity();
+      }
+
+
       //TODO Remove this
       DirectX::XMVECTOR GetXmVector() { return _XmVector; }
+
+      Vector4DX& XM_CALLCONV operator = (DirectX::XMVECTOR& const other) {
+        _XmVector = other;
+        return *this;
+      }
 
       Vector4DX XM_CALLCONV operator + (DirectX::XMVECTOR& const other) {
         return Vector4DX(_XmVector + other);

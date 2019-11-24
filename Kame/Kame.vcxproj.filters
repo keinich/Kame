@@ -193,6 +193,8 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Math\Vector4DX.h" />
     <ClInclude Include="src\Kame\Math\Matrix4x4.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Math\Matrix4x4DX.h" />
+    <ClInclude Include="src\Kame\Math\VectorMath.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Math\VectorMathDx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp">

@@ -31,7 +31,7 @@
   */
 
 
-#include <DirectXMath.h>
+//#include <DirectXMath.h>
 #include "Kame/Math/Vector4.h"
 #include <Kame\Math\Vector4.h>
 #include "Kame/Math/Matrix4x4.h"
@@ -52,9 +52,9 @@ namespace Kame {
     Camera();
     virtual ~Camera();
 
-    void XM_CALLCONV set_LookAt(DirectX::FXMVECTOR eye, DirectX::FXMVECTOR target, DirectX::FXMVECTOR up);
-    DirectX::XMMATRIX get_ViewMatrix() const;
-    DirectX::XMMATRIX get_InverseViewMatrix() const;
+    void XM_CALLCONV set_LookAt(Kame::Math::Vector4 eye, Kame::Math::Vector4 target, Kame::Math::Vector4 up);
+    Kame::Math::Matrix4x4 get_ViewMatrix() const;
+    Kame::Math::Matrix4x4 get_InverseViewMatrix() const;
 
     /**
      * Set the camera to a perspective projection matrix.
@@ -64,8 +64,8 @@ namespace Kame {
      * @param zFar The distance to the far clipping plane.
      */
     void set_Projection(float fovy, float aspect, float zNear, float zFar);
-    DirectX::XMMATRIX get_ProjectionMatrix() const;
-    DirectX::XMMATRIX get_InverseProjectionMatrix() const;
+    Kame::Math::Matrix4x4 get_ProjectionMatrix() const;
+    Kame::Math::Matrix4x4 get_InverseProjectionMatrix() const;
 
     /**
      * Set the field of view in degrees.
@@ -80,22 +80,22 @@ namespace Kame {
     /**
      * Set the camera's position in world-space.
      */
-    void XM_CALLCONV set_Translation(DirectX::FXMVECTOR translation);
-    DirectX::XMVECTOR get_Translation() const;
+    void XM_CALLCONV set_Translation(Kame::Math::Vector4 translation);
+    Kame::Math::Vector4 get_Translation() const;
 
     /**
      * Set the camera's rotation in world-space.
      * @param rotation The rotation quaternion.
      */
-    void XM_CALLCONV set_Rotation(DirectX::FXMVECTOR rotation);
+    void XM_CALLCONV set_Rotation(Kame::Math::Vector4 rotation);
     /**
      * Query the camera's rotation.
      * @returns The camera's rotation quaternion.
      */
-    DirectX::XMVECTOR get_Rotation() const;
+    Kame::Math::Vector4 get_Rotation() const;
 
-    void XM_CALLCONV Translate(DirectX::FXMVECTOR translation, Space space = Space::Local);
-    void Rotate(DirectX::FXMVECTOR quaternion);
+    void XM_CALLCONV Translate(Kame::Math::Vector4 translation, Space space = Space::Local);
+    void Rotate(Kame::Math::Vector4 quaternion);
 
   protected:
     virtual void UpdateViewMatrix() const;

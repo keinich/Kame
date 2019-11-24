@@ -12,12 +12,18 @@ namespace Kame {
 
     public:
 
+      Matrix4x4DX(XMMATRIX xmMatrix) : _XmMatrix(xmMatrix) {}
+
       //TODO remove this:
       inline XMMATRIX GetXmMatrix() { return _XmMatrix; }
 
-      Matrix4x4DX& operator = (const XMMATRIX& other) {
+      Matrix4x4DX& XM_CALLCONV operator = (const XMMATRIX& other) {
         _XmMatrix = other;
         return *this;
+      }
+
+      Matrix4x4DX XM_CALLCONV operator * (Matrix4x4DX& const other) {
+        return Matrix4x4DX(_XmMatrix * other.GetXmMatrix());
       }
 
     protected:

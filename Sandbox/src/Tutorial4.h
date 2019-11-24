@@ -42,6 +42,8 @@
 #include "Kame/Platform/DirectX12/Graphics/Texture.h"
 #include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
 
+#include "Kame/Math/Vector4.h"
+
 #include <DirectXMath.h>
 
 namespace Kame {
@@ -136,8 +138,8 @@ namespace Kame {
 
     Camera m_Camera;
     struct alignas(16) CameraData {
-      DirectX::XMVECTOR m_InitialCamPos;
-      DirectX::XMVECTOR m_InitialCamRot;
+      Kame::Math::Vector4 m_InitialCamPos;
+      Kame::Math::Vector4 m_InitialCamRot;
       float m_InitialFov;
     };
     CameraData* m_pAlignedCameraData;

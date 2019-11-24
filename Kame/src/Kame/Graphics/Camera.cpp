@@ -1,9 +1,12 @@
 #include "kmpch.h"
 #include "Camera.h"
+#include "Kame/Math/VectorMath.h"
 
-using namespace DirectX;
+//using namespace DirectX;
 
 namespace Kame {
+
+using namespace Math;
 
   Camera::Camera()
     : m_ViewDirty(true)
@@ -15,16 +18,16 @@ namespace Kame {
     , m_zNear(0.1f)
     , m_zFar(100.0f) {
     pData = (AlignedData*)_aligned_malloc(sizeof(AlignedData), 16);
-    pData->m_Translation = XMVectorZero();
-    pData->m_Rotation = XMQuaternionIdentity();
+    pData->m_Translation = Kame::Math::Vector4::VectorZero();
+    pData->m_Rotation = Kame::Math::Vector4::QuaternionIdentity();
   }
 
   Camera::~Camera() {
     _aligned_free(pData);
   }
 
-  void XM_CALLCONV Camera::set_LookAt(FXMVECTOR eye, FXMVECTOR target, FXMVECTOR up) {
-    pData->m_ViewMatrix = XMMatrixLookAtLH(eye, target, up);
+  void XM_CALLCONV Camera::set_LookAt(Vector4 eye, Vector4 target, Vector4 up) {
+    pData->m_ViewMatrix = XMMatrixLookAtLH(eye.GetXmVector(), target.GetXmVector(), up.GetXmVector());
 
     pData->m_Translation = eye;
     pData->m_Rotation = XMQuaternionRotationMatrix(XMMatrixTranspose(pData->m_ViewMatrix.GetXmMatrix()));
@@ -33,20 +36,20 @@ namespace Kame {
     m_ViewDirty = false;
   }
 
-  XMMATRIX Camera::get_ViewMatrix() const {
+  Matrix4x4 Camera::get_ViewMatrix() const {
     if (m_ViewDirty) {
       UpdateViewMatrix();
     }
-    return pData->m_ViewMatrix.GetXmMatrix();
+    return pData->m_ViewMatrix;
   }
 
-  XMMATRIX Camera::get_InverseViewMatrix() const {
+  Matrix4x4 Camera::get_InverseViewMatrix() const {
     if (m_InverseViewDirty) {
       pData->m_InverseViewMatrix = XMMatrixInverse(nullptr, pData->m_ViewMatrix.GetXmMatrix());
       m_InverseViewDirty = false;
     }
 
-    return pData->m_InverseViewMatrix.GetXmMatrix();
+    return pData->m_InverseViewMatrix;
   }
 
   void Camera::set_Projection(float fovy, float aspect, float zNear, float zFar) {
@@ -59,20 +62,20 @@ namespace Kame {
     m_InverseProjectionDirty = true;
   }
 
-  XMMATRIX Camera::get_ProjectionMatrix() const {
+  Matrix4x4 Camera::get_ProjectionMatrix() const {
     if (m_ProjectionDirty) {
       UpdateProjectionMatrix();
     }
 
-    return pData->m_ProjectionMatrix.GetXmMatrix();
+    return pData->m_ProjectionMatrix;
   }
 
-  XMMATRIX Camera::get_InverseProjectionMatrix() const {
+  Matrix4x4 Camera::get_InverseProjectionMatrix() const {
     if (m_InverseProjectionDirty) {
       UpdateInverseProjectionMatrix();
     }
 
-    return pData->m_InverseProjectionMatrix.GetXmMatrix();
+    return pData->m_InverseProjectionMatrix;
   }
 
   void Camera::set_FoV(float fovy) {
@@ -88,33 +91,33 @@ namespace Kame {
   }
 
 
-  void XM_CALLCONV Camera::set_Translation(FXMVECTOR translation) {
+  void XM_CALLCONV Camera::set_Translation(Vector4 translation) {
     pData->m_Translation = translation;
     m_ViewDirty = true;
   }
 
-  XMVECTOR Camera::get_Translation() const {
-    return pData->m_Translation.GetXmVector();
+  Vector4 Camera::get_Translation() const {
+    return pData->m_Translation;
   }
 
-  void Camera::set_Rotation(FXMVECTOR rotation) {
+  void Camera::set_Rotation(Vector4 rotation) {
     pData->m_Rotation = rotation;
   }
 
-  XMVECTOR Camera::get_Rotation() const {
-    return pData->m_Rotation.GetXmVector();
+  Vector4 Camera::get_Rotation() const {
+    return pData->m_Rotation;
   }
 
-  void XM_CALLCONV Camera::Translate(FXMVECTOR translation, Space space) {
+  void XM_CALLCONV Camera::Translate(Vector4 translation, Space space) {
     switch (space) {
     case Space::Local:
     {
-      pData->m_Translation += XMVector3Rotate(translation, pData->m_Rotation.GetXmVector());
+      pData->m_Translation += XMVector3Rotate(translation.GetXmVector(), pData->m_Rotation.GetXmVector());
     }
     break;
     case Space::World:
     {
-      pData->m_Translation += translation;
+      pData->m_Translation += translation.GetXmVector();
     }
     break;
     }
@@ -125,16 +128,16 @@ namespace Kame {
     m_InverseViewDirty = true;
   }
 
-  void Camera::Rotate(FXMVECTOR quaternion) {
-    pData->m_Rotation = XMQuaternionMultiply(pData->m_Rotation.GetXmVector(), quaternion);
+  void Camera::Rotate(Vector4 quaternion) {
+    pData->m_Rotation = XMQuaternionMultiply(pData->m_Rotation.GetXmVector(), quaternion.GetXmVector());
 
     m_ViewDirty = true;
     m_InverseViewDirty = true;
   }
 
   void Camera::UpdateViewMatrix() const {
-    XMMATRIX rotationMatrix = XMMatrixTranspose(XMMatrixRotationQuaternion(pData->m_Rotation.GetXmVector()));
-    XMMATRIX translationMatrix = XMMatrixTranslationFromVector(-(pData->m_Translation.GetXmVector()));
+    Matrix4x4 rotationMatrix = MatrixTranspose(MatrixRotationQuaternion(pData->m_Rotation));
+    Matrix4x4 translationMatrix = XMMatrixTranslationFromVector(-(pData->m_Translation.GetXmVector()));
 
     pData->m_ViewMatrix = translationMatrix * rotationMatrix;
 

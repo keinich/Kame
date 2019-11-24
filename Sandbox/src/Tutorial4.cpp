@@ -16,6 +16,7 @@
 #include "Kame/Window.h"
 
 #include "Kame/Math/Vector4.h"
+#include "Kame/Math/VectorMath.h"
 
 #include <wrl.h>
 using namespace Microsoft::WRL;
@@ -471,7 +472,7 @@ namespace Kame {
     XMVECTOR cameraRotation = XMQuaternionRotationRollPitchYaw(XMConvertToRadians(m_Pitch), XMConvertToRadians(m_Yaw), 0.0f);
     m_Camera.set_Rotation(cameraRotation);
 
-    XMMATRIX viewMatrix = m_Camera.get_ViewMatrix();
+    Kame::Math::Matrix4x4 viewMatrix = m_Camera.get_ViewMatrix();
 
     const int numPointLights = 4;
     const int numSpotLights = 4;
@@ -501,9 +502,9 @@ namespace Kame {
           static_cast<float>(std::cos(lightAnimTime + offset * i))* radius,
           1.0f
       };
-      XMVECTOR positionWS = XMLoadFloat4(&l.PositionWS);
-      XMVECTOR positionVS = XMVector3TransformCoord(positionWS, viewMatrix);
-      XMStoreFloat4(&l.PositionVS, positionVS);
+      Kame::Math::Vector4 positionWS = XMLoadFloat4(&l.PositionWS);
+      Kame::Math::Vector4 positionVS = Kame::Math::Vector3TransformCoord(positionWS, viewMatrix);
+      XMStoreFloat4(&l.PositionVS, positionVS.GetXmVector());
 
       l.Color = XMFLOAT4(LightColors[i]);
       l.Intensity = 1.0f;
@@ -520,14 +521,14 @@ namespace Kame {
           static_cast<float>(std::cos(lightAnimTime + offset * i + offset2))* radius,
           1.0f
       };
-      XMVECTOR positionWS = XMLoadFloat4(&l.PositionWS);
-      XMVECTOR positionVS = XMVector3TransformCoord(positionWS, viewMatrix);
-      XMStoreFloat4(&l.PositionVS, positionVS);
+      Kame::Math::Vector4 positionWS = XMLoadFloat4(&l.PositionWS);
+      Kame::Math::Vector4 positionVS = Kame::Math::Vector3TransformCoord(positionWS, viewMatrix);
+      XMStoreFloat4(&l.PositionVS, positionVS.GetXmVector());
 
-      XMVECTOR directionWS = XMVector3Normalize(XMVectorSetW(XMVectorNegate(positionWS), 0));
-      XMVECTOR directionVS = XMVector3Normalize(XMVector3TransformNormal(directionWS, viewMatrix));
-      XMStoreFloat4(&l.DirectionWS, directionWS);
-      XMStoreFloat4(&l.DirectionVS, directionVS);
+      Kame::Math::Vector4 directionWS = XMVector3Normalize(XMVectorSetW(XMVectorNegate(positionWS.GetXmVector()), 0));
+      Kame::Math::Vector4 directionVS = XMVector3Normalize(XMVector3TransformNormal(directionWS.GetXmVector(), viewMatrix.GetXmMatrix()));
+      XMStoreFloat4(&l.DirectionWS, directionWS.GetXmVector());
+      XMStoreFloat4(&l.DirectionVS, directionVS.GetXmVector());
 
       l.Color = XMFLOAT4(LightColors[numPointLights + i]);
       l.Intensity = 1.0f;
@@ -764,8 +765,8 @@ namespace Kame {
     // Render the skybox.
     {
       // The view matrix should only consider the camera's rotation, but not the translation.
-      auto viewMatrix = XMMatrixTranspose(XMMatrixRotationQuaternion(m_Camera.get_Rotation()));
-      auto projMatrix = m_Camera.get_ProjectionMatrix();
+      auto viewMatrix = XMMatrixTranspose(XMMatrixRotationQuaternion(m_Camera.get_Rotation().GetXmVector()));
+      auto projMatrix = m_Camera.get_ProjectionMatrix().GetXmMatrix();
       auto viewProjMatrix = viewMatrix * projMatrix;
 
       commandList->SetPipelineState(m_SkyboxPipelineState);
@@ -803,8 +804,8 @@ namespace Kame {
     XMMATRIX rotationMatrix = XMMatrixIdentity();
     XMMATRIX scaleMatrix = XMMatrixScaling(4.0f, 4.0f, 4.0f);
     XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
-    XMMATRIX viewMatrix = m_Camera.get_ViewMatrix();
-    XMMATRIX viewProjectionMatrix = viewMatrix * m_Camera.get_ProjectionMatrix();
+    XMMATRIX viewMatrix = m_Camera.get_ViewMatrix().GetXmMatrix();
+    XMMATRIX viewProjectionMatrix = viewMatrix * m_Camera.get_ProjectionMatrix().GetXmMatrix();
 
     Mat matrices;
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
