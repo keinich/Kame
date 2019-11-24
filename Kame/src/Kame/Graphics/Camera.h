@@ -34,6 +34,7 @@
 #include <DirectXMath.h>
 #include "Kame/Math/Vector4.h"
 #include <Kame\Math\Vector4.h>
+#include "Kame/Math/Matrix4x4.h"
 
 namespace Kame {
 
@@ -113,8 +114,8 @@ namespace Kame {
       //DirectX::XMVECTOR m_Rotation;
       Kame::Math::Vector4 m_Rotation;
 
-      DirectX::XMMATRIX m_ViewMatrix, m_InverseViewMatrix;
-      DirectX::XMMATRIX m_ProjectionMatrix, m_InverseProjectionMatrix;
+      Kame::Math::Matrix4x4 m_ViewMatrix, m_InverseViewMatrix;
+      Kame::Math::Matrix4x4 m_ProjectionMatrix, m_InverseProjectionMatrix;
     };
     AlignedData* pData;
 

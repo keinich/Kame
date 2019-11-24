@@ -27,7 +27,7 @@ namespace Kame {
     pData->m_ViewMatrix = XMMatrixLookAtLH(eye, target, up);
 
     pData->m_Translation = eye;
-    pData->m_Rotation = XMQuaternionRotationMatrix(XMMatrixTranspose(pData->m_ViewMatrix));
+    pData->m_Rotation = XMQuaternionRotationMatrix(XMMatrixTranspose(pData->m_ViewMatrix.GetXmMatrix()));
 
     m_InverseViewDirty = true;
     m_ViewDirty = false;
@@ -37,16 +37,16 @@ namespace Kame {
     if (m_ViewDirty) {
       UpdateViewMatrix();
     }
-    return pData->m_ViewMatrix;
+    return pData->m_ViewMatrix.GetXmMatrix();
   }
 
   XMMATRIX Camera::get_InverseViewMatrix() const {
     if (m_InverseViewDirty) {
-      pData->m_InverseViewMatrix = XMMatrixInverse(nullptr, pData->m_ViewMatrix);
+      pData->m_InverseViewMatrix = XMMatrixInverse(nullptr, pData->m_ViewMatrix.GetXmMatrix());
       m_InverseViewDirty = false;
     }
 
-    return pData->m_InverseViewMatrix;
+    return pData->m_InverseViewMatrix.GetXmMatrix();
   }
 
   void Camera::set_Projection(float fovy, float aspect, float zNear, float zFar) {
@@ -64,7 +64,7 @@ namespace Kame {
       UpdateProjectionMatrix();
     }
 
-    return pData->m_ProjectionMatrix;
+    return pData->m_ProjectionMatrix.GetXmMatrix();
   }
 
   XMMATRIX Camera::get_InverseProjectionMatrix() const {
@@ -72,7 +72,7 @@ namespace Kame {
       UpdateInverseProjectionMatrix();
     }
 
-    return pData->m_InverseProjectionMatrix;
+    return pData->m_InverseProjectionMatrix.GetXmMatrix();
   }
 
   void Camera::set_FoV(float fovy) {
@@ -147,7 +147,7 @@ namespace Kame {
       UpdateViewMatrix();
     }
 
-    pData->m_InverseViewMatrix = XMMatrixInverse(nullptr, pData->m_ViewMatrix);
+    pData->m_InverseViewMatrix = XMMatrixInverse(nullptr, pData->m_ViewMatrix.GetXmMatrix());
     m_InverseViewDirty = false;
   }
 
@@ -163,7 +163,7 @@ namespace Kame {
       UpdateProjectionMatrix();
     }
 
-    pData->m_InverseProjectionMatrix = XMMatrixInverse(nullptr, pData->m_ProjectionMatrix);
+    pData->m_InverseProjectionMatrix = XMMatrixInverse(nullptr, pData->m_ProjectionMatrix.GetXmMatrix());
     m_InverseProjectionDirty = false;
   }
 
