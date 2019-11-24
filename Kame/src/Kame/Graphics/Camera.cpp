@@ -26,7 +26,7 @@ using namespace Math;
     _aligned_free(pData);
   }
 
-  void XM_CALLCONV Camera::set_LookAt(Vector4 eye, Vector4 target, Vector4 up) {
+  void CALLCONV Camera::set_LookAt(Vector4 eye, Vector4 target, Vector4 up) {
     pData->m_ViewMatrix = Kame::Math::MatrixLookAtLh(eye, target, up);
 
     pData->m_Translation = eye;
@@ -91,7 +91,7 @@ using namespace Math;
   }
 
 
-  void XM_CALLCONV Camera::set_Translation(Vector4 translation) {
+  void CALLCONV Camera::set_Translation(Vector4 translation) {
     pData->m_Translation = translation;
     m_ViewDirty = true;
   }
@@ -108,7 +108,7 @@ using namespace Math;
     return pData->m_Rotation;
   }
 
-  void XM_CALLCONV Camera::Translate(Vector4 translation, Space space) {
+  void CALLCONV Camera::Translate(Vector4 translation, Space space) {
     switch (space) {
     case Space::Local:
     {
@@ -117,7 +117,7 @@ using namespace Math;
     break;
     case Space::World:
     {
-      pData->m_Translation += translation.GetXmVector();
+      pData->m_Translation += translation;
     }
     break;
     }
@@ -150,12 +150,12 @@ using namespace Math;
       UpdateViewMatrix();
     }
 
-    pData->m_InverseViewMatrix = XMMatrixInverse(nullptr, pData->m_ViewMatrix.GetXmMatrix());
+    pData->m_InverseViewMatrix = MatrixInverse(nullptr, pData->m_ViewMatrix);
     m_InverseViewDirty = false;
   }
 
   void Camera::UpdateProjectionMatrix() const {
-    pData->m_ProjectionMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(m_vFoV), m_AspectRatio, m_zNear, m_zFar);
+    pData->m_ProjectionMatrix = MatrixPerspectiveFovLH(ConvertToRadians(m_vFoV), m_AspectRatio, m_zNear, m_zFar);
 
     m_ProjectionDirty = false;
     m_InverseProjectionDirty = true;
@@ -166,7 +166,7 @@ using namespace Math;
       UpdateProjectionMatrix();
     }
 
-    pData->m_InverseProjectionMatrix = XMMatrixInverse(nullptr, pData->m_ProjectionMatrix.GetXmMatrix());
+    pData->m_InverseProjectionMatrix = MatrixInverse(nullptr, pData->m_ProjectionMatrix);
     m_InverseProjectionDirty = false;
   }
 

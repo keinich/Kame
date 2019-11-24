@@ -4,9 +4,13 @@
 #include "Matrix4x4DX.h"
 #include "Vector4DX.h"
 
+#define CALLCONV XM_CALLCONV
+
 namespace Kame {
 
-  namespace Math {
+  namespace Math {      
+
+
 
     inline Matrix4x4DX XM_CALLCONV MatrixRotationQuaternion(Vector4DX quaternion) {
       return Matrix4x4DX(DirectX::XMMatrixRotationQuaternion(quaternion.GetXmVector()));
@@ -52,6 +56,13 @@ namespace Kame {
     inline Matrix4x4DX  XM_CALLCONV MatrixTranslationFromVector(Vector4DX offset) {
       return Matrix4x4DX(DirectX::XMMatrixTranslationFromVector(offset.GetXmVector()));
     }
+    
+    inline Matrix4x4DX XM_CALLCONV MatrixPerspectiveFovLH(float fovAngleY, float aspectRatio, float nearZ, float farZ) {
+      return Matrix4x4DX(DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, nearZ, farZ));
+    }
+
+    inline XM_CONSTEXPR float ConvertToRadians(float fDegrees) { return fDegrees * (XM_PI / 180.0f); }
+
   }
 
 }
