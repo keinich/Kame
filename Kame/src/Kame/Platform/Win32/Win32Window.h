@@ -2,7 +2,7 @@
 
 //#ifdef KAME_PLATFORM_WIN32
 
-#include "Kame/Window.h"
+#include <Kame/Application/Window.h>
 
 namespace Kame {
 

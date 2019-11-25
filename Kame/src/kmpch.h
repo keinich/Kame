@@ -20,7 +20,7 @@ namespace fs = std::filesystem;
 
 #include <chrono>
 
-#include "Kame/Log.h"
+#include <Kame/Logging/Log.h>
 #include <Kame/Math/MathCommon.h>
 
 //#include "Kame/VectorMath.h"

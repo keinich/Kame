@@ -153,9 +153,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Kame.h" />
-    <ClInclude Include="src\Kame\Application.h" />
+    <ClInclude Include="src\Kame\Application\Application.h" />
     <ClInclude Include="src\Kame\Core.h" />
-    <ClInclude Include="src\Kame\Entrypoint.h" />
+    <ClInclude Include="src\Kame\Application\Entrypoint.h" />
     <ClInclude Include="src\Kame\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Kame\Events\Event.h" />
     <ClInclude Include="src\Kame\Events\EventArgs.h" />
@@ -168,17 +168,16 @@
     <ClInclude Include="src\Kame\Graphics\Mesh.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input\Input.h" />
-    <ClInclude Include="src\Kame\KameApplication.h" />
     <ClInclude Include="src\Kame\Input\KeyCodes.h" />
-    <ClInclude Include="src\Kame\Layer.h" />
-    <ClInclude Include="src\Kame\LayerStack.h" />
-    <ClInclude Include="src\Kame\Log.h" />
+    <ClInclude Include="src\Kame\Application\Layer.h" />
+    <ClInclude Include="src\Kame\Application\LayerStack.h" />
+    <ClInclude Include="src\Kame\Logging\Log.h" />
     <ClInclude Include="src\Kame\Math\MathCommon.h" />
     <ClInclude Include="src\Kame\Math\Matrix4x4.h" />
     <ClInclude Include="src\Kame\Math\Vector4.h" />
     <ClInclude Include="src\Kame\Math\VectorMath.h" />
     <ClInclude Include="src\Kame\Memory\Memory.h" />
-    <ClInclude Include="src\Kame\MouseButtonCodes.h" />
+    <ClInclude Include="src\Kame\Input\MouseButtonCodes.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Buffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ByteAddressBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.h" />
@@ -246,22 +245,20 @@
     <ClInclude Include="src\Kame\Platform\Win32\Win32Window.h" />
     <ClInclude Include="src\Kame\Utility\Hash.h" />
     <ClInclude Include="src\Kame\Utility\ThreadSafeQueue.h" />
-    <ClInclude Include="src\Kame\VectorMath.h" />
-    <ClInclude Include="src\Kame\Window.h" />
+    <ClInclude Include="src\Kame\Application\Window.h" />
     <ClInclude Include="src\kmpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Kame\Application.cpp" />
+    <ClCompile Include="src\Kame\Application\Application.cpp" />
     <ClCompile Include="src\Kame\Graphics\Camera.cpp" />
     <ClCompile Include="src\Kame\Graphics\Light.cpp" />
     <ClCompile Include="src\Kame\Graphics\Material.cpp" />
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Input\Input.cpp" />
-    <ClCompile Include="src\Kame\KameApplication.cpp" />
-    <ClCompile Include="src\Kame\Layer.cpp" />
-    <ClCompile Include="src\Kame\LayerStack.cpp" />
-    <ClCompile Include="src\Kame\Log.cpp" />
+    <ClCompile Include="src\Kame\Application\Layer.cpp" />
+    <ClCompile Include="src\Kame\Application\LayerStack.cpp" />
+    <ClCompile Include="src\Kame\Logging\Log.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Buffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ByteAddressBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ColorBuffer.cpp" />
@@ -314,7 +311,7 @@
     <ClCompile Include="src\Kame\Platform\Win32\Win32Application.cpp" />
     <ClCompile Include="src\Kame\Platform\Win32\Win32Window.cpp" />
     <ClCompile Include="src\Kame\Platform\Win32\Win32Window_old.cpp" />
-    <ClCompile Include="src\Kame\Window.cpp" />
+    <ClCompile Include="src\Kame\Application\Window.cpp" />
     <ClCompile Include="src\kmpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

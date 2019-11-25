@@ -3,7 +3,7 @@
 
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
 
-#include "Kame/Application.h"
+#include "Kame/Application/Application.h"
 #include "Kame/Input/Input.h"
 
 namespace Kame {

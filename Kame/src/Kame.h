@@ -2,16 +2,16 @@
 
 // For use by Kame applications
 
-#include "Kame/KameApplication.h"
-#include "Kame/Layer.h"
-#include "Kame/Log.h"
+#include "Kame/Application/KameApplication.h"
+#include "Kame/Application/Layer.h"
+#include "Kame/Logging/Log.h"
 
-#include "Kame/Input.h"
-#include "Kame/KeyCodes.h"
-#include "Kame/MouseButtonCodes.h"
+#include "Kame/Input/Input.h"
+#include "Kame/Input/KeyCodes.h"
+#include "Kame/Input/MouseButtonCodes.h"
 
 #include "Kame/ImGui/ImGuiLayer.h"
 
 // ---Entry Point --------------------------
-#include "Kame/Entrypoint.h"
+#include "Kame/Application/Entrypoint.h"
 // ---Entry Point --------------------------

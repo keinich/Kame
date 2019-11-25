@@ -1,13 +1,13 @@
 #include "kmpch.h"
 #include "Application.h"
 //#include "Kame/Platform/DirectX12/Graphics/Display.h"
-#include "Kame/Window.h"
-#include "Kame/Platform/Win32/Win32Window.h"
+#include <Kame/Application/Window.h>
+#include <Kame/Platform/Win32/Win32Window.h>
+         
+#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
+#include <Kame/Platform/DirectX12/Graphics/Game.h>
 
-#include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
-#include "Kame/Platform/DirectX12/Graphics/Game.h"
-
-#include "Kame/Input/Input.h"
+#include <Kame/Input/Input.h>
 //#include "Kame/Events/Event.h"
 
 namespace Kame {

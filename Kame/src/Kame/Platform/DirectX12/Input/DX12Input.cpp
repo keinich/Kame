@@ -4,9 +4,6 @@
 
 #include "DX12Input.h"
 
-#include <GLFW/glfw3.h>
-#include <Kame/KameApplication.h>
-
 //namespace Kame {
 //
 //  Input* Input::s_Instance = new DX12Input();

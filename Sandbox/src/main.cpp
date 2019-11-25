@@ -8,10 +8,10 @@
 #include <Shlwapi.h>
 
 #include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
-#include "Kame/Application.h"
+#include <Kame/Application/Application.h>
 #include "Tutorial4.h"
 
-#include "Kame/Log.h"
+#include "Kame/Logging/Log.h"
 
 #include <dxgidebug.h>
 

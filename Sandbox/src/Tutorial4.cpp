@@ -5,15 +5,15 @@
 #include "Kame/Core.h"
 #include "Tutorial4.h"
 
-#include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
-#include "Kame/Application.h"
-#include "Kame/Platform/DirectX12/Graphics/CommandQueue.h"
-#include "Kame/Platform/DirectX12/Graphics/CommandList.h"
-#include "Kame/Platform/DirectX12/Graphics/Helpers.h"
-#include "Kame/Graphics/Light.h"
-#include "Kame/Graphics/Material.h"
-#include "Kame/Platform/DirectX12/Graphics/Display.h"
-#include "Kame/Window.h"
+#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
+#include <Kame/Application/Application.h>
+#include <Kame/Platform/DirectX12/Graphics/CommandQueue.h>
+#include <Kame/Platform/DirectX12/Graphics/CommandList.h>
+#include <Kame/Platform/DirectX12/Graphics/Helpers.h>
+#include <Kame/Graphics/Light.h>
+#include <Kame/Graphics/Material.h>
+#include <Kame/Platform/DirectX12/Graphics/Display.h>
+#include <Kame/Application/Window.h>
 
 #include "Kame/Math/Vector4.h"
 #include "Kame/Math/VectorMath.h"

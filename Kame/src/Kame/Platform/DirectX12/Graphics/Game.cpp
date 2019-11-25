@@ -1,9 +1,9 @@
 #include "kmpch.h"
 
 #include "DX12Core.h"
-#include "Kame/Application.h"
+#include "Kame/Application/Application.h"
 #include "Game.h"
-#include "Kame/Window.h"
+#include "Kame/Application/Window.h"
 
 namespace Kame {
 

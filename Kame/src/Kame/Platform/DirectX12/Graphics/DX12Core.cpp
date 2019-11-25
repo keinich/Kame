@@ -6,7 +6,7 @@
 #include "Game.h"
 #include "DescriptorAllocator.h"
 #include "Display.h"
-#include "Kame/Window.h"
+#include "Kame/Application/Window.h"
 
 namespace Kame {
 
