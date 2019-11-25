@@ -29,7 +29,7 @@ namespace Kame {
   }
 
   void Application::Create() {
-    assert(!_Instance, "Application is already initialized");
+    assert(!_Instance);
     _Instance = new Application();
     _Instance->Initialize();
   }

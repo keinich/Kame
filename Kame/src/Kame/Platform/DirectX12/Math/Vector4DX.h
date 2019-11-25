@@ -31,26 +31,26 @@ namespace Kame {
       //TODO Remove this
       DirectX::XMVECTOR GetXmVector() { return _XmVector; }
 
-      Vector4DX& XM_CALLCONV operator = (DirectX::XMVECTOR& const other) {
+      Vector4DX& XM_CALLCONV operator = (DirectX::XMVECTOR& other) {
         _XmVector = other;
         return *this;
       }
 
-      Vector4DX XM_CALLCONV operator + (DirectX::XMVECTOR& const other) {
+      Vector4DX XM_CALLCONV operator + (DirectX::XMVECTOR& other) {
         return Vector4DX(_XmVector + other);
       }
 
-      Vector4DX XM_CALLCONV operator += (DirectX::XMVECTOR& const other) {
+      Vector4DX XM_CALLCONV operator += (DirectX::XMVECTOR& other) {
         _XmVector += other;
         return *this;
       }
 
-      Vector4DX XM_CALLCONV operator += (Vector4DX& const other) {
+      Vector4DX XM_CALLCONV operator += (Vector4DX& other) {
         _XmVector += other.GetXmVector();
         return *this;
       }
 
-      Vector4DX XM_CALLCONV operator += (DirectX::FXMVECTOR& const other) {
+      Vector4DX XM_CALLCONV operator += (DirectX::FXMVECTOR& other) {
         _XmVector += other;
         return *this;
       }

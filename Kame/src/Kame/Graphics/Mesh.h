@@ -13,7 +13,7 @@ namespace Kame {
 
   };
 
-  class Mesh {
+  class KAME_API Mesh {
 
   public:
     Mesh();

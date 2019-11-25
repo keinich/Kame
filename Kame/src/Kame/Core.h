@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef KAME_PLATFORM_WINDOWS
+#if KAME_DYNAMIC_LINK
 #ifdef KAME_BUILD_DLL
 #define KAME_API __declspec(dllexport)
 #else
 #define KAME_API __declspec(dllimport)
+#endif
+#else
+#define KAME_API 
 #endif
 #else
 #error Kame only supports Windows!

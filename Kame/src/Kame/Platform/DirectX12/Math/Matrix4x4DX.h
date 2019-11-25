@@ -22,7 +22,7 @@ namespace Kame {
         return *this;
       }
 
-      Matrix4x4DX XM_CALLCONV operator * (Matrix4x4DX& const other) {
+      Matrix4x4DX XM_CALLCONV operator * (Matrix4x4DX& other) {
         return Matrix4x4DX(_XmMatrix * other.GetXmMatrix());
       }
 

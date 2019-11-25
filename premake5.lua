@@ -23,8 +23,10 @@ include "Kame/vendor/DirectXTex/DirectXTex"
 
 project "Kame"
   location "Kame"
-  kind "SharedLib"
+  kind "StaticLib"
   language "C++"
+  cppdialect "C++17"
+  staticruntime "on"
 
   targetdir ("bin/" .. outputdir  .. "/%{prj.name}")
   objdir ("bin-int/" .. outputdir  .. "/%{prj.name}")
@@ -57,8 +59,6 @@ project "Kame"
   }
 
   filter "system:windows"
-    cppdialect "C++17"
-    staticruntime "On"
     systemversion "latest"
 
     defines {
@@ -69,24 +69,20 @@ project "Kame"
 	    "KAME_PLATFORM_DIRECTX12"
     }
 
-    postbuildcommands {
-      ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-    }
-
   filter "configurations:Debug"
     defines "KAME_DEBUG"
-    buildoptions "/MDd"
-    symbols "On"
+    runtime "Debug"
+    symbols "on"
 
   filter "configurations:Release"
     defines "KAME_RELEASE"
-    buildoptions "/MD"
-    optimize "On"
+    runtime "Release"
+    optimize "on"
 
   filter "configurations:Dist"
     defines "KAME_DIST"
-    buildoptions "/MD"
-    optimize "On"
+    runtime "Release"
+    optimize "on"
 
   filter { "files:**.hlsl" }
     shadermodel "6.0"
@@ -104,6 +100,8 @@ project "Sandbox"
   location "Sandbox"
   kind "ConsoleApp"
   language "C++"
+  cppdialect "C++17"
+  staticruntime "on"
 
   targetdir ("bin/" .. outputdir  .. "/%{prj.name}")
   objdir ("bin-int/" .. outputdir  .. "/%{prj.name}")
@@ -125,8 +123,6 @@ project "Sandbox"
   }
 
   filter "system:windows"
-    cppdialect "C++17"
-    staticruntime "On"
     systemversion "latest"
 
     defines {
@@ -135,18 +131,18 @@ project "Sandbox"
 
   filter "configurations:Debug"
     defines "KAME_DEBUG"
-    buildoptions "/MDd"
-    symbols "On"
+    runtime "Debug"
+    symbols "on"
 
   filter "configurations:Release"
     defines "KAME_RELEASE"
-    buildoptions "/MD"
-    optimize "On"
+    runtime "Release"
+    optimize "on"
 
   filter "configurations:Dist"
     defines "KAME_DIST"
-    buildoptions "/MD"
-    optimize "On"
+    runtime "Release"
+    optimize "on"
 
   filter { "files:**.hlsl" }
     shadermodel "6.0"

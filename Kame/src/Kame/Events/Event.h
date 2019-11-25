@@ -32,7 +32,7 @@ namespace Kame {
 
   public:
 
-    friend class EventHandle;
+    friend struct EventHandle;
 
     template<typename T>
     using EventHandler = std::function<bool(T&)>;
@@ -50,7 +50,7 @@ namespace Kame {
   template<class T>
   class Event : public EventBase {
 
-    friend class EventHandle;
+    friend struct EventHandle;
 
   public:
 

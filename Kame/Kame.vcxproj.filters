@@ -4,6 +4,9 @@
     <Filter Include="Kame">
       <UniqueIdentifier>{03DB877C-EF11-890D-98FE-6E108414050F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Application">
+      <UniqueIdentifier>{46B3027B-32AC-21CD-5BDE-0652473601D9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\Events">
       <UniqueIdentifier>{87A5FE1F-F35A-7715-7C4F-71ECE8036E19}</UniqueIdentifier>
     </Filter>
@@ -12,6 +15,12 @@
     </Filter>
     <Filter Include="Kame\ImGui">
       <UniqueIdentifier>{6D46B7F1-59FE-F83E-C205-D29AAEDC932F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Input">
+      <UniqueIdentifier>{4281B8F1-2E39-FA3E-9740-D39A8317952F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Logging">
+      <UniqueIdentifier>{990E772A-8571-06CF-2EF7-3E851A39D251}</UniqueIdentifier>
     </Filter>
     <Filter Include="Kame\Math">
       <UniqueIdentifier>{BC99264D-2804-DBC3-7142-8C69DDEBB818}</UniqueIdentifier>
@@ -58,6 +67,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Kame.h" />
+    <ClInclude Include="src\Kame\Application\Application.h">
+      <Filter>Kame\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Application\Entrypoint.h">
+      <Filter>Kame\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Application\Layer.h">
+      <Filter>Kame\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Application\LayerStack.h">
+      <Filter>Kame\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Application\Window.h">
+      <Filter>Kame\Application</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Core.h">
       <Filter>Kame</Filter>
     </ClInclude>
@@ -93,6 +117,18 @@
     </ClInclude>
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h">
       <Filter>Kame\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Input\Input.h">
+      <Filter>Kame\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Input\KeyCodes.h">
+      <Filter>Kame\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Input\MouseButtonCodes.h">
+      <Filter>Kame\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Logging\Log.h">
+      <Filter>Kame\Logging</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Math\MathCommon.h">
       <Filter>Kame\Math</Filter>
@@ -311,35 +347,20 @@
       <Filter>Kame\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\Input\Input.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Input\KeyCodes.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Input\MouseButtonCodes.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Application\Application.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Application\Entrypoint.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Application\Layer.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Application\LayerStack.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Application\Window.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Logging\Log.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Kame\Application\Application.cpp">
+      <Filter>Kame\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Application\Layer.cpp">
+      <Filter>Kame\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Application\LayerStack.cpp">
+      <Filter>Kame\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Application\Window.cpp">
+      <Filter>Kame\Application</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Camera.cpp">
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
@@ -354,6 +375,12 @@
     </ClCompile>
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp">
       <Filter>Kame\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Input\Input.cpp">
+      <Filter>Kame\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Logging\Log.cpp">
+      <Filter>Kame\Logging</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Buffer.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
@@ -506,22 +533,6 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
-    <ClCompile Include="src\Kame\Input\Input.cpp" />
-    <ClCompile Include="src\Kame\Application\Application.cpp">
-      <Filter>Kame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Application\Layer.cpp">
-      <Filter>Kame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Application\LayerStack.cpp">
-      <Filter>Kame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Application\Window.cpp">
-      <Filter>Kame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Logging\Log.cpp">
-      <Filter>Kame</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">
