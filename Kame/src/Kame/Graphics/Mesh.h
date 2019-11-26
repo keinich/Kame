@@ -29,6 +29,7 @@
   *  @brief A mesh class encapsulates the index and vertex buffers for a geometric primitive.
   */
 
+  //TODO make this RenderApi independent
 #include "Kame/Platform/DirectX12/Graphics/CommandList.h"
 #include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
 #include "Kame/Platform/DirectX12/Graphics/IndexBuffer.h"
@@ -66,8 +67,27 @@ namespace Kame {
     static const D3D12_INPUT_ELEMENT_DESC InputElements[InputElementCount];
   };
 
+  // Vertex struct holding position, normal vector, and texture mapping information.
+  struct KAME_API VertexPosition {
+    VertexPosition() {}
+
+    VertexPosition(const DirectX::XMFLOAT3& position)
+      : position(position) {}
+
+    VertexPosition(DirectX::FXMVECTOR position) {
+      XMStoreFloat3(&this->position, position);
+    }
+
+    DirectX::XMFLOAT3 position;
+
+    static const int InputElementCount = 1;
+    static const D3D12_INPUT_ELEMENT_DESC InputElements[InputElementCount];
+  };
+
   using VertexCollection = std::vector<VertexPositionNormalTexture>;
   using IndexCollection = std::vector<uint16_t>;
+
+  using SimpleVertexCollection = std::vector<VertexPosition>;
 
   class KAME_API Mesh {
   public:
@@ -80,6 +100,8 @@ namespace Kame {
     static std::unique_ptr<Mesh> CreateTorus(CommandListDx12& commandList, float diameter = 1, float thickness = 0.333f, size_t tessellation = 32, bool rhcoords = false);
     static std::unique_ptr<Mesh> CreatePlane(CommandListDx12& commandList, float width = 1, float height = 1, bool rhcoords = false);
 
+    static std::unique_ptr<Mesh> CreateDebugCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
+
   protected:
 
   private:
@@ -90,6 +112,7 @@ namespace Kame {
     virtual ~Mesh();
 
     void Initialize(CommandListDx12& commandList, VertexCollection& vertices, IndexCollection& indices, bool rhcoords);
+    void Initialize(CommandListDx12& commandList, SimpleVertexCollection& vertices, IndexCollection& indices, bool rhcoords);
 
     VertexBuffer m_VertexBuffer;
     IndexBuffer m_IndexBuffer;

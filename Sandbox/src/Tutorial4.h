@@ -114,6 +114,8 @@ namespace Kame {
     std::unique_ptr<Mesh> m_TorusMesh;
     std::unique_ptr<Mesh> m_PlaneMesh;
 
+    std::unique_ptr<Mesh> m_DebugCube;
+
     std::unique_ptr<Mesh> m_SkyboxMesh;
 
     Texture m_DefaultTexture;

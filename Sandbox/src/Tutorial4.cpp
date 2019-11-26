@@ -192,6 +192,8 @@ namespace Kame {
     m_ConeMesh = Mesh::CreateCone(*commandList);
     m_TorusMesh = Mesh::CreateTorus(*commandList);
     m_PlaneMesh = Mesh::CreatePlane(*commandList);
+
+    m_DebugCube = Mesh::CreateDebugCube(*commandList);
     // Create an inverted (reverse winding order) cube so the insides are not clipped.
     m_SkyboxMesh = Mesh::CreateCube(*commandList, 1.0f, true);
 
@@ -951,6 +953,11 @@ namespace Kame {
       commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, lightMaterial);
 
       m_SphereMesh->Draw(*commandList);
+
+
+
+
+      //m_DebugCube->Draw(*commandList);
     }
 
     for (const auto& l : m_SpotLights) {
