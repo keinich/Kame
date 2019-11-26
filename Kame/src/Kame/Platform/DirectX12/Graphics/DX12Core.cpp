@@ -101,30 +101,22 @@ namespace Kame {
     ms_FrameCount = 0;
   }
 
-  //void DX12Core::Create(HINSTANCE hInst) {
-  //  if (!gs_pSingelton) {
-  //    gs_pSingelton = new DX12Core();
-  //    gs_pSingelton->Initialize();
-  //  }
-  //}
+  void DX12Core::Create() {
+    assert(!gs_pSingelton);
+    gs_pSingelton = new DX12Core();
+  }
 
   DX12Core& DX12Core::Get() {
-    if (!gs_pSingelton) {
-      gs_pSingelton = new DX12Core();
-    }
     assert(gs_pSingelton);
     return *gs_pSingelton;
   }
 
-  //void DX12Core::Destroy() {
-  //  if (gs_pSingelton) {
-  //    assert(gs_Windows.empty() && gs_WindowByName.empty() &&
-  //      "All windows should be destroyed before destroying the application instance.");
-
-  //    delete gs_pSingelton;
-  //    gs_pSingelton = nullptr;
-  //  }
-  //}
+  void DX12Core::Destroy() {
+    if (gs_pSingelton) {
+      delete gs_pSingelton;
+      gs_pSingelton = nullptr;
+    }
+  }
 
   DX12Core::~DX12Core() {
     Flush();

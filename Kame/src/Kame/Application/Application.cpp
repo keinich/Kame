@@ -29,12 +29,20 @@ namespace Kame {
   }
 
   void Application::Create() {
+
+    // Create Application Instance
     assert(!_Instance);
     _Instance = new Application();
+
+    // Create subsystems
+    DX12Core::Create();
+
+    // Initialize
     _Instance->Initialize();
   }
 
   void Application::Destroy() {
+    DX12Core::Destroy();
     if (_Instance) {
       assert(
         s_Windows.empty() && s_WindowByName.empty() &&
@@ -59,7 +67,12 @@ namespace Kame {
 
   void Application::Initialize() {
 
+    // Initialize Application
     PlatformInitialize();
+
+    // Initialize Subsystems
+
+    //Renderer::Initialize();
     DX12Core::Get().Initialize();
 
   }
