@@ -77,8 +77,8 @@ namespace Kame {
     WaitForFenceValue(m_FenceValue);
   }
 
-  std::shared_ptr<CommandList> CommandQueue::GetCommandList() {
-    std::shared_ptr<CommandList> commandList;
+  std::shared_ptr<CommandListDx12> CommandQueue::GetCommandList() {
+    std::shared_ptr<CommandListDx12> commandList;
 
     // If there is a command list on the queue.
     if (!m_AvailableCommandLists.Empty()) {
@@ -86,7 +86,7 @@ namespace Kame {
     }
     else {
       // Otherwise create a new command list.
-      commandList = std::make_shared<CommandList>(m_CommandListType);
+      commandList = std::make_shared<CommandListDx12>(m_CommandListType);
     }
 
     return commandList;
@@ -94,19 +94,19 @@ namespace Kame {
 
   // Execute a command list.
   // Returns the fence value to wait for for this command list.
-  uint64_t CommandQueue::ExecuteCommandList(std::shared_ptr<CommandList> commandList) {
-    return ExecuteCommandLists(std::vector<std::shared_ptr<CommandList> >({ commandList }));
+  uint64_t CommandQueue::ExecuteCommandList(std::shared_ptr<CommandListDx12> commandList) {
+    return ExecuteCommandLists(std::vector<std::shared_ptr<CommandListDx12> >({ commandList }));
   }
 
-  uint64_t CommandQueue::ExecuteCommandLists(const std::vector<std::shared_ptr<CommandList> >& commandLists) {
+  uint64_t CommandQueue::ExecuteCommandLists(const std::vector<std::shared_ptr<CommandListDx12> >& commandLists) {
     ResourceStateTracker::Lock();
 
     // Command lists that need to put back on the command list queue.
-    std::vector<std::shared_ptr<CommandList> > toBeQueued;
+    std::vector<std::shared_ptr<CommandListDx12> > toBeQueued;
     toBeQueued.reserve(commandLists.size() * 2);        // 2x since each command list will have a pending command list.
 
     // Generate mips command lists.
-    std::vector<std::shared_ptr<CommandList> > generateMipsCommandLists;
+    std::vector<std::shared_ptr<CommandListDx12> > generateMipsCommandLists;
     generateMipsCommandLists.reserve(commandLists.size());
 
     // Command lists that need to be executed.

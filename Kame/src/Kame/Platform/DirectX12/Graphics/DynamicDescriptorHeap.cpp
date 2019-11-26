@@ -121,7 +121,7 @@ namespace Kame {
     return descriptorHeap;
   }
 
-  void DynamicDescriptorHeap::CommitStagedDescriptors(CommandList& commandList, std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc) {
+  void DynamicDescriptorHeap::CommitStagedDescriptors(CommandListDx12& commandList, std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc) {
     // Compute the number of descriptors that need to be copied 
     uint32_t numDescriptorsToCommit = ComputeStaleDescriptorCount();
 
@@ -177,15 +177,15 @@ namespace Kame {
     }
   }
 
-  void DynamicDescriptorHeap::CommitStagedDescriptorsForDraw(CommandList& commandList) {
+  void DynamicDescriptorHeap::CommitStagedDescriptorsForDraw(CommandListDx12& commandList) {
     CommitStagedDescriptors(commandList, &ID3D12GraphicsCommandList::SetGraphicsRootDescriptorTable);
   }
 
-  void DynamicDescriptorHeap::CommitStagedDescriptorsForDispatch(CommandList& commandList) {
+  void DynamicDescriptorHeap::CommitStagedDescriptorsForDispatch(CommandListDx12& commandList) {
     CommitStagedDescriptors(commandList, &ID3D12GraphicsCommandList::SetComputeRootDescriptorTable);
   }
 
-  D3D12_GPU_DESCRIPTOR_HANDLE DynamicDescriptorHeap::CopyDescriptor(CommandList& comandList, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor) {
+  D3D12_GPU_DESCRIPTOR_HANDLE DynamicDescriptorHeap::CopyDescriptor(CommandListDx12& comandList, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor) {
     if (!m_CurrentDescriptorHeap || m_NumFreeHandles < 1) {
       m_CurrentDescriptorHeap = RequestDescriptorHeap();
       m_CurrentCPUDescriptorHandle = m_CurrentDescriptorHeap->GetCPUDescriptorHandleForHeapStart();

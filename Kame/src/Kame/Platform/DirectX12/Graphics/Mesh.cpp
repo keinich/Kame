@@ -23,14 +23,14 @@ namespace Kame {
     // Allocated resources will be cleaned automatically when the pointers go out of scope.
   }
 
-  void Mesh::Draw(CommandList& commandList) {
+  void Mesh::Draw(CommandListDx12& commandList) {
     commandList.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList.SetVertexBuffer(0, m_VertexBuffer);
     commandList.SetIndexBuffer(m_IndexBuffer);
     commandList.DrawIndexed(m_IndexCount);
   }
 
-  std::unique_ptr<Mesh> Mesh::CreateSphere(CommandList& commandList, float diameter, size_t tessellation, bool rhcoords) {
+  std::unique_ptr<Mesh> Mesh::CreateSphere(CommandListDx12& commandList, float diameter, size_t tessellation, bool rhcoords) {
     VertexCollection vertices;
     IndexCollection indices;
 
@@ -95,7 +95,7 @@ namespace Kame {
     return mesh;
   }
 
-  std::unique_ptr<Mesh> Mesh::CreateCube(CommandList& commandList, float size, bool rhcoords) {
+  std::unique_ptr<Mesh> Mesh::CreateCube(CommandListDx12& commandList, float size, bool rhcoords) {
     // A cube has six faces, each one pointing in a different direction.
     const int FaceCount = 6;
 
@@ -216,7 +216,7 @@ namespace Kame {
     }
   }
 
-  std::unique_ptr<Mesh> Mesh::CreateCone(CommandList& commandList, float diameter, float height, size_t tessellation, bool rhcoords) {
+  std::unique_ptr<Mesh> Mesh::CreateCone(CommandListDx12& commandList, float diameter, float height, size_t tessellation, bool rhcoords) {
     VertexCollection vertices;
     IndexCollection indices;
 
@@ -265,7 +265,7 @@ namespace Kame {
     return mesh;
   }
 
-  std::unique_ptr<Mesh> Mesh::CreateTorus(CommandList& commandList, float diameter, float thickness, size_t tessellation, bool rhcoords) {
+  std::unique_ptr<Mesh> Mesh::CreateTorus(CommandListDx12& commandList, float diameter, float thickness, size_t tessellation, bool rhcoords) {
     VertexCollection vertices;
     IndexCollection indices;
 
@@ -325,7 +325,7 @@ namespace Kame {
     return mesh;
   }
 
-  std::unique_ptr<Mesh> Mesh::CreatePlane(CommandList& commandList, float width, float height, bool rhcoords) {
+  std::unique_ptr<Mesh> Mesh::CreatePlane(CommandListDx12& commandList, float width, float height, bool rhcoords) {
     VertexCollection vertices =
     {
         { XMFLOAT3(-0.5f * width, 0.0f,  0.5f * height), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) }, // 0
@@ -359,7 +359,7 @@ namespace Kame {
     }
   }
 
-  void Mesh::Initialize(CommandList& commandList, VertexCollection& vertices, IndexCollection& indices, bool rhcoords) {
+  void Mesh::Initialize(CommandListDx12& commandList, VertexCollection& vertices, IndexCollection& indices, bool rhcoords) {
     if (vertices.size() >= USHRT_MAX)
       throw std::exception("Too many vertices for 16-bit index buffer");
 

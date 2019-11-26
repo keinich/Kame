@@ -88,7 +88,7 @@ namespace Kame {
     ResourceBarrier(CD3DX12_RESOURCE_BARRIER::Aliasing(pResourceBefore, pResourceAfter));
   }
 
-  void ResourceStateTracker::FlushResourceBarriers(CommandList& commandList) {
+  void ResourceStateTracker::FlushResourceBarriers(CommandListDx12& commandList) {
     UINT numBarriers = static_cast<UINT>(m_ResourceBarriers.size());
     if (numBarriers > 0) {
       auto d3d12CommandList = commandList.GetGraphicsCommandList();
@@ -97,7 +97,7 @@ namespace Kame {
     }
   }
 
-  uint32_t ResourceStateTracker::FlushPendingResourceBarriers(CommandList& commandList) {
+  uint32_t ResourceStateTracker::FlushPendingResourceBarriers(CommandListDx12& commandList) {
     assert(ms_IsLocked);
 
     // Resolve the pending resource barriers by checking the global state of the 

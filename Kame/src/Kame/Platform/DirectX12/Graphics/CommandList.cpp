@@ -24,10 +24,10 @@ using namespace DirectX;
 
 namespace Kame {
 
-  std::map<std::wstring, ID3D12Resource* > CommandList::ms_TextureCache;
-  std::mutex CommandList::ms_TextureCacheMutex;
+  std::map<std::wstring, ID3D12Resource* > CommandListDx12::ms_TextureCache;
+  std::mutex CommandListDx12::ms_TextureCacheMutex;
 
-  CommandList::CommandList(D3D12_COMMAND_LIST_TYPE type)
+  CommandListDx12::CommandListDx12(D3D12_COMMAND_LIST_TYPE type)
     : m_d3d12CommandListType(type) {
     auto device = DX12Core::Get().GetDevice();
 
@@ -46,9 +46,9 @@ namespace Kame {
     }
   }
 
-  CommandList::~CommandList() {}
+  CommandListDx12::~CommandListDx12() {}
 
-  void CommandList::TransitionBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource, bool flushBarriers) {
+  void CommandListDx12::TransitionBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource, bool flushBarriers) {
     if (resource) {
       // The "before" state is not important. It will be resolved by the resource state tracker.
       auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(resource.Get(), D3D12_RESOURCE_STATE_COMMON, stateAfter, subresource);
@@ -60,11 +60,11 @@ namespace Kame {
     }
   }
 
-  void CommandList::TransitionBarrier(const Resource& resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource, bool flushBarriers) {
+  void CommandListDx12::TransitionBarrier(const Resource& resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource, bool flushBarriers) {
     TransitionBarrier(resource.GetD3D12Resource(), stateAfter, subresource, flushBarriers);
   }
 
-  void CommandList::UAVBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> resource, bool flushBarriers) {
+  void CommandListDx12::UAVBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> resource, bool flushBarriers) {
     auto barrier = CD3DX12_RESOURCE_BARRIER::UAV(resource.Get());
 
     m_ResourceStateTracker->ResourceBarrier(barrier);
@@ -74,11 +74,11 @@ namespace Kame {
     }
   }
 
-  void CommandList::UAVBarrier(const Resource& resource, bool flushBarriers) {
+  void CommandListDx12::UAVBarrier(const Resource& resource, bool flushBarriers) {
     UAVBarrier(resource.GetD3D12Resource());
   }
 
-  void CommandList::AliasingBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> beforeResource, Microsoft::WRL::ComPtr<ID3D12Resource> afterResource, bool flushBarriers) {
+  void CommandListDx12::AliasingBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> beforeResource, Microsoft::WRL::ComPtr<ID3D12Resource> afterResource, bool flushBarriers) {
     auto barrier = CD3DX12_RESOURCE_BARRIER::Aliasing(beforeResource.Get(), afterResource.Get());
 
     m_ResourceStateTracker->ResourceBarrier(barrier);
@@ -88,15 +88,15 @@ namespace Kame {
     }
   }
 
-  void CommandList::AliasingBarrier(const Resource& beforeResource, const Resource& afterResource, bool flushBarriers) {
+  void CommandListDx12::AliasingBarrier(const Resource& beforeResource, const Resource& afterResource, bool flushBarriers) {
     AliasingBarrier(beforeResource.GetD3D12Resource(), afterResource.GetD3D12Resource());
   }
 
-  void CommandList::FlushResourceBarriers() {
+  void CommandListDx12::FlushResourceBarriers() {
     m_ResourceStateTracker->FlushResourceBarriers(*this);
   }
 
-  void CommandList::CopyResource(Microsoft::WRL::ComPtr<ID3D12Resource> dstRes, Microsoft::WRL::ComPtr<ID3D12Resource> srcRes) {
+  void CommandListDx12::CopyResource(Microsoft::WRL::ComPtr<ID3D12Resource> dstRes, Microsoft::WRL::ComPtr<ID3D12Resource> srcRes) {
     TransitionBarrier(dstRes, D3D12_RESOURCE_STATE_COPY_DEST);
     TransitionBarrier(srcRes, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
@@ -108,11 +108,11 @@ namespace Kame {
     TrackResource(srcRes);
   }
 
-  void CommandList::CopyResource(Resource& dstRes, const Resource& srcRes) {
+  void CommandListDx12::CopyResource(Resource& dstRes, const Resource& srcRes) {
     CopyResource(dstRes.GetD3D12Resource(), srcRes.GetD3D12Resource());
   }
 
-  void CommandList::ResolveSubresource(Resource& dstRes, const Resource& srcRes, uint32_t dstSubresource, uint32_t srcSubresource) {
+  void CommandListDx12::ResolveSubresource(Resource& dstRes, const Resource& srcRes, uint32_t dstSubresource, uint32_t srcSubresource) {
     TransitionBarrier(dstRes, D3D12_RESOURCE_STATE_RESOLVE_DEST, dstSubresource);
     TransitionBarrier(srcRes, D3D12_RESOURCE_STATE_RESOLVE_SOURCE, srcSubresource);
 
@@ -125,7 +125,7 @@ namespace Kame {
   }
 
 
-  void CommandList::CopyBuffer(Buffer& buffer, size_t numElements, size_t elementSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags) {
+  void CommandListDx12::CopyBuffer(Buffer& buffer, size_t numElements, size_t elementSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags) {
     auto device = DX12Core::Get().GetDevice();
 
     size_t bufferSize = numElements * elementSize;
@@ -178,28 +178,28 @@ namespace Kame {
     buffer.CreateViews(numElements, elementSize);
   }
 
-  void CommandList::CopyVertexBuffer(VertexBuffer& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData) {
+  void CommandListDx12::CopyVertexBuffer(VertexBuffer& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData) {
     CopyBuffer(vertexBuffer, numVertices, vertexStride, vertexBufferData);
   }
 
-  void CommandList::CopyIndexBuffer(IndexBuffer& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
+  void CommandListDx12::CopyIndexBuffer(IndexBuffer& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
     size_t indexSizeInBytes = indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4;
     CopyBuffer(indexBuffer, numIndicies, indexSizeInBytes, indexBufferData);
   }
 
-  void CommandList::CopyByteAddressBuffer(ByteAddressBuffer& byteAddressBuffer, size_t bufferSize, const void* bufferData) {
+  void CommandListDx12::CopyByteAddressBuffer(ByteAddressBuffer& byteAddressBuffer, size_t bufferSize, const void* bufferData) {
     CopyBuffer(byteAddressBuffer, 1, bufferSize, bufferData, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
   }
 
-  void CommandList::CopyStructuredBuffer(StructuredBuffer& structuredBuffer, size_t numElements, size_t elementSize, const void* bufferData) {
+  void CommandListDx12::CopyStructuredBuffer(StructuredBuffer& structuredBuffer, size_t numElements, size_t elementSize, const void* bufferData) {
     CopyBuffer(structuredBuffer, numElements, elementSize, bufferData, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
   }
 
-  void CommandList::SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY primitiveTopology) {
+  void CommandListDx12::SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY primitiveTopology) {
     m_d3d12CommandList->IASetPrimitiveTopology(primitiveTopology);
   }
 
-  void CommandList::LoadTextureFromFile(Texture& texture, const std::wstring& fileName, TextureUsage textureUsage) {
+  void CommandListDx12::LoadTextureFromFile(Texture& texture, const std::wstring& fileName, TextureUsage textureUsage) {
     fs::path filePath(fileName);
     if (!fs::exists(filePath)) {
       throw std::exception("File not found.");
@@ -315,7 +315,7 @@ namespace Kame {
     }
   }
 
-  void CommandList::GenerateMips(Texture& texture) {
+  void CommandListDx12::GenerateMips(Texture& texture) {
     if (m_d3d12CommandListType == D3D12_COMMAND_LIST_TYPE_COPY) {
       if (!m_ComputeCommandList) {
         m_ComputeCommandList = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)->GetCommandList();
@@ -441,7 +441,7 @@ namespace Kame {
     }
   }
 
-  void CommandList::GenerateMips_UAV(Texture& texture, DXGI_FORMAT format) {
+  void CommandListDx12::GenerateMips_UAV(Texture& texture, DXGI_FORMAT format) {
     if (!m_GenerateMipsPSO) {
       m_GenerateMipsPSO = std::make_unique<GenerateMipsPSO>();
     }
@@ -526,7 +526,7 @@ namespace Kame {
     }
   }
 
-  void CommandList::PanoToCubemap(Texture& cubemapTexture, const Texture& panoTexture) {
+  void CommandListDx12::PanoToCubemap(Texture& cubemapTexture, const Texture& panoTexture) {
     if (m_d3d12CommandListType == D3D12_COMMAND_LIST_TYPE_COPY) {
       if (!m_ComputeCommandList) {
         m_ComputeCommandList = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)->GetCommandList();
@@ -620,21 +620,21 @@ namespace Kame {
     }
   }
 
-  void CommandList::ClearTexture(const Texture& texture, const float clearColor[4]) {
+  void CommandListDx12::ClearTexture(const Texture& texture, const float clearColor[4]) {
     TransitionBarrier(texture, D3D12_RESOURCE_STATE_RENDER_TARGET);
     m_d3d12CommandList->ClearRenderTargetView(texture.GetRenderTargetView(), clearColor, 0, nullptr);
 
     TrackResource(texture);
   }
 
-  void CommandList::ClearDepthStencilTexture(const Texture& texture, D3D12_CLEAR_FLAGS clearFlags, float depth, uint8_t stencil) {
+  void CommandListDx12::ClearDepthStencilTexture(const Texture& texture, D3D12_CLEAR_FLAGS clearFlags, float depth, uint8_t stencil) {
     TransitionBarrier(texture, D3D12_RESOURCE_STATE_DEPTH_WRITE);
     m_d3d12CommandList->ClearDepthStencilView(texture.GetDepthStencilView(), clearFlags, depth, stencil, 0, nullptr);
 
     TrackResource(texture);
   }
 
-  void CommandList::CopyTextureSubresource(Texture& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData) {
+  void CommandListDx12::CopyTextureSubresource(Texture& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData) {
     auto device = DX12Core::Get().GetDevice();
     auto destinationResource = texture.GetD3D12Resource();
 
@@ -663,7 +663,7 @@ namespace Kame {
     }
   }
 
-  void CommandList::SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, size_t sizeInBytes, const void* bufferData) {
+  void CommandListDx12::SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, size_t sizeInBytes, const void* bufferData) {
     // Constant buffers must be 256-byte aligned.
     auto heapAllococation = m_UploadBuffer->Allocate(sizeInBytes, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
     memcpy(heapAllococation.CPU, bufferData, sizeInBytes);
@@ -671,15 +671,15 @@ namespace Kame {
     m_d3d12CommandList->SetGraphicsRootConstantBufferView(rootParameterIndex, heapAllococation.GPU);
   }
 
-  void CommandList::SetGraphics32BitConstants(uint32_t rootParameterIndex, uint32_t numConstants, const void* constants) {
+  void CommandListDx12::SetGraphics32BitConstants(uint32_t rootParameterIndex, uint32_t numConstants, const void* constants) {
     m_d3d12CommandList->SetGraphicsRoot32BitConstants(rootParameterIndex, numConstants, constants, 0);
   }
 
-  void CommandList::SetCompute32BitConstants(uint32_t rootParameterIndex, uint32_t numConstants, const void* constants) {
+  void CommandListDx12::SetCompute32BitConstants(uint32_t rootParameterIndex, uint32_t numConstants, const void* constants) {
     m_d3d12CommandList->SetComputeRoot32BitConstants(rootParameterIndex, numConstants, constants, 0);
   }
 
-  void CommandList::SetVertexBuffer(uint32_t slot, const VertexBuffer& vertexBuffer) {
+  void CommandListDx12::SetVertexBuffer(uint32_t slot, const VertexBuffer& vertexBuffer) {
     TransitionBarrier(vertexBuffer, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 
     auto vertexBufferView = vertexBuffer.GetVertexBufferView();
@@ -689,7 +689,7 @@ namespace Kame {
     TrackResource(vertexBuffer);
   }
 
-  void CommandList::SetDynamicVertexBuffer(uint32_t slot, size_t numVertices, size_t vertexSize, const void* vertexBufferData) {
+  void CommandListDx12::SetDynamicVertexBuffer(uint32_t slot, size_t numVertices, size_t vertexSize, const void* vertexBufferData) {
     size_t bufferSize = numVertices * vertexSize;
 
     auto heapAllocation = m_UploadBuffer->Allocate(bufferSize, vertexSize);
@@ -703,7 +703,7 @@ namespace Kame {
     m_d3d12CommandList->IASetVertexBuffers(slot, 1, &vertexBufferView);
   }
 
-  void CommandList::SetIndexBuffer(const IndexBuffer& indexBuffer) {
+  void CommandListDx12::SetIndexBuffer(const IndexBuffer& indexBuffer) {
     TransitionBarrier(indexBuffer, D3D12_RESOURCE_STATE_INDEX_BUFFER);
 
     auto indexBufferView = indexBuffer.GetIndexBufferView();
@@ -713,7 +713,7 @@ namespace Kame {
     TrackResource(indexBuffer);
   }
 
-  void CommandList::SetDynamicIndexBuffer(size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
+  void CommandListDx12::SetDynamicIndexBuffer(size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
     size_t indexSizeInBytes = indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4;
     size_t bufferSize = numIndicies * indexSizeInBytes;
 
@@ -728,7 +728,7 @@ namespace Kame {
     m_d3d12CommandList->IASetIndexBuffer(&indexBufferView);
   }
 
-  void CommandList::SetGraphicsDynamicStructuredBuffer(uint32_t slot, size_t numElements, size_t elementSize, const void* bufferData) {
+  void CommandListDx12::SetGraphicsDynamicStructuredBuffer(uint32_t slot, size_t numElements, size_t elementSize, const void* bufferData) {
     size_t bufferSize = numElements * elementSize;
 
     auto heapAllocation = m_UploadBuffer->Allocate(bufferSize, elementSize);
@@ -737,33 +737,33 @@ namespace Kame {
 
     m_d3d12CommandList->SetGraphicsRootShaderResourceView(slot, heapAllocation.GPU);
   }
-  void CommandList::SetViewport(const D3D12_VIEWPORT& viewport) {
+  void CommandListDx12::SetViewport(const D3D12_VIEWPORT& viewport) {
     SetViewports({ viewport });
   }
 
-  void CommandList::SetViewports(const std::vector<D3D12_VIEWPORT>& viewports) {
+  void CommandListDx12::SetViewports(const std::vector<D3D12_VIEWPORT>& viewports) {
     assert(viewports.size() < D3D12_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE);
     m_d3d12CommandList->RSSetViewports(static_cast<UINT>(viewports.size()),
       viewports.data());
   }
 
-  void CommandList::SetScissorRect(const D3D12_RECT& scissorRect) {
+  void CommandListDx12::SetScissorRect(const D3D12_RECT& scissorRect) {
     SetScissorRects({ scissorRect });
   }
 
-  void CommandList::SetScissorRects(const std::vector<D3D12_RECT>& scissorRects) {
+  void CommandListDx12::SetScissorRects(const std::vector<D3D12_RECT>& scissorRects) {
     assert(scissorRects.size() < D3D12_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE);
     m_d3d12CommandList->RSSetScissorRects(static_cast<UINT>(scissorRects.size()),
       scissorRects.data());
   }
 
-  void CommandList::SetPipelineState(Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState) {
+  void CommandListDx12::SetPipelineState(Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState) {
     m_d3d12CommandList->SetPipelineState(pipelineState.Get());
 
     TrackResource(pipelineState);
   }
 
-  void CommandList::SetGraphicsRootSignature(const RootSignature& rootSignature) {
+  void CommandListDx12::SetGraphicsRootSignature(const RootSignature& rootSignature) {
     auto d3d12RootSignature = rootSignature.GetRootSignature().Get();
     if (m_RootSignature != d3d12RootSignature) {
       m_RootSignature = d3d12RootSignature;
@@ -778,7 +778,7 @@ namespace Kame {
     }
   }
 
-  void CommandList::SetComputeRootSignature(const RootSignature& rootSignature) {
+  void CommandListDx12::SetComputeRootSignature(const RootSignature& rootSignature) {
     auto d3d12RootSignature = rootSignature.GetRootSignature().Get();
     if (m_RootSignature != d3d12RootSignature) {
       m_RootSignature = d3d12RootSignature;
@@ -793,7 +793,7 @@ namespace Kame {
     }
   }
 
-  void CommandList::SetShaderResourceView(uint32_t rootParameterIndex,
+  void CommandListDx12::SetShaderResourceView(uint32_t rootParameterIndex,
     uint32_t descriptorOffset,
     const Resource& resource,
     D3D12_RESOURCE_STATES stateAfter,
@@ -814,7 +814,7 @@ namespace Kame {
     TrackResource(resource);
   }
 
-  void CommandList::SetUnorderedAccessView(uint32_t rootParameterIndex,
+  void CommandListDx12::SetUnorderedAccessView(uint32_t rootParameterIndex,
     uint32_t descrptorOffset,
     const Resource& resource,
     D3D12_RESOURCE_STATES stateAfter,
@@ -836,7 +836,7 @@ namespace Kame {
   }
 
 
-  void CommandList::SetRenderTarget(const RenderTarget& renderTarget) {
+  void CommandListDx12::SetRenderTarget(const RenderTarget& renderTarget) {
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> renderTargetDescriptors;
     renderTargetDescriptors.reserve(AttachmentPoint::NumAttachmentPoints);
 
@@ -870,7 +870,7 @@ namespace Kame {
       renderTargetDescriptors.data(), FALSE, pDSV);
   }
 
-  void CommandList::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t startVertex, uint32_t startInstance) {
+  void CommandListDx12::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t startVertex, uint32_t startInstance) {
     FlushResourceBarriers();
 
     for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
@@ -880,7 +880,7 @@ namespace Kame {
     m_d3d12CommandList->DrawInstanced(vertexCount, instanceCount, startVertex, startInstance);
   }
 
-  void CommandList::DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t startIndex, int32_t baseVertex, uint32_t startInstance) {
+  void CommandListDx12::DrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t startIndex, int32_t baseVertex, uint32_t startInstance) {
     FlushResourceBarriers();
 
     for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
@@ -890,7 +890,7 @@ namespace Kame {
     m_d3d12CommandList->DrawIndexedInstanced(indexCount, instanceCount, startIndex, baseVertex, startInstance);
   }
 
-  void CommandList::Dispatch(uint32_t numGroupsX, uint32_t numGroupsY, uint32_t numGroupsZ) {
+  void CommandListDx12::Dispatch(uint32_t numGroupsX, uint32_t numGroupsY, uint32_t numGroupsZ) {
     FlushResourceBarriers();
 
     for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
@@ -900,7 +900,7 @@ namespace Kame {
     m_d3d12CommandList->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
   }
 
-  bool CommandList::Close(CommandList& pendingCommandList) {
+  bool CommandListDx12::Close(CommandListDx12& pendingCommandList) {
     // Flush any remaining barriers.
     FlushResourceBarriers();
 
@@ -914,13 +914,13 @@ namespace Kame {
     return numPendingBarriers > 0;
   }
 
-  void CommandList::Close() {
+  void CommandListDx12::Close() {
     FlushResourceBarriers();
     m_d3d12CommandList->Close();
   }
 
 
-  void CommandList::Reset() {
+  void CommandListDx12::Reset() {
     ThrowIfFailed(m_d3d12CommandAllocator->Reset());
     ThrowIfFailed(m_d3d12CommandList->Reset(m_d3d12CommandAllocator.Get(), nullptr));
 
@@ -938,26 +938,26 @@ namespace Kame {
     m_ComputeCommandList = nullptr;
   }
 
-  void CommandList::TrackResource(Microsoft::WRL::ComPtr<ID3D12Object> object) {
+  void CommandListDx12::TrackResource(Microsoft::WRL::ComPtr<ID3D12Object> object) {
     m_TrackedObjects.push_back(object);
   }
 
-  void CommandList::TrackResource(const Resource& res) {
+  void CommandListDx12::TrackResource(const Resource& res) {
     TrackResource(res.GetD3D12Resource());
   }
 
-  void CommandList::ReleaseTrackedObjects() {
+  void CommandListDx12::ReleaseTrackedObjects() {
     m_TrackedObjects.clear();
   }
 
-  void CommandList::SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, ID3D12DescriptorHeap* heap) {
+  void CommandListDx12::SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, ID3D12DescriptorHeap* heap) {
     if (m_DescriptorHeaps[heapType] != heap) {
       m_DescriptorHeaps[heapType] = heap;
       BindDescriptorHeaps();
     }
   }
 
-  void CommandList::BindDescriptorHeaps() {
+  void CommandListDx12::BindDescriptorHeaps() {
     UINT numDescriptorHeaps = 0;
     ID3D12DescriptorHeap* descriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {};
 

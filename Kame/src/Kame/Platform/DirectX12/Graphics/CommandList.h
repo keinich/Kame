@@ -33,6 +33,8 @@
   */
 #include "TextureUsage.h"
 
+#include <Kame/Graphics/RenderApi/CommandList1.h>
+
 #include <d3d12.h>
 #include <wrl.h>
 
@@ -59,10 +61,10 @@ namespace Kame {
   class UploadBuffer;
   class VertexBuffer;
 
-  class KAME_API CommandList {
+  class KAME_API CommandListDx12 : public CommandList1 {
   public:
-    CommandList(D3D12_COMMAND_LIST_TYPE type);
-    virtual ~CommandList();
+    CommandListDx12(D3D12_COMMAND_LIST_TYPE type);
+    virtual ~CommandListDx12();
 
     /**
      * Get the type of command list.
@@ -354,7 +356,7 @@ namespace Kame {
       * @return true if there are any pending resource barriers that need to be
       * processed.
       */
-    bool Close(CommandList& pendingCommandList);
+    bool Close(CommandListDx12& pendingCommandList);
     // Just close the command list. This is useful for pending command lists.
     void Close();
 
@@ -375,7 +377,7 @@ namespace Kame {
      */
     void SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, ID3D12DescriptorHeap* heap);
 
-    std::shared_ptr<CommandList> GetGenerateMipsCommandList() const {
+    std::shared_ptr<CommandListDx12> GetGenerateMipsCommandList() const {
       return m_ComputeCommandList;
     }
 
@@ -404,7 +406,7 @@ namespace Kame {
     // Mips can't be generated on copy queues but must be generated on compute or
     // direct queues. In this case, a Compute command list is generated and executed 
     // after the copy queue is finished uploading the first sub resource.
-    std::shared_ptr<CommandList> m_ComputeCommandList;
+    std::shared_ptr<CommandListDx12> m_ComputeCommandList;
 
     // Keep track of the currently bound root signatures to minimize root
     // signature changes.

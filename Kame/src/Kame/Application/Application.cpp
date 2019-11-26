@@ -36,7 +36,7 @@ namespace Kame {
     _Instance = new Application();
 
     // Create subsystems
-    Renderer::Create();
+    GraphicsCore::Create();
     //DX12Core::Create();
 
     // Initialize
@@ -45,7 +45,7 @@ namespace Kame {
 
   void Application::Destroy() {
     //DX12Core::Destroy();
-    Renderer::Destroy();
+    GraphicsCore::Destroy();
     if (_Instance) {
       assert(
         s_Windows.empty() && s_WindowByName.empty() &&
@@ -77,7 +77,7 @@ namespace Kame {
 
     //Renderer::Initialize();
     //DX12Core::Get().Initialize();
-    Renderer::Initialize();
+    GraphicsCore::Initialize();
 
   }
 
@@ -143,7 +143,7 @@ namespace Kame {
     PlatformMainLoop(returnCode);
 
     // Flush any commands in the commands queues before quiting.
-    Renderer::Flush();
+    GraphicsCore::Flush();
     //DX12Core::Get().Flush();
 
     game->UnloadContent();

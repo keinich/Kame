@@ -72,13 +72,13 @@ namespace Kame {
   class KAME_API Mesh {
   public:
 
-    void Draw(CommandList& commandList);
+    void Draw(CommandListDx12& commandList);
 
-    static std::unique_ptr<Mesh> CreateCube(CommandList& commandList, float size = 1, bool rhcoords = false);
-    static std::unique_ptr<Mesh> CreateSphere(CommandList& commandList, float diameter = 1, size_t tessellation = 16, bool rhcoords = false);
-    static std::unique_ptr<Mesh> CreateCone(CommandList& commandList, float diameter = 1, float height = 1, size_t tessellation = 32, bool rhcoords = false);
-    static std::unique_ptr<Mesh> CreateTorus(CommandList& commandList, float diameter = 1, float thickness = 0.333f, size_t tessellation = 32, bool rhcoords = false);
-    static std::unique_ptr<Mesh> CreatePlane(CommandList& commandList, float width = 1, float height = 1, bool rhcoords = false);
+    static std::unique_ptr<Mesh> CreateCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
+    static std::unique_ptr<Mesh> CreateSphere(CommandListDx12& commandList, float diameter = 1, size_t tessellation = 16, bool rhcoords = false);
+    static std::unique_ptr<Mesh> CreateCone(CommandListDx12& commandList, float diameter = 1, float height = 1, size_t tessellation = 32, bool rhcoords = false);
+    static std::unique_ptr<Mesh> CreateTorus(CommandListDx12& commandList, float diameter = 1, float thickness = 0.333f, size_t tessellation = 32, bool rhcoords = false);
+    static std::unique_ptr<Mesh> CreatePlane(CommandListDx12& commandList, float width = 1, float height = 1, bool rhcoords = false);
 
   protected:
 
@@ -89,7 +89,7 @@ namespace Kame {
     Mesh(const Mesh& copy) = delete;
     virtual ~Mesh();
 
-    void Initialize(CommandList& commandList, VertexCollection& vertices, IndexCollection& indices, bool rhcoords);
+    void Initialize(CommandListDx12& commandList, VertexCollection& vertices, IndexCollection& indices, bool rhcoords);
 
     VertexBuffer m_VertexBuffer;
     IndexBuffer m_IndexBuffer;

@@ -157,6 +157,7 @@
     <ClInclude Include="src\Kame\Graphics\Light.h" />
     <ClInclude Include="src\Kame\Graphics\Material.h" />
     <ClInclude Include="src\Kame\Graphics\Mesh.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\CommandList1.h" />
     <ClInclude Include="src\Kame\Graphics\Renderer.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input\Input.h" />

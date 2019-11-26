@@ -9,10 +9,10 @@
 
 namespace Kame {
 
-  RenderApi Renderer::s_RenderApi = RenderApi::DirectX12;
-  Renderer* Renderer::s_Instance = nullptr;
+  RenderApi GraphicsCore::s_RenderApi = RenderApi::DirectX12;
+  GraphicsCore* GraphicsCore::s_Instance = nullptr;
 
-  void Kame::Renderer::Create() {
+  void Kame::GraphicsCore::Create() {
 
     switch (s_RenderApi) {
     case RenderApi::DirectX12:
@@ -24,7 +24,7 @@ namespace Kame {
 
   }
 
-  void Kame::Renderer::Initialize() {
+  void Kame::GraphicsCore::Initialize() {
 
     switch (s_RenderApi) {
     case RenderApi::DirectX12:
@@ -35,7 +35,7 @@ namespace Kame {
 
   }
 
-  void Kame::Renderer::Destroy() {
+  void Kame::GraphicsCore::Destroy() {
 
     switch (s_RenderApi) {
     case RenderApi::DirectX12:
@@ -46,7 +46,7 @@ namespace Kame {
 
   }
 
-  void Renderer::Flush() {
+  void GraphicsCore::Flush() {
   
     switch (s_RenderApi) {
     case RenderApi::DirectX12:
@@ -57,14 +57,20 @@ namespace Kame {
 
   }
 
-  std::shared_ptr<CommandList> Renderer::BeginCommandList(D3D12_COMMAND_LIST_TYPE type) {
-    auto commandQueue = DX12Core::Get().GetCommandQueue(type);
+  std::shared_ptr<CommandListDx12> GraphicsCore::BeginCommandListDx(D3D12_COMMAND_LIST_TYPE type) {
+    auto commandQueue = s_Instance->GetCommandQueue(type);
     auto commandList = commandQueue->GetCommandList();
     return commandList;
   }
 
-  void Renderer::ExecuteCommandList(std::shared_ptr<CommandList> commandList) {
-    DX12Core::Get().GetCommandQueue(commandList->GetCommandListType())->ExecuteCommandList(commandList);
+  CommandList1* GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE type) {
+    auto commandQueue = s_Instance->GetCommandQueue(type);
+    auto commandList = commandQueue->GetCommandList();
+    return commandList.get();
+  }
+
+  void GraphicsCore::ExecuteCommandList(std::shared_ptr<CommandListDx12> commandList) {
+    s_Instance->GetCommandQueue(commandList->GetCommandListType())->ExecuteCommandList(commandList);
   }
 
 }

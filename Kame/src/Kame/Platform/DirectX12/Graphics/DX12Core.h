@@ -47,7 +47,7 @@ namespace Kame {
   class Game;
   class Display;
 
-  class KAME_API DX12Core : public Renderer {
+  class KAME_API DX12Core : public GraphicsCore {
 
     friend class Application;
 
@@ -130,7 +130,7 @@ namespace Kame {
      * - D3D12_COMMAND_LIST_TYPE_COMPUTE: Can be used for dispatch or copy commands.
      * - D3D12_COMMAND_LIST_TYPE_COPY   : Can be used for copy commands.
      */
-    std::shared_ptr<CommandQueue> GetCommandQueue(D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT) const;
+    virtual std::shared_ptr<CommandQueue> GetCommandQueue(D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT) const override;
 
     /**
      * Flush all command queues.

@@ -4,7 +4,9 @@
 
 namespace Kame {
 
-  class CommandList;
+  class CommandListDx12;
+  class CommandList1;
+  class CommandQueue;
 
   enum class RenderApi {
 
@@ -13,7 +15,7 @@ namespace Kame {
 
   };
 
-  class Renderer {
+  class GraphicsCore { //TODO Rename to GraphicsCore or GraphicsEngine
 
   public:
 
@@ -23,14 +25,20 @@ namespace Kame {
 
     static void Flush();
 
-    static std::shared_ptr<CommandList> BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
-    static void ExecuteCommandList(std::shared_ptr<CommandList> commandList);
-  protected:
+    static std::shared_ptr<CommandListDx12> BeginCommandListDx(D3D12_COMMAND_LIST_TYPE type);
+    static CommandList1* BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
+    static void ExecuteCommandList(std::shared_ptr<CommandListDx12> commandList);
 
-    static Renderer* s_Instance;
+  protected: // Methods
+
+    virtual std::shared_ptr<CommandQueue> GetCommandQueue(D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT) const = 0;
+
+  protected: // Fields
+
 
   private:
 
+    static GraphicsCore* s_Instance;
     static RenderApi s_RenderApi;
 
   };

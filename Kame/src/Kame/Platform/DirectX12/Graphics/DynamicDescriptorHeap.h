@@ -44,7 +44,7 @@
 
 namespace Kame {
 
-  class CommandList;
+  class CommandListDx12;
   class RootSignature;
 
   class KAME_API DynamicDescriptorHeap {
@@ -73,9 +73,9 @@ namespace Kame {
      * Since the DynamicDescriptorHeap can't know which function will be used, it must
      * be passed as an argument to the function.
      */
-    void CommitStagedDescriptors(CommandList& commandList, std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc);
-    void CommitStagedDescriptorsForDraw(CommandList& commandList);
-    void CommitStagedDescriptorsForDispatch(CommandList& commandList);
+    void CommitStagedDescriptors(CommandListDx12& commandList, std::function<void(ID3D12GraphicsCommandList*, UINT, D3D12_GPU_DESCRIPTOR_HANDLE)> setFunc);
+    void CommitStagedDescriptorsForDraw(CommandListDx12& commandList);
+    void CommitStagedDescriptorsForDispatch(CommandListDx12& commandList);
 
     /**
      * Copies a single CPU visible descriptor to a GPU visible descriptor heap.
@@ -92,7 +92,7 @@ namespace Kame {
      *
      * @return The GPU visible descriptor.
      */
-    D3D12_GPU_DESCRIPTOR_HANDLE CopyDescriptor(CommandList& comandList, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor);
+    D3D12_GPU_DESCRIPTOR_HANDLE CopyDescriptor(CommandListDx12& comandList, D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor);
 
     /**
      * Parse the root signature to determine which root parameters contain

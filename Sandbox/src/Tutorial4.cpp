@@ -756,7 +756,8 @@ namespace Kame {
     //auto commandQueue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
     //auto commandList = commandQueue->GetCommandList();
 
-    std::shared_ptr<CommandList> commandList = Renderer::BeginCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    std::shared_ptr<CommandListDx12> commandList = GraphicsCore::BeginCommandListDx(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    //CommandList1* commandList = Renderer::BeginCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
     // Clear the render targets.
     {
@@ -972,7 +973,7 @@ namespace Kame {
     commandList->Draw(3);
 
     //commandQueue->ExecuteCommandList(commandList);
-    Renderer::ExecuteCommandList(commandList);
+    GraphicsCore::ExecuteCommandList(commandList);
     //commandList->Execute();
 
     // Render GUI.
