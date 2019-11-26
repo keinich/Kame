@@ -2,9 +2,12 @@
 #include "Application.h"
 //#include "Kame/Platform/DirectX12/Graphics/Display.h"
 #include <Kame/Application/Window.h>
+//#ifdef KAME_PLATFORM_WIN32
 #include <Kame/Platform/Win32/Win32Window.h>
-         
-#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
+//#endif
+
+#include <Kame/Graphics/Renderer.h>
+//#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include <Kame/Platform/DirectX12/Graphics/Game.h>
 
 #include <Kame/Input/Input.h>
@@ -35,14 +38,16 @@ namespace Kame {
     _Instance = new Application();
 
     // Create subsystems
-    DX12Core::Create();
+    Renderer::Create();
+    //DX12Core::Create();
 
     // Initialize
     _Instance->Initialize();
   }
 
   void Application::Destroy() {
-    DX12Core::Destroy();
+    //DX12Core::Destroy();
+    Renderer::Destroy();
     if (_Instance) {
       assert(
         s_Windows.empty() && s_WindowByName.empty() &&
@@ -60,7 +65,7 @@ namespace Kame {
   }
 
   Application::~Application() {
-    DX12Core::Get().Flush();
+    //DX12Core::Get().Flush();
     delete _Input;
     _Input = nullptr;
   }
@@ -73,7 +78,8 @@ namespace Kame {
     // Initialize Subsystems
 
     //Renderer::Initialize();
-    DX12Core::Get().Initialize();
+    //DX12Core::Get().Initialize();
+    Renderer::Initialize();
 
   }
 
@@ -139,7 +145,8 @@ namespace Kame {
     PlatformMainLoop(returnCode);
 
     // Flush any commands in the commands queues before quiting.
-    DX12Core::Get().Flush();
+    Renderer::Flush();
+    //DX12Core::Get().Flush();
 
     game->UnloadContent();
     game->Destroy();

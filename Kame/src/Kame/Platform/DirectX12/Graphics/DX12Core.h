@@ -67,6 +67,9 @@ namespace Kame {
     */
     static DX12Core& Get();
 
+    // Initialize the application instance.
+    void Initialize();
+
     /**
      * Check to see if VSync-off is supported.
      */
@@ -157,8 +160,6 @@ namespace Kame {
     // Destroy the application instance and all windows associated with this application.
     virtual ~DX12Core();
 
-    // Initialize the application instance.
-    void Initialize();
 
     Microsoft::WRL::ComPtr<IDXGIAdapter4> GetAdapter(bool bUseWarp);
     Microsoft::WRL::ComPtr<ID3D12Device2> CreateDevice(Microsoft::WRL::ComPtr<IDXGIAdapter4> adapter);

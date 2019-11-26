@@ -157,6 +157,7 @@
     <ClInclude Include="src\Kame\Graphics\Light.h" />
     <ClInclude Include="src\Kame\Graphics\Material.h" />
     <ClInclude Include="src\Kame\Graphics\Mesh.h" />
+    <ClInclude Include="src\Kame\Graphics\Renderer.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input\Input.h" />
     <ClInclude Include="src\Kame\Input\KeyCodes.h" />
@@ -245,6 +246,7 @@
     <ClCompile Include="src\Kame\Graphics\Light.cpp" />
     <ClCompile Include="src\Kame\Graphics\Material.cpp" />
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Input\Input.cpp" />
     <ClCompile Include="src\Kame\Logging\Log.cpp" />
