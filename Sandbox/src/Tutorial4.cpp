@@ -20,6 +20,8 @@
 
 #include "Kame/Input/Input.h"
 
+#include "Kame/Graphics/RenderApi/VertexLayout.h"
+
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
@@ -414,6 +416,14 @@ namespace Kame {
 
     auto fenceValue = commandQueue->ExecuteCommandList(commandList);
     commandQueue->WaitForFenceValue(fenceValue);
+
+
+    //VertexLayout layout = {
+    //  {ShaderDataType::Float3, "Position"},
+    //  {ShaderDataType::Float4, "Color"},
+    //  {ShaderDataType::Float3, "Normal"}
+    //};
+
 
     return true;
   }

@@ -349,6 +349,7 @@
     <ClInclude Include="src\kmpch.h" />
     <ClInclude Include="src\Kame\Graphics\Renderer.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\CommandList1.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\VertexLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
