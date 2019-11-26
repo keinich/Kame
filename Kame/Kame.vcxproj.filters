@@ -112,9 +112,6 @@
     <ClInclude Include="src\Kame\Graphics\Material.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Graphics\Mesh.h">
-      <Filter>Kame\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h">
       <Filter>Kame\ImGui</Filter>
     </ClInclude>
@@ -235,9 +232,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Mesh.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
@@ -350,6 +344,11 @@
     <ClInclude Include="src\Kame\Graphics\Renderer.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\CommandList1.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexLayout.h" />
+    <ClInclude Include="src\Kame\Graphics\Mesh.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer1.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -371,9 +370,6 @@
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Material.cpp">
-      <Filter>Kame\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Graphics\Mesh.cpp">
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp">
@@ -460,9 +456,6 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Mesh.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
@@ -537,6 +530,9 @@
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
     <ClCompile Include="src\Kame\Graphics\Renderer.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Mesh.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">
