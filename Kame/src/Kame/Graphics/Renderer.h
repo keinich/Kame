@@ -1,6 +1,10 @@
 #pragma once
 
+
+
 namespace Kame {
+
+  class CommandList;
 
   enum class RenderApi {
 
@@ -18,6 +22,12 @@ namespace Kame {
     static void Destroy();
 
     static void Flush();
+
+    static std::shared_ptr<CommandList> BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
+    static void ExecuteCommandList(std::shared_ptr<CommandList> commandList);
+  protected:
+
+    static Renderer* s_Instance;
 
   private:
 

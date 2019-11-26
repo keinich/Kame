@@ -18,8 +18,6 @@ namespace Kame {
   static Application* _Instance = nullptr;
   static WindowNameMap s_WindowByName;
 
-
-
   //using WindowMap = std::map< KAME_NATIVE_WINDOW, WindowPtr >;
   using WindowMap = std::map< KAME_NATIVE_WINDOW, std::shared_ptr<Win32Window> >;
   static WindowMap s_Windows;

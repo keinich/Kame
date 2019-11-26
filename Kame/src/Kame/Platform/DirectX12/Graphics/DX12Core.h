@@ -31,6 +31,7 @@
   */
 
 #include "DescriptorAllocation.h"
+#include "Kame/Graphics/Renderer.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -46,7 +47,7 @@ namespace Kame {
   class Game;
   class Display;
 
-  class KAME_API DX12Core {
+  class KAME_API DX12Core : public Renderer {
 
     friend class Application;
 
