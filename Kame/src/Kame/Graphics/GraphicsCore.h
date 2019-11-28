@@ -29,12 +29,13 @@ namespace Kame {
     static CommandList1* BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
     static void ExecuteCommandList(std::shared_ptr<CommandListDx12> commandList);
 
+    static inline RenderApi GetApi() { return s_RenderApi; }
+
   protected: // Methods
 
     virtual std::shared_ptr<CommandQueue> GetCommandQueue(D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT) const = 0;
 
   protected: // Fields
-
 
   private:
 

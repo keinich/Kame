@@ -1,5 +1,5 @@
 #include "kmpch.h"
-#include "Renderer.h"
+#include "GraphicsCore.h"
 
 #include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 

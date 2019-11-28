@@ -31,7 +31,7 @@
   */
 
 #include "DescriptorAllocation.h"
-#include "Kame/Graphics/Renderer.h"
+#include "Kame/Graphics/GraphicsCore.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>

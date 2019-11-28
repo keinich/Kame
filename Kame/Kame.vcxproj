@@ -160,7 +160,7 @@
     <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer1.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer1.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexLayout.h" />
-    <ClInclude Include="src\Kame\Graphics\Renderer.h" />
+    <ClInclude Include="src\Kame\Graphics\GraphicsCore.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input\Input.h" />
     <ClInclude Include="src\Kame\Input\KeyCodes.h" />
@@ -248,7 +248,7 @@
     <ClCompile Include="src\Kame\Graphics\Camera.cpp" />
     <ClCompile Include="src\Kame\Graphics\Light.cpp" />
     <ClCompile Include="src\Kame\Graphics\Material.cpp" />
-    <ClCompile Include="src\Kame\Graphics\Renderer.cpp" />
+    <ClCompile Include="src\Kame\Graphics\GraphicsCore.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Input\Input.cpp" />
     <ClCompile Include="src\Kame\Logging\Log.cpp" />

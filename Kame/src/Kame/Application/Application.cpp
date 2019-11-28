@@ -6,7 +6,7 @@
 #include <Kame/Platform/Win32/Win32Window.h>
 //#endif
 
-#include <Kame/Graphics/Renderer.h>
+#include <Kame/Graphics/GraphicsCore.h>
 //#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include <Kame/Platform/DirectX12/Graphics/Game.h>
 
