@@ -349,6 +349,8 @@
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer1.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer1.h" />
     <ClInclude Include="src\Kame\Graphics\GraphicsCore.h" />
+    <ClInclude Include="src\Kame\Graphics\Renderer3D.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\Texture1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
