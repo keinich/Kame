@@ -1,6 +1,6 @@
 #include "kmpch.h"
 
-#include "Texture.h"
+#include "TextureDx12.h"
 
 #include "DX12Core.h"
 #include "Helpers.h"
@@ -8,11 +8,11 @@
 
 namespace Kame {
 
-  Texture::Texture(TextureUsage textureUsage, const std::wstring& name)
+  TextureDx12::TextureDx12(TextureUsage textureUsage, const std::wstring& name)
     : Resource(name)
     , m_TextureUsage(textureUsage) {}
 
-  Texture::Texture(const D3D12_RESOURCE_DESC& resourceDesc,
+  TextureDx12::TextureDx12(const D3D12_RESOURCE_DESC& resourceDesc,
     const D3D12_CLEAR_VALUE* clearValue,
     TextureUsage textureUsage,
     const std::wstring& name)
@@ -21,7 +21,7 @@ namespace Kame {
     CreateViews();
   }
 
-  Texture::Texture(Microsoft::WRL::ComPtr<ID3D12Resource> resource,
+  TextureDx12::TextureDx12(Microsoft::WRL::ComPtr<ID3D12Resource> resource,
     TextureUsage textureUsage,
     const std::wstring& name)
     : Resource(resource, name)
@@ -29,24 +29,24 @@ namespace Kame {
     CreateViews();
   }
 
-  Texture::Texture(const Texture& copy)
+  TextureDx12::TextureDx12(const TextureDx12& copy)
     : Resource(copy) {
     CreateViews();
   }
 
-  Texture::Texture(Texture&& copy)
+  TextureDx12::TextureDx12(TextureDx12&& copy)
     : Resource(copy) {
     CreateViews();
   }
 
-  Texture& Texture::operator=(const Texture& other) {
+  TextureDx12& TextureDx12::operator=(const TextureDx12& other) {
     Resource::operator=(other);
 
     CreateViews();
 
     return *this;
   }
-  Texture& Texture::operator=(Texture&& other) {
+  TextureDx12& TextureDx12::operator=(TextureDx12&& other) {
     Resource::operator=(other);
 
     CreateViews();
@@ -54,9 +54,9 @@ namespace Kame {
     return *this;
   }
 
-  Texture::~Texture() {}
+  TextureDx12::~TextureDx12() {}
 
-  void Texture::Resize(uint32_t width, uint32_t height, uint32_t depthOrArraySize) {
+  void TextureDx12::Resize(uint32_t width, uint32_t height, uint32_t depthOrArraySize) {
     // Resource can't be resized if it was never created in the first place.
     if (m_d3d12Resource) {
       ResourceStateTracker::RemoveGlobalResourceState(m_d3d12Resource.Get());
@@ -132,7 +132,7 @@ namespace Kame {
     return uavDesc;
   }
 
-  void Texture::CreateViews() {
+  void TextureDx12::CreateViews() {
     if (m_d3d12Resource) {
       auto& app = DX12Core::Get();
       auto device = app.GetDevice();
@@ -159,7 +159,7 @@ namespace Kame {
     m_UnorderedAccessViews.clear();
   }
 
-  DescriptorAllocation Texture::CreateShaderResourceView(const D3D12_SHADER_RESOURCE_VIEW_DESC* srvDesc) const {
+  DescriptorAllocation TextureDx12::CreateShaderResourceView(const D3D12_SHADER_RESOURCE_VIEW_DESC* srvDesc) const {
     auto& app = DX12Core::Get();
     auto device = app.GetDevice();
     auto srv = app.AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -169,7 +169,7 @@ namespace Kame {
     return srv;
   }
 
-  DescriptorAllocation Texture::CreateUnorderedAccessView(const D3D12_UNORDERED_ACCESS_VIEW_DESC* uavDesc) const {
+  DescriptorAllocation TextureDx12::CreateUnorderedAccessView(const D3D12_UNORDERED_ACCESS_VIEW_DESC* uavDesc) const {
     auto& app = DX12Core::Get();
     auto device = app.GetDevice();
     auto uav = app.AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -180,7 +180,7 @@ namespace Kame {
   }
 
 
-  D3D12_CPU_DESCRIPTOR_HANDLE Texture::GetShaderResourceView(const D3D12_SHADER_RESOURCE_VIEW_DESC* srvDesc) const {
+  D3D12_CPU_DESCRIPTOR_HANDLE TextureDx12::GetShaderResourceView(const D3D12_SHADER_RESOURCE_VIEW_DESC* srvDesc) const {
     std::size_t hash = 0;
     if (srvDesc) {
       hash = std::hash<D3D12_SHADER_RESOURCE_VIEW_DESC>{}(*srvDesc);
@@ -197,7 +197,7 @@ namespace Kame {
     return iter->second.GetDescriptorHandle();
   }
 
-  D3D12_CPU_DESCRIPTOR_HANDLE Texture::GetUnorderedAccessView(const D3D12_UNORDERED_ACCESS_VIEW_DESC* uavDesc) const {
+  D3D12_CPU_DESCRIPTOR_HANDLE TextureDx12::GetUnorderedAccessView(const D3D12_UNORDERED_ACCESS_VIEW_DESC* uavDesc) const {
     std::size_t hash = 0;
     if (uavDesc) {
       hash = std::hash<D3D12_UNORDERED_ACCESS_VIEW_DESC>{}(*uavDesc);
@@ -214,15 +214,15 @@ namespace Kame {
     return iter->second.GetDescriptorHandle();
   }
 
-  D3D12_CPU_DESCRIPTOR_HANDLE Texture::GetRenderTargetView() const {
+  D3D12_CPU_DESCRIPTOR_HANDLE TextureDx12::GetRenderTargetView() const {
     return m_RenderTargetView.GetDescriptorHandle();
   }
 
-  D3D12_CPU_DESCRIPTOR_HANDLE Texture::GetDepthStencilView() const {
+  D3D12_CPU_DESCRIPTOR_HANDLE TextureDx12::GetDepthStencilView() const {
     return m_DepthStencilView.GetDescriptorHandle();
   }
 
-  bool Texture::IsUAVCompatibleFormat(DXGI_FORMAT format) {
+  bool TextureDx12::IsUAVCompatibleFormat(DXGI_FORMAT format) {
     switch (format) {
     case DXGI_FORMAT_R32G32B32A32_FLOAT:
     case DXGI_FORMAT_R32G32B32A32_UINT:
@@ -248,7 +248,7 @@ namespace Kame {
     }
   }
 
-  bool Texture::IsSRGBFormat(DXGI_FORMAT format) {
+  bool TextureDx12::IsSRGBFormat(DXGI_FORMAT format) {
     switch (format) {
     case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
     case DXGI_FORMAT_BC1_UNORM_SRGB:
@@ -263,7 +263,7 @@ namespace Kame {
     }
   }
 
-  bool Texture::IsBGRFormat(DXGI_FORMAT format) {
+  bool TextureDx12::IsBGRFormat(DXGI_FORMAT format) {
     switch (format) {
     case DXGI_FORMAT_B8G8R8A8_UNORM:
     case DXGI_FORMAT_B8G8R8X8_UNORM:
@@ -278,7 +278,7 @@ namespace Kame {
 
   }
 
-  bool Texture::IsDepthFormat(DXGI_FORMAT format) {
+  bool TextureDx12::IsDepthFormat(DXGI_FORMAT format) {
     switch (format) {
     case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
     case DXGI_FORMAT_D32_FLOAT:
@@ -290,7 +290,7 @@ namespace Kame {
     }
   }
 
-  DXGI_FORMAT Texture::GetTypelessFormat(DXGI_FORMAT format) {
+  DXGI_FORMAT TextureDx12::GetTypelessFormat(DXGI_FORMAT format) {
     DXGI_FORMAT typelessFormat = format;
 
     switch (format) {
@@ -401,7 +401,7 @@ namespace Kame {
     return typelessFormat;
   }
 
-  DXGI_FORMAT Texture::GetUAVCompatableFormat(DXGI_FORMAT format) {
+  DXGI_FORMAT TextureDx12::GetUAVCompatableFormat(DXGI_FORMAT format) {
     DXGI_FORMAT uavFormat = format;
 
     switch (format) {

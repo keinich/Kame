@@ -2,9 +2,7 @@
 
 namespace Kame {
 
-  class Texture1 {
-
-
+  class Texture {
 
   };
 

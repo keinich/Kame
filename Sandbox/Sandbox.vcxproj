@@ -185,9 +185,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Kame\Kame.vcxproj">
       <Project>{03DB877C-EF11-890D-98FE-6E108414050F}</Project>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

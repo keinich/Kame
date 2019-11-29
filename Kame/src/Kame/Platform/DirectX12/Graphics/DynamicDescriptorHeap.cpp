@@ -3,7 +3,7 @@
 #include "DynamicDescriptorHeap.h"
 
 #include "DX12Core.h"
-#include "CommandList.h"
+#include "CommandListDx12.h"
 #include "RootSignature.h"
 
 namespace Kame {

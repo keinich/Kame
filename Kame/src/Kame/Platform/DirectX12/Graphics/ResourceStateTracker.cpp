@@ -2,7 +2,7 @@
 
 #include "ResourceStateTracker.h"
 
-#include "CommandList.h"
+#include "CommandListDx12.h"
 #include "Resource.h"
 
 namespace Kame {

@@ -10,7 +10,7 @@ namespace Kame {
 
   // Attach a texture to the render target.
   // The texture will be copied into the texture array.
-  void RenderTarget::AttachTexture(AttachmentPoint attachmentPoint, const Texture& texture) {
+  void RenderTarget::AttachTexture(AttachmentPoint attachmentPoint, const TextureDx12& texture) {
     m_Textures[attachmentPoint] = texture;
 
     if (texture.GetD3D12Resource()) {
@@ -20,8 +20,12 @@ namespace Kame {
     }
   }
 
-  const Texture& RenderTarget::GetTexture(AttachmentPoint attachmentPoint) const {
+  const TextureDx12& RenderTarget::GetTexture(AttachmentPoint attachmentPoint) const {
     return m_Textures[attachmentPoint];
+  }
+
+  const Texture* RenderTarget::GetTextureBase(AttachmentPoint attachmentPoint) const {
+    return &m_Textures[attachmentPoint];
   }
 
   // Resize all of the textures associated with the render target.
@@ -53,7 +57,7 @@ namespace Kame {
     UINT height = 0;
 
     for (int i = AttachmentPoint::Color0; i <= AttachmentPoint::Color7; ++i) {
-      const Texture& texture = m_Textures[i];
+      const TextureDx12& texture = m_Textures[i];
       if (texture.IsValid()) {
         auto desc = texture.GetD3D12ResourceDesc();
         width = std::max(width, desc.Width);
@@ -76,7 +80,7 @@ namespace Kame {
   // Get a list of the textures attached to the render target.
   // This method is primarily used by the CommandList when binding the
   // render target to the output merger stage of the rendering pipeline.
-  const std::vector<Texture>& RenderTarget::GetTextures() const {
+  const std::vector<TextureDx12>& RenderTarget::GetTextures() const {
     return m_Textures;
   }
 
@@ -85,7 +89,7 @@ namespace Kame {
 
 
     for (int i = AttachmentPoint::Color0; i <= AttachmentPoint::Color7; ++i) {
-      const Texture& texture = m_Textures[i];
+      const TextureDx12& texture = m_Textures[i];
       if (texture.IsValid()) {
         rtvFormats.RTFormats[rtvFormats.NumRenderTargets++] = texture.GetD3D12ResourceDesc().Format;
       }
@@ -96,7 +100,7 @@ namespace Kame {
 
   DXGI_FORMAT RenderTarget::GetDepthStencilFormat() const {
     DXGI_FORMAT dsvFormat = DXGI_FORMAT_UNKNOWN;
-    const Texture& depthStencilTexture = m_Textures[AttachmentPoint::DepthStencil];
+    const TextureDx12& depthStencilTexture = m_Textures[AttachmentPoint::DepthStencil];
     if (depthStencilTexture.IsValid()) {
       dsvFormat = depthStencilTexture.GetD3D12ResourceDesc().Format;
     }

@@ -4,7 +4,7 @@
 #include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 
 //TODO Remove this:
-#include <Kame/Platform/DirectX12/Graphics/CommandList.h>
+#include <Kame/Platform/DirectX12/Graphics/CommandListDx12.h>
 #include <Kame/Platform/DirectX12/Graphics/CommandQueue.h>
 
 namespace Kame {
@@ -63,7 +63,7 @@ namespace Kame {
     return commandList;
   }
 
-  CommandList1* GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE type) {
+  CommandList* GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE type) {
     auto commandQueue = s_Instance->GetCommandQueue(type);
     auto commandList = commandQueue->GetCommandList();
     return commandList.get();

@@ -8,7 +8,7 @@
 #include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include <Kame/Application/Application.h>
 #include <Kame/Platform/DirectX12/Graphics/CommandQueue.h>
-#include <Kame/Platform/DirectX12/Graphics/CommandList.h>
+#include <Kame/Platform/DirectX12/Graphics/CommandListDx12.h>
 #include <Kame/Platform/DirectX12/Graphics/Helpers.h>
 #include <Kame/Graphics/Light.h>
 #include <Kame/Graphics/Material.h>
@@ -211,7 +211,7 @@ namespace Kame {
     cubemapDesc.DepthOrArraySize = 6;
     cubemapDesc.MipLevels = 0;
 
-    m_GraceCathedralCubemap = Texture(cubemapDesc, nullptr, TextureUsage::Albedo, L"Grace Cathedral Cubemap");
+    m_GraceCathedralCubemap = TextureDx12(cubemapDesc, nullptr, TextureUsage::Albedo, L"Grace Cathedral Cubemap");
     // Convert the 2D panorama to a 3D cubemap.
     commandList->PanoToCubemap(m_GraceCathedralCubemap, m_GraceCathedralTexture);
 
@@ -230,7 +230,7 @@ namespace Kame {
     colorClearValue.Color[2] = 0.9f;
     colorClearValue.Color[3] = 1.0f;
 
-    Texture HDRTexture = Texture(colorDesc, &colorClearValue,
+    TextureDx12 HDRTexture = TextureDx12(colorDesc, &colorClearValue,
       TextureUsage::RenderTarget,
       L"HDR Texture");
 
@@ -242,7 +242,7 @@ namespace Kame {
     depthClearValue.Format = depthDesc.Format;
     depthClearValue.DepthStencil = { 1.0f, 0 };
 
-    Texture depthTexture = Texture(depthDesc, &depthClearValue,
+    TextureDx12 depthTexture = TextureDx12(depthDesc, &depthClearValue,
       TextureUsage::Depth,
       L"Depth Render Target");
 
@@ -769,13 +769,14 @@ namespace Kame {
     //auto commandList = commandQueue->GetCommandList();
 
     std::shared_ptr<CommandListDx12> commandList = GraphicsCore::BeginCommandListDx(D3D12_COMMAND_LIST_TYPE_DIRECT);
-    //CommandList1* commandList = Renderer::BeginCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    //CommandList* commandListBase = GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    CommandList* commandListBase = static_cast<CommandList*>(commandList.get());
 
     // Clear the render targets.
     {
       FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
 
-      commandList->ClearTexture(m_HDRRenderTarget.GetTexture(AttachmentPoint::Color0), clearColor);
+      commandListBase->ClearTexture(m_HDRRenderTarget.GetTextureBase(AttachmentPoint::Color0), clearColor);
       commandList->ClearDepthStencilTexture(m_HDRRenderTarget.GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
     }
 

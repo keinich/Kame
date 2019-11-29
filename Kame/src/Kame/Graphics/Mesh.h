@@ -30,7 +30,7 @@
   */
 
   //TODO make this RenderApi independent
-#include "Kame/Platform/DirectX12/Graphics/CommandList.h"
+#include "Kame/Platform/DirectX12/Graphics/CommandListDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
 #include "Kame/Platform/DirectX12/Graphics/IndexBuffer.h"
 
@@ -90,6 +90,9 @@ namespace Kame {
   using SimpleVertexCollection = std::vector<VertexPosition>;
 
   class KAME_API Mesh {
+
+    friend class MeshManager;
+
   public:
 
     void Draw(CommandListDx12& commandList);

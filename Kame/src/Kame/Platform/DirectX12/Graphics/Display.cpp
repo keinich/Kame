@@ -4,12 +4,12 @@
 
 #include "DX12Core.h"
 #include "CommandQueue.h"
-#include "CommandList.h"
+#include "CommandListDx12.h"
 #include "Game.h"
 #include "GUI.h"
 #include "RenderTarget.h"
 #include "ResourceStateTracker.h"
-#include "Texture.h"
+#include "TextureDx12.h"
 
 namespace Kame {
 
@@ -70,7 +70,7 @@ namespace Kame {
       DX12Core::Get().Flush();
 
       // Release all references to back buffer textures.
-      m_RenderTarget.AttachTexture(Color0, Texture());
+      m_RenderTarget.AttachTexture(Color0, TextureDx12());
       for (int i = 0; i < BufferCount; ++i) {
         ResourceStateTracker::RemoveGlobalResourceState(m_BackBufferTextures[i].GetD3D12Resource().Get());
         m_BackBufferTextures[i].Reset();
@@ -152,7 +152,7 @@ namespace Kame {
     return m_RenderTarget;
   }
 
-  UINT Display::Present(const Texture& texture) {
+  UINT Display::Present(const TextureDx12& texture) {
     auto commandQueue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
     auto commandList = commandQueue->GetCommandList();
 

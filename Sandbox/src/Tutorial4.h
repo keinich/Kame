@@ -39,7 +39,7 @@
 #include "Kame/Graphics/Mesh.h"
 #include "Kame/Platform/DirectX12/Graphics/RenderTarget.h"
 #include "Kame/Platform/DirectX12/Graphics/RootSignature.h"
-#include "Kame/Platform/DirectX12/Graphics/Texture.h"
+#include "Kame/Platform/DirectX12/Graphics/TextureDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
 
 #include "Kame/Math/Vector4.h"
@@ -118,12 +118,12 @@ namespace Kame {
 
     std::unique_ptr<Mesh> m_SkyboxMesh;
 
-    Texture m_DefaultTexture;
-    Texture m_DirectXTexture;
-    Texture m_EarthTexture;
-    Texture m_MonaLisaTexture;
-    Texture m_GraceCathedralTexture;
-    Texture m_GraceCathedralCubemap;
+    TextureDx12 m_DefaultTexture;
+    TextureDx12 m_DirectXTexture;
+    TextureDx12 m_EarthTexture;
+    TextureDx12 m_MonaLisaTexture;
+    TextureDx12 m_GraceCathedralTexture;
+    TextureDx12 m_GraceCathedralCubemap;
 
     // HDR Render target
     RenderTarget m_HDRRenderTarget;

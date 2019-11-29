@@ -33,7 +33,7 @@
   */
 #include "TextureUsage.h"
 
-#include <Kame/Graphics/RenderApi/CommandList1.h>
+#include <Kame/Graphics/RenderApi/CommandList.h>
 
 #include <d3d12.h>
 #include <wrl.h>
@@ -57,11 +57,11 @@ namespace Kame {
   class ResourceStateTracker;
   class StructuredBuffer;
   class RootSignature;
-  class Texture;
+  class TextureDx12;
   class UploadBuffer;
   class VertexBuffer;
 
-  class KAME_API CommandListDx12 : public CommandList1 {
+  class KAME_API CommandListDx12 : public CommandList {
   public:
     CommandListDx12(D3D12_COMMAND_LIST_TYPE type);
     virtual ~CommandListDx12();
@@ -176,34 +176,35 @@ namespace Kame {
     /**
      * Load a texture by a filename.
      */
-    void LoadTextureFromFile(Texture& texture, const std::wstring& fileName, TextureUsage textureUsage = TextureUsage::Albedo);
+    void LoadTextureFromFile(TextureDx12& texture, const std::wstring& fileName, TextureUsage textureUsage = TextureUsage::Albedo);
 
     /**
      * Clear a texture.
      */
-    void ClearTexture(const Texture& texture, const float clearColor[4]);
+    void ClearTexture(const TextureDx12& texture, const float clearColor[4]);
+    virtual void ClearTexture(const Texture* texture, const float clearColor[4]) override;
 
     /**
      * Clear depth/stencil texture.
      */
-    void ClearDepthStencilTexture(const Texture& texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0);
+    void ClearDepthStencilTexture(const TextureDx12& texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0);
 
     /**
      * Generate mips for the texture.
      * The first subresource is used to generate the mip chain.
      * Mips are automatically generated for textures loaded from files.
      */
-    void GenerateMips(Texture& texture);
+    void GenerateMips(TextureDx12& texture);
 
     /**
      * Generate a cubemap texture from a panoramic (equirectangular) texture.
      */
-    void PanoToCubemap(Texture& cubemap, const Texture& pano);
+    void PanoToCubemap(TextureDx12& cubemap, const TextureDx12& pano);
 
     /**
      * Copy subresource data to a texture.
      */
-    void CopyTextureSubresource(Texture& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData);
+    void CopyTextureSubresource(TextureDx12& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData);
 
     /**
      * Set a dynamic constant buffer data to an inline descriptor in the root
@@ -388,7 +389,7 @@ namespace Kame {
     void TrackResource(const Resource& res);
 
     // Generate mips for UAV compatible textures.
-    void GenerateMips_UAV(Texture& texture, DXGI_FORMAT format);
+    void GenerateMips_UAV(TextureDx12& texture, DXGI_FORMAT format);
 
     // Copy the contents of a CPU buffer to a GPU buffer (possibly replacing the previous buffer contents).
     void CopyBuffer(Buffer& buffer, size_t numElements, size_t elementSize, const void* bufferData, D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE);

@@ -5,7 +5,7 @@
 namespace Kame {
 
   class CommandListDx12;
-  class CommandList1;
+  class CommandList;
   class CommandQueue;
 
   enum class RenderApi {
@@ -26,7 +26,7 @@ namespace Kame {
     static void Flush();
 
     static std::shared_ptr<CommandListDx12> BeginCommandListDx(D3D12_COMMAND_LIST_TYPE type);
-    static CommandList1* BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
+    static CommandList* BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
     static void ExecuteCommandList(std::shared_ptr<CommandListDx12> commandList);
 
     static inline RenderApi GetApi() { return s_RenderApi; }

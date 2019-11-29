@@ -3,7 +3,7 @@
 #include "CommandQueue.h"
 
 #include "DX12Core.h"
-#include "CommandList.h"
+#include "CommandListDx12.h"
 #include "ResourceStateTracker.h"
 
 namespace Kame {

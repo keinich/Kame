@@ -39,7 +39,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "Texture.h"
+#include "TextureDx12.h"
 
 namespace Kame {
 
@@ -71,8 +71,9 @@ namespace Kame {
 
     // Attach a texture to the render target.
     // The texture will be copied into the texture array.
-    void AttachTexture(AttachmentPoint attachmentPoint, const Texture& texture);
-    const Texture& GetTexture(AttachmentPoint attachmentPoint) const;
+    void AttachTexture(AttachmentPoint attachmentPoint, const TextureDx12& texture);
+    const TextureDx12& GetTexture(AttachmentPoint attachmentPoint) const;
+    const Texture* GetTextureBase(AttachmentPoint attachmentPoint) const;
 
     // Resize all of the textures associated with the render target.
     void Resize(DirectX::XMUINT2 size);
@@ -90,7 +91,7 @@ namespace Kame {
     // Get a list of the textures attached to the render target.
     // This method is primarily used by the CommandList when binding the
     // render target to the output merger stage of the rendering pipeline.
-    const std::vector<Texture>& GetTextures() const;
+    const std::vector<TextureDx12>& GetTextures() const;
 
     // Get the render target formats of the textures currently 
     // attached to this render target object.
@@ -102,7 +103,7 @@ namespace Kame {
 
   private:
 
-    std::vector<Texture> m_Textures;
+    std::vector<TextureDx12> m_Textures;
     DirectX::XMUINT2 m_Size;
   };
 

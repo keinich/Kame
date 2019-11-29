@@ -1,6 +1,6 @@
 #include "kmpch.h"
 
-#include "CommandList.h"
+#include "CommandListDx12.h"
 
 #include "DX12Core.h"
 #include "ByteAddressBuffer.h"
@@ -15,10 +15,13 @@
 #include "ResourceStateTracker.h"
 #include "RootSignature.h"
 #include "StructuredBuffer.h"
-#include "Texture.h"
+#include "TextureDx12.h"
 #include "UploadBuffer.h"
 #include "VertexBuffer.h"
 #include "DirectXTex.h"
+
+#include "Kame/Utility/Casting.h"
+#include "Kame/Graphics/RenderApi/Texture.h"
 
 using namespace DirectX;
 
@@ -199,7 +202,7 @@ namespace Kame {
     m_d3d12CommandList->IASetPrimitiveTopology(primitiveTopology);
   }
 
-  void CommandListDx12::LoadTextureFromFile(Texture& texture, const std::wstring& fileName, TextureUsage textureUsage) {
+  void CommandListDx12::LoadTextureFromFile(TextureDx12& texture, const std::wstring& fileName, TextureUsage textureUsage) {
     fs::path filePath(fileName);
     if (!fs::exists(filePath)) {
       throw std::exception("File not found.");
@@ -315,7 +318,7 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::GenerateMips(Texture& texture) {
+  void CommandListDx12::GenerateMips(TextureDx12& texture) {
     if (m_d3d12CommandListType == D3D12_COMMAND_LIST_TYPE_COPY) {
       if (!m_ComputeCommandList) {
         m_ComputeCommandList = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)->GetCommandList();
@@ -363,7 +366,7 @@ namespace Kame {
       // Describe a UAV compatible resource that is used to perform
       // mipmapping of the original texture.
       auto uavDesc = aliasDesc;   // The flags for the UAV description must match that of the alias description.
-      uavDesc.Format = Texture::GetUAVCompatableFormat(resourceDesc.Format);
+      uavDesc.Format = TextureDx12::GetUAVCompatableFormat(resourceDesc.Format);
 
       D3D12_RESOURCE_DESC resourceDescs[] = {
           aliasDesc,
@@ -432,7 +435,7 @@ namespace Kame {
     }
 
     // Generate mips with the UAV compatible resource.
-    GenerateMips_UAV(Texture(uavResource, texture.GetTextureUsage()), resourceDesc.Format);
+    GenerateMips_UAV(TextureDx12(uavResource, texture.GetTextureUsage()), resourceDesc.Format);
 
     if (aliasResource) {
       AliasingBarrier(uavResource, aliasResource);
@@ -441,7 +444,7 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::GenerateMips_UAV(Texture& texture, DXGI_FORMAT format) {
+  void CommandListDx12::GenerateMips_UAV(TextureDx12& texture, DXGI_FORMAT format) {
     if (!m_GenerateMipsPSO) {
       m_GenerateMipsPSO = std::make_unique<GenerateMipsPSO>();
     }
@@ -450,7 +453,7 @@ namespace Kame {
     SetComputeRootSignature(m_GenerateMipsPSO->GetRootSignature());
 
     GenerateMipsCB generateMipsCB;
-    generateMipsCB.IsSRGB = Texture::IsSRGBFormat(format);
+    generateMipsCB.IsSRGB = TextureDx12::IsSRGBFormat(format);
 
     auto resource = texture.GetD3D12Resource();
     auto resourceDesc = resource->GetDesc();
@@ -526,7 +529,7 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::PanoToCubemap(Texture& cubemapTexture, const Texture& panoTexture) {
+  void CommandListDx12::PanoToCubemap(TextureDx12& cubemapTexture, const TextureDx12& panoTexture) {
     if (m_d3d12CommandListType == D3D12_COMMAND_LIST_TYPE_COPY) {
       if (!m_ComputeCommandList) {
         m_ComputeCommandList = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)->GetCommandList();
@@ -547,13 +550,13 @@ namespace Kame {
     CD3DX12_RESOURCE_DESC cubemapDesc(cubemapResource->GetDesc());
 
     auto stagingResource = cubemapResource;
-    Texture stagingTexture(stagingResource);
+    TextureDx12 stagingTexture(stagingResource);
     // If the passed-in resource does not allow for UAV access
     // then create a staging resource that is used to generate
     // the cubemap.
     if ((cubemapDesc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS) == 0) {
       auto stagingDesc = cubemapDesc;
-      stagingDesc.Format = Texture::GetUAVCompatableFormat(cubemapDesc.Format);
+      stagingDesc.Format = TextureDx12::GetUAVCompatableFormat(cubemapDesc.Format);
       stagingDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
       ThrowIfFailed(device->CreateCommittedResource(
@@ -583,7 +586,7 @@ namespace Kame {
     PanoToCubemapCB panoToCubemapCB;
 
     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
-    uavDesc.Format = Texture::GetUAVCompatableFormat(cubemapDesc.Format);
+    uavDesc.Format = TextureDx12::GetUAVCompatableFormat(cubemapDesc.Format);
     uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
     uavDesc.Texture2DArray.FirstArraySlice = 0;
     uavDesc.Texture2DArray.ArraySize = 6;
@@ -620,21 +623,26 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::ClearTexture(const Texture& texture, const float clearColor[4]) {
+  void CommandListDx12::ClearTexture(const TextureDx12& texture, const float clearColor[4]) {
     TransitionBarrier(texture, D3D12_RESOURCE_STATE_RENDER_TARGET);
     m_d3d12CommandList->ClearRenderTargetView(texture.GetRenderTargetView(), clearColor, 0, nullptr);
 
     TrackResource(texture);
   }
 
-  void CommandListDx12::ClearDepthStencilTexture(const Texture& texture, D3D12_CLEAR_FLAGS clearFlags, float depth, uint8_t stencil) {
+  void CommandListDx12::ClearTexture(const Texture* texture, const float clearColor[4]) {
+    const TextureDx12* textureDx12 = static_cast<const TextureDx12*>(texture);
+    ClearTexture(*textureDx12, clearColor);
+  }
+
+  void CommandListDx12::ClearDepthStencilTexture(const TextureDx12& texture, D3D12_CLEAR_FLAGS clearFlags, float depth, uint8_t stencil) {
     TransitionBarrier(texture, D3D12_RESOURCE_STATE_DEPTH_WRITE);
     m_d3d12CommandList->ClearDepthStencilView(texture.GetDepthStencilView(), clearFlags, depth, stencil, 0, nullptr);
 
     TrackResource(texture);
   }
 
-  void CommandListDx12::CopyTextureSubresource(Texture& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData) {
+  void CommandListDx12::CopyTextureSubresource(TextureDx12& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData) {
     auto device = DX12Core::Get().GetDevice();
     auto destinationResource = texture.GetD3D12Resource();
 

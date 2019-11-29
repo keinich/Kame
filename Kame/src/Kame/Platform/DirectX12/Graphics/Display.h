@@ -41,14 +41,14 @@
 #include "GUI.h"
 #include "HighResolutionClock.h"
 #include "RenderTarget.h"
-#include "Texture.h"
+#include "TextureDx12.h"
 
 #include <memory>
 
 namespace Kame {
 
   class Game;
-  class Texture;
+  class TextureDx12;
 
   class KAME_API Display : public std::enable_shared_from_this<Display> {
 
@@ -90,7 +90,7 @@ namespace Kame {
      * will be performed. Use the Window::GetRenderTarget method to get a render
      * target for the window's color buffer.
      */
-    UINT Present(const Texture& texture = Texture());
+    UINT Present(const TextureDx12& texture = TextureDx12());
 
   protected:
 
@@ -127,7 +127,7 @@ namespace Kame {
     uint64_t m_FrameValues[BufferCount];
 
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_dxgiSwapChain;
-    Texture m_BackBufferTextures[BufferCount];
+    TextureDx12 m_BackBufferTextures[BufferCount];
     // Marked mutable to allow modification in a const function.
     mutable RenderTarget m_RenderTarget;
 
