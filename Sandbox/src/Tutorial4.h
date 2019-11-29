@@ -126,7 +126,7 @@ namespace Kame {
     TextureDx12 m_GraceCathedralCubemap;
 
     // HDR Render target
-    RenderTarget m_HDRRenderTarget;
+    std::unique_ptr<RenderTarget> m_HDRRenderTarget;
 
     // Root signatures
     RootSignature m_SkyboxSignature;

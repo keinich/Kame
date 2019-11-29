@@ -7,6 +7,9 @@
 #include <Kame/Platform/DirectX12/Graphics/CommandListDx12.h>
 #include <Kame/Platform/DirectX12/Graphics/CommandQueue.h>
 
+#include <Kame/Platform/DirectX12/Graphics/RenderTarget.h>
+#include <Kame/Platform/DirectX12/Graphics/TextureDx12.h>
+
 namespace Kame {
 
   RenderApi GraphicsCore::s_RenderApi = RenderApi::DirectX12;
@@ -71,6 +74,14 @@ namespace Kame {
 
   void GraphicsCore::ExecuteCommandList(std::shared_ptr<CommandListDx12> commandList) {
     s_Instance->GetCommandQueue(commandList->GetCommandListType())->ExecuteCommandList(commandList);
+  }
+
+  RenderTarget* GraphicsCore::CreateRenderTarget() {
+    return reinterpret_cast<RenderTarget*>(new RenderTargetOf<TextureDx12>());
+  }
+
+  Texture* GraphicsCore::CreateTexture() {
+    return reinterpret_cast<Texture*>(new TextureDx12());
   }
 
 }

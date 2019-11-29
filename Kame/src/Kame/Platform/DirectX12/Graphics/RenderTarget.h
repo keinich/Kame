@@ -39,7 +39,8 @@
 #include <cstdint>
 #include <vector>
 
-#include "TextureDx12.h"
+//#include "TextureDx12.h"
+#include <Kame/Graphics/RenderApi/Texture.h>
 
 namespace Kame {
 
@@ -62,6 +63,7 @@ namespace Kame {
   public:
     // Create an empty render target.
     RenderTarget();
+    virtual ~RenderTarget();
 
     RenderTarget(const RenderTarget& copy) = default;
     RenderTarget(RenderTarget&& copy) = default;
@@ -71,40 +73,172 @@ namespace Kame {
 
     // Attach a texture to the render target.
     // The texture will be copied into the texture array.
-    void AttachTexture(AttachmentPoint attachmentPoint, const TextureDx12& texture);
-    const TextureDx12& GetTexture(AttachmentPoint attachmentPoint) const;
-    const Texture* GetTextureBase(AttachmentPoint attachmentPoint) const;
+    virtual void AttachTexture(AttachmentPoint attachmentPoint, const Texture& texture) = 0;
+    //const Texture& GetTexture(AttachmentPoint attachmentPoint) const;
+    virtual const Texture* GetTexture(AttachmentPoint attachmentPoint) const = 0;
 
     // Resize all of the textures associated with the render target.
-    void Resize(DirectX::XMUINT2 size);
-    void Resize(uint32_t width, uint32_t height);
-    DirectX::XMUINT2 GetSize() const;
-    uint32_t GetWidth() const;
-    uint32_t GetHeight() const;
+    virtual void Resize(DirectX::XMUINT2 size) = 0;
+    virtual void Resize(uint32_t width, uint32_t height) = 0;
+    virtual DirectX::XMUINT2 GetSize() const = 0;
+    virtual uint32_t GetWidth() const = 0;
+    virtual uint32_t GetHeight() const = 0;
 
     // Get a viewport for this render target.
     // The scale and bias parameters can be used to specify a split-screen
     // viewport (the bias parameter is normalized in the range [0...1]).
     // By default, a fullscreen viewport is returned.
-    D3D12_VIEWPORT GetViewport(DirectX::XMFLOAT2 scale = { 1.0f, 1.0f }, DirectX::XMFLOAT2 bias = { 0.0f, 0.0f }, float minDepth = 0.0f, float maxDepth = 1.0f) const;
-
-    // Get a list of the textures attached to the render target.
-    // This method is primarily used by the CommandList when binding the
-    // render target to the output merger stage of the rendering pipeline.
-    const std::vector<TextureDx12>& GetTextures() const;
+    virtual D3D12_VIEWPORT GetViewport(
+      DirectX::XMFLOAT2 scale = { 1.0f, 1.0f }, 
+      DirectX::XMFLOAT2 bias = { 0.0f, 0.0f }, 
+      float minDepth = 0.0f, float maxDepth = 1.0f
+  ) const = 0;
 
     // Get the render target formats of the textures currently 
     // attached to this render target object.
     // This is needed to configure the Pipeline state object.
-    D3D12_RT_FORMAT_ARRAY GetRenderTargetFormats() const;
+    virtual D3D12_RT_FORMAT_ARRAY GetRenderTargetFormats() const = 0;
 
     // Get the format of the attached depth/stencil buffer.
-    DXGI_FORMAT GetDepthStencilFormat() const;
+    virtual DXGI_FORMAT GetDepthStencilFormat() const = 0;
 
-  private:
+  protected:
 
-    std::vector<TextureDx12> m_Textures;
     DirectX::XMUINT2 m_Size;
   };
+
+  template<class TextureType>
+  class RenderTargetOf : public RenderTarget {
+  public:
+    RenderTargetOf();
+    virtual ~RenderTargetOf();
+
+    virtual void AttachTexture(AttachmentPoint attachmentPoint, const Texture& texture) override;
+
+    virtual const Texture* GetTexture(AttachmentPoint attachmentPoint) const override;
+
+    virtual void Resize(DirectX::XMUINT2 size) override ;
+    virtual void Resize(uint32_t width, uint32_t height) override;
+    virtual DirectX::XMUINT2 GetSize() const override;
+    virtual uint32_t GetWidth() const override;
+    virtual uint32_t GetHeight() const override;
+   
+    virtual D3D12_VIEWPORT GetViewport(
+      DirectX::XMFLOAT2 scale = { 1.0f, 1.0f },
+      DirectX::XMFLOAT2 bias = { 0.0f, 0.0f },
+      float minDepth = 0.0f, float maxDepth = 1.0f
+    ) const override;
+    
+    virtual D3D12_RT_FORMAT_ARRAY GetRenderTargetFormats() const override;
+
+    virtual DXGI_FORMAT GetDepthStencilFormat() const override;
+
+  protected:
+    std::vector<TextureType> m_Textures;
+  };
+
+  template<class TextureType>
+  RenderTargetOf<TextureType>::RenderTargetOf()
+    : m_Textures(AttachmentPoint::NumAttachmentPoints) {}
+
+  template<class TextureType>
+  inline RenderTargetOf<TextureType>::~RenderTargetOf() {
+  }
+
+  template<class TextureType>
+  inline void Kame::RenderTargetOf<TextureType>::AttachTexture(AttachmentPoint attachmentPoint, const Texture& texture) {
+    const TextureType* x = static_cast<const TextureType*>(&texture);
+    m_Textures[attachmentPoint] = *x;
+
+    if (texture.IsValid1()) {
+      m_Size.x = static_cast<uint32_t>(texture.GetWidth());
+      m_Size.y = static_cast<uint32_t>(texture.GetHeight());
+    }
+  }
+
+  template<class TextureType>
+  const Texture* RenderTargetOf<TextureType>::GetTexture(AttachmentPoint attachmentPoint) const {
+    return &m_Textures[attachmentPoint];
+  }
+
+  template<class TextureType>
+  void RenderTargetOf<TextureType>::Resize(DirectX::XMUINT2 size) {
+    m_Size = size;
+    for (auto& texture : m_Textures) {
+      texture.Resize(m_Size.x, m_Size.y);
+    }
+
+  }
+
+  template<class TextureType>
+  void RenderTargetOf<TextureType>::Resize(uint32_t width, uint32_t height) {
+    Resize(DirectX::XMUINT2(width, height));
+  }
+
+  template<class TextureType>
+  DirectX::XMUINT2 RenderTargetOf<TextureType>::GetSize() const {
+    return m_Size;
+  }
+
+  template<class TextureType>
+  uint32_t RenderTargetOf<TextureType>::GetWidth() const {
+    return m_Size.x;
+  }
+
+  template<class TextureType>
+  uint32_t RenderTargetOf<TextureType>::GetHeight() const {
+    return m_Size.y;
+  }
+
+  template<class TextureType>
+  D3D12_VIEWPORT RenderTargetOf<TextureType>::GetViewport(DirectX::XMFLOAT2 scale, DirectX::XMFLOAT2 bias, float minDepth, float maxDepth) const {
+    UINT64 width = 0;
+    UINT64 height = 0;
+
+    for (int i = AttachmentPoint::Color0; i <= AttachmentPoint::Color7; ++i) {
+      const TextureType& texture = m_Textures[i];
+      if (texture.IsValid1()) {
+        width = std::max(width, texture.GetWidth());
+        height = std::max(height, texture.GetHeight());
+      }
+    }
+
+    D3D12_VIEWPORT viewport = {
+        (width * bias.x),       // TopLeftX
+        (height * bias.y),      // TopLeftY
+        (width * scale.x),      // Width
+        (height * scale.y),     // Height
+        minDepth,               // MinDepth
+        maxDepth                // MaxDepth
+    };
+
+    return viewport;
+  }
+
+  template<class TextureType>
+  D3D12_RT_FORMAT_ARRAY RenderTargetOf<TextureType>::GetRenderTargetFormats() const {
+    D3D12_RT_FORMAT_ARRAY rtvFormats = {};
+
+
+    for (int i = AttachmentPoint::Color0; i <= AttachmentPoint::Color0; ++i) {
+      const TextureType& texture = m_Textures[i];
+      if (texture.IsValid1()) {
+        rtvFormats.RTFormats[rtvFormats.NumRenderTargets++] = texture.GetFormat();
+      }
+    }
+
+    return rtvFormats;
+  }
+
+  template<class TextureType>
+  DXGI_FORMAT RenderTargetOf<TextureType>::GetDepthStencilFormat() const {
+    DXGI_FORMAT dsvFormat = DXGI_FORMAT_UNKNOWN;
+    const TextureType& depthStencilTexture = m_Textures[AttachmentPoint::DepthStencil];
+    if (depthStencilTexture.IsValid1()) {
+      dsvFormat = depthStencilTexture.GetFormat();
+    }
+
+    return dsvFormat;
+  }
 
 }

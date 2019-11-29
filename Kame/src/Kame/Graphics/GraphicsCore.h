@@ -8,6 +8,9 @@ namespace Kame {
   class CommandList;
   class CommandQueue;
 
+  class RenderTarget;
+  class Texture;
+
   enum class RenderApi {
 
     None = 0,
@@ -28,6 +31,9 @@ namespace Kame {
     static std::shared_ptr<CommandListDx12> BeginCommandListDx(D3D12_COMMAND_LIST_TYPE type);
     static CommandList* BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
     static void ExecuteCommandList(std::shared_ptr<CommandListDx12> commandList);
+
+    static RenderTarget* CreateRenderTarget();
+    static Texture* CreateTexture();
 
     static inline RenderApi GetApi() { return s_RenderApi; }
 

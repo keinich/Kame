@@ -18,8 +18,11 @@ namespace Kame {
     , m_ClientHeight(clientHeight)
     , m_VSync(vSync)
     , m_FenceValues{ 0 }
-    , m_FrameValues{ 0 }
-  {}
+    , m_FrameValues{ 0 } {
+
+    m_RenderTarget.reset(GraphicsCore::CreateRenderTarget());
+
+  }
 
   void Display::Initialize(HWND hWnd) {
 
@@ -70,7 +73,7 @@ namespace Kame {
       DX12Core::Get().Flush();
 
       // Release all references to back buffer textures.
-      m_RenderTarget.AttachTexture(Color0, TextureDx12());
+      m_RenderTarget->AttachTexture(Color0, TextureDx12());
       for (int i = 0; i < BufferCount; ++i) {
         ResourceStateTracker::RemoveGlobalResourceState(m_BackBufferTextures[i].GetD3D12Resource().Get());
         m_BackBufferTextures[i].Reset();
@@ -148,8 +151,8 @@ namespace Kame {
   }
 
   const RenderTarget& Display::GetRenderTarget() const {
-    m_RenderTarget.AttachTexture(AttachmentPoint::Color0, m_BackBufferTextures[m_CurrentBackBufferIndex]);
-    return m_RenderTarget;
+    m_RenderTarget->AttachTexture(AttachmentPoint::Color0, m_BackBufferTextures[m_CurrentBackBufferIndex]);
+    return *m_RenderTarget;
   }
 
   UINT Display::Present(const TextureDx12& texture) {
@@ -167,8 +170,8 @@ namespace Kame {
       }
     }
 
-    RenderTarget renderTarget;
-    renderTarget.AttachTexture(AttachmentPoint::Color0, backBuffer);
+    //RenderTarget renderTarget;
+    //renderTarget.AttachTexture(AttachmentPoint::Color0, backBuffer);
 
     //m_GUI.Render( commandList, renderTarget );
 

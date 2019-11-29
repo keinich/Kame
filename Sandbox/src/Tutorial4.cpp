@@ -175,6 +175,8 @@ namespace Kame {
     Input::KeyEvent(Kame::Key::F)->AddHandler(BIND_FUNCTION(Tutorial4::OnKeyF));
     Input::MapKeyToCustomEvent(Kame::Key::G, L"Shoot");
     Input::CustomEvent(L"Shoot")->AddHandler(BIND_FUNCTION(Tutorial4::Shoot));
+
+    m_HDRRenderTarget.reset(GraphicsCore::CreateRenderTarget());
   }
 
   Tutorial4::~Tutorial4() {
@@ -247,8 +249,8 @@ namespace Kame {
       L"Depth Render Target");
 
     // Attach the HDR texture to the HDR render target.
-    m_HDRRenderTarget.AttachTexture(AttachmentPoint::Color0, HDRTexture);
-    m_HDRRenderTarget.AttachTexture(AttachmentPoint::DepthStencil, depthTexture);
+    m_HDRRenderTarget->AttachTexture(AttachmentPoint::Color0, HDRTexture);
+    m_HDRRenderTarget->AttachTexture(AttachmentPoint::DepthStencil, depthTexture);
 
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
     featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
@@ -304,7 +306,7 @@ namespace Kame {
       skyboxPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
       skyboxPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
       skyboxPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
-      skyboxPipelineStateStream.RTVFormats = m_HDRRenderTarget.GetRenderTargetFormats();
+      skyboxPipelineStateStream.RTVFormats = m_HDRRenderTarget->GetRenderTargetFormats();
 
       D3D12_PIPELINE_STATE_STREAM_DESC skyboxPipelineStateStreamDesc = {
           sizeof(SkyboxPipelineState), &skyboxPipelineStateStream
@@ -361,8 +363,8 @@ namespace Kame {
       hdrPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
       hdrPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
       hdrPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
-      hdrPipelineStateStream.DSVFormat = m_HDRRenderTarget.GetDepthStencilFormat();
-      hdrPipelineStateStream.RTVFormats = m_HDRRenderTarget.GetRenderTargetFormats();
+      hdrPipelineStateStream.DSVFormat = m_HDRRenderTarget->GetDepthStencilFormat();
+      hdrPipelineStateStream.RTVFormats = m_HDRRenderTarget->GetRenderTargetFormats();
 
       D3D12_PIPELINE_STATE_STREAM_DESC hdrPipelineStateStreamDesc = {
           sizeof(HDRPipelineStateStream), &hdrPipelineStateStream
@@ -437,7 +439,7 @@ namespace Kame {
     width = clamp<uint32_t>(width, 1, D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
     height = clamp<uint32_t>(height, 1, D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
-    m_HDRRenderTarget.Resize(width, height);
+    m_HDRRenderTarget->Resize(width, height);
   }
 
   void Tutorial4::OnResize(ResizeEventArgs& e) {
@@ -776,12 +778,12 @@ namespace Kame {
     {
       FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
 
-      commandListBase->ClearTexture(m_HDRRenderTarget.GetTextureBase(AttachmentPoint::Color0), clearColor);
-      commandList->ClearDepthStencilTexture(m_HDRRenderTarget.GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
+      commandListBase->ClearTexture(m_HDRRenderTarget->GetTexture(AttachmentPoint::Color0), clearColor);
+      commandList->ClearDepthStencilTextureBase(m_HDRRenderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
     }
 
-    commandList->SetRenderTarget(m_HDRRenderTarget);
-    commandList->SetViewport(m_HDRRenderTarget.GetViewport());
+    commandList->SetRenderTarget(*m_HDRRenderTarget);
+    commandList->SetViewport(m_HDRRenderTarget->GetViewport());
     commandList->SetScissorRect(m_ScissorRect);
 
     // Render the skybox.
@@ -986,7 +988,7 @@ namespace Kame {
     commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->SetGraphicsRootSignature(m_SDRRootSignature);
     commandList->SetGraphics32BitConstants(0, g_TonemapParameters);
-    commandList->SetShaderResourceView(1, 0, m_HDRRenderTarget.GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandList->SetShaderResourceViewBase(1, 0, m_HDRRenderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     commandList->Draw(3);
 

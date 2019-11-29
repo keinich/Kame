@@ -75,12 +75,20 @@ namespace Kame {
     /**
      * Resize the texture.
      */
-    void Resize(uint32_t width, uint32_t height, uint32_t depthOrArraySize = 1);
+    virtual void Resize(uint32_t width, uint32_t height, uint32_t depthOrArraySize = 1) override;
 
     /**
      * Create SRV and UAVs for the resource.
      */
     virtual void CreateViews();
+
+    //inline virtual void* GetNativeHandle() const { return m_d3d12Resource.Get(); }
+    inline virtual bool IsValid1() const override { return IsValid(); }
+
+    inline virtual UINT64 GetWidth() const override { return m_d3d12Resource->GetDesc().Width; }
+    inline virtual UINT64 GetHeight() const override { return m_d3d12Resource->GetDesc().Height; }
+
+    inline virtual DXGI_FORMAT GetFormat() const override { return m_d3d12Resource->GetDesc().Format; }
 
     /**
     * Get the SRV for a resource.

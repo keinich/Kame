@@ -188,6 +188,7 @@ namespace Kame {
      * Clear depth/stencil texture.
      */
     void ClearDepthStencilTexture(const TextureDx12& texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0);
+    void ClearDepthStencilTextureBase(const Texture* texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0);
 
     /**
      * Generate mips for the texture.
@@ -307,6 +308,20 @@ namespace Kame {
       uint32_t rootParameterIndex,
       uint32_t descriptorOffset,
       const Resource& resource,
+      D3D12_RESOURCE_STATES stateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
+      D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+      UINT firstSubresource = 0,
+      UINT numSubresources = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
+      const D3D12_SHADER_RESOURCE_VIEW_DESC* srv = nullptr
+    );
+
+    /**
+     * Set the SRV on the graphics pipeline.
+     */
+    void SetShaderResourceViewBase(
+      uint32_t rootParameterIndex,
+      uint32_t descriptorOffset,
+      const Texture* texture,
       D3D12_RESOURCE_STATES stateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
       D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
       UINT firstSubresource = 0,

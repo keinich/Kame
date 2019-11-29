@@ -642,6 +642,13 @@ namespace Kame {
     TrackResource(texture);
   }
 
+  void CommandListDx12::ClearDepthStencilTextureBase(
+    const Texture* texture, D3D12_CLEAR_FLAGS clearFlags, float depth, uint8_t stencil
+  ) {
+    const TextureDx12* textureDx12 = static_cast<const TextureDx12*>(texture);
+    ClearDepthStencilTexture(*textureDx12, clearFlags, depth, stencil);
+  }
+
   void CommandListDx12::CopyTextureSubresource(TextureDx12& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData) {
     auto device = DX12Core::Get().GetDevice();
     auto destinationResource = texture.GetD3D12Resource();
@@ -822,6 +829,19 @@ namespace Kame {
     TrackResource(resource);
   }
 
+  void CommandListDx12::SetShaderResourceViewBase(uint32_t rootParameterIndex,
+    uint32_t descriptorOffset,
+    const Texture* texture,
+    D3D12_RESOURCE_STATES stateAfter,
+    UINT firstSubresource,
+    UINT numSubresources,
+    const D3D12_SHADER_RESOURCE_VIEW_DESC* srv) {
+    const TextureDx12* textureDx12 = static_cast<const TextureDx12*>(texture);
+    SetShaderResourceView(
+      rootParameterIndex, descriptorOffset, *textureDx12, stateAfter, firstSubresource, numSubresources, srv
+    );
+  }
+
   void CommandListDx12::SetUnorderedAccessView(uint32_t rootParameterIndex,
     uint32_t descrptorOffset,
     const Resource& resource,
@@ -848,11 +868,9 @@ namespace Kame {
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> renderTargetDescriptors;
     renderTargetDescriptors.reserve(AttachmentPoint::NumAttachmentPoints);
 
-    const auto& textures = renderTarget.GetTextures();
-
     // Bind color targets (max of 8 render targets can be bound to the rendering pipeline.
-    for (int i = 0; i < 8; ++i) {
-      auto& texture = textures[i];
+    for (int i = AttachmentPoint::Color0; i <= AttachmentPoint::Color7; ++i) {
+      const TextureDx12& texture = *static_cast<const TextureDx12*>(renderTarget.GetTexture(static_cast<AttachmentPoint>(i)));
 
       if (texture.IsValid()) {
         TransitionBarrier(texture, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -862,7 +880,9 @@ namespace Kame {
       }
     }
 
-    const auto& depthTexture = renderTarget.GetTexture(AttachmentPoint::DepthStencil);
+    const TextureDx12& depthTexture = *static_cast<const TextureDx12*>(
+      renderTarget.GetTexture(AttachmentPoint::DepthStencil)
+    );
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE depthStencilDescriptor(D3D12_DEFAULT);
     if (depthTexture.GetD3D12Resource()) {
