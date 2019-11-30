@@ -7,6 +7,7 @@
 #include "DescriptorAllocator.h"
 #include "Display.h"
 #include "Kame/Application/Window.h"
+#include "GraphicsCommon.h"
 
 namespace Kame {
 
@@ -99,6 +100,9 @@ namespace Kame {
 
     // Initialize frame counter 
     ms_FrameCount = 0;
+
+    // Initialize Common Objects
+    GraphicsCommon::InitializeCommonState();
   }
 
   void DX12Core::Create() {
@@ -112,6 +116,7 @@ namespace Kame {
   }
 
   void DX12Core::Destroy() {
+    GraphicsCommon::DestroyCommonState();
     if (gs_pSingelton) {
       delete gs_pSingelton;
       gs_pSingelton = nullptr;

@@ -6,6 +6,7 @@ namespace Kame {
 
   class Texture;
   class RenderTarget;
+  class RenderProgram;
 
   class CommandList {
 
@@ -18,6 +19,7 @@ namespace Kame {
     virtual void SetViewport(const D3D12_VIEWPORT& viewport) = 0;
     virtual void SetScissorRect(const D3D12_RECT& scissorRect) = 0;
 
+    virtual void SetPipelineState(const RenderProgram* renderPipeline) = 0;
   };
 
 }

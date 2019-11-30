@@ -42,6 +42,8 @@
 #include "Kame/Platform/DirectX12/Graphics/TextureDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
 
+#include "Kame/Platform/DirectX12/Graphics/PipelineState.h"
+
 #include "Kame/Math/Vector4.h"
 
 #include <DirectXMath.h>
@@ -139,6 +141,7 @@ namespace Kame {
     // Pipeline state object.
     // Skybox PSO
     Microsoft::WRL::ComPtr<ID3D12PipelineState> m_SkyboxPipelineState;
+    Reference<Kame::RenderProgram> _SkyboxProgram;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> m_HDRPipelineState;
     // HDR -> SDR tone mapping PSO.
     Microsoft::WRL::ComPtr<ID3D12PipelineState> m_SDRPipelineState;

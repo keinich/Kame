@@ -14,6 +14,7 @@
 #include <Kame/Graphics/Material.h>
 #include <Kame/Platform/DirectX12/Graphics/Display.h>
 #include <Kame/Application/Window.h>
+#include <Kame/Platform/DirectX12/Graphics/GraphicsCommon.h>
 
 #include "Kame/Math/Vector4.h"
 #include "Kame/Math/VectorMath.h"
@@ -177,6 +178,9 @@ namespace Kame {
     Input::CustomEvent(L"Shoot")->AddHandler(BIND_FUNCTION(Tutorial4::Shoot));
 
     m_HDRRenderTarget.reset(GraphicsCore::CreateRenderTarget());
+
+    _SkyboxProgram.reset(new GraphicsPSO());
+
   }
 
   Tutorial4::~Tutorial4() {
@@ -234,8 +238,8 @@ namespace Kame {
 
     _HDRTexture.reset(
       new TextureDx12(colorDesc, &colorClearValue,
-      TextureUsage::RenderTarget,
-      L"HDR Texture")
+        TextureUsage::RenderTarget,
+        L"HDR Texture")
     );
 
     // Create a depth buffer for the HDR render target.
@@ -248,8 +252,8 @@ namespace Kame {
 
     _DepthTexture.reset(
       new TextureDx12(depthDesc, &depthClearValue,
-      TextureUsage::Depth,
-      L"Depth Render Target")
+        TextureUsage::Depth,
+        L"Depth Render Target")
     );
 
     // Attach the HDR texture to the HDR render target.
@@ -317,6 +321,78 @@ namespace Kame {
       };
       ThrowIfFailed(device->CreatePipelineState(&skyboxPipelineStateStreamDesc, IID_PPV_ARGS(&m_SkyboxPipelineState)));
     }
+
+
+
+
+    {
+      // Load the Skybox shaders.
+      ComPtr<ID3DBlob> vs;
+      ComPtr<ID3DBlob> ps;
+      ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\Skybox_VS.cso", &vs));
+      ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\Skybox_PS.cso", &ps));
+
+      // Setup the input layout for the skybox vertex shader.
+      D3D12_INPUT_ELEMENT_DESC inputLayout[1] = {
+          { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+      };
+
+      // Allow input layout and deny unnecessary access to certain pipeline stages.
+      D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
+        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+        D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+        D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+        D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
+
+      CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+
+      CD3DX12_ROOT_PARAMETER1 rootParameters[2];
+      rootParameters[0].InitAsConstants(sizeof(DirectX::XMMATRIX) / 4, 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
+      rootParameters[1].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
+
+      CD3DX12_STATIC_SAMPLER_DESC linearClampSampler(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
+
+      CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
+      rootSignatureDescription.Init_1_1(2, rootParameters, 1, &linearClampSampler, rootSignatureFlags);
+
+      m_SkyboxSignature.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+
+      //_SkyboxProgram->SetRootSignature(m_SkyboxSignature);
+      //_SkyboxProgram->SetRasterizerState(Kame::GraphicsCommon::RasterizerDefault);
+      //_SkyboxProgram->SetInputLayout(1, inputLayout);
+      //_SkyboxProgram->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      //_SkyboxProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      //_SkyboxProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      //_SkyboxProgram->SetRenderTargetFormats(m_HDRRenderTarget->GetRenderTargetFormats());
+      //_SkyboxProgram->Finalize();
+
+      struct SkyboxPipelineState {
+        CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
+        CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
+        CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
+        CD3DX12_PIPELINE_STATE_STREAM_VS VS;
+        CD3DX12_PIPELINE_STATE_STREAM_PS PS;
+        CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
+      } skyboxPipelineStateStream;
+
+      skyboxPipelineStateStream.pRootSignature = m_SkyboxSignature.GetRootSignature().Get();
+      skyboxPipelineStateStream.InputLayout = { inputLayout, 1 };
+      skyboxPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+      skyboxPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
+      skyboxPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
+      skyboxPipelineStateStream.RTVFormats = m_HDRRenderTarget->GetRenderTargetFormats();
+
+      D3D12_PIPELINE_STATE_STREAM_DESC skyboxPipelineStateStreamDesc = {
+          sizeof(SkyboxPipelineState), &skyboxPipelineStateStream
+      };
+
+      _SkyboxProgram->Create(skyboxPipelineStateStreamDesc);
+    }
+
+
+
+
+
 
     // Create a root signature for the HDR pipeline.
     {
@@ -797,7 +873,8 @@ namespace Kame {
       auto projMatrix = m_Camera.get_ProjectionMatrix().GetXmMatrix();
       auto viewProjMatrix = viewMatrix * projMatrix;
 
-      commandList->SetPipelineState(m_SkyboxPipelineState);
+      //commandList->SetPipelineState(m_SkyboxPipelineState);
+      commandListBase->SetPipelineState(_SkyboxProgram.get());
       commandList->SetGraphicsRootSignature(m_SkyboxSignature);
 
       commandList->SetGraphics32BitConstants(0, viewProjMatrix);

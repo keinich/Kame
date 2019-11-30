@@ -60,6 +60,7 @@ namespace Kame {
   class TextureDx12;
   class UploadBuffer;
   class VertexBuffer;
+  class GraphicsPSO;
 
   class KAME_API CommandListDx12 : public CommandList {
   public:
@@ -294,6 +295,7 @@ namespace Kame {
      * Set the pipeline state object on the command list.
      */
     void SetPipelineState(Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState);
+    virtual void SetPipelineState(const RenderProgram* renderProgram) override;
 
     /**
      * Set the current root signature on the command list.

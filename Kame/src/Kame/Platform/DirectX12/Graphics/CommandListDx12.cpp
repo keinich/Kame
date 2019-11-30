@@ -23,6 +23,8 @@
 #include "Kame/Utility/Casting.h"
 #include "Kame/Graphics/RenderApi/Texture.h"
 
+#include "PipelineState.h"
+
 using namespace DirectX;
 
 namespace Kame {
@@ -776,6 +778,11 @@ namespace Kame {
     m_d3d12CommandList->SetPipelineState(pipelineState.Get());
 
     TrackResource(pipelineState);
+  }
+
+  void CommandListDx12::SetPipelineState(const RenderProgram* renderProgram) {
+    const PSO* renderProgramDx12 = static_cast<const PSO*>(renderProgram);
+    SetPipelineState(renderProgramDx12->GetPipelineStateObject());
   }
 
   void CommandListDx12::SetGraphicsRootSignature(const RootSignature& rootSignature) {

@@ -10,6 +10,7 @@ namespace Kame {
     extern D3D12_RASTERIZER_DESC RasterizerDefault;
 
     void InitializeCommonState();
+    void DestroyCommonState();
 
   }
 

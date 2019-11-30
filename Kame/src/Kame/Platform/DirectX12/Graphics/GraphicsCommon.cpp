@@ -18,3 +18,7 @@ void Kame::GraphicsCommon::InitializeCommonState() {
   RasterizerDefault.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
 
 }
+
+void Kame::GraphicsCommon::DestroyCommonState(void) {
+
+}

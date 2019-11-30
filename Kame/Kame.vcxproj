@@ -161,6 +161,7 @@
     <ClInclude Include="src\Kame\Graphics\MeshManager.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\CommandList.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer1.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgram.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\Texture.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer1.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexLayout.h" />
@@ -210,6 +211,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h" />
     <ClInclude Include="src\Kame\Graphics\RenderTarget.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Resource.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.h" />

@@ -69,7 +69,7 @@ namespace Kame {
     }
 
     uint32_t GetDescriptorTableBitMask(D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType) const;
-    uint32_t GetNumDescriptors(uint32_t rootIndex) const;
+    uint32_t GetNumDescriptors(uint32_t rootIndex) const;    
 
   protected:
 

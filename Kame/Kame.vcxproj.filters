@@ -380,6 +380,8 @@
     <ClInclude Include="src\Kame\Graphics\RenderTarget.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgram.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
