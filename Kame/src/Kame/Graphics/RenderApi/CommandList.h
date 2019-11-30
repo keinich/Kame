@@ -1,6 +1,6 @@
 #pragma once
 
-#include <d3d12.h> //TODO abstract away D3D12_CLEAR_FLAGS
+#include <d3d12.h> //TODO abstract away D3D12_CLEAR_FLAGS, D3D12_VIEWPORT, D3D12_RECT
 
 namespace Kame {
 
@@ -15,6 +15,9 @@ namespace Kame {
     virtual void ClearDepthStencilTexture(const Texture* texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0) = 0;
 
     virtual void SetRenderTarget(const RenderTarget& renderTarget) = 0;
+    virtual void SetViewport(const D3D12_VIEWPORT& viewport) = 0;
+    virtual void SetScissorRect(const D3D12_RECT& scissorRect) = 0;
+
   };
 
 }

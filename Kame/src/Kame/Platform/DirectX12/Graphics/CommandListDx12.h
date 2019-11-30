@@ -281,13 +281,13 @@ namespace Kame {
     /**
      * Set viewports.
      */
-    void SetViewport(const D3D12_VIEWPORT& viewport);
+    virtual void SetViewport(const D3D12_VIEWPORT& viewport) override;
     void SetViewports(const std::vector<D3D12_VIEWPORT>& viewports);
 
     /**
      * Set scissor rects.
      */
-    void SetScissorRect(const D3D12_RECT& scissorRect);
+    virtual void SetScissorRect(const D3D12_RECT& scissorRect) override;
     void SetScissorRects(const std::vector<D3D12_RECT>& scissorRects);
 
     /**

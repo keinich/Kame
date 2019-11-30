@@ -787,8 +787,8 @@ namespace Kame {
     }
 
     commandListBase->SetRenderTarget(*m_HDRRenderTarget);
-    commandList->SetViewport(m_HDRRenderTarget->GetViewport());
-    commandList->SetScissorRect(m_ScissorRect);
+    commandListBase->SetViewport(m_HDRRenderTarget->GetViewport());
+    commandListBase->SetScissorRect(m_ScissorRect);
 
     // Render the skybox.
     {
