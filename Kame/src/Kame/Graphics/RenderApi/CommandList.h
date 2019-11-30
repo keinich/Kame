@@ -19,7 +19,7 @@ namespace Kame {
     virtual void SetViewport(const D3D12_VIEWPORT& viewport) = 0;
     virtual void SetScissorRect(const D3D12_RECT& scissorRect) = 0;
 
-    virtual void SetPipelineState(const RenderProgram* renderPipeline) = 0;
+    virtual void SetRenderProgram(const RenderProgram* renderProgram) = 0;
   };
 
 }

@@ -295,7 +295,7 @@ namespace Kame {
      * Set the pipeline state object on the command list.
      */
     void SetPipelineState(Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState);
-    virtual void SetPipelineState(const RenderProgram* renderProgram) override;
+    virtual void SetRenderProgram(const RenderProgram* renderProgram) override;
 
     /**
      * Set the current root signature on the command list.

@@ -780,7 +780,7 @@ namespace Kame {
     TrackResource(pipelineState);
   }
 
-  void CommandListDx12::SetPipelineState(const RenderProgram* renderProgram) {
+  void CommandListDx12::SetRenderProgram(const RenderProgram* renderProgram) {
     const PSO* renderProgramDx12 = static_cast<const PSO*>(renderProgram);
     SetPipelineState(renderProgramDx12->GetPipelineStateObject());
   }

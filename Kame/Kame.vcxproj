@@ -162,6 +162,7 @@
     <ClInclude Include="src\Kame\Graphics\RenderApi\CommandList.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer1.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgram.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgramSignature.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\Texture.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer1.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexLayout.h" />

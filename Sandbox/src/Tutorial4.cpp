@@ -874,7 +874,7 @@ namespace Kame {
       auto viewProjMatrix = viewMatrix * projMatrix;
 
       //commandList->SetPipelineState(m_SkyboxPipelineState);
-      commandListBase->SetPipelineState(_SkyboxProgram.get());
+      commandListBase->SetRenderProgram(_SkyboxProgram.get());
       commandList->SetGraphicsRootSignature(m_SkyboxSignature);
 
       commandList->SetGraphics32BitConstants(0, viewProjMatrix);

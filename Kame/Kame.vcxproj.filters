@@ -382,6 +382,7 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgram.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgramSignature.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
