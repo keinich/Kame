@@ -786,7 +786,7 @@ namespace Kame {
       commandListBase->ClearDepthStencilTexture(m_HDRRenderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
     }
 
-    commandList->SetRenderTarget(*m_HDRRenderTarget);
+    commandListBase->SetRenderTarget(*m_HDRRenderTarget);
     commandList->SetViewport(m_HDRRenderTarget->GetViewport());
     commandList->SetScissorRect(m_ScissorRect);
 
@@ -964,7 +964,7 @@ namespace Kame {
 
 
 
-      //m_DebugCube->Draw(*commandList);
+      m_DebugCube->Draw(*commandList);
     }
 
     for (const auto& l : m_SpotLights) {

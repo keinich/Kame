@@ -345,7 +345,7 @@ namespace Kame {
     /**
      * Set the render targets for the graphics rendering pipeline.
      */
-    void SetRenderTarget(const RenderTarget& renderTarget);
+    virtual void SetRenderTarget(const RenderTarget& renderTarget) override;
 
     /**
      * Draw geometry.
