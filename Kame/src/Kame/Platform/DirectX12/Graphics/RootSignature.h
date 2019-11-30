@@ -33,6 +33,8 @@
   *  layout of the root signature at runtime.
   */
 
+//TODO Hash the Inners of the RootSignature so you dont compile too often
+//The Hash will also be the identifier so you can sort by RootSignature in the Renderer
 
 #include "d3dx12.h"
 

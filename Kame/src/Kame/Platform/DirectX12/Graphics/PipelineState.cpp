@@ -139,8 +139,17 @@ namespace Kame {
     }
   }
 
-  void PSO::Create(D3D12_PIPELINE_STATE_STREAM_DESC description) {
-    ThrowIfFailed(DX12Core::Get().GetDevice()->CreatePipelineState(&description, IID_PPV_ARGS(&m_PSO)));
+  void PSO::Create() {
+    //ThrowIfFailed(DX12Core::Get().GetDevice()->CreatePipelineState(&description, IID_PPV_ARGS(&m_PSO)));
+    D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = {
+       sizeof(PipelineStateStream), & _PipelineStateStream
+    };
+    ThrowIfFailed(DX12Core::Get().GetDevice()->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&m_PSO)));
+  }
+
+  void PSO::SetRootSignature(const RootSignature& BindMappings) {
+    m_RootSignature = &BindMappings;
+    _PipelineStateStream.pRootSignature = BindMappings.GetRootSignature().Get();
   }
 
   void ComputePSO::Finalize() {

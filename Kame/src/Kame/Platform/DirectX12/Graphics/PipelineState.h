@@ -28,17 +28,27 @@ namespace Kame {
   class PixelShader;
   class ComputeShader;
 
+
+  struct PipelineStateStream {
+    CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
+    CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
+    CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
+    CD3DX12_PIPELINE_STATE_STREAM_VS VS;
+    CD3DX12_PIPELINE_STATE_STREAM_PS PS;
+    CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
+    CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
+  };
+
   class PSO : public RenderProgram {
   public:
 
     PSO() : m_RootSignature(nullptr) {}
 
+    virtual ~PSO() override {}
+
     static void DestroyAll(void);
 
-    void SetRootSignature(const RootSignature& BindMappings) {
-      m_RootSignature = &BindMappings;
-    }
-
+    
     const RootSignature& GetRootSignature(void) const {
       assert(m_RootSignature != nullptr);
       return *m_RootSignature;
@@ -46,14 +56,39 @@ namespace Kame {
 
     ID3D12PipelineState* GetPipelineStateObject(void) const { return m_PSO; }
 
+    virtual void Create() override;
 
-    virtual void Create(D3D12_PIPELINE_STATE_STREAM_DESC description) override;
+    virtual void SetRootSignature(const RootSignature& BindMappings) override;
+
+    virtual void SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE TopologyType) override {
+      _PipelineStateStream.PrimitiveTopologyType = TopologyType;
+    }
+    virtual void SetRenderTargetFormats1(
+      D3D12_RT_FORMAT_ARRAY rtvFormats, 
+      DXGI_FORMAT DSVFormat = DXGI_FORMAT(), 
+      UINT MsaaCount = 1, 
+      UINT MsaaQuality = 0
+    ) override {
+      _PipelineStateStream.RTVFormats = rtvFormats;
+      _PipelineStateStream.DSVFormat = DSVFormat;
+    }
+
+    virtual void SetVertexShader1(const D3D12_SHADER_BYTECODE& Binary) override { _PipelineStateStream.VS = Binary; }
+    virtual void SetPixelShader1(const D3D12_SHADER_BYTECODE& Binary) override { _PipelineStateStream.PS = Binary; }
+    //void SetGeometryShader(const D3D12_SHADER_BYTECODE& Binary) { m_PSODesc.GS = Binary; }
+    //void SetHullShader(const D3D12_SHADER_BYTECODE& Binary) { m_PSODesc.HS = Binary; }
+    //void SetDomainShader(const D3D12_SHADER_BYTECODE& Binary) { m_PSODesc.DS = Binary; }
+
+    virtual void SetInputLayout1(UINT NumElements, const D3D12_INPUT_ELEMENT_DESC* pInputElementDescs) override { 
+      _PipelineStateStream.InputLayout = { pInputElementDescs, NumElements };
+    };
 
   protected:
 
     const RootSignature* m_RootSignature;
 
     ID3D12PipelineState* m_PSO;
+    PipelineStateStream _PipelineStateStream;
   };
 
   class GraphicsPSO : public PSO {
@@ -71,7 +106,7 @@ namespace Kame {
     void SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE TopologyType);
     void SetRenderTargetFormat(DXGI_FORMAT RTVFormat, DXGI_FORMAT DSVFormat, UINT MsaaCount = 1, UINT MsaaQuality = 0);
     void SetRenderTargetFormats(UINT NumRTVs, const DXGI_FORMAT* RTVFormats, DXGI_FORMAT DSVFormat, UINT MsaaCount = 1, UINT MsaaQuality = 0);
-    void SetRenderTargetFormats(D3D12_RT_FORMAT_ARRAY rtvFormats, DXGI_FORMAT DSVFormat = DXGI_FORMAT_UNKNOWN, UINT MsaaCount = 1, UINT MsaaQuality = 0);
+    void SetRenderTargetFormats(D3D12_RT_FORMAT_ARRAY rtvFormats, DXGI_FORMAT DSVFormat = DXGI_FORMAT(), UINT MsaaCount = 1, UINT MsaaQuality = 0);
     void SetInputLayout(UINT NumElements, const D3D12_INPUT_ELEMENT_DESC* pInputElementDescs);
     void SetPrimitiveRestart(D3D12_INDEX_BUFFER_STRIP_CUT_VALUE IBProps);
 

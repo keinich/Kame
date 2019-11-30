@@ -23,6 +23,8 @@
 
 #include "Kame/Graphics/RenderApi/VertexLayout.h"
 
+#include "Kame/Platform/DirectX12/Graphics/PipelineState.h"
+
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
@@ -357,36 +359,35 @@ namespace Kame {
 
       m_SkyboxSignature.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
 
-      //_SkyboxProgram->SetRootSignature(m_SkyboxSignature);
-      //_SkyboxProgram->SetRasterizerState(Kame::GraphicsCommon::RasterizerDefault);
-      //_SkyboxProgram->SetInputLayout(1, inputLayout);
-      //_SkyboxProgram->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-      //_SkyboxProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
-      //_SkyboxProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
-      //_SkyboxProgram->SetRenderTargetFormats(m_HDRRenderTarget->GetRenderTargetFormats());
+      _SkyboxProgram->SetRootSignature(m_SkyboxSignature);
+      _SkyboxProgram->SetInputLayout1(1, inputLayout);
+      _SkyboxProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      _SkyboxProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      _SkyboxProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      _SkyboxProgram->SetRenderTargetFormats1(m_HDRRenderTarget->GetRenderTargetFormats());
       //_SkyboxProgram->Finalize();
 
-      struct SkyboxPipelineState {
-        CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
-        CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
-        CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
-        CD3DX12_PIPELINE_STATE_STREAM_VS VS;
-        CD3DX12_PIPELINE_STATE_STREAM_PS PS;
-        CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
-      } skyboxPipelineStateStream;
+      //struct SkyboxPipelineState {
+      //  CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
+      //  CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
+      //  CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
+      //  CD3DX12_PIPELINE_STATE_STREAM_VS VS;
+      //  CD3DX12_PIPELINE_STATE_STREAM_PS PS;
+      //  CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
+      //} skyboxPipelineStateStream;
 
-      skyboxPipelineStateStream.pRootSignature = m_SkyboxSignature.GetRootSignature().Get();
-      skyboxPipelineStateStream.InputLayout = { inputLayout, 1 };
-      skyboxPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-      skyboxPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
-      skyboxPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
-      skyboxPipelineStateStream.RTVFormats = m_HDRRenderTarget->GetRenderTargetFormats();
+      //skyboxPipelineStateStream.pRootSignature = m_SkyboxSignature.GetRootSignature().Get();
+      //skyboxPipelineStateStream.InputLayout = { inputLayout, 1 };
+      //skyboxPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+      //skyboxPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
+      //skyboxPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
+      //skyboxPipelineStateStream.RTVFormats = m_HDRRenderTarget->GetRenderTargetFormats();
 
-      D3D12_PIPELINE_STATE_STREAM_DESC skyboxPipelineStateStreamDesc = {
-          sizeof(SkyboxPipelineState), &skyboxPipelineStateStream
-      };
+      //D3D12_PIPELINE_STATE_STREAM_DESC skyboxPipelineStateStreamDesc = {
+      //    sizeof(SkyboxPipelineState), &skyboxPipelineStateStream
+      //};
 
-      _SkyboxProgram->Create(skyboxPipelineStateStreamDesc);
+      _SkyboxProgram->Create();
     }
 
 

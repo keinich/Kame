@@ -1,5 +1,7 @@
 #pragma once
 
+#include <dxgidebug.h>
+
 //#ifdef KAME_PLATFORM_WIN32
 #define KAME_NATIVE_WINDOW HWND
 namespace Kame {
@@ -22,6 +24,14 @@ namespace Kame {
   class KAME_API Application {
 
   public:
+
+    static void ReportLiveObjects() {
+      IDXGIDebug1* dxgiDebug;
+      DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug));
+
+      dxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_IGNORE_INTERNAL);
+      dxgiDebug->Release();
+    }
 
     friend class Window;
 
