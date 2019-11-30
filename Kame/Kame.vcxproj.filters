@@ -61,6 +61,9 @@
     <Filter Include="Kame\Platform\OpenGl">
       <UniqueIdentifier>{2BC03489-174F-BE52-C06D-D24DACDBCEF8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Platform\Vulkan">
+      <UniqueIdentifier>{5724E799-43B3-7063-ECD1-845ED83F8109}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\Platform\Win32">
       <UniqueIdentifier>{D94F3914-45B1-1622-CE1E-5DD43A7F4DE1}</UniqueIdentifier>
     </Filter>
@@ -361,8 +364,14 @@
     <ClInclude Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.h">
       <Filter>Kame\Platform\OpenGl</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Platform\Vulkan\VulkanTest.h">
+      <Filter>Kame\Platform\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Platform\Win32\Win32Window.h">
       <Filter>Kame\Platform\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Utility\Casting.h">
+      <Filter>Kame\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Utility\Hash.h">
       <Filter>Kame\Utility</Filter>
@@ -371,7 +380,6 @@
       <Filter>Kame\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\Utility\Casting.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -550,6 +558,9 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.cpp">
       <Filter>Kame\Platform\OpenGl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\Vulkan\VulkanTest.cpp">
+      <Filter>Kame\Platform\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\Win32\Win32Application.cpp">
       <Filter>Kame\Platform\Win32</Filter>

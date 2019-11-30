@@ -13,3 +13,9 @@
 [submodule "Kame\\vendor\\DirectXTex"]
 	path = Kame\\vendor\\DirectXTex
 	url = https://github.com/microsoft/DirectXTex
+[submodule "Kame/vendor/Volk"]
+	path = Kame/vendor/Volk
+	url = https://github.com/zeux/volk
+[submodule "Kame/vendor/Vulkan"]
+	path = Kame/vendor/Vulkan
+	url = https://github.com/KhronosGroup/Vulkan-Headers

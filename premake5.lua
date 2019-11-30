@@ -15,6 +15,7 @@ IncludeDir["Glad"] = "Kame/vendor/GLAD/include"
 IncludeDir["ImGui"] = "Kame/vendor/imgui"
 IncludeDir["glm"] = "Kame/vendor/glm"
 IncludeDir["DirectXTex"] = "Kame/vendor/DirectXTex/DirectXTex"
+IncludeDir["VulkanSdk"] = "$(VULKAN_SDK)/include"
 
 include "Kame/vendor/GLFW"
 include "Kame/vendor/Glad"
