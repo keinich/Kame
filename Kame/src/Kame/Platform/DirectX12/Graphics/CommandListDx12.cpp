@@ -635,18 +635,18 @@ namespace Kame {
     ClearTexture(*textureDx12, clearColor);
   }
 
-  void CommandListDx12::ClearDepthStencilTexture(const TextureDx12& texture, D3D12_CLEAR_FLAGS clearFlags, float depth, uint8_t stencil) {
+  void CommandListDx12::ClearDepthStencilTextureInternal(const TextureDx12& texture, D3D12_CLEAR_FLAGS clearFlags, float depth, uint8_t stencil) {
     TransitionBarrier(texture, D3D12_RESOURCE_STATE_DEPTH_WRITE);
     m_d3d12CommandList->ClearDepthStencilView(texture.GetDepthStencilView(), clearFlags, depth, stencil, 0, nullptr);
 
     TrackResource(texture);
   }
 
-  void CommandListDx12::ClearDepthStencilTextureBase(
+  void CommandListDx12::ClearDepthStencilTexture(
     const Texture* texture, D3D12_CLEAR_FLAGS clearFlags, float depth, uint8_t stencil
   ) {
     const TextureDx12* textureDx12 = static_cast<const TextureDx12*>(texture);
-    ClearDepthStencilTexture(*textureDx12, clearFlags, depth, stencil);
+    ClearDepthStencilTextureInternal(*textureDx12, clearFlags, depth, stencil);
   }
 
   void CommandListDx12::CopyTextureSubresource(TextureDx12& texture, uint32_t firstSubresource, uint32_t numSubresources, D3D12_SUBRESOURCE_DATA* subresourceData) {

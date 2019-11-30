@@ -783,7 +783,7 @@ namespace Kame {
       FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
 
       commandListBase->ClearTexture(m_HDRRenderTarget->GetTexture(AttachmentPoint::Color0), clearColor);
-      commandList->ClearDepthStencilTextureBase(m_HDRRenderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
+      commandListBase->ClearDepthStencilTexture(m_HDRRenderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
     }
 
     commandList->SetRenderTarget(*m_HDRRenderTarget);

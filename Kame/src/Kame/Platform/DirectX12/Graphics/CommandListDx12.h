@@ -187,8 +187,8 @@ namespace Kame {
     /**
      * Clear depth/stencil texture.
      */
-    void ClearDepthStencilTexture(const TextureDx12& texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0);
-    void ClearDepthStencilTextureBase(const Texture* texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0);
+    void ClearDepthStencilTextureInternal(const TextureDx12& texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0);
+    virtual void ClearDepthStencilTexture(const Texture* texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0) override;
 
     /**
      * Generate mips for the texture.
