@@ -872,7 +872,7 @@ namespace Kame {
     for (int i = AttachmentPoint::Color0; i <= AttachmentPoint::Color7; ++i) {
       const TextureDx12& texture = *static_cast<const TextureDx12*>(renderTarget.GetTexture(static_cast<AttachmentPoint>(i)));
 
-      if (texture.IsValid()) {
+      if (&texture && texture.IsValid()) {
         TransitionBarrier(texture, D3D12_RESOURCE_STATE_RENDER_TARGET);
         renderTargetDescriptors.push_back(texture.GetRenderTargetView());
 
@@ -885,7 +885,7 @@ namespace Kame {
     );
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE depthStencilDescriptor(D3D12_DEFAULT);
-    if (depthTexture.GetD3D12Resource()) {
+    if (&depthTexture && depthTexture.GetD3D12Resource()) {
       TransitionBarrier(depthTexture, D3D12_RESOURCE_STATE_DEPTH_WRITE);
       depthStencilDescriptor = depthTexture.GetDepthStencilView();
 

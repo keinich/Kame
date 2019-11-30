@@ -128,6 +128,9 @@ namespace Kame {
     // HDR Render target
     std::unique_ptr<RenderTarget> m_HDRRenderTarget;
 
+    std::shared_ptr<TextureDx12> _HDRTexture;
+    std::shared_ptr<TextureDx12> _DepthTexture;
+
     // Root signatures
     RootSignature m_SkyboxSignature;
     RootSignature m_HDRRootSignature;

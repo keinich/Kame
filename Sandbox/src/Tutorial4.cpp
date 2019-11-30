@@ -232,9 +232,11 @@ namespace Kame {
     colorClearValue.Color[2] = 0.9f;
     colorClearValue.Color[3] = 1.0f;
 
-    TextureDx12 HDRTexture = TextureDx12(colorDesc, &colorClearValue,
+    _HDRTexture.reset(
+      new TextureDx12(colorDesc, &colorClearValue,
       TextureUsage::RenderTarget,
-      L"HDR Texture");
+      L"HDR Texture")
+    );
 
     // Create a depth buffer for the HDR render target.
     auto depthDesc = CD3DX12_RESOURCE_DESC::Tex2D(depthBufferFormat, m_Width, m_Height);
@@ -244,13 +246,15 @@ namespace Kame {
     depthClearValue.Format = depthDesc.Format;
     depthClearValue.DepthStencil = { 1.0f, 0 };
 
-    TextureDx12 depthTexture = TextureDx12(depthDesc, &depthClearValue,
+    _DepthTexture.reset(
+      new TextureDx12(depthDesc, &depthClearValue,
       TextureUsage::Depth,
-      L"Depth Render Target");
+      L"Depth Render Target")
+    );
 
     // Attach the HDR texture to the HDR render target.
-    m_HDRRenderTarget->AttachTexture(AttachmentPoint::Color0, HDRTexture);
-    m_HDRRenderTarget->AttachTexture(AttachmentPoint::DepthStencil, depthTexture);
+    m_HDRRenderTarget->AttachTexture(AttachmentPoint::Color0, _HDRTexture.get());
+    m_HDRRenderTarget->AttachTexture(AttachmentPoint::DepthStencil, _DepthTexture.get());
 
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
     featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;

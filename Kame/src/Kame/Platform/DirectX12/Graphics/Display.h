@@ -79,7 +79,7 @@ namespace Kame {
      * frame since the color attachment point changes depending on the window's
      * current back buffer.
      */
-    const RenderTarget& GetRenderTarget() const;
+    const RenderTarget& GetRenderTarget();
 
     /**
      * Present the swapchain's back buffer to the screen.

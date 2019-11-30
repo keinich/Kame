@@ -73,7 +73,7 @@ namespace Kame {
 
     // Attach a texture to the render target.
     // The texture will be copied into the texture array.
-    virtual void AttachTexture(AttachmentPoint attachmentPoint, const Texture& texture) = 0;
+    virtual void AttachTexture(AttachmentPoint attachmentPoint, Texture* texture) = 0;
     //const Texture& GetTexture(AttachmentPoint attachmentPoint) const;
     virtual const Texture* GetTexture(AttachmentPoint attachmentPoint) const = 0;
 
@@ -113,7 +113,7 @@ namespace Kame {
     RenderTargetOf();
     virtual ~RenderTargetOf();
 
-    virtual void AttachTexture(AttachmentPoint attachmentPoint, const Texture& texture) override;
+    virtual void AttachTexture(AttachmentPoint attachmentPoint, Texture* texture) override;
 
     virtual const Texture* GetTexture(AttachmentPoint attachmentPoint) const override;
 
@@ -134,7 +134,7 @@ namespace Kame {
     virtual DXGI_FORMAT GetDepthStencilFormat() const override;
 
   protected:
-    std::vector<TextureType> m_Textures;
+    std::vector<TextureType*> m_Textures;
   };
 
   template<class TextureType>
@@ -146,26 +146,28 @@ namespace Kame {
   }
 
   template<class TextureType>
-  inline void Kame::RenderTargetOf<TextureType>::AttachTexture(AttachmentPoint attachmentPoint, const Texture& texture) {
-    const TextureType* x = static_cast<const TextureType*>(&texture);
-    m_Textures[attachmentPoint] = *x;
+  inline void Kame::RenderTargetOf<TextureType>::AttachTexture(AttachmentPoint attachmentPoint, Texture* texture) {
+    TextureType* x = static_cast<TextureType*>(texture);
+    m_Textures[attachmentPoint] = x;
 
-    if (texture.IsValid1()) {
-      m_Size.x = static_cast<uint32_t>(texture.GetWidth());
-      m_Size.y = static_cast<uint32_t>(texture.GetHeight());
+    if (texture->IsValid1()) {
+      m_Size.x = static_cast<uint32_t>(texture->GetWidth());
+      m_Size.y = static_cast<uint32_t>(texture->GetHeight());
     }
   }
 
   template<class TextureType>
   const Texture* RenderTargetOf<TextureType>::GetTexture(AttachmentPoint attachmentPoint) const {
-    return &m_Textures[attachmentPoint];
+    return m_Textures[attachmentPoint];
   }
 
   template<class TextureType>
   void RenderTargetOf<TextureType>::Resize(DirectX::XMUINT2 size) {
     m_Size = size;
     for (auto& texture : m_Textures) {
-      texture.Resize(m_Size.x, m_Size.y);
+      if (!texture)
+        continue;
+      texture->Resize(m_Size.x, m_Size.y);
     }
 
   }
@@ -196,10 +198,12 @@ namespace Kame {
     UINT64 height = 0;
 
     for (int i = AttachmentPoint::Color0; i <= AttachmentPoint::Color7; ++i) {
-      const TextureType& texture = m_Textures[i];
-      if (texture.IsValid1()) {
-        width = std::max(width, texture.GetWidth());
-        height = std::max(height, texture.GetHeight());
+      const auto texture = m_Textures[i];
+      if (!texture)
+        continue;
+      if (texture->IsValid1()) {
+        width = std::max(width, texture->GetWidth());
+        height = std::max(height, texture->GetHeight());
       }
     }
 
@@ -221,9 +225,11 @@ namespace Kame {
 
 
     for (int i = AttachmentPoint::Color0; i <= AttachmentPoint::Color0; ++i) {
-      const TextureType& texture = m_Textures[i];
-      if (texture.IsValid1()) {
-        rtvFormats.RTFormats[rtvFormats.NumRenderTargets++] = texture.GetFormat();
+      const auto texture = m_Textures[i];
+      if (!texture)
+        continue;
+      if (texture->IsValid1()) {
+        rtvFormats.RTFormats[rtvFormats.NumRenderTargets++] = texture->GetFormat();
       }
     }
 
@@ -233,9 +239,11 @@ namespace Kame {
   template<class TextureType>
   DXGI_FORMAT RenderTargetOf<TextureType>::GetDepthStencilFormat() const {
     DXGI_FORMAT dsvFormat = DXGI_FORMAT_UNKNOWN;
-    const TextureType& depthStencilTexture = m_Textures[AttachmentPoint::DepthStencil];
-    if (depthStencilTexture.IsValid1()) {
-      dsvFormat = depthStencilTexture.GetFormat();
+    const auto depthStencilTexture = m_Textures[AttachmentPoint::DepthStencil];
+    if (!depthStencilTexture)
+      return dsvFormat;
+    if (depthStencilTexture->IsValid1()) {
+      dsvFormat = depthStencilTexture->GetFormat();
     }
 
     return dsvFormat;
