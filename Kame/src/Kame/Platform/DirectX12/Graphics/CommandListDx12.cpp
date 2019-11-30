@@ -39,12 +39,12 @@ namespace Kame {
     ThrowIfFailed(device->CreateCommandList(0, m_d3d12CommandListType, m_d3d12CommandAllocator.Get(),
       nullptr, IID_PPV_ARGS(&m_d3d12CommandList)));
 
-    m_UploadBuffer = std::make_unique<UploadBuffer>();
+    m_UploadBuffer = CreateNotCopyableReference<UploadBuffer>();
 
-    m_ResourceStateTracker = std::make_unique<ResourceStateTracker>();
+    m_ResourceStateTracker = CreateNotCopyableReference<ResourceStateTracker>();
 
     for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
-      m_DynamicDescriptorHeap[i] = std::make_unique<DynamicDescriptorHeap>(static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
+      m_DynamicDescriptorHeap[i] = CreateNotCopyableReference<DynamicDescriptorHeap>(static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
       m_DescriptorHeaps[i] = nullptr;
     }
   }
@@ -446,7 +446,7 @@ namespace Kame {
 
   void CommandListDx12::GenerateMips_UAV(TextureDx12& texture, DXGI_FORMAT format) {
     if (!m_GenerateMipsPSO) {
-      m_GenerateMipsPSO = std::make_unique<GenerateMipsPSO>();
+      m_GenerateMipsPSO = CreateNotCopyableReference<GenerateMipsPSO>();
     }
 
     m_d3d12CommandList->SetPipelineState(m_GenerateMipsPSO->GetPipelineState().Get());
@@ -539,7 +539,7 @@ namespace Kame {
     }
 
     if (!m_PanoToCubemapPSO) {
-      m_PanoToCubemapPSO = std::make_unique<PanoToCubemapPSO>();
+      m_PanoToCubemapPSO = CreateNotCopyableReference<PanoToCubemapPSO>();
     }
 
     auto device = DX12Core::Get().GetDevice();

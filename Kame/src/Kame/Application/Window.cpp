@@ -71,7 +71,7 @@ namespace Kame {
     }
   }
 
-  void Window::RegisterCallbacks(std::shared_ptr<Game> pGame) {
+  void Window::RegisterCallbacks(Reference<Game> pGame) {
     _pGame = pGame;
 
     return;

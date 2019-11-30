@@ -129,7 +129,7 @@ namespace Kame {
     Microsoft::WRL::ComPtr<IDXGISwapChain4> m_dxgiSwapChain;
     TextureDx12 m_BackBufferTextures[BufferCount];
     // Marked mutable to allow modification in a const function.
-    mutable std::unique_ptr<RenderTarget> m_RenderTarget;
+    mutable NotCopyableReference<RenderTarget> m_RenderTarget;
 
     UINT m_CurrentBackBufferIndex;
 

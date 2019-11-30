@@ -71,7 +71,7 @@ namespace Kame {
 
     // Register a Game with this window. This allows
     // the window to callback functions in the Game class.
-    void RegisterCallbacks(std::shared_ptr<Game> pGame);
+    void RegisterCallbacks(Reference<Game> pGame);
 
     // Update and Draw can only be called by the application.
     virtual void OnUpdate(UpdateEventArgs& e);

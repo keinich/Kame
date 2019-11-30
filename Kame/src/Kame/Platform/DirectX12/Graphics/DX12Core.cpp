@@ -86,15 +86,15 @@ namespace Kame {
       throw std::exception("DXGI adapter enumeration failed.");
     }
 
-    m_DirectCommandQueue = std::make_shared<CommandQueue>(D3D12_COMMAND_LIST_TYPE_DIRECT);
-    m_ComputeCommandQueue = std::make_shared<CommandQueue>(D3D12_COMMAND_LIST_TYPE_COMPUTE);
-    m_CopyCommandQueue = std::make_shared<CommandQueue>(D3D12_COMMAND_LIST_TYPE_COPY);
+    m_DirectCommandQueue = CreateReference<CommandQueue>(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    m_ComputeCommandQueue = CreateReference<CommandQueue>(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+    m_CopyCommandQueue = CreateReference<CommandQueue>(D3D12_COMMAND_LIST_TYPE_COPY);
 
     m_TearingSupported = CheckTearingSupport();
 
     // Create descriptor allocators
     for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
-      m_DescriptorAllocators[i] = std::make_unique<DescriptorAllocator>(static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
+      m_DescriptorAllocators[i] = CreateNotCopyableReference<DescriptorAllocator>(static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
     }
 
     // Initialize frame counter 
@@ -330,8 +330,8 @@ namespace Kame {
     return m_d3d12Device;
   }
 
-  std::shared_ptr<CommandQueue> DX12Core::GetCommandQueue(D3D12_COMMAND_LIST_TYPE type) const {
-    std::shared_ptr<CommandQueue> commandQueue;
+  Reference<CommandQueue> DX12Core::GetCommandQueue(D3D12_COMMAND_LIST_TYPE type) const {
+    Reference<CommandQueue> commandQueue;
     switch (type) {
     case D3D12_COMMAND_LIST_TYPE_DIRECT:
       commandQueue = m_DirectCommandQueue;

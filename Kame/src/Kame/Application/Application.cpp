@@ -131,7 +131,7 @@ namespace Kame {
     }
   }
 
-  int Application::Run(std::shared_ptr<Game> game) {
+  int Application::Run(Reference<Game> game) {
 
     _Game = game;
 

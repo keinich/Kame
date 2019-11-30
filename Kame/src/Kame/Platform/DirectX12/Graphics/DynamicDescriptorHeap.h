@@ -163,7 +163,7 @@ namespace Kame {
     uint32_t m_DescriptorHandleIncrementSize;
 
     // The descriptor handle cache.
-    std::unique_ptr<D3D12_CPU_DESCRIPTOR_HANDLE[]> m_DescriptorHandleCache;
+    NotCopyableReference<D3D12_CPU_DESCRIPTOR_HANDLE[]> m_DescriptorHandleCache;
 
     // Descriptor handle cache per descriptor table.
     DescriptorTableCache m_DescriptorTableCache[MaxDescriptorTables];

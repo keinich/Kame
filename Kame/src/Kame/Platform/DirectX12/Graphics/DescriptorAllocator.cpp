@@ -11,8 +11,8 @@ namespace Kame {
 
   DescriptorAllocator::~DescriptorAllocator() {}
 
-  std::shared_ptr<DescriptorAllocatorPage> DescriptorAllocator::CreateAllocatorPage() {
-    auto newPage = std::make_shared<DescriptorAllocatorPage>(m_HeapType, m_NumDescriptorsPerHeap);
+  Reference<DescriptorAllocatorPage> DescriptorAllocator::CreateAllocatorPage() {
+    auto newPage = CreateReference<DescriptorAllocatorPage>(m_HeapType, m_NumDescriptorsPerHeap);
 
     m_HeapPool.emplace_back(newPage);
     m_AvailableHeaps.insert(m_HeapPool.size() - 1);

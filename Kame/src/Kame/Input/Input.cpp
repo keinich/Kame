@@ -4,17 +4,17 @@
 
 namespace Kame {
 
-  std::shared_ptr<Event<KeyEventArgs>> Input::KeyEvent(Kame::Key key) {
+  Reference<Event<KeyEventArgs>> Input::KeyEvent(Kame::Key key) {
     //TODO could init one event for each key to save performance...
     auto input = Application::Get().GetInput();
-    std::map<Kame::Key, std::shared_ptr<Event<KeyEventArgs>>>::iterator x = input->_KeyEvents.find(key);
+    std::map<Kame::Key, Reference<Event<KeyEventArgs>>>::iterator x = input->_KeyEvents.find(key);
     if (x == input->_KeyEvents.end()) {
-      std::shared_ptr<Event<KeyEventArgs>> e = std::make_shared< Event<KeyEventArgs>>();
+      Reference<Event<KeyEventArgs>> e = CreateReference< Event<KeyEventArgs>>();
       //e->AddHandler(BIND_FUNCTION_I(input, Input::OnKeyEvent)); //TODO das hier ist sowieso fragwürdig,
       // Wenn aus irgendeinem Grund zb das Release-Event nicht gefeuert wird, bleibt die Taste gefrückt
       // zb im Debugging kann das passieren
       input->_KeyEvents.insert(
-        std::map<Kame::Key, std::shared_ptr<Event<KeyEventArgs>>>::value_type(key, e)
+        std::map<Kame::Key, Reference<Event<KeyEventArgs>>>::value_type(key, e)
       );
       return e;
     }
@@ -23,17 +23,17 @@ namespace Kame {
     }
   }
 
-  std::shared_ptr<Event<KeyEventArgs>> Input::CustomEvent(std::wstring name) {
+  Reference<Event<KeyEventArgs>> Input::CustomEvent(std::wstring name) {
     //TODO could init one event for each key to save performance...
     auto input = Application::Get().GetInput();
-    std::map<std::wstring, std::shared_ptr<Event<KeyEventArgs>>>::iterator x = input->_CustomEvents.find(name);
+    std::map<std::wstring, Reference<Event<KeyEventArgs>>>::iterator x = input->_CustomEvents.find(name);
     if (x == input->_CustomEvents.end()) {
-      std::shared_ptr<Event<KeyEventArgs>> e = std::make_shared< Event<KeyEventArgs>>();
+      Reference<Event<KeyEventArgs>> e = CreateReference< Event<KeyEventArgs>>();
       //e->AddHandler(BIND_FUNCTION_I(input, Input::OnKeyEvent)); //TODO das hier ist sowieso fragwürdig,
       // Wenn aus irgendeinem Grund zb das Release-Event nicht gefeuert wird, bleibt die Taste gefrückt
       // zb im Debugging kann das passieren
       input->_CustomEvents.insert(
-        std::map<std::wstring, std::shared_ptr<Event<KeyEventArgs>>>::value_type(name, e)
+        std::map<std::wstring, Reference<Event<KeyEventArgs>>>::value_type(name, e)
       );
       return e;
     }

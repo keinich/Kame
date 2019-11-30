@@ -26,15 +26,15 @@ namespace Kame {
     return m_CurrentPage->Allocate(sizeInBytes, alignment);
   }
 
-  std::shared_ptr<UploadBuffer::Page> UploadBuffer::RequestPage() {
-    std::shared_ptr<Page> page;
+  Reference<UploadBuffer::Page> UploadBuffer::RequestPage() {
+    Reference<Page> page;
 
     if (!m_AvailablePages.empty()) {
       page = m_AvailablePages.front();
       m_AvailablePages.pop_front();
     }
     else {
-      page = std::make_shared<Page>(m_PageSize);
+      page = CreateReference<Page>(m_PageSize);
       m_PagePool.push_back(page);
     }
 

@@ -70,10 +70,10 @@ namespace Kame {
     void ReleaseStaleDescriptors(uint64_t frameNumber);
 
   private:
-    using DescriptorHeapPool = std::vector< std::shared_ptr<DescriptorAllocatorPage> >;
+    using DescriptorHeapPool = std::vector< Reference<DescriptorAllocatorPage> >;
 
     // Create a new heap with a specific number of descriptors.
-    std::shared_ptr<DescriptorAllocatorPage> CreateAllocatorPage();
+    Reference<DescriptorAllocatorPage> CreateAllocatorPage();
 
     D3D12_DESCRIPTOR_HEAP_TYPE m_HeapType;
     uint32_t m_NumDescriptorsPerHeap;

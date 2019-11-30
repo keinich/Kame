@@ -60,7 +60,7 @@ namespace Kame {
 
   }
 
-  std::shared_ptr<CommandListDx12> GraphicsCore::BeginCommandListDx(D3D12_COMMAND_LIST_TYPE type) {
+  Reference<CommandListDx12> GraphicsCore::BeginCommandListDx(D3D12_COMMAND_LIST_TYPE type) {
     auto commandQueue = s_Instance->GetCommandQueue(type);
     auto commandList = commandQueue->GetCommandList();
     return commandList;
@@ -72,7 +72,7 @@ namespace Kame {
     return commandList.get();
   }
 
-  void GraphicsCore::ExecuteCommandList(std::shared_ptr<CommandListDx12> commandList) {
+  void GraphicsCore::ExecuteCommandList(Reference<CommandListDx12> commandList) {
     s_Instance->GetCommandQueue(commandList->GetCommandListType())->ExecuteCommandList(commandList);
   }
 

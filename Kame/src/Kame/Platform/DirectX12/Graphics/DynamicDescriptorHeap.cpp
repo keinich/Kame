@@ -19,7 +19,7 @@ namespace Kame {
     m_DescriptorHandleIncrementSize = DX12Core::Get().GetDescriptorHandleIncrementSize(heapType);
 
     // Allocate space for staging CPU visible descriptors.
-    m_DescriptorHandleCache = std::make_unique<D3D12_CPU_DESCRIPTOR_HANDLE[]>(m_NumDescriptorsPerHeap);
+    m_DescriptorHandleCache = CreateNotCopyableReference<D3D12_CPU_DESCRIPTOR_HANDLE[]>(m_NumDescriptorsPerHeap);
   }
 
   DynamicDescriptorHeap::~DynamicDescriptorHeap() {}

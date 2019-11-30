@@ -130,7 +130,7 @@ namespace Kame {
      * - D3D12_COMMAND_LIST_TYPE_COMPUTE: Can be used for dispatch or copy commands.
      * - D3D12_COMMAND_LIST_TYPE_COPY   : Can be used for copy commands.
      */
-    virtual std::shared_ptr<CommandQueue> GetCommandQueue(D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT) const override;
+    virtual Reference<CommandQueue> GetCommandQueue(D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT) const override;
 
     /**
      * Flush all command queues.
@@ -175,11 +175,11 @@ namespace Kame {
 
     Microsoft::WRL::ComPtr<ID3D12Device2> m_d3d12Device;
 
-    std::shared_ptr<CommandQueue> m_DirectCommandQueue;
-    std::shared_ptr<CommandQueue> m_ComputeCommandQueue;
-    std::shared_ptr<CommandQueue> m_CopyCommandQueue;
+    Reference<CommandQueue> m_DirectCommandQueue;
+    Reference<CommandQueue> m_ComputeCommandQueue;
+    Reference<CommandQueue> m_CopyCommandQueue;
 
-    std::unique_ptr<DescriptorAllocator> m_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+    NotCopyableReference<DescriptorAllocator> m_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
 
     bool m_TearingSupported;
 

@@ -48,7 +48,7 @@ namespace Kame {
     // Creates a NULL descriptor.
     DescriptorAllocation();
 
-    DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, uint32_t numHandles, uint32_t descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page);
+    DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, uint32_t numHandles, uint32_t descriptorSize, Reference<DescriptorAllocatorPage> page);
 
     // The destructor will automatically free the allocation.
     ~DescriptorAllocation();
@@ -72,7 +72,7 @@ namespace Kame {
 
     // Get the heap that this allocation came from.
     // (For internal use only).
-    std::shared_ptr<DescriptorAllocatorPage> GetDescriptorAllocatorPage() const;
+    Reference<DescriptorAllocatorPage> GetDescriptorAllocatorPage() const;
 
   private:
     // Free the descriptor back to the heap it came from.
@@ -86,7 +86,7 @@ namespace Kame {
     uint32_t m_DescriptorSize;
 
     // A pointer back to the original page where this allocation came from.
-    std::shared_ptr<DescriptorAllocatorPage> m_Page;
+    Reference<DescriptorAllocatorPage> m_Page;
   };
 
 }

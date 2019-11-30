@@ -14,7 +14,7 @@ namespace Kame {
     , m_Page(nullptr)
   {}
 
-  DescriptorAllocation::DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, uint32_t numHandles, uint32_t descriptorSize, std::shared_ptr<DescriptorAllocatorPage> page)
+  DescriptorAllocation::DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE descriptor, uint32_t numHandles, uint32_t descriptorSize, Reference<DescriptorAllocatorPage> page)
     : m_Descriptor(descriptor)
     , m_NumHandles(numHandles)
     , m_DescriptorSize(descriptorSize)
@@ -77,7 +77,7 @@ namespace Kame {
     return m_NumHandles;
   }
 
-  std::shared_ptr<DescriptorAllocatorPage> DescriptorAllocation::GetDescriptorAllocatorPage() const {
+  Reference<DescriptorAllocatorPage> DescriptorAllocation::GetDescriptorAllocatorPage() const {
     return m_Page;
   }
 

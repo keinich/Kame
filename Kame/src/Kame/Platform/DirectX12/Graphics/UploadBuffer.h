@@ -109,16 +109,16 @@ namespace Kame {
     };
 
     // A pool of memory pages.
-    using PagePool = std::deque< std::shared_ptr<Page> >;
+    using PagePool = std::deque< Reference<Page> >;
 
     // Request a page from the pool of available pages
     // or create a new page if there are no available pages.
-    std::shared_ptr<Page> RequestPage();
+    Reference<Page> RequestPage();
 
     PagePool m_PagePool;
     PagePool m_AvailablePages;
 
-    std::shared_ptr<Page> m_CurrentPage;
+    Reference<Page> m_CurrentPage;
 
     // The size of each page of memory.
     size_t m_PageSize;
