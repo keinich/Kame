@@ -54,7 +54,7 @@ namespace Kame {
       return *m_RootSignature;
     }
 
-    ID3D12PipelineState* GetPipelineStateObject(void) const { return m_PSO; }
+    ID3D12PipelineState* GetPipelineStateObject(void) const { return m_PSO.Get(); }
 
     virtual void Create() override;
 
@@ -87,7 +87,7 @@ namespace Kame {
 
     const RootSignature* m_RootSignature;
 
-    ID3D12PipelineState* m_PSO;
+    ComPtr<ID3D12PipelineState> m_PSO;
     PipelineStateStream _PipelineStateStream;
   };
 
