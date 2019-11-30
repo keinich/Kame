@@ -277,9 +277,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderTarget.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Resource.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
@@ -380,6 +377,9 @@
       <Filter>Kame\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderTarget.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -505,9 +505,6 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderTarget.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Resource.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
@@ -572,6 +569,9 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
+    <ClCompile Include="src\Kame\Graphics\RenderTarget.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

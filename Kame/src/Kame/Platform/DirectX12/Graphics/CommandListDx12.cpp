@@ -10,7 +10,7 @@
 #include "GenerateMipsPSO.h"
 #include "IndexBuffer.h"
 #include "PanoToCubemapPSO.h"
-#include "RenderTarget.h"
+#include "Kame/Graphics/RenderTarget.h"
 #include "Resource.h"
 #include "ResourceStateTracker.h"
 #include "RootSignature.h"

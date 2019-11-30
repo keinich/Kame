@@ -40,7 +40,6 @@
 #include "Kame/Events/EventArgs.h"
 #include "GUI.h"
 #include "HighResolutionClock.h"
-#include "RenderTarget.h"
 #include "TextureDx12.h"
 
 #include <memory>
@@ -49,6 +48,7 @@ namespace Kame {
 
   class Game;
   class TextureDx12;
+  class RenderTarget;
 
   class KAME_API Display : public std::enable_shared_from_this<Display> {
 

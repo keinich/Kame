@@ -7,7 +7,7 @@
 #include <Kame/Platform/DirectX12/Graphics/CommandListDx12.h>
 #include <Kame/Platform/DirectX12/Graphics/CommandQueue.h>
 
-#include <Kame/Platform/DirectX12/Graphics/RenderTarget.h>
+#include <Kame/Graphics/RenderTarget.h>
 #include <Kame/Platform/DirectX12/Graphics/TextureDx12.h>
 
 namespace Kame {

@@ -209,7 +209,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemap_CS.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderTarget.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderTarget.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Resource.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.h" />
@@ -287,7 +287,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderTarget.cpp" />
+    <ClCompile Include="src\Kame\Graphics\RenderTarget.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Resource.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.cpp" />
