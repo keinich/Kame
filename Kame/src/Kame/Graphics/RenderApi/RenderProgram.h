@@ -1,6 +1,6 @@
 #pragma once
 
-#include <d3d12.h> //TODO abstract away D3D12_PIPELINE_STATE_STREAM_DESC
+#include <d3d12.h> //TODO abstract away D3D12_PIPELINE_STATE_STREAM_DESC, CD3DX12_RASTERIZER_DESC
 
 namespace Kame {
 
@@ -30,6 +30,8 @@ namespace Kame {
     virtual void SetPixelShader1(const D3D12_SHADER_BYTECODE& Binary) = 0;
 
     virtual void SetInputLayout1(UINT NumElements, const D3D12_INPUT_ELEMENT_DESC* pInputElementDescs) = 0;
+
+    virtual void SetRasterizer(CD3DX12_RASTERIZER_DESC rasterizerDesc) = 0;
 
   };
 

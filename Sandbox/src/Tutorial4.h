@@ -140,11 +140,12 @@ namespace Kame {
 
     // Pipeline state object.
     // Skybox PSO
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_SkyboxPipelineState;
     Reference<Kame::RenderProgram> _SkyboxProgram;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_HDRPipelineState;
+    Reference<Kame::RenderProgram> _HDRProgram;
+    Reference<Kame::RenderProgram> _SDRProgram;
+    //Microsoft::WRL::ComPtr<ID3D12PipelineState> m_HDRPipelineState;
     // HDR -> SDR tone mapping PSO.
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_SDRPipelineState;
+    //Microsoft::WRL::ComPtr<ID3D12PipelineState> m_SDRPipelineState;
 
     D3D12_RECT m_ScissorRect;
 

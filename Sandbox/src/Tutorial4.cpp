@@ -182,6 +182,8 @@ namespace Kame {
     m_HDRRenderTarget.reset(GraphicsCore::CreateRenderTarget());
 
     _SkyboxProgram.reset(new RenderProgramDx12());
+    _HDRProgram.reset(new RenderProgramDx12());
+    _SDRProgram.reset(new RenderProgramDx12());
 
   }
 
@@ -268,65 +270,6 @@ namespace Kame {
       featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
     }
 
-    // Create a root signature and PSO for the skybox shaders.
-    {
-      // Load the Skybox shaders.
-      ComPtr<ID3DBlob> vs;
-      ComPtr<ID3DBlob> ps;
-      ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\Skybox_VS.cso", &vs));
-      ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\Skybox_PS.cso", &ps));
-
-      // Setup the input layout for the skybox vertex shader.
-      D3D12_INPUT_ELEMENT_DESC inputLayout[1] = {
-          { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-      };
-
-      // Allow input layout and deny unnecessary access to certain pipeline stages.
-      D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
-        D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
-        D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
-        D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
-
-      CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-
-      CD3DX12_ROOT_PARAMETER1 rootParameters[2];
-      rootParameters[0].InitAsConstants(sizeof(DirectX::XMMATRIX) / 4, 0, 0, D3D12_SHADER_VISIBILITY_VERTEX);
-      rootParameters[1].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
-
-      CD3DX12_STATIC_SAMPLER_DESC linearClampSampler(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
-
-      CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
-      rootSignatureDescription.Init_1_1(2, rootParameters, 1, &linearClampSampler, rootSignatureFlags);
-
-      m_SkyboxSignature.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
-
-      // Setup the Skybox pipeline state.
-      struct SkyboxPipelineState {
-        CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
-        CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
-        CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
-        CD3DX12_PIPELINE_STATE_STREAM_VS VS;
-        CD3DX12_PIPELINE_STATE_STREAM_PS PS;
-        CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
-      } skyboxPipelineStateStream;
-
-      skyboxPipelineStateStream.pRootSignature = m_SkyboxSignature.GetRootSignature().Get();
-      skyboxPipelineStateStream.InputLayout = { inputLayout, 1 };
-      skyboxPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-      skyboxPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
-      skyboxPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
-      skyboxPipelineStateStream.RTVFormats = m_HDRRenderTarget->GetRenderTargetFormats();
-
-      D3D12_PIPELINE_STATE_STREAM_DESC skyboxPipelineStateStreamDesc = {
-          sizeof(SkyboxPipelineState), &skyboxPipelineStateStream
-      };
-      ThrowIfFailed(device->CreatePipelineState(&skyboxPipelineStateStreamDesc, IID_PPV_ARGS(&m_SkyboxPipelineState)));
-    }
-
-
-
-
     {
       // Load the Skybox shaders.
       ComPtr<ID3DBlob> vs;
@@ -365,27 +308,6 @@ namespace Kame {
       _SkyboxProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
       _SkyboxProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
       _SkyboxProgram->SetRenderTargetFormats1(m_HDRRenderTarget->GetRenderTargetFormats());
-      //_SkyboxProgram->Finalize();
-
-      //struct SkyboxPipelineState {
-      //  CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
-      //  CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
-      //  CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
-      //  CD3DX12_PIPELINE_STATE_STREAM_VS VS;
-      //  CD3DX12_PIPELINE_STATE_STREAM_PS PS;
-      //  CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
-      //} skyboxPipelineStateStream;
-
-      //skyboxPipelineStateStream.pRootSignature = m_SkyboxSignature.GetRootSignature().Get();
-      //skyboxPipelineStateStream.InputLayout = { inputLayout, 1 };
-      //skyboxPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-      //skyboxPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
-      //skyboxPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
-      //skyboxPipelineStateStream.RTVFormats = m_HDRRenderTarget->GetRenderTargetFormats();
-
-      //D3D12_PIPELINE_STATE_STREAM_DESC skyboxPipelineStateStreamDesc = {
-      //    sizeof(SkyboxPipelineState), &skyboxPipelineStateStream
-      //};
 
       _SkyboxProgram->Create();
     }
@@ -428,29 +350,14 @@ namespace Kame {
 
       m_HDRRootSignature.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
 
-      // Setup the HDR pipeline state.
-      struct HDRPipelineStateStream {
-        CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
-        CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
-        CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
-        CD3DX12_PIPELINE_STATE_STREAM_VS VS;
-        CD3DX12_PIPELINE_STATE_STREAM_PS PS;
-        CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
-        CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
-      } hdrPipelineStateStream;
+      _HDRProgram->SetRootSignature(m_HDRRootSignature);
+      _HDRProgram->SetInputLayout1(VertexPositionNormalTexture::InputElementCount, VertexPositionNormalTexture::InputElements);
+      _HDRProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      _HDRProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      _HDRProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      _HDRProgram->SetRenderTargetFormats1(m_HDRRenderTarget->GetRenderTargetFormats(), m_HDRRenderTarget->GetDepthStencilFormat());
 
-      hdrPipelineStateStream.pRootSignature = m_HDRRootSignature.GetRootSignature().Get();
-      hdrPipelineStateStream.InputLayout = { VertexPositionNormalTexture::InputElements, VertexPositionNormalTexture::InputElementCount };
-      hdrPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-      hdrPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
-      hdrPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
-      hdrPipelineStateStream.DSVFormat = m_HDRRenderTarget->GetDepthStencilFormat();
-      hdrPipelineStateStream.RTVFormats = m_HDRRenderTarget->GetRenderTargetFormats();
-
-      D3D12_PIPELINE_STATE_STREAM_DESC hdrPipelineStateStreamDesc = {
-          sizeof(HDRPipelineStateStream), &hdrPipelineStateStream
-      };
-      ThrowIfFailed(device->CreatePipelineState(&hdrPipelineStateStreamDesc, IID_PPV_ARGS(&m_HDRPipelineState)));
+      _HDRProgram->Create();
     }
 
     // Create the SDR Root Signature
@@ -477,38 +384,18 @@ namespace Kame {
       CD3DX12_RASTERIZER_DESC rasterizerDesc(D3D12_DEFAULT);
       rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
 
-      struct SDRPipelineStateStream {
-        CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
-        CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
-        CD3DX12_PIPELINE_STATE_STREAM_VS VS;
-        CD3DX12_PIPELINE_STATE_STREAM_PS PS;
-        CD3DX12_PIPELINE_STATE_STREAM_RASTERIZER Rasterizer;
-        CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
-      } sdrPipelineStateStream;
+      _SDRProgram->SetRootSignature(m_SDRRootSignature);
+      _SDRProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      _SDRProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      _SDRProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      _SDRProgram->SetRasterizer(rasterizerDesc);
+      _SDRProgram->SetRenderTargetFormats1(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
 
-      sdrPipelineStateStream.pRootSignature = m_SDRRootSignature.GetRootSignature().Get();
-      sdrPipelineStateStream.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-      sdrPipelineStateStream.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
-      sdrPipelineStateStream.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
-      sdrPipelineStateStream.Rasterizer = rasterizerDesc;
-      sdrPipelineStateStream.RTVFormats = m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats();
-
-      D3D12_PIPELINE_STATE_STREAM_DESC sdrPipelineStateStreamDesc = {
-          sizeof(SDRPipelineStateStream), &sdrPipelineStateStream
-      };
-      ThrowIfFailed(device->CreatePipelineState(&sdrPipelineStateStreamDesc, IID_PPV_ARGS(&m_SDRPipelineState)));
+      _SDRProgram->Create();
     }
 
     auto fenceValue = commandQueue->ExecuteCommandList(commandList);
     commandQueue->WaitForFenceValue(fenceValue);
-
-
-    //VertexLayout layout = {
-    //  {ShaderDataType::Float3, "Position"},
-    //  {ShaderDataType::Float4, "Color"},
-    //  {ShaderDataType::Float3, "Normal"}
-    //};
-
 
     return true;
   }
@@ -893,7 +780,7 @@ namespace Kame {
     }
 
 
-    commandList->SetPipelineState(m_HDRPipelineState);
+    commandListBase->SetRenderProgram(_HDRProgram.get());
     commandList->SetGraphicsRootSignature(m_HDRRootSignature);
 
     // Upload lights
@@ -1066,7 +953,7 @@ namespace Kame {
     // Perform HDR -> SDR tonemapping directly to the Window's render target.
     commandList->SetRenderTarget(m_pWindow->GetDisplay().GetRenderTarget());
     commandList->SetViewport(m_pWindow->GetDisplay().GetRenderTarget().GetViewport());
-    commandList->SetPipelineState(m_SDRPipelineState);
+    commandListBase->SetRenderProgram(_SDRProgram.get());
     commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->SetGraphicsRootSignature(m_SDRRootSignature);
     commandList->SetGraphics32BitConstants(0, g_TonemapParameters);
