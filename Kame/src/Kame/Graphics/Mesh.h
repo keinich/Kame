@@ -30,9 +30,10 @@
   */
 
   //TODO make this RenderApi independent
+#include "Kame/Graphics/RenderApi/CommandList.h"
 #include "Kame/Platform/DirectX12/Graphics/CommandListDx12.h"
-#include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
-#include "Kame/Platform/DirectX12/Graphics/IndexBuffer.h"
+#include "Kame/Platform/DirectX12/Graphics/VertexBufferDx12.h"
+#include "Kame/Platform/DirectX12/Graphics/IndexBufferDx12.h"
 
 #include <DirectXMath.h>
 #include <d3d12.h>
@@ -95,7 +96,7 @@ namespace Kame {
 
   public:
 
-    void Draw(CommandListDx12& commandList);
+    void Draw(CommandList* commandList);
 
     static std::unique_ptr<Mesh> CreateCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
     static std::unique_ptr<Mesh> CreateSphere(CommandListDx12& commandList, float diameter = 1, size_t tessellation = 16, bool rhcoords = false);
@@ -117,8 +118,8 @@ namespace Kame {
     void Initialize(CommandListDx12& commandList, VertexCollection& vertices, IndexCollection& indices, bool rhcoords);
     void Initialize(CommandListDx12& commandList, SimpleVertexCollection& vertices, IndexCollection& indices, bool rhcoords);
 
-    VertexBuffer m_VertexBuffer;
-    IndexBuffer m_IndexBuffer;
+    VertexBufferDx12 m_VertexBuffer;
+    IndexBufferDx12 m_IndexBuffer;
 
     UINT m_IndexCount;
   };

@@ -161,11 +161,11 @@
     <ClInclude Include="src\Kame\Graphics\MeshManager.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\CommandList.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\GpuResource.h" />
-    <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer1.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgram.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgramSignature.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\Texture.h" />
-    <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer1.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexLayout.h" />
     <ClInclude Include="src\Kame\Graphics\Renderer3D.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
@@ -207,7 +207,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\HighResolutionClock.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ImGUI_PS.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ImGUI_VS.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemap_CS.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.h" />
@@ -222,7 +222,7 @@
     <ClInclude Include="src\Kame\Graphics\RenderApi\TextureUsage.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ThreadSafeQueue.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBufferDx12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\d3dx12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\dxd12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\imconfig.h" />
@@ -287,7 +287,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsContext.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\HighResolutionClock.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp" />
@@ -299,7 +299,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\StructuredBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\TextureDx12.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBufferDx12.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui_demo.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui_draw.cpp" />

@@ -130,13 +130,7 @@
     <ClInclude Include="src\Kame\Graphics\RenderApi\CommandList.h">
       <Filter>Kame\Graphics\RenderApi</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer1.h">
-      <Filter>Kame\Graphics\RenderApi</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Graphics\RenderApi\Texture.h">
-      <Filter>Kame\Graphics\RenderApi</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer1.h">
       <Filter>Kame\Graphics\RenderApi</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexLayout.h">
@@ -262,9 +256,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ImGUI_VS.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
@@ -290,9 +281,6 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\d3dx12.h">
@@ -384,6 +372,18 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\RenderApi\GpuResource.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBufferDx12.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer.h">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer.h">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -497,9 +497,6 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\HighResolutionClock.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBuffer.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
@@ -519,9 +516,6 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui.cpp">
@@ -575,6 +569,12 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResourceDx12.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBufferDx12.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
   </ItemGroup>

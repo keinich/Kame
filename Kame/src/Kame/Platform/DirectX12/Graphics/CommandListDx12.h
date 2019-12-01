@@ -36,6 +36,8 @@
 
 #include <Kame/Graphics/RenderApi/CommandList.h>
 
+#include <Kame/Graphics/RenderApi/IndexBuffer.h>
+
 #include <d3d12.h>
 #include <wrl.h>
 
@@ -51,7 +53,7 @@ namespace Kame {
   class ConstantBuffer;
   class DynamicDescriptorHeap;
   class GenerateMipsPSO;
-  class IndexBuffer;
+  class IndexBufferDx12;
   class PanoToCubemapPSO;
   class RenderTarget;
   class GpuResourceDx12;
@@ -60,7 +62,7 @@ namespace Kame {
   class RootSignatureDx12;
   class TextureDx12;
   class UploadBuffer;
-  class VertexBuffer;
+  class VertexBufferDx12;
   class GraphicsPSO;
 
   class KAME_API CommandListDx12 : public CommandList {
@@ -134,18 +136,18 @@ namespace Kame {
     /**
      * Copy the contents to a vertex buffer in GPU memory.
      */
-    void CopyVertexBuffer(VertexBuffer& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData);
+    void CopyVertexBuffer(VertexBufferDx12& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData);
     template<typename T>
-    void CopyVertexBuffer(VertexBuffer& vertexBuffer, const std::vector<T>& vertexBufferData) {
+    void CopyVertexBuffer(VertexBufferDx12& vertexBuffer, const std::vector<T>& vertexBufferData) {
       CopyVertexBuffer(vertexBuffer, vertexBufferData.size(), sizeof(T), vertexBufferData.data());
     }
 
     /**
      * Copy the contents to a index buffer in GPU memory.
      */
-    void CopyIndexBuffer(IndexBuffer& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData);
+    void CopyIndexBuffer(IndexBufferDx12& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData);
     template<typename T>
-    void CopyIndexBuffer(IndexBuffer& indexBuffer, const std::vector<T>& indexBufferData) {
+    void CopyIndexBuffer(IndexBufferDx12& indexBuffer, const std::vector<T>& indexBufferData) {
       assert(sizeof(T) == 2 || sizeof(T) == 4);
 
       DXGI_FORMAT indexFormat = (sizeof(T) == 2) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
@@ -236,7 +238,7 @@ namespace Kame {
     /**
      * Set the vertex buffer to the rendering pipeline.
      */
-    void SetVertexBuffer(uint32_t slot, const VertexBuffer& vertexBuffer);
+    virtual void SetVertexBuffer(uint32_t slot, const VertexBuffer* vertexBuffer) override;
 
     /**
      * Set dynamic vertex buffer data to the rendering pipeline.
@@ -250,7 +252,7 @@ namespace Kame {
     /**
      * Bind the index buffer to the rendering pipeline.
      */
-    void SetIndexBuffer(const IndexBuffer& indexBuffer);
+    virtual void SetIndexBuffer(const IndexBuffer* indexBuffer) override;
 
     /**
      * Bind dynamic index buffer data to the rendering pipeline.
@@ -353,8 +355,8 @@ namespace Kame {
     /**
      * Draw geometry.
      */
-    void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t startVertex = 0, uint32_t startInstance = 0);
-    void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t startIndex = 0, int32_t baseVertex = 0, uint32_t startInstance = 0);
+    virtual void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t startVertex = 0, uint32_t startInstance = 0) override;
+    virtual void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t startIndex = 0, int32_t baseVertex = 0, uint32_t startInstance = 0) override;
 
     /**
      * Dispatch a compute shader.

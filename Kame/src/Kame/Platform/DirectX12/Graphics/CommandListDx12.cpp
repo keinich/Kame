@@ -8,7 +8,7 @@
 #include "CommandQueue.h"
 #include "DynamicDescriptorHeap.h"
 #include "GenerateMipsPSO.h"
-#include "IndexBuffer.h"
+#include "IndexBufferDx12.h"
 #include "PanoToCubemapPSO.h"
 #include "Kame/Graphics/RenderTarget.h"
 #include "GpuResourceDx12.h"
@@ -17,7 +17,7 @@
 #include "StructuredBuffer.h"
 #include "TextureDx12.h"
 #include "UploadBuffer.h"
-#include "VertexBuffer.h"
+#include "VertexBufferDx12.h"
 #include "DirectXTex.h"
 
 #include "Kame/Utility/Casting.h"
@@ -183,11 +183,11 @@ namespace Kame {
     buffer.CreateViews(numElements, elementSize);
   }
 
-  void CommandListDx12::CopyVertexBuffer(VertexBuffer& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData) {
+  void CommandListDx12::CopyVertexBuffer(VertexBufferDx12& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData) {
     CopyBuffer(vertexBuffer, numVertices, vertexStride, vertexBufferData);
   }
 
-  void CommandListDx12::CopyIndexBuffer(IndexBuffer& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
+  void CommandListDx12::CopyIndexBuffer(IndexBufferDx12& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
     size_t indexSizeInBytes = indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4;
     CopyBuffer(indexBuffer, numIndicies, indexSizeInBytes, indexBufferData);
   }
@@ -696,14 +696,15 @@ namespace Kame {
     m_d3d12CommandList->SetComputeRoot32BitConstants(rootParameterIndex, numConstants, constants, 0);
   }
 
-  void CommandListDx12::SetVertexBuffer(uint32_t slot, const VertexBuffer& vertexBuffer) {
-    TransitionBarrier(vertexBuffer, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+  void CommandListDx12::SetVertexBuffer(uint32_t slot, const VertexBuffer* vertexBuffer) {
+    const VertexBufferDx12& vertexBufferDx12 = *static_cast<const VertexBufferDx12*>(vertexBuffer);
+    TransitionBarrier(vertexBufferDx12, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 
-    auto vertexBufferView = vertexBuffer.GetVertexBufferView();
+    auto vertexBufferView = vertexBufferDx12.GetVertexBufferView();
 
     m_d3d12CommandList->IASetVertexBuffers(slot, 1, &vertexBufferView);
 
-    TrackResource(vertexBuffer);
+    TrackResource(vertexBufferDx12);
   }
 
   void CommandListDx12::SetDynamicVertexBuffer(uint32_t slot, size_t numVertices, size_t vertexSize, const void* vertexBufferData) {
@@ -720,14 +721,16 @@ namespace Kame {
     m_d3d12CommandList->IASetVertexBuffers(slot, 1, &vertexBufferView);
   }
 
-  void CommandListDx12::SetIndexBuffer(const IndexBuffer& indexBuffer) {
-    TransitionBarrier(indexBuffer, D3D12_RESOURCE_STATE_INDEX_BUFFER);
+  void CommandListDx12::SetIndexBuffer(const IndexBuffer* indexBuffer) {
+    const IndexBufferDx12& indexBufferDx12 = *static_cast<const IndexBufferDx12*>(indexBuffer);
 
-    auto indexBufferView = indexBuffer.GetIndexBufferView();
+    TransitionBarrier(indexBufferDx12, D3D12_RESOURCE_STATE_INDEX_BUFFER);
+
+    auto indexBufferView = indexBufferDx12.GetIndexBufferView();
 
     m_d3d12CommandList->IASetIndexBuffer(&indexBufferView);
 
-    TrackResource(indexBuffer);
+    TrackResource(indexBufferDx12);
   }
 
   void CommandListDx12::SetDynamicIndexBuffer(size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
@@ -906,7 +909,7 @@ namespace Kame {
 
     const TextureDx12& depthTexture = *static_cast<const TextureDx12*>(
       renderTarget.GetTexture(AttachmentPoint::DepthStencil)
-    );
+      );
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE depthStencilDescriptor(D3D12_DEFAULT);
     if (&depthTexture && depthTexture.GetD3D12Resource()) {

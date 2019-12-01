@@ -33,14 +33,14 @@
 
 #include "Kame/Graphics/Camera.h"
 #include "Kame/Platform/DirectX12/Graphics/Game.h"
-#include "Kame/Platform/DirectX12/Graphics/IndexBuffer.h"
+#include "Kame/Platform/DirectX12/Graphics/IndexBufferDx12.h"
 #include "Kame/Graphics/Light.h"
 #include "Kame/Platform/DirectX12/Graphics/Display.h"
 #include "Kame/Graphics/Mesh.h"
 #include "Kame/Graphics/RenderTarget.h"
 #include "Kame/Platform/DirectX12/Graphics/RootSignatureDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/TextureDx12.h"
-#include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
+#include "Kame/Platform/DirectX12/Graphics/VertexBufferDx12.h"
 
 #include "Kame/Platform/DirectX12/Graphics/PipelineState.h"
 

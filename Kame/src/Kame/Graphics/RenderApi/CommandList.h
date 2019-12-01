@@ -9,6 +9,8 @@ namespace Kame {
   class RenderTarget;
   class RenderProgram;
   class RenderProgramSignature;
+  class VertexBuffer;
+  class IndexBuffer;
 
   class CommandList {
 
@@ -66,6 +68,12 @@ namespace Kame {
       UINT numSubresources = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
       const D3D12_SHADER_RESOURCE_VIEW_DESC* srv = nullptr
     ) = 0;
+
+    virtual void SetVertexBuffer(uint32_t slot, const VertexBuffer* vertexBuffer) = 0;
+    virtual void SetIndexBuffer(const IndexBuffer* indexBuffer) = 0;
+
+    virtual void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t startVertex = 0, uint32_t startInstance = 0) = 0;
+    virtual void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t startIndex = 0, int32_t baseVertex = 0, uint32_t startInstance = 0) = 0;
 
   };
 

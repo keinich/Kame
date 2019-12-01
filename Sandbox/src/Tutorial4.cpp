@@ -808,7 +808,7 @@ namespace Kame {
       // TODO: Need a better way to bind a cubemap.
       commandListBase->SetShaderResourceViewTexture(1, 0, &m_GraceCathedralCubemap, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, 0, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, &srvDesc);
 
-      m_SkyboxMesh->Draw(*commandList);
+      m_SkyboxMesh->Draw(commandListBase);
     }
 
 
@@ -839,7 +839,7 @@ namespace Kame {
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
     commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_EarthTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    m_SphereMesh->Draw(*commandList);
+    m_SphereMesh->Draw(commandListBase);
 
     // Draw a cube
     translationMatrix = XMMatrixTranslation(4.0f, 4.0f, 4.0f);
@@ -853,7 +853,7 @@ namespace Kame {
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
     commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_MonaLisaTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    m_CubeMesh->Draw(*commandList);
+    m_CubeMesh->Draw(commandListBase);
 
     // Draw a torus
     translationMatrix = XMMatrixTranslation(4.0f, 0.6f, -4.0f);
@@ -867,7 +867,7 @@ namespace Kame {
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::Ruby);
     commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    m_TorusMesh->Draw(*commandList);
+    m_TorusMesh->Draw(commandListBase);
 
     // Floor plane.
     float scalePlane = 20.0f;
@@ -884,7 +884,7 @@ namespace Kame {
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
     commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DirectXTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    m_PlaneMesh->Draw(*commandList);
+    m_PlaneMesh->Draw(commandListBase);
 
     // Back wall
     translationMatrix = XMMatrixTranslation(0, translateOffset, translateOffset);
@@ -895,7 +895,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
 
-    m_PlaneMesh->Draw(*commandList);
+    m_PlaneMesh->Draw(commandListBase);
 
     // Ceiling plane
     translationMatrix = XMMatrixTranslation(0, translateOffset * 2.0f, 0);
@@ -906,7 +906,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
 
-    m_PlaneMesh->Draw(*commandList);
+    m_PlaneMesh->Draw(commandListBase);
 
     // Front wall
     translationMatrix = XMMatrixTranslation(0, translateOffset, -translateOffset);
@@ -917,7 +917,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
 
-    m_PlaneMesh->Draw(*commandList);
+    m_PlaneMesh->Draw(commandListBase);
 
     // Left wall
     translationMatrix = XMMatrixTranslation(-translateOffset, translateOffset, 0);
@@ -930,7 +930,7 @@ namespace Kame {
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::Red);
     commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    m_PlaneMesh->Draw(*commandList);
+    m_PlaneMesh->Draw(commandListBase);
 
     // Right wall
     translationMatrix = XMMatrixTranslation(translateOffset, translateOffset, 0);
@@ -941,7 +941,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::Blue);
-    m_PlaneMesh->Draw(*commandList);
+    m_PlaneMesh->Draw(commandListBase);
 
     // Draw shapes to visualize the position of the lights in the scene.
     Material lightMaterial;
@@ -956,12 +956,12 @@ namespace Kame {
       commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
       commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, lightMaterial);
 
-      m_SphereMesh->Draw(*commandList);
+      m_SphereMesh->Draw(commandListBase);
 
 
 
 
-      m_DebugCube->Draw(*commandList);
+      m_DebugCube->Draw(commandListBase);
     }
 
     for (const auto& l : m_SpotLights) {
@@ -979,7 +979,7 @@ namespace Kame {
       commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
       commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, lightMaterial);
 
-      m_ConeMesh->Draw(*commandList);
+      m_ConeMesh->Draw(commandListBase);
     }
 
     // Perform HDR -> SDR tonemapping directly to the Window's render target.
@@ -991,7 +991,7 @@ namespace Kame {
     commandListBase->SetGraphics32BitConstants(0, g_TonemapParameters);
     commandListBase->SetShaderResourceViewTexture(1, 0, m_HDRRenderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    commandList->Draw(3);
+    commandListBase->Draw(3);
 
     //commandQueue->ExecuteCommandList(commandList);
     GraphicsCore::ExecuteCommandList(commandList);

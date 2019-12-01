@@ -31,13 +31,14 @@
   */
 
 #include "Buffer.h"
+#include <Kame/Graphics/RenderApi/VertexBuffer.h>
 
 namespace Kame {
 
-  class VertexBuffer : public Buffer {
+  class VertexBufferDx12 : public VertexBuffer, public Buffer {
   public:
-    VertexBuffer(const std::wstring& name = L"");
-    virtual ~VertexBuffer();
+    VertexBufferDx12(const std::wstring& name = L"");
+    virtual ~VertexBufferDx12();
 
     // Inherited from Buffer
     virtual void CreateViews(size_t numElements, size_t elementSize) override;

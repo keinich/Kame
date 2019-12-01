@@ -31,13 +31,14 @@
   */
 
 #include "Buffer.h"
+#include <Kame/Graphics/RenderApi/IndexBuffer.h>
 
 namespace Kame {
 
-  class IndexBuffer : public Buffer {
+  class IndexBufferDx12 : public Buffer, public IndexBuffer {
   public:
-    IndexBuffer(const std::wstring& name = L"");
-    virtual ~IndexBuffer();
+    IndexBufferDx12(const std::wstring& name = L"");
+    virtual ~IndexBufferDx12();
 
     // Inherited from Buffer
     virtual void CreateViews(size_t numElements, size_t elementSize) override;
