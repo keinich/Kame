@@ -48,7 +48,7 @@ namespace Kame {
 
     static void DestroyAll(void);
 
-    
+
     const RootSignature& GetRootSignature(void) const {
       assert(m_RootSignature != nullptr);
       return *m_RootSignature;
@@ -64,9 +64,9 @@ namespace Kame {
       _PipelineStateStream.PrimitiveTopologyType = TopologyType;
     }
     virtual void SetRenderTargetFormats1(
-      D3D12_RT_FORMAT_ARRAY rtvFormats, 
-      DXGI_FORMAT DSVFormat = DXGI_FORMAT(), 
-      UINT MsaaCount = 1, 
+      D3D12_RT_FORMAT_ARRAY rtvFormats,
+      DXGI_FORMAT DSVFormat = DXGI_FORMAT(),
+      UINT MsaaCount = 1,
       UINT MsaaQuality = 0
     ) override {
       _PipelineStateStream.RTVFormats = rtvFormats;
@@ -79,8 +79,9 @@ namespace Kame {
     //void SetHullShader(const D3D12_SHADER_BYTECODE& Binary) { m_PSODesc.HS = Binary; }
     //void SetDomainShader(const D3D12_SHADER_BYTECODE& Binary) { m_PSODesc.DS = Binary; }
 
-    virtual void SetInputLayout1(UINT NumElements, const D3D12_INPUT_ELEMENT_DESC* pInputElementDescs) override { 
-      _PipelineStateStream.InputLayout = { pInputElementDescs, NumElements };
+    virtual void SetInputLayout1(UINT numElements, const D3D12_INPUT_ELEMENT_DESC* inputElementDescs) override {
+      _NumInputElements = numElements;
+      _InputElementDescs = inputElementDescs;
     };
 
   protected:
@@ -89,6 +90,9 @@ namespace Kame {
 
     ComPtr<ID3D12PipelineState> m_PSO;
     PipelineStateStream _PipelineStateStream;
+
+    UINT _NumInputElements;
+    const D3D12_INPUT_ELEMENT_DESC* _InputElementDescs;
   };
 
   class GraphicsPSO : public PSO {

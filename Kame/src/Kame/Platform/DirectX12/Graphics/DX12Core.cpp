@@ -8,6 +8,7 @@
 #include "Display.h"
 #include "Kame/Application/Window.h"
 #include "GraphicsCommon.h"
+#include "PipelineState.h"
 
 namespace Kame {
 
@@ -116,6 +117,7 @@ namespace Kame {
   }
 
   void DX12Core::Destroy() {
+    PSO::DestroyAll();
     GraphicsCommon::DestroyCommonState();
     if (gs_pSingelton) {
       delete gs_pSingelton;
