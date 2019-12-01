@@ -171,6 +171,8 @@ namespace Kame {
       ThrowIfFailed(device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
         rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&m_RootSignature)));
 
+      s_RootSignatureHashMap[HashCode] = m_RootSignature;
+
     }
     else {
       while (*RSRef == nullptr)

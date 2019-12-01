@@ -375,6 +375,21 @@ namespace Kame {
 
       m_SDRRootSignature.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
 
+      //Test RootSignature Hash
+      CD3DX12_DESCRIPTOR_RANGE1 descriptorRange2(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+
+      CD3DX12_ROOT_PARAMETER1 rootParameters2[2];
+      rootParameters2[0].InitAsConstants(sizeof(TonemapParameters) / 4, 0, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+      rootParameters2[1].InitAsDescriptorTable(1, &descriptorRange2, D3D12_SHADER_VISIBILITY_PIXEL);
+
+      CD3DX12_STATIC_SAMPLER_DESC linearClampsSampler2(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
+
+      CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription2;
+      rootSignatureDescription2.Init_1_1(2, rootParameters2, 1, &linearClampsSampler2);
+
+      RootSignature rootSignature2;
+      rootSignature2.SetRootSignatureDesc(rootSignatureDescription2.Desc_1_1, featureData.HighestVersion);
+
       // Create the SDR PSO
       ComPtr<ID3DBlob> vs;
       ComPtr<ID3DBlob> ps;
