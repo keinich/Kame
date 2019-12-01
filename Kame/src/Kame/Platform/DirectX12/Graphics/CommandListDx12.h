@@ -173,7 +173,7 @@ namespace Kame {
     /**
      * Set the current primitive topology for the rendering pipeline.
      */
-    void SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY primitiveTopology);
+    virtual void SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY primitiveTopology) override;
 
     /**
      * Load a texture by a filename.
@@ -213,21 +213,14 @@ namespace Kame {
      * Set a dynamic constant buffer data to an inline descriptor in the root
      * signature.
      */
-    void SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, size_t sizeInBytes, const void* bufferData);
-    template<typename T>
-    void SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, const T& data) {
-      SetGraphicsDynamicConstantBuffer(rootParameterIndex, sizeof(T), &data);
-    }
+    virtual void SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, size_t sizeInBytes, const void* bufferData) override;
+    
 
     /**
      * Set a set of 32-bit constants on the graphics pipeline.
      */
     virtual void SetGraphics32BitConstants(uint32_t rootParameterIndex, uint32_t numConstants, const void* constants) override;
-    template<typename T>
-    void SetGraphics32BitConstants(uint32_t rootParameterIndex, const T& constants) {
-      static_assert(sizeof(T) % sizeof(uint32_t) == 0, "Size of type must be a multiple of 4 bytes");
-      SetGraphics32BitConstants(rootParameterIndex, sizeof(T) / sizeof(uint32_t), &constants);
-    }
+
 
     /**
      * Set a set of 32-bit constants on the compute pipeline.
@@ -274,11 +267,7 @@ namespace Kame {
     /**
      * Set dynamic structured buffer contents.
      */
-    void SetGraphicsDynamicStructuredBuffer(uint32_t slot, size_t numElements, size_t elementSize, const void* bufferData);
-    template<typename T>
-    void SetGraphicsDynamicStructuredBuffer(uint32_t slot, const std::vector<T>& bufferData) {
-      SetGraphicsDynamicStructuredBuffer(slot, bufferData.size(), sizeof(T), bufferData.data());
-    }
+    virtual void SetGraphicsDynamicStructuredBuffer(uint32_t slot, size_t numElements, size_t elementSize, const void* bufferData) override;
 
     /**
      * Set viewports.

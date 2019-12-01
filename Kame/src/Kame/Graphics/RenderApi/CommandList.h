@@ -1,6 +1,6 @@
 #pragma once
 
-#include <d3d12.h> //TODO abstract away D3D12_CLEAR_FLAGS, D3D12_VIEWPORT, D3D12_RECT
+#include <d3d12.h> //TODO abstract away D3D12_CLEAR_FLAGS, D3D12_VIEWPORT, D3D12_RECT, D3D_PRIMITIVE_TOPOLOGY
 
 namespace Kame {
 
@@ -21,10 +21,29 @@ namespace Kame {
     virtual void SetViewport(const D3D12_VIEWPORT& viewport) = 0;
     virtual void SetScissorRect(const D3D12_RECT& scissorRect) = 0;
 
+    virtual void SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY primitiveTopology) = 0;
+
     virtual void SetRenderProgram(const RenderProgram* renderProgram) = 0;
     virtual void SetGraphicsRootSignature(const RenderProgramSignature* rootSignature) = 0;
 
     virtual void SetGraphics32BitConstants(uint32_t rootParameterIndex, uint32_t numConstants, const void* constants) = 0;
+    template<typename T>
+    void SetGraphics32BitConstants(uint32_t rootParameterIndex, const T& constants) {
+      static_assert(sizeof(T) % sizeof(uint32_t) == 0, "Size of type must be a multiple of 4 bytes");
+      SetGraphics32BitConstants(rootParameterIndex, sizeof(T) / sizeof(uint32_t), &constants);
+    }
+
+    virtual void SetGraphicsDynamicStructuredBuffer(uint32_t slot, size_t numElements, size_t elementSize, const void* bufferData) = 0;
+    template<typename T>
+    void SetGraphicsDynamicStructuredBuffer(uint32_t slot, const std::vector<T>& bufferData) {
+      SetGraphicsDynamicStructuredBuffer(slot, bufferData.size(), sizeof(T), bufferData.data());
+    }
+
+    virtual void SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, size_t sizeInBytes, const void* bufferData) = 0;
+    template<typename T>
+    void SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, const T& data) {
+      SetGraphicsDynamicConstantBuffer(rootParameterIndex, sizeof(T), &data);
+    }
 
     virtual void SetShaderResourceView(
       uint32_t rootParameterIndex,
