@@ -53,7 +53,7 @@ namespace Kame {
         sizeof(PipelineStateStream), &pipelineStateStream
     };
 
-    ThrowIfFailed(device->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&m_PipelineState)));
+    ThrowIfFailed(device->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&m_PSO)));
 
     // Create some default texture UAV's to pad any unused UAV's during mip map generation.
     m_DefaultUAV = DX12Core::Get().AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 5);

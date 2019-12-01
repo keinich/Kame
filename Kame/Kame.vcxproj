@@ -291,6 +291,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp" />
     <ClCompile Include="src\Kame\Graphics\RenderTarget.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Resource.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.cpp" />

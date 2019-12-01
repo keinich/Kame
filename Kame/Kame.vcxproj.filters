@@ -575,6 +575,7 @@
     <ClCompile Include="src\Kame\Graphics\RenderTarget.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

@@ -23,7 +23,7 @@
 
 #include "Kame/Graphics/RenderApi/VertexLayout.h"
 
-#include "Kame/Platform/DirectX12/Graphics/PipelineState.h"
+#include "Kame/Platform/DirectX12/Graphics/RenderProgramDx12.h"
 
 #include <wrl.h>
 using namespace Microsoft::WRL;
@@ -181,7 +181,7 @@ namespace Kame {
 
     m_HDRRenderTarget.reset(GraphicsCore::CreateRenderTarget());
 
-    _SkyboxProgram.reset(new GraphicsPSO());
+    _SkyboxProgram.reset(new RenderProgramDx12());
 
   }
 
