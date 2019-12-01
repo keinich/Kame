@@ -1,10 +1,11 @@
 #pragma once
 
 #include <d3d.h> //TODO abstract away DXGI_FORMAT
+#include "GpuResource.h"
 
 namespace Kame {
 
-  class Texture {
+  class Texture : public GpuResource {
 
   public:
 

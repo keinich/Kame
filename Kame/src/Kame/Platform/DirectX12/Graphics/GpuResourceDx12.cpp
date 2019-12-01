@@ -1,17 +1,17 @@
 #include "kmpch.h"
 
-#include "Resource.h"
+#include "GpuResourceDx12.h"
 
 #include "DX12Core.h"
 #include "ResourceStateTracker.h"
 
 namespace Kame {
 
-  Resource::Resource(const std::wstring& name)
+  GpuResourceDx12::GpuResourceDx12(const std::wstring& name)
     : m_ResourceName(name)
     , m_FormatSupport({}) {}
 
-  Resource::Resource(const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue, const std::wstring& name) {
+  GpuResourceDx12::GpuResourceDx12(const D3D12_RESOURCE_DESC& resourceDesc, const D3D12_CLEAR_VALUE* clearValue, const std::wstring& name) {
     if (clearValue) {
       m_d3d12ClearValue = std::make_unique<D3D12_CLEAR_VALUE>(*clearValue);
     }
@@ -33,26 +33,26 @@ namespace Kame {
     SetName(name);
   }
 
-  Resource::Resource(Microsoft::WRL::ComPtr<ID3D12Resource> resource, const std::wstring& name)
+  GpuResourceDx12::GpuResourceDx12(Microsoft::WRL::ComPtr<ID3D12Resource> resource, const std::wstring& name)
     : m_d3d12Resource(resource)
     , m_FormatSupport({}) {
     CheckFeatureSupport();
     SetName(name);
   }
 
-  Resource::Resource(const Resource& copy)
+  GpuResourceDx12::GpuResourceDx12(const GpuResourceDx12& copy)
     : m_d3d12Resource(copy.m_d3d12Resource)
     , m_FormatSupport(copy.m_FormatSupport)
     , m_ResourceName(copy.m_ResourceName)
     , m_d3d12ClearValue(std::make_unique<D3D12_CLEAR_VALUE>(*copy.m_d3d12ClearValue)) {}
 
-  Resource::Resource(Resource&& copy)
+  GpuResourceDx12::GpuResourceDx12(GpuResourceDx12&& copy)
     : m_d3d12Resource(std::move(copy.m_d3d12Resource))
     , m_FormatSupport(copy.m_FormatSupport)
     , m_ResourceName(std::move(copy.m_ResourceName))
     , m_d3d12ClearValue(std::move(copy.m_d3d12ClearValue)) {}
 
-  Resource& Resource::operator=(const Resource& other) {
+  GpuResourceDx12& GpuResourceDx12::operator=(const GpuResourceDx12& other) {
     if (this != &other) {
       m_d3d12Resource = other.m_d3d12Resource;
       m_FormatSupport = other.m_FormatSupport;
@@ -65,7 +65,7 @@ namespace Kame {
     return *this;
   }
 
-  Resource& Resource::operator=(Resource&& other) noexcept {
+  GpuResourceDx12& GpuResourceDx12::operator=(GpuResourceDx12&& other) noexcept {
     if (this != &other) {
       m_d3d12Resource = std::move(other.m_d3d12Resource);
       m_FormatSupport = other.m_FormatSupport;
@@ -79,9 +79,9 @@ namespace Kame {
   }
 
 
-  Resource::~Resource() {}
+  GpuResourceDx12::~GpuResourceDx12() {}
 
-  void Resource::SetD3D12Resource(Microsoft::WRL::ComPtr<ID3D12Resource> d3d12Resource, const D3D12_CLEAR_VALUE* clearValue) {
+  void GpuResourceDx12::SetD3D12Resource(Microsoft::WRL::ComPtr<ID3D12Resource> d3d12Resource, const D3D12_CLEAR_VALUE* clearValue) {
     m_d3d12Resource = d3d12Resource;
     if (m_d3d12ClearValue) {
       m_d3d12ClearValue = std::make_unique<D3D12_CLEAR_VALUE>(*clearValue);
@@ -93,29 +93,29 @@ namespace Kame {
     SetName(m_ResourceName);
   }
 
-  void Resource::SetName(const std::wstring& name) {
+  void GpuResourceDx12::SetName(const std::wstring& name) {
     m_ResourceName = name;
     if (m_d3d12Resource && !m_ResourceName.empty()) {
       m_d3d12Resource->SetName(m_ResourceName.c_str());
     }
   }
 
-  void Resource::Reset() {
+  void GpuResourceDx12::Reset() {
     m_d3d12Resource.Reset();
     m_FormatSupport = {};
     m_d3d12ClearValue.reset();
     m_ResourceName.clear();
   }
 
-  bool Resource::CheckFormatSupport(D3D12_FORMAT_SUPPORT1 formatSupport) const {
+  bool GpuResourceDx12::CheckFormatSupport(D3D12_FORMAT_SUPPORT1 formatSupport) const {
     return (m_FormatSupport.Support1 & formatSupport) != 0;
   }
 
-  bool Resource::CheckFormatSupport(D3D12_FORMAT_SUPPORT2 formatSupport) const {
+  bool GpuResourceDx12::CheckFormatSupport(D3D12_FORMAT_SUPPORT2 formatSupport) const {
     return (m_FormatSupport.Support2 & formatSupport) != 0;
   }
 
-  void Resource::CheckFeatureSupport() {
+  void GpuResourceDx12::CheckFeatureSupport() {
     if (m_d3d12Resource) {
       auto desc = m_d3d12Resource->GetDesc();
       auto device = DX12Core::Get().GetDevice();

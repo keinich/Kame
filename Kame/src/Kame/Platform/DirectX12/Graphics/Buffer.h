@@ -30,11 +30,11 @@
   *  @brief Abstract base class for buffer resources.
   */
 
-#include "Resource.h"
+#include "GpuResourceDx12.h"
 
 namespace Kame {
 
-  class Buffer : public Resource {
+  class Buffer : public GpuResourceDx12 {
   public:
     explicit Buffer(const std::wstring& name = L"");
     explicit Buffer(const D3D12_RESOURCE_DESC& resDesc,

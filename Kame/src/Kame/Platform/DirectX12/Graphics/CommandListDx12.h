@@ -54,7 +54,7 @@ namespace Kame {
   class IndexBuffer;
   class PanoToCubemapPSO;
   class RenderTarget;
-  class Resource;
+  class GpuResourceDx12;
   class ResourceStateTracker;
   class StructuredBuffer;
   class RootSignatureDx12;
@@ -90,7 +90,7 @@ namespace Kame {
      * @param subresource The subresource to transition. By default, this is D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES which indicates that all subresources are transitioned to the same state.
      * @param flushBarriers Force flush any barriers. Resource barriers need to be flushed before a command (draw, dispatch, or copy) that expects the resource to be in a particular state can run.
      */
-    void TransitionBarrier(const Resource& resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, bool flushBarriers = false);
+    void TransitionBarrier(const GpuResourceDx12& resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, bool flushBarriers = false);
     void TransitionBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, bool flushBarriers = false);
 
     /**
@@ -102,7 +102,7 @@ namespace Kame {
      * flushed before a command (draw, dispatch, or copy) that expects the resource
      * to be in a particular state can run.
      */
-    void UAVBarrier(const Resource& resource, bool flushBarriers = false);
+    void UAVBarrier(const GpuResourceDx12& resource, bool flushBarriers = false);
     void UAVBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> resource, bool flushBarriers = false);
 
     /**
@@ -112,7 +112,7 @@ namespace Kame {
      * @param beforeResource The resource that currently occupies the heap.
      * @param afterResource The resource that will occupy the space in the heap.
      */
-    void AliasingBarrier(const Resource& beforeResource, const Resource& afterResource, bool flushBarriers = false);
+    void AliasingBarrier(const GpuResourceDx12& beforeResource, const GpuResourceDx12& afterResource, bool flushBarriers = false);
     void AliasingBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> beforeResource, Microsoft::WRL::ComPtr<ID3D12Resource> afterResource, bool flushBarriers = false);
 
     /**
@@ -123,13 +123,13 @@ namespace Kame {
     /**
      * Copy resources.
      */
-    void CopyResource(Resource& dstRes, const Resource& srcRes);
+    void CopyResource(GpuResourceDx12& dstRes, const GpuResourceDx12& srcRes);
     void CopyResource(Microsoft::WRL::ComPtr<ID3D12Resource> dstRes, Microsoft::WRL::ComPtr<ID3D12Resource> srcRes);
 
     /**
      * Resolve a multisampled resource into a non-multisampled resource.
      */
-    void ResolveSubresource(Resource& dstRes, const Resource& srcRes, uint32_t dstSubresource = 0, uint32_t srcSubresource = 0);
+    void ResolveSubresource(GpuResourceDx12& dstRes, const GpuResourceDx12& srcRes, uint32_t dstSubresource = 0, uint32_t srcSubresource = 0);
 
     /**
      * Copy the contents to a vertex buffer in GPU memory.
@@ -222,7 +222,7 @@ namespace Kame {
     /**
      * Set a set of 32-bit constants on the graphics pipeline.
      */
-    void SetGraphics32BitConstants(uint32_t rootParameterIndex, uint32_t numConstants, const void* constants);
+    virtual void SetGraphics32BitConstants(uint32_t rootParameterIndex, uint32_t numConstants, const void* constants) override;
     template<typename T>
     void SetGraphics32BitConstants(uint32_t rootParameterIndex, const T& constants) {
       static_assert(sizeof(T) % sizeof(uint32_t) == 0, "Size of type must be a multiple of 4 bytes");
@@ -307,10 +307,21 @@ namespace Kame {
     /**
      * Set the SRV on the graphics pipeline.
      */
-    void SetShaderResourceView(
+    virtual void SetShaderResourceView(
       uint32_t rootParameterIndex,
       uint32_t descriptorOffset,
-      const Resource& resource,
+      const GpuResource* resource,
+      D3D12_RESOURCE_STATES stateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
+      D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+      UINT firstSubresource = 0,
+      UINT numSubresources = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
+      const D3D12_SHADER_RESOURCE_VIEW_DESC* srv = nullptr
+    ) override;
+
+    void SetShaderResourceViewInternal(
+      uint32_t rootParameterIndex,
+      uint32_t descriptorOffset,
+      const GpuResourceDx12* resource,
       D3D12_RESOURCE_STATES stateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
       D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
       UINT firstSubresource = 0,
@@ -321,7 +332,7 @@ namespace Kame {
     /**
      * Set the SRV on the graphics pipeline.
      */
-    void SetShaderResourceViewBase(
+    virtual void SetShaderResourceViewTexture(
       uint32_t rootParameterIndex,
       uint32_t descriptorOffset,
       const Texture* texture,
@@ -330,7 +341,7 @@ namespace Kame {
       UINT firstSubresource = 0,
       UINT numSubresources = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
       const D3D12_SHADER_RESOURCE_VIEW_DESC* srv = nullptr
-    );
+    ) override;
 
     /**
      * Set the UAV on the graphics pipeline.
@@ -338,7 +349,7 @@ namespace Kame {
     void SetUnorderedAccessView(
       uint32_t rootParameterIndex,
       uint32_t descrptorOffset,
-      const Resource& resource,
+      const GpuResourceDx12& resource,
       D3D12_RESOURCE_STATES stateAfter = D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
       UINT firstSubresource = 0,
       UINT numSubresources = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
@@ -404,7 +415,7 @@ namespace Kame {
 
   private:
     void TrackResource(Microsoft::WRL::ComPtr<ID3D12Object> object);
-    void TrackResource(const Resource& res);
+    void TrackResource(const GpuResourceDx12& res);
 
     // Generate mips for UAV compatible textures.
     void GenerateMips_UAV(TextureDx12& texture, DXGI_FORMAT format);

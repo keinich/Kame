@@ -277,9 +277,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Resource.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
@@ -383,6 +380,10 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignatureDx12.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GpuResourceDx12.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\GpuResource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -508,9 +509,6 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Resource.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
@@ -574,6 +572,9 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignatureDx12.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResourceDx12.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
   </ItemGroup>

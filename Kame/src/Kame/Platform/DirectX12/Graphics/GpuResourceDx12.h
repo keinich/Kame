@@ -33,26 +33,27 @@
 
 #include <d3d12.h>
 #include <wrl.h>
+#include <Kame/Graphics/RenderApi/GpuResource.h>
 
 #include <string>
 
 namespace Kame {
 
-  class Resource {
+  class GpuResourceDx12 : GpuResource {
   public:
-    explicit Resource(const std::wstring& name = L"");
-    explicit Resource(const D3D12_RESOURCE_DESC& resourceDesc,
+    explicit GpuResourceDx12(const std::wstring& name = L"");
+    explicit GpuResourceDx12(const D3D12_RESOURCE_DESC& resourceDesc,
       const D3D12_CLEAR_VALUE* clearValue = nullptr,
       const std::wstring& name = L"");
-    explicit Resource(Microsoft::WRL::ComPtr<ID3D12Resource> resource, const std::wstring& name = L"");
+    explicit GpuResourceDx12(Microsoft::WRL::ComPtr<ID3D12Resource> resource, const std::wstring& name = L"");
 
-    Resource(const Resource& copy);
-    Resource(Resource&& copy);
+    GpuResourceDx12(const GpuResourceDx12& copy);
+    GpuResourceDx12(GpuResourceDx12&& copy);
 
-    Resource& operator=(const Resource& other);
-    Resource& operator=(Resource&& other) noexcept;
+    GpuResourceDx12& operator=(const GpuResourceDx12& other);
+    GpuResourceDx12& operator=(GpuResourceDx12&& other) noexcept;
 
-    virtual ~Resource();
+    virtual ~GpuResourceDx12();
 
     /**
      * Check to see if the underlying resource is valid.

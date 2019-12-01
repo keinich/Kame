@@ -791,13 +791,13 @@ namespace Kame {
       // The view matrix should only consider the camera's rotation, but not the translation.
       auto viewMatrix = XMMatrixTranspose(XMMatrixRotationQuaternion(m_Camera.get_Rotation().GetXmVector()));
       auto projMatrix = m_Camera.get_ProjectionMatrix().GetXmMatrix();
-      auto viewProjMatrix = viewMatrix * projMatrix;
+      DirectX::XMMATRIX viewProjMatrix = viewMatrix * projMatrix;
 
       //commandList->SetPipelineState(m_SkyboxPipelineState);
       commandListBase->SetRenderProgram(_SkyboxProgram.get());
       commandListBase->SetGraphicsRootSignature(m_SkyboxSignature.get());
 
-      commandList->SetGraphics32BitConstants(0, viewProjMatrix);
+      commandListBase->SetGraphics32BitConstants(0, sizeof(DirectX::XMMATRIX) / sizeof(uint32_t), &viewProjMatrix);
 
       D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
       srvDesc.Format = m_GraceCathedralCubemap.GetD3D12ResourceDesc().Format;
@@ -806,7 +806,7 @@ namespace Kame {
       srvDesc.TextureCube.MipLevels = (UINT)-1; // Use all mips.
 
       // TODO: Need a better way to bind a cubemap.
-      commandList->SetShaderResourceView(1, 0, m_GraceCathedralCubemap, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, 0, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, &srvDesc);
+      commandListBase->SetShaderResourceViewTexture(1, 0, &m_GraceCathedralCubemap, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, 0, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, &srvDesc);
 
       m_SkyboxMesh->Draw(*commandList);
     }
@@ -837,7 +837,7 @@ namespace Kame {
 
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
-    commandList->SetShaderResourceView(RootParameters::Textures, 0, m_EarthTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_EarthTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_SphereMesh->Draw(*commandList);
 
@@ -851,7 +851,7 @@ namespace Kame {
 
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
-    commandList->SetShaderResourceView(RootParameters::Textures, 0, m_MonaLisaTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_MonaLisaTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_CubeMesh->Draw(*commandList);
 
@@ -865,7 +865,7 @@ namespace Kame {
 
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::Ruby);
-    commandList->SetShaderResourceView(RootParameters::Textures, 0, m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_TorusMesh->Draw(*commandList);
 
@@ -882,7 +882,7 @@ namespace Kame {
 
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
-    commandList->SetShaderResourceView(RootParameters::Textures, 0, m_DirectXTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DirectXTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_PlaneMesh->Draw(*commandList);
 
@@ -928,7 +928,7 @@ namespace Kame {
 
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::Red);
-    commandList->SetShaderResourceView(RootParameters::Textures, 0, m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_PlaneMesh->Draw(*commandList);
 
@@ -989,7 +989,7 @@ namespace Kame {
     commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandListBase->SetGraphicsRootSignature(m_SDRRootSignature.get());
     commandList->SetGraphics32BitConstants(0, g_TonemapParameters);
-    commandList->SetShaderResourceViewBase(1, 0, m_HDRRenderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(1, 0, m_HDRRenderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     commandList->Draw(3);
 

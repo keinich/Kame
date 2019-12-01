@@ -3,7 +3,7 @@
 #include "ResourceStateTracker.h"
 
 #include "CommandListDx12.h"
-#include "Resource.h"
+#include "GpuResourceDx12.h"
 
 namespace Kame {
 
@@ -71,17 +71,17 @@ namespace Kame {
     }
   }
 
-  void ResourceStateTracker::TransitionResource(const Resource& resource, D3D12_RESOURCE_STATES stateAfter, UINT subResource) {
+  void ResourceStateTracker::TransitionResource(const GpuResourceDx12& resource, D3D12_RESOURCE_STATES stateAfter, UINT subResource) {
     TransitionResource(resource.GetD3D12Resource().Get(), stateAfter, subResource);
   }
 
-  void ResourceStateTracker::UAVBarrier(const Resource* resource) {
+  void ResourceStateTracker::UAVBarrier(const GpuResourceDx12* resource) {
     ID3D12Resource* pResource = resource != nullptr ? resource->GetD3D12Resource().Get() : nullptr;
 
     ResourceBarrier(CD3DX12_RESOURCE_BARRIER::UAV(pResource));
   }
 
-  void ResourceStateTracker::AliasBarrier(const Resource* resourceBefore, const Resource* resourceAfter) {
+  void ResourceStateTracker::AliasBarrier(const GpuResourceDx12* resourceBefore, const GpuResourceDx12* resourceAfter) {
     ID3D12Resource* pResourceBefore = resourceBefore != nullptr ? resourceBefore->GetD3D12Resource().Get() : nullptr;
     ID3D12Resource* pResourceAfter = resourceAfter != nullptr ? resourceAfter->GetD3D12Resource().Get() : nullptr;
 

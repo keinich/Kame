@@ -9,14 +9,14 @@
 namespace Kame {
 
   TextureDx12::TextureDx12(TextureUsage textureUsage, const std::wstring& name)
-    : Resource(name)
+    : GpuResourceDx12(name)
     , m_TextureUsage(textureUsage) {}
 
   TextureDx12::TextureDx12(const D3D12_RESOURCE_DESC& resourceDesc,
     const D3D12_CLEAR_VALUE* clearValue,
     TextureUsage textureUsage,
     const std::wstring& name)
-    : Resource(resourceDesc, clearValue, name)
+    : GpuResourceDx12(resourceDesc, clearValue, name)
     , m_TextureUsage(textureUsage) {
     CreateViews();
   }
@@ -24,30 +24,30 @@ namespace Kame {
   TextureDx12::TextureDx12(Microsoft::WRL::ComPtr<ID3D12Resource> resource,
     TextureUsage textureUsage,
     const std::wstring& name)
-    : Resource(resource, name)
+    : GpuResourceDx12(resource, name)
     , m_TextureUsage(textureUsage) {
     CreateViews();
   }
 
   TextureDx12::TextureDx12(const TextureDx12& copy)
-    : Resource(copy) {
+    : GpuResourceDx12(copy) {
     CreateViews();
   }
 
   TextureDx12::TextureDx12(TextureDx12&& copy)
-    : Resource(copy) {
+    : GpuResourceDx12(copy) {
     CreateViews();
   }
 
   TextureDx12& TextureDx12::operator=(const TextureDx12& other) {
-    Resource::operator=(other);
+    GpuResourceDx12::operator=(other);
 
     CreateViews();
 
     return *this;
   }
   TextureDx12& TextureDx12::operator=(TextureDx12&& other) {
-    Resource::operator=(other);
+    GpuResourceDx12::operator=(other);
 
     CreateViews();
 

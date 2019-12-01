@@ -54,7 +54,7 @@
 namespace Kame {
 
   class CommandListDx12;
-  class Resource;
+  class GpuResourceDx12;
 
   class KAME_API ResourceStateTracker {
   public:
@@ -77,7 +77,7 @@ namespace Kame {
      * which indicates that all subresources should be transitioned to the same state.
      */
     void TransitionResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES stateAfter, UINT subResource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
-    void TransitionResource(const Resource& resource, D3D12_RESOURCE_STATES stateAfter, UINT subResource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
+    void TransitionResource(const GpuResourceDx12& resource, D3D12_RESOURCE_STATES stateAfter, UINT subResource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
 
     /**
      * Push a UAV resource barrier for the given resource.
@@ -85,7 +85,7 @@ namespace Kame {
      * @param resource The resource to add a UAV barrier for. Can be NULL which
      * indicates that any UAV access could require the barrier.
      */
-    void UAVBarrier(const Resource* resource = nullptr);
+    void UAVBarrier(const GpuResourceDx12* resource = nullptr);
 
     /**
      * Push an aliasing barrier for the given resource.
@@ -96,7 +96,7 @@ namespace Kame {
      * Either the beforeResource or the afterResource parameters can be NULL which
      * indicates that any placed or reserved resource could cause aliasing.
      */
-    void AliasBarrier(const Resource* resourceBefore = nullptr, const Resource* resourceAfter = nullptr);
+    void AliasBarrier(const GpuResourceDx12* resourceBefore = nullptr, const GpuResourceDx12* resourceAfter = nullptr);
 
     /**
      * Flush any pending resource barriers to the command list.

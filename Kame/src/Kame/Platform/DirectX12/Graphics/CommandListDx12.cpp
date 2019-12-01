@@ -11,7 +11,7 @@
 #include "IndexBuffer.h"
 #include "PanoToCubemapPSO.h"
 #include "Kame/Graphics/RenderTarget.h"
-#include "Resource.h"
+#include "GpuResourceDx12.h"
 #include "ResourceStateTracker.h"
 #include "RootSignatureDx12.h"
 #include "StructuredBuffer.h"
@@ -65,7 +65,7 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::TransitionBarrier(const Resource& resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource, bool flushBarriers) {
+  void CommandListDx12::TransitionBarrier(const GpuResourceDx12& resource, D3D12_RESOURCE_STATES stateAfter, UINT subresource, bool flushBarriers) {
     TransitionBarrier(resource.GetD3D12Resource(), stateAfter, subresource, flushBarriers);
   }
 
@@ -79,7 +79,7 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::UAVBarrier(const Resource& resource, bool flushBarriers) {
+  void CommandListDx12::UAVBarrier(const GpuResourceDx12& resource, bool flushBarriers) {
     UAVBarrier(resource.GetD3D12Resource());
   }
 
@@ -93,7 +93,7 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::AliasingBarrier(const Resource& beforeResource, const Resource& afterResource, bool flushBarriers) {
+  void CommandListDx12::AliasingBarrier(const GpuResourceDx12& beforeResource, const GpuResourceDx12& afterResource, bool flushBarriers) {
     AliasingBarrier(beforeResource.GetD3D12Resource(), afterResource.GetD3D12Resource());
   }
 
@@ -113,11 +113,11 @@ namespace Kame {
     TrackResource(srcRes);
   }
 
-  void CommandListDx12::CopyResource(Resource& dstRes, const Resource& srcRes) {
+  void CommandListDx12::CopyResource(GpuResourceDx12& dstRes, const GpuResourceDx12& srcRes) {
     CopyResource(dstRes.GetD3D12Resource(), srcRes.GetD3D12Resource());
   }
 
-  void CommandListDx12::ResolveSubresource(Resource& dstRes, const Resource& srcRes, uint32_t dstSubresource, uint32_t srcSubresource) {
+  void CommandListDx12::ResolveSubresource(GpuResourceDx12& dstRes, const GpuResourceDx12& srcRes, uint32_t dstSubresource, uint32_t srcSubresource) {
     TransitionBarrier(dstRes, D3D12_RESOURCE_STATE_RESOLVE_DEST, dstSubresource);
     TransitionBarrier(srcRes, D3D12_RESOURCE_STATE_RESOLVE_SOURCE, srcSubresource);
 
@@ -507,7 +507,7 @@ namespace Kame {
 
       SetCompute32BitConstants(GenerateMips::GenerateMipsCB, generateMipsCB);
 
-      SetShaderResourceView(GenerateMips::SrcMip, 0, texture, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, srcMip, 1, &srvDesc);
+      SetShaderResourceViewInternal(GenerateMips::SrcMip, 0, &texture, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, srcMip, 1, &srvDesc);
 
       for (uint32_t mip = 0; mip < mipCount; ++mip) {
         D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
@@ -603,7 +603,7 @@ namespace Kame {
 
       SetCompute32BitConstants(PanoToCubemapRS::PanoToCubemapCB, panoToCubemapCB);
 
-      SetShaderResourceView(PanoToCubemapRS::SrcTexture, 0, panoTexture, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+      SetShaderResourceViewInternal(PanoToCubemapRS::SrcTexture, 0, &panoTexture, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
       for (uint32_t mip = 0; mip < numMips; ++mip) {
         uavDesc.Texture2DArray.MipSlice = mipSlice + mip;
@@ -816,28 +816,44 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::SetShaderResourceView(uint32_t rootParameterIndex,
+  void CommandListDx12::SetShaderResourceView(
+    uint32_t rootParameterIndex,
     uint32_t descriptorOffset,
-    const Resource& resource,
+    const GpuResource* resource,
     D3D12_RESOURCE_STATES stateAfter,
     UINT firstSubresource,
     UINT numSubresources,
-    const D3D12_SHADER_RESOURCE_VIEW_DESC* srv) {
+    const D3D12_SHADER_RESOURCE_VIEW_DESC* srv
+  ) {
+    const GpuResourceDx12* resourceDx12 = static_cast<const GpuResourceDx12*>(resource);
+
+    SetShaderResourceViewInternal(rootParameterIndex, descriptorOffset, resourceDx12, stateAfter, firstSubresource, numSubresources, srv);
+  }
+
+  void CommandListDx12::SetShaderResourceViewInternal(uint32_t rootParameterIndex,
+    uint32_t descriptorOffset,
+    const GpuResourceDx12* resource,
+    D3D12_RESOURCE_STATES stateAfter,
+    UINT firstSubresource,
+    UINT numSubresources,
+    const D3D12_SHADER_RESOURCE_VIEW_DESC* srv
+  ) {
+
     if (numSubresources < D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES) {
       for (uint32_t i = 0; i < numSubresources; ++i) {
-        TransitionBarrier(resource, stateAfter, firstSubresource + i);
+        TransitionBarrier(*resource, stateAfter, firstSubresource + i);
       }
     }
     else {
-      TransitionBarrier(resource, stateAfter);
+      TransitionBarrier(*resource, stateAfter);
     }
 
-    m_DynamicDescriptorHeap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->StageDescriptors(rootParameterIndex, descriptorOffset, 1, resource.GetShaderResourceView(srv));
+    m_DynamicDescriptorHeap[D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV]->StageDescriptors(rootParameterIndex, descriptorOffset, 1, resource->GetShaderResourceView(srv));
 
-    TrackResource(resource);
+    TrackResource(*resource);
   }
 
-  void CommandListDx12::SetShaderResourceViewBase(uint32_t rootParameterIndex,
+  void CommandListDx12::SetShaderResourceViewTexture(uint32_t rootParameterIndex,
     uint32_t descriptorOffset,
     const Texture* texture,
     D3D12_RESOURCE_STATES stateAfter,
@@ -845,14 +861,14 @@ namespace Kame {
     UINT numSubresources,
     const D3D12_SHADER_RESOURCE_VIEW_DESC* srv) {
     const TextureDx12* textureDx12 = static_cast<const TextureDx12*>(texture);
-    SetShaderResourceView(
-      rootParameterIndex, descriptorOffset, *textureDx12, stateAfter, firstSubresource, numSubresources, srv
+    SetShaderResourceViewInternal(
+      rootParameterIndex, descriptorOffset, textureDx12, stateAfter, firstSubresource, numSubresources, srv
     );
   }
 
   void CommandListDx12::SetUnorderedAccessView(uint32_t rootParameterIndex,
     uint32_t descrptorOffset,
-    const Resource& resource,
+    const GpuResourceDx12& resource,
     D3D12_RESOURCE_STATES stateAfter,
     UINT firstSubresource,
     UINT numSubresources,
@@ -978,7 +994,7 @@ namespace Kame {
     m_TrackedObjects.push_back(object);
   }
 
-  void CommandListDx12::TrackResource(const Resource& res) {
+  void CommandListDx12::TrackResource(const GpuResourceDx12& res) {
     TrackResource(res.GetD3D12Resource());
   }
 

@@ -31,7 +31,7 @@
   */
 
 
-#include "Resource.h"
+#include "GpuResourceDx12.h"
 #include "DescriptorAllocation.h"
 #include <Kame/Graphics/RenderApi/TextureUsage.h>
 
@@ -44,7 +44,7 @@
 
 namespace Kame {
 
-  class KAME_API TextureDx12 : public Resource, public Texture {
+  class KAME_API TextureDx12 : public GpuResourceDx12, public Texture {
   public:
     explicit TextureDx12(TextureUsage textureUsage = TextureUsage::Albedo,
       const std::wstring& name = L"");
