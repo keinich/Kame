@@ -46,6 +46,9 @@ namespace Kame {
 
   class KAME_API RootSignature {
   public:
+
+    static void DestroyAll();
+
     // TODO: Add (deep) copy/move constructors and assignment operators!
     RootSignature();
     RootSignature(

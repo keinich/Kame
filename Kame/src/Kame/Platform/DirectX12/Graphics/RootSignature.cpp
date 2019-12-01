@@ -10,6 +10,10 @@ namespace Kame {
 
   static std::map< size_t, ComPtr<ID3D12RootSignature> > s_RootSignatureHashMap;
 
+  void RootSignature::DestroyAll() {
+    s_RootSignatureHashMap.clear();
+  }
+
   RootSignature::RootSignature()
     : m_RootSignatureDesc{}
     , m_NumDescriptorsPerTable{ 0 }
