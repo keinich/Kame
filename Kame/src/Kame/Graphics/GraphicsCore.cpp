@@ -50,7 +50,7 @@ namespace Kame {
   }
 
   void GraphicsCore::Flush() {
-  
+
     switch (s_RenderApi) {
     case RenderApi::DirectX12:
       DX12Core::Get().Flush();
@@ -80,8 +80,15 @@ namespace Kame {
     return reinterpret_cast<RenderTarget*>(new RenderTargetOf<TextureDx12>());
   }
 
-  Texture* GraphicsCore::CreateTexture() {
-    return reinterpret_cast<Texture*>(new TextureDx12());
+  Reference<Texture> GraphicsCore::CreateTexture(
+    const D3D12_RESOURCE_DESC& resourceDesc,
+    const D3D12_CLEAR_VALUE* clearValue,
+    TextureUsage textureUsage,
+    const std::wstring& name
+  ) {
+    Reference<Texture> ret = CreateReference<TextureDx12>(resourceDesc, clearValue, textureUsage, name);
+    return ret;
+    //return reinterpret_cast<Texture*>(new TextureDx12(resourceDesc, clearValue, textureUsage, name));
   }
 
 }

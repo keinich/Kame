@@ -292,9 +292,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\TextureDx12.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\TextureUsage.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ThreadSafeQueue.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
@@ -383,6 +380,9 @@
     <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgram.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgramSignature.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\TextureUsage.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">

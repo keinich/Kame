@@ -218,7 +218,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\StructuredBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\TextureDx12.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\TextureUsage.h" />
+    <ClInclude Include="src\Kame\Graphics\RenderApi\TextureUsage.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ThreadSafeQueue.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBuffer.h" />

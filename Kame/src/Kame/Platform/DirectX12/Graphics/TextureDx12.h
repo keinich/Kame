@@ -33,7 +33,7 @@
 
 #include "Resource.h"
 #include "DescriptorAllocation.h"
-#include "TextureUsage.h"
+#include <Kame/Graphics/RenderApi/TextureUsage.h>
 
 #include "d3dx12.h"
 

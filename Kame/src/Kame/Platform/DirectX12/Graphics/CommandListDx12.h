@@ -31,7 +31,8 @@
   *  The CommandList class provides additional functionality that makes working with
   *  DirectX 12 applications easier.
   */
-#include "TextureUsage.h"
+#include <Kame/Graphics/RenderApi/Texture.h>
+#include <Kame/Graphics/RenderApi/TextureUsage.h>
 
 #include <Kame/Graphics/RenderApi/CommandList.h>
 
