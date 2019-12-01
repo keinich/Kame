@@ -134,9 +134,9 @@ namespace Kame {
     Reference<Texture> _DepthTexture;
 
     // Root signatures
-    RootSignatureDx12 m_SkyboxSignature;
-    RootSignatureDx12 m_HDRRootSignature;
-    RootSignatureDx12 m_SDRRootSignature;
+    NotCopyableReference<RenderProgramSignature> m_SkyboxSignature;
+    NotCopyableReference<RenderProgramSignature> m_HDRRootSignature;
+    NotCopyableReference<RenderProgramSignature> m_SDRRootSignature;
 
     // Pipeline state object.
     // Skybox PSO

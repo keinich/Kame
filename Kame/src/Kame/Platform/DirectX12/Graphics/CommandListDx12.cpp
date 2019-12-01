@@ -785,13 +785,14 @@ namespace Kame {
     SetPipelineState(renderProgramDx12->GetPipelineStateObject());
   }
 
-  void CommandListDx12::SetGraphicsRootSignature(const RootSignatureDx12& rootSignature) {
-    auto d3d12RootSignature = rootSignature.GetRootSignature().Get();
+  void CommandListDx12::SetGraphicsRootSignature(const RenderProgramSignature* rootSignature) {
+    const RootSignatureDx12* rootSignatureDx12 = static_cast<const RootSignatureDx12*>(rootSignature);
+    auto d3d12RootSignature = rootSignatureDx12->GetRootSignature().Get();
     if (m_RootSignature != d3d12RootSignature) {
       m_RootSignature = d3d12RootSignature;
 
       for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i) {
-        m_DynamicDescriptorHeap[i]->ParseRootSignature(rootSignature);
+        m_DynamicDescriptorHeap[i]->ParseRootSignature(*rootSignatureDx12);
       }
 
       m_d3d12CommandList->SetGraphicsRootSignature(m_RootSignature);

@@ -42,9 +42,11 @@
 
 #include <vector>
 
+#include <Kame/Graphics/RenderApi/RenderProgramSignature.h>
+
 namespace Kame {
 
-  class KAME_API RootSignatureDx12 {
+  class KAME_API RootSignatureDx12 : public RenderProgramSignature {
   public:
 
     static void DestroyAll();
@@ -64,10 +66,10 @@ namespace Kame {
       return m_RootSignature;
     }
 
-    void SetRootSignatureDesc(
+    virtual void SetDescription(
       const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
       D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
-    );
+    ) override;
 
     const D3D12_ROOT_SIGNATURE_DESC1& GetRootSignatureDesc() const {
       return m_RootSignatureDesc;

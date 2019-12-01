@@ -13,6 +13,7 @@ namespace Kame {
 
   class RenderTarget;
   class Texture;
+  class RenderProgramSignature;
 
   enum class RenderApi {
 
@@ -36,6 +37,8 @@ namespace Kame {
     static void ExecuteCommandList(Reference<CommandListDx12> commandList);
 
     static RenderTarget* CreateRenderTarget();
+
+    static NotCopyableReference<RenderProgramSignature> CreateRenderProgramSignatureNc();
 
     static Reference<Texture> CreateTexture(
       const D3D12_RESOURCE_DESC& resourceDesc,

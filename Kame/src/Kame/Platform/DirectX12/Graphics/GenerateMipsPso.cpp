@@ -41,7 +41,7 @@ namespace Kame {
       rootParameters, 1, &linearClampSampler
     );
 
-    m_RootSignature.SetRootSignatureDesc(
+    m_RootSignature.SetDescription(
       rootSignatureDesc.Desc_1_1,
       featureData.HighestVersion
     );

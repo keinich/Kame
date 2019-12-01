@@ -38,7 +38,7 @@ namespace Kame {
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc(PanoToCubemapRS::NumRootParameters,
       rootParameters, 1, &linearRepeatSampler);
 
-    m_RootSignature.SetRootSignatureDesc(rootSignatureDesc.Desc_1_1, featureData.HighestVersion);
+    m_RootSignature.SetDescription(rootSignatureDesc.Desc_1_1, featureData.HighestVersion);
 
     // Create the PSO for GenerateMips shader.
     struct PipelineStateStream {

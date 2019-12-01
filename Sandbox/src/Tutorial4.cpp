@@ -185,6 +185,10 @@ namespace Kame {
     _HDRProgram.reset(new RenderProgramDx12());
     _SDRProgram.reset(new RenderProgramDx12());
 
+    m_SkyboxSignature = GraphicsCore::CreateRenderProgramSignatureNc();
+    m_HDRRootSignature = GraphicsCore::CreateRenderProgramSignatureNc();
+    m_SDRRootSignature = GraphicsCore::CreateRenderProgramSignatureNc();
+
   }
 
   Tutorial4::~Tutorial4() {
@@ -296,9 +300,9 @@ namespace Kame {
       CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
       rootSignatureDescription.Init_1_1(2, rootParameters, 1, &linearClampSampler, rootSignatureFlags);
 
-      m_SkyboxSignature.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      m_SkyboxSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
 
-      _SkyboxProgram->SetRootSignature(m_SkyboxSignature);
+      _SkyboxProgram->SetRootSignature(m_SkyboxSignature.get());
       _SkyboxProgram->SetInputLayout1(1, inputLayout);
       _SkyboxProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
       _SkyboxProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
@@ -344,9 +348,9 @@ namespace Kame {
       CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
       rootSignatureDescription.Init_1_1(RootParameters::NumRootParameters, rootParameters, 1, &linearRepeatSampler, rootSignatureFlags);
 
-      m_HDRRootSignature.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
 
-      _HDRProgram->SetRootSignature(m_HDRRootSignature);
+      _HDRProgram->SetRootSignature(m_HDRRootSignature.get());
       _HDRProgram->SetInputLayout1(VertexPositionNormalTexture::InputElementCount, VertexPositionNormalTexture::InputElements);
       _HDRProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
       _HDRProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
@@ -369,7 +373,7 @@ namespace Kame {
       CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
       rootSignatureDescription.Init_1_1(2, rootParameters, 1, &linearClampsSampler);
 
-      m_SDRRootSignature.SetRootSignatureDesc(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      m_SDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
 
       //Test RootSignature Hash
       {
@@ -386,7 +390,7 @@ namespace Kame {
         rootSignatureDescription2.Init_1_1(2, rootParameters2, 1, &linearClampsSampler2);
 
         RootSignatureDx12 rootSignature2;
-        rootSignature2.SetRootSignatureDesc(rootSignatureDescription2.Desc_1_1, featureData.HighestVersion);
+        rootSignature2.SetDescription(rootSignatureDescription2.Desc_1_1, featureData.HighestVersion);
 
       } //End Test RootSignature Hash
 
@@ -399,7 +403,7 @@ namespace Kame {
       CD3DX12_RASTERIZER_DESC rasterizerDesc(D3D12_DEFAULT);
       rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
 
-      _SDRProgram->SetRootSignature(m_SDRRootSignature);
+      _SDRProgram->SetRootSignature(m_SDRRootSignature.get());
       _SDRProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
       _SDRProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
       _SDRProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
@@ -412,7 +416,7 @@ namespace Kame {
       //Test Hash
       Reference<RenderProgramDx12> testProgram;
       testProgram.reset(new RenderProgramDx12());
-      testProgram->SetRootSignature(m_SDRRootSignature);
+      testProgram->SetRootSignature(m_SDRRootSignature.get());
       testProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
       testProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
       testProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
@@ -791,7 +795,7 @@ namespace Kame {
 
       //commandList->SetPipelineState(m_SkyboxPipelineState);
       commandListBase->SetRenderProgram(_SkyboxProgram.get());
-      commandList->SetGraphicsRootSignature(m_SkyboxSignature);
+      commandListBase->SetGraphicsRootSignature(m_SkyboxSignature.get());
 
       commandList->SetGraphics32BitConstants(0, viewProjMatrix);
 
@@ -809,7 +813,7 @@ namespace Kame {
 
 
     commandListBase->SetRenderProgram(_HDRProgram.get());
-    commandList->SetGraphicsRootSignature(m_HDRRootSignature);
+    commandListBase->SetGraphicsRootSignature(m_HDRRootSignature.get());
 
     // Upload lights
     LightProperties lightProps;
@@ -983,7 +987,7 @@ namespace Kame {
     commandList->SetViewport(m_pWindow->GetDisplay().GetRenderTarget().GetViewport());
     commandListBase->SetRenderProgram(_SDRProgram.get());
     commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList->SetGraphicsRootSignature(m_SDRRootSignature);
+    commandListBase->SetGraphicsRootSignature(m_SDRRootSignature.get());
     commandList->SetGraphics32BitConstants(0, g_TonemapParameters);
     commandList->SetShaderResourceViewBase(1, 0, m_HDRRenderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 

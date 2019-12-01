@@ -10,6 +10,8 @@
 #include <Kame/Graphics/RenderTarget.h>
 #include <Kame/Platform/DirectX12/Graphics/TextureDx12.h>
 
+#include <Kame/Platform/DirectX12/Graphics/RootSignatureDx12.h>
+
 namespace Kame {
 
   RenderApi GraphicsCore::s_RenderApi = RenderApi::DirectX12;
@@ -78,6 +80,10 @@ namespace Kame {
 
   RenderTarget* GraphicsCore::CreateRenderTarget() {
     return reinterpret_cast<RenderTarget*>(new RenderTargetOf<TextureDx12>());
+  }
+
+  NotCopyableReference<RenderProgramSignature> GraphicsCore::CreateRenderProgramSignatureNc() {
+    return CreateNotCopyableReference<RootSignatureDx12>();
   }
 
   Reference<Texture> GraphicsCore::CreateTexture(

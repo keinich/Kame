@@ -301,7 +301,7 @@ namespace Kame {
     /**
      * Set the current root signature on the command list.
      */
-    void SetGraphicsRootSignature(const RootSignatureDx12& rootSignature);
+    virtual void SetGraphicsRootSignature(const RenderProgramSignature* rootSignature) override;
     void SetComputeRootSignature(const RootSignatureDx12& rootSignature);
 
     /**

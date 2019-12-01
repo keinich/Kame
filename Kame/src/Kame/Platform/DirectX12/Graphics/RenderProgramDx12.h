@@ -62,7 +62,7 @@ namespace Kame {
 
     virtual void Create() override;
 
-    virtual void SetRootSignature(const RootSignatureDx12& BindMappings) override;
+    virtual void SetRootSignature(const RenderProgramSignature* signature) override;
 
     virtual void SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE TopologyType) override {
       _PipelineStateStream.PrimitiveTopologyType = TopologyType;

@@ -28,7 +28,7 @@ namespace Kame {
     , m_SamplerTableBitMask(0)
     , m_DescriptorTableBitMask(0)
   {
-    SetRootSignatureDesc(rootSignatureDesc, rootSignatureVersion);
+    SetDescription(rootSignatureDesc, rootSignatureVersion);
   }
 
   RootSignatureDx12::~RootSignatureDx12() {
@@ -57,7 +57,7 @@ namespace Kame {
     memset(m_NumDescriptorsPerTable, 0, sizeof(m_NumDescriptorsPerTable));
   }
 
-  void RootSignatureDx12::SetRootSignatureDesc(
+  void RootSignatureDx12::SetDescription(
     const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
     D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
   ) {

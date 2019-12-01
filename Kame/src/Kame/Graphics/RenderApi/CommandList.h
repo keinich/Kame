@@ -7,6 +7,7 @@ namespace Kame {
   class Texture;
   class RenderTarget;
   class RenderProgram;
+  class RenderProgramSignature;
 
   class CommandList {
 
@@ -20,6 +21,8 @@ namespace Kame {
     virtual void SetScissorRect(const D3D12_RECT& scissorRect) = 0;
 
     virtual void SetRenderProgram(const RenderProgram* renderProgram) = 0;
+    virtual void SetGraphicsRootSignature(const RenderProgramSignature* rootSignature) = 0;
+
   };
 
 }

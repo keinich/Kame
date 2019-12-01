@@ -69,9 +69,10 @@ namespace Kame {
 
   }
 
-  void RenderProgramDx12::SetRootSignature(const RootSignatureDx12& BindMappings) {
-    m_RootSignature = &BindMappings;
-    _PipelineStateStream.pRootSignature = BindMappings.GetRootSignature().Get();
+  void RenderProgramDx12::SetRootSignature(const RenderProgramSignature* signature) {
+    const RootSignatureDx12* rootSignatureDx12 = static_cast<const RootSignatureDx12*>(signature);
+    m_RootSignature = rootSignatureDx12;
+    _PipelineStateStream.pRootSignature = rootSignatureDx12->GetRootSignature().Get();
   }
 
 }
