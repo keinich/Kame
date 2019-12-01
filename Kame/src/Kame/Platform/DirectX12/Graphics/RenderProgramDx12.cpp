@@ -1,7 +1,7 @@
 #include "kmpch.h"
 #include "DX12Core.h"
 #include "RenderProgramDx12.h"
-#include "RootSignature.h"
+#include "RootSignatureDx12.h"
 #include "Kame/Utility/Hash.h"
 #include <map>
 #include <thread>
@@ -69,7 +69,7 @@ namespace Kame {
 
   }
 
-  void RenderProgramDx12::SetRootSignature(const RootSignature& BindMappings) {
+  void RenderProgramDx12::SetRootSignature(const RootSignatureDx12& BindMappings) {
     m_RootSignature = &BindMappings;
     _PipelineStateStream.pRootSignature = BindMappings.GetRootSignature().Get();
   }

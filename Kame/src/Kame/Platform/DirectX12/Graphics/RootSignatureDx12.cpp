@@ -1,6 +1,6 @@
 #include "kmpch.h"
 
-#include "RootSignature.h"
+#include "RootSignatureDx12.h"
 
 #include "DX12Core.h"
 
@@ -10,18 +10,18 @@ namespace Kame {
 
   static std::map< size_t, ComPtr<ID3D12RootSignature> > s_RootSignatureHashMap;
 
-  void RootSignature::DestroyAll() {
+  void RootSignatureDx12::DestroyAll() {
     s_RootSignatureHashMap.clear();
   }
 
-  RootSignature::RootSignature()
+  RootSignatureDx12::RootSignatureDx12()
     : m_RootSignatureDesc{}
     , m_NumDescriptorsPerTable{ 0 }
     , m_SamplerTableBitMask(0)
     , m_DescriptorTableBitMask(0)
   {}
 
-  RootSignature::RootSignature(
+  RootSignatureDx12::RootSignatureDx12(
     const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion)
     : m_RootSignatureDesc{}
     , m_NumDescriptorsPerTable{ 0 }
@@ -31,11 +31,11 @@ namespace Kame {
     SetRootSignatureDesc(rootSignatureDesc, rootSignatureVersion);
   }
 
-  RootSignature::~RootSignature() {
+  RootSignatureDx12::~RootSignatureDx12() {
     Destroy();
   }
 
-  void RootSignature::Destroy() {
+  void RootSignatureDx12::Destroy() {
     for (UINT i = 0; i < m_RootSignatureDesc.NumParameters; ++i) {
       const D3D12_ROOT_PARAMETER1& rootParameter = m_RootSignatureDesc.pParameters[i];
       if (rootParameter.ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE) {
@@ -57,7 +57,7 @@ namespace Kame {
     memset(m_NumDescriptorsPerTable, 0, sizeof(m_NumDescriptorsPerTable));
   }
 
-  void RootSignature::SetRootSignatureDesc(
+  void RootSignatureDx12::SetRootSignatureDesc(
     const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
     D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
   ) {
@@ -181,7 +181,7 @@ namespace Kame {
     }
   }
 
-  uint32_t RootSignature::GetDescriptorTableBitMask(D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType) const {
+  uint32_t RootSignatureDx12::GetDescriptorTableBitMask(D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType) const {
     uint32_t descriptorTableBitMask = 0;
     switch (descriptorHeapType) {
     case D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV:
@@ -195,7 +195,7 @@ namespace Kame {
     return descriptorTableBitMask;
   }
 
-  uint32_t RootSignature::GetNumDescriptors(uint32_t rootIndex) const {
+  uint32_t RootSignatureDx12::GetNumDescriptors(uint32_t rootIndex) const {
     assert(rootIndex < 32);
     return m_NumDescriptorsPerTable[rootIndex];
   }

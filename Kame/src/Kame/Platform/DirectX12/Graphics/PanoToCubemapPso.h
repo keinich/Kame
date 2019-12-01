@@ -32,7 +32,7 @@
   */
 
 
-#include "RootSignature.h"
+#include "RootSignatureDx12.h"
 #include "DescriptorAllocation.h"
 #include "RenderProgramDx12.h"
 
@@ -65,7 +65,7 @@ namespace Kame {
   public:
     PanoToCubemapPSO();
 
-    const RootSignature& GetRootSignature() const {
+    const RootSignatureDx12& GetRootSignature() const {
       return m_RootSignature;
     }
 
@@ -74,7 +74,7 @@ namespace Kame {
     }
 
   private:
-    RootSignature m_RootSignature;
+    RootSignatureDx12 m_RootSignature;
     // Default (no resource) UAV's to pad the unused UAV descriptors.
     // If generating less than 5 mip map levels, the unused mip maps
     // need to be padded with default UAVs (to keep the DX12 runtime happy).

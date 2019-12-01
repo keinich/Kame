@@ -4,7 +4,7 @@
 
 #include "DX12Core.h"
 #include "CommandListDx12.h"
-#include "RootSignature.h"
+#include "RootSignatureDx12.h"
 
 namespace Kame {
 
@@ -24,7 +24,7 @@ namespace Kame {
 
   DynamicDescriptorHeap::~DynamicDescriptorHeap() {}
 
-  void DynamicDescriptorHeap::ParseRootSignature(const RootSignature& rootSignature) {
+  void DynamicDescriptorHeap::ParseRootSignature(const RootSignatureDx12& rootSignature) {
     // If the root signature changes, all descriptors must be (re)bound to the
     // command list.
     m_StaleDescriptorTableBitMask = 0;

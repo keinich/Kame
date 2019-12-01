@@ -38,7 +38,7 @@
 #include "Kame/Platform/DirectX12/Graphics/Display.h"
 #include "Kame/Graphics/Mesh.h"
 #include "Kame/Graphics/RenderTarget.h"
-#include "Kame/Platform/DirectX12/Graphics/RootSignature.h"
+#include "Kame/Platform/DirectX12/Graphics/RootSignatureDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/TextureDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/VertexBuffer.h"
 
@@ -134,9 +134,9 @@ namespace Kame {
     Reference<Texture> _DepthTexture;
 
     // Root signatures
-    RootSignature m_SkyboxSignature;
-    RootSignature m_HDRRootSignature;
-    RootSignature m_SDRRootSignature;
+    RootSignatureDx12 m_SkyboxSignature;
+    RootSignatureDx12 m_HDRRootSignature;
+    RootSignatureDx12 m_SDRRootSignature;
 
     // Pipeline state object.
     // Skybox PSO

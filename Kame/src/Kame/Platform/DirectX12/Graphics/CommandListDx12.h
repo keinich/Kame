@@ -57,7 +57,7 @@ namespace Kame {
   class Resource;
   class ResourceStateTracker;
   class StructuredBuffer;
-  class RootSignature;
+  class RootSignatureDx12;
   class TextureDx12;
   class UploadBuffer;
   class VertexBuffer;
@@ -301,8 +301,8 @@ namespace Kame {
     /**
      * Set the current root signature on the command list.
      */
-    void SetGraphicsRootSignature(const RootSignature& rootSignature);
-    void SetComputeRootSignature(const RootSignature& rootSignature);
+    void SetGraphicsRootSignature(const RootSignatureDx12& rootSignature);
+    void SetComputeRootSignature(const RootSignatureDx12& rootSignature);
 
     /**
      * Set the SRV on the graphics pipeline.

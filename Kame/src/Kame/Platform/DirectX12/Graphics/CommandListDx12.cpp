@@ -13,7 +13,7 @@
 #include "Kame/Graphics/RenderTarget.h"
 #include "Resource.h"
 #include "ResourceStateTracker.h"
-#include "RootSignature.h"
+#include "RootSignatureDx12.h"
 #include "StructuredBuffer.h"
 #include "TextureDx12.h"
 #include "UploadBuffer.h"
@@ -785,7 +785,7 @@ namespace Kame {
     SetPipelineState(renderProgramDx12->GetPipelineStateObject());
   }
 
-  void CommandListDx12::SetGraphicsRootSignature(const RootSignature& rootSignature) {
+  void CommandListDx12::SetGraphicsRootSignature(const RootSignatureDx12& rootSignature) {
     auto d3d12RootSignature = rootSignature.GetRootSignature().Get();
     if (m_RootSignature != d3d12RootSignature) {
       m_RootSignature = d3d12RootSignature;
@@ -800,7 +800,7 @@ namespace Kame {
     }
   }
 
-  void CommandListDx12::SetComputeRootSignature(const RootSignature& rootSignature) {
+  void CommandListDx12::SetComputeRootSignature(const RootSignatureDx12& rootSignature) {
     auto d3d12RootSignature = rootSignature.GetRootSignature().Get();
     if (m_RootSignature != d3d12RootSignature) {
       m_RootSignature = d3d12RootSignature;

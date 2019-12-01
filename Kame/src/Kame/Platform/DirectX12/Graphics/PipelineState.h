@@ -20,7 +20,7 @@
 namespace Kame {
 
   class CommandList;
-  class RootSignature;
+  class RootSignatureDx12;
   class VertexShader;
   class GeometryShader;
   class HullShader;

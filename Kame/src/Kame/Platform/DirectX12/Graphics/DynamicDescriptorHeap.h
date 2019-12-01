@@ -45,7 +45,7 @@
 namespace Kame {
 
   class CommandListDx12;
-  class RootSignature;
+  class RootSignatureDx12;
 
   class KAME_API DynamicDescriptorHeap {
   public:
@@ -99,7 +99,7 @@ namespace Kame {
      * descriptor tables and determine the number of descriptors needed for
      * each table.
      */
-    void ParseRootSignature(const RootSignature& rootSignature);
+    void ParseRootSignature(const RootSignatureDx12& rootSignature);
 
     /**
      * Reset used descriptors. This should only be done if any descriptors

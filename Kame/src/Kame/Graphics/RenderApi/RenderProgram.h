@@ -4,7 +4,7 @@
 
 namespace Kame {
 
-  class RootSignature;
+  class RootSignatureDx12;
 
   class RenderProgram {
 
@@ -15,7 +15,7 @@ namespace Kame {
 
     virtual void Create() = 0;
 
-    virtual void SetRootSignature(const RootSignature& BindMappings) = 0;
+    virtual void SetRootSignature(const RootSignatureDx12& BindMappings) = 0;
 
     virtual void SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE TopologyType) = 0;
 

@@ -385,7 +385,7 @@ namespace Kame {
         CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription2;
         rootSignatureDescription2.Init_1_1(2, rootParameters2, 1, &linearClampsSampler2);
 
-        RootSignature rootSignature2;
+        RootSignatureDx12 rootSignature2;
         rootSignature2.SetRootSignatureDesc(rootSignatureDescription2.Desc_1_1, featureData.HighestVersion);
 
       } //End Test RootSignature Hash

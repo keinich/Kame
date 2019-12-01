@@ -30,7 +30,7 @@
   *  @brief Pipeline state object for generating mip maps.
   */
 
-#include "RootSignature.h"
+#include "RootSignatureDx12.h"
 #include "DescriptorAllocation.h"
 
 #include <d3d12.h>
@@ -62,7 +62,7 @@ namespace Kame {
   public:
     GenerateMipsPSO();
 
-    const RootSignature& GetRootSignature() const {
+    const RootSignatureDx12& GetRootSignature() const {
       return m_RootSignature;
     }
 
@@ -75,7 +75,7 @@ namespace Kame {
     }
 
   private:
-    RootSignature m_RootSignature;
+    RootSignatureDx12 m_RootSignature;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> m_PipelineState;
     // Default (no resource) UAV's to pad the unused UAV descriptors.
     // If generating less than 4 mip map levels, the unused mip maps

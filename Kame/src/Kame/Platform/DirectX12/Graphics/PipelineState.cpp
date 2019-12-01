@@ -14,7 +14,7 @@
 #include "DX12Core.h"
 #include "PipelineState.h"
 #include "RenderProgramDx12.h"
-#include "RootSignature.h"
+#include "RootSignatureDx12.h"
 #include "Kame/Utility/Hash.h"
 #include <map>
 #include <thread>

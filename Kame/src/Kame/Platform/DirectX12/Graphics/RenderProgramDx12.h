@@ -2,7 +2,7 @@
 
 #include <d3d12.h>
 
-#include "RootSignature.h"
+#include "RootSignatureDx12.h"
 #include <Kame/Graphics/RenderApi/RenderProgram.h>
 
 namespace Kame {
@@ -53,7 +53,7 @@ namespace Kame {
     static void DestroyAll(void);
 
 
-    const RootSignature& GetRootSignature(void) const {
+    const RootSignatureDx12& GetRootSignature(void) const {
       assert(m_RootSignature != nullptr);
       return *m_RootSignature;
     }
@@ -62,7 +62,7 @@ namespace Kame {
 
     virtual void Create() override;
 
-    virtual void SetRootSignature(const RootSignature& BindMappings) override;
+    virtual void SetRootSignature(const RootSignatureDx12& BindMappings) override;
 
     virtual void SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE TopologyType) override {
       _PipelineStateStream.PrimitiveTopologyType = TopologyType;
@@ -94,7 +94,7 @@ namespace Kame {
 
   protected:
 
-    const RootSignature* m_RootSignature;
+    const RootSignatureDx12* m_RootSignature;
 
     ComPtr<ID3D12PipelineState> m_PSO;
     PipelineStateStream _PipelineStateStream;

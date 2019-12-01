@@ -44,19 +44,19 @@
 
 namespace Kame {
 
-  class KAME_API RootSignature {
+  class KAME_API RootSignatureDx12 {
   public:
 
     static void DestroyAll();
 
     // TODO: Add (deep) copy/move constructors and assignment operators!
-    RootSignature();
-    RootSignature(
+    RootSignatureDx12();
+    RootSignatureDx12(
       const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
       D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
     );
 
-    virtual ~RootSignature();
+    virtual ~RootSignatureDx12();
 
     void Destroy();
 

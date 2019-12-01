@@ -118,7 +118,7 @@ namespace Kame {
 
   void DX12Core::Destroy() {
     RenderProgramDx12::DestroyAll();
-    RootSignature::DestroyAll();
+    RootSignatureDx12::DestroyAll();
     GraphicsCommon::DestroyCommonState();
     if (gs_pSingelton) {
       delete gs_pSingelton;

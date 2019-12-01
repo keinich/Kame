@@ -215,7 +215,7 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Resource.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.h" />
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignatureDx12.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\StructuredBuffer.h" />
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\TextureDx12.h" />
     <ClInclude Include="src\Kame\Graphics\RenderApi\TextureUsage.h" />
@@ -294,7 +294,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Resource.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignature.cpp" />
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignatureDx12.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\StructuredBuffer.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\TextureDx12.cpp" />
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp" />
