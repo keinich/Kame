@@ -392,6 +392,19 @@ namespace Kame {
       _SDRProgram->SetRenderTargetFormats1(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
 
       _SDRProgram->Create();
+
+
+      //Test Hash
+      Reference<RenderProgramDx12> testProgram;
+      testProgram.reset(new RenderProgramDx12());
+      testProgram->SetRootSignature(m_SDRRootSignature);
+      testProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      testProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      testProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      testProgram->SetRasterizer(rasterizerDesc);
+      testProgram->SetRenderTargetFormats1(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
+      testProgram->Create();
+
     }
 
     auto fenceValue = commandQueue->ExecuteCommandList(commandList);

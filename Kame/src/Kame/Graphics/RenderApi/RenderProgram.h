@@ -31,7 +31,7 @@ namespace Kame {
 
     virtual void SetInputLayout1(UINT NumElements, const D3D12_INPUT_ELEMENT_DESC* pInputElementDescs) = 0;
 
-    virtual void SetRasterizer(CD3DX12_RASTERIZER_DESC rasterizerDesc) = 0;
+    virtual void SetRasterizer(const CD3DX12_RASTERIZER_DESC& rasterizerDesc) = 0;
 
   };
 

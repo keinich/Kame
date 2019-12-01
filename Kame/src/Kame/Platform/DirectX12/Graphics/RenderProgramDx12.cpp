@@ -11,6 +11,8 @@ using Kame::Math::IsAligned;
 using Microsoft::WRL::ComPtr;
 using namespace std;
 
+
+
 namespace Kame {
 
   static map< size_t, ComPtr<ID3D12PipelineState> > s_PSOHashMap;
@@ -21,18 +23,23 @@ namespace Kame {
 
   void RenderProgramDx12::Create() {
 
-    D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = {
-    sizeof(PipelineStateStream), &_PipelineStateStream
-    };
-
     assert(_PipelineStateStream.pRootSignature != nullptr);
 
     _PipelineStateStream.InputLayout = { nullptr, 0U };
 
-    size_t HashCode = Kame::Utility::HashState(&pipelineStateStreamDesc);
-    HashCode = Kame::Utility::HashState(&_PipelineStateStream, _NumInputElements, HashCode);
-    _PipelineStateStream.InputLayout = { _InputElementDescs, _NumInputElements };
+    D3D12_PIPELINE_STATE_STREAM_DESC pipelineStateStreamDesc = {
+     sizeof(PipelineStateStream), &_PipelineStateStream
+    };
 
+    PipelineStateStreamWithoutRtvs pssToHash; 
+    ZeroMemory(&pssToHash, sizeof(pssToHash));
+    pssToHash.Init(_PipelineStateStream);
+
+    size_t HashCode = Kame::Utility::HashState(&pssToHash);
+    HashCode = Kame::Utility::HashState(&_InputElementDescs, _NumInputElements, HashCode);
+    HashCode = Kame::Utility::HashState(&_RtvFormats.RTFormats, 1, HashCode);
+    _PipelineStateStream.InputLayout = { _InputElementDescs, _NumInputElements };
+    _PipelineStateStream.RTVFormats = _RtvFormats;
 
     ID3D12PipelineState** PSORef = nullptr;
     bool firstCompile = false;

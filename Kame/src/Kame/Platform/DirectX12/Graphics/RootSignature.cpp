@@ -4,7 +4,11 @@
 
 #include "DX12Core.h"
 
+#include "Kame/Utility/Hash.h"
+
 namespace Kame {
+
+  static std::map< size_t, ComPtr<ID3D12RootSignature> > s_RootSignatureHashMap;
 
   RootSignature::RootSignature()
     : m_RootSignatureDesc{}
@@ -57,6 +61,9 @@ namespace Kame {
     // up first.
     Destroy();
 
+    size_t HashCode = Utility::HashState(&rootSignatureDesc.Flags);
+    HashCode = Utility::HashState(rootSignatureDesc.pStaticSamplers, rootSignatureDesc.NumStaticSamplers, HashCode);
+
     auto device = DX12Core::Get().GetDevice();
 
     UINT numParameters = rootSignatureDesc.NumParameters;
@@ -67,6 +74,13 @@ namespace Kame {
       pParameters[i] = rootParameter;
 
       if (rootParameter.ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE) {
+
+        HashCode = Utility::HashState(
+          rootParameter.DescriptorTable.pDescriptorRanges,
+          rootParameter.DescriptorTable.NumDescriptorRanges,
+          HashCode
+        );
+
         UINT numDescriptorRanges = rootParameter.DescriptorTable.NumDescriptorRanges;
         D3D12_DESCRIPTOR_RANGE1* pDescriptorRanges = numDescriptorRanges > 0 ? new D3D12_DESCRIPTOR_RANGE1[numDescriptorRanges] : nullptr;
 
@@ -95,6 +109,9 @@ namespace Kame {
           m_NumDescriptorsPerTable[i] += pDescriptorRanges[j].NumDescriptors;
         }
       }
+      else {
+        HashCode = Utility::HashState(&rootParameter, 1, HashCode);
+      }
     }
 
     m_RootSignatureDesc.NumParameters = numParameters;
@@ -114,18 +131,48 @@ namespace Kame {
     D3D12_ROOT_SIGNATURE_FLAGS flags = rootSignatureDesc.Flags;
     m_RootSignatureDesc.Flags = flags;
 
-    CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC versionRootSignatureDesc;
-    versionRootSignatureDesc.Init_1_1(numParameters, pParameters, numStaticSamplers, pStaticSamplers, flags);
 
-    // Serialize the root signature.
-    Microsoft::WRL::ComPtr<ID3DBlob> rootSignatureBlob;
-    Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
-    ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&versionRootSignatureDesc,
-      rootSignatureVersion, &rootSignatureBlob, &errorBlob));
 
-    // Create the root signature.
-    ThrowIfFailed(device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
-      rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&m_RootSignature)));
+
+
+    // Begin creating
+    ID3D12RootSignature** RSRef = nullptr;
+    bool firstCompile = false;
+    {
+      static std::mutex s_HashMapMutex;
+      std::lock_guard<std::mutex> CS(s_HashMapMutex);
+      auto iter = s_RootSignatureHashMap.find(HashCode);
+
+      // Reserve space so the next inquiry will find that someone got here first.
+      if (iter == s_RootSignatureHashMap.end()) {
+        RSRef = s_RootSignatureHashMap[HashCode].GetAddressOf();
+        firstCompile = true;
+      }
+      else
+        RSRef = iter->second.GetAddressOf();
+    }
+
+    if (firstCompile) {
+
+      CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC versionRootSignatureDesc;
+      versionRootSignatureDesc.Init_1_1(numParameters, pParameters, numStaticSamplers, pStaticSamplers, flags);
+
+      // Serialize the root signature.
+      Microsoft::WRL::ComPtr<ID3DBlob> rootSignatureBlob;
+      Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
+      ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&versionRootSignatureDesc,
+        rootSignatureVersion, &rootSignatureBlob, &errorBlob));
+
+      // Create the root signature.
+      ThrowIfFailed(device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),
+        rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&m_RootSignature)));
+
+    }
+    else {
+      while (*RSRef == nullptr)
+        std::this_thread::yield();
+      m_RootSignature = *RSRef;
+    }
   }
 
   uint32_t RootSignature::GetDescriptorTableBitMask(D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType) const {

@@ -18,6 +18,28 @@ namespace Kame {
     CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
   };
 
+  struct PipelineStateStreamWithoutRtvs {
+    CD3DX12_PIPELINE_STATE_STREAM_INPUT_LAYOUT InputLayout;
+    CD3DX12_PIPELINE_STATE_STREAM_ROOT_SIGNATURE pRootSignature;
+    CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
+    CD3DX12_PIPELINE_STATE_STREAM_VS VS;
+    CD3DX12_PIPELINE_STATE_STREAM_PS PS;
+    CD3DX12_PIPELINE_STATE_STREAM_RASTERIZER Rasterizer;    
+    CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
+
+    PipelineStateStreamWithoutRtvs() {}
+
+    void Init(PipelineStateStream pss) {
+      pRootSignature = pss.pRootSignature;
+      InputLayout = pss.InputLayout;
+      PrimitiveTopologyType = pss.PrimitiveTopologyType;
+      VS = pss.VS;
+      PS = pss.PS;
+      Rasterizer = pss.Rasterizer;
+      DSVFormat = pss.DSVFormat;
+    }
+  };
+
   class RenderProgramDx12 : public RenderProgram {
   public:
 
@@ -51,7 +73,7 @@ namespace Kame {
       UINT MsaaCount = 1,
       UINT MsaaQuality = 0
     ) override {
-      _PipelineStateStream.RTVFormats = rtvFormats;
+      _RtvFormats = rtvFormats;
       _PipelineStateStream.DSVFormat = DSVFormat;
     }
 
@@ -66,7 +88,7 @@ namespace Kame {
       _InputElementDescs = inputElementDescs;
     };
 
-    virtual void SetRasterizer(CD3DX12_RASTERIZER_DESC rasterizerDesc) override {
+    virtual void SetRasterizer(const CD3DX12_RASTERIZER_DESC& rasterizerDesc) override {
       _PipelineStateStream.Rasterizer = rasterizerDesc;
     }
 
@@ -79,6 +101,7 @@ namespace Kame {
 
     UINT _NumInputElements;
     const D3D12_INPUT_ELEMENT_DESC* _InputElementDescs;
+    D3D12_RT_FORMAT_ARRAY _RtvFormats;
   };
 
 }
