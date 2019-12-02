@@ -62,20 +62,14 @@ namespace Kame {
 
   }
 
-  Reference<CommandListDx12> GraphicsCore::BeginCommandListDx(D3D12_COMMAND_LIST_TYPE type) {
+  Reference<CommandList> GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE type) {
     auto commandQueue = s_Instance->GetCommandQueue(type);
     auto commandList = commandQueue->GetCommandList();
     return commandList;
   }
 
-  CommandList* GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE type) {
-    auto commandQueue = s_Instance->GetCommandQueue(type);
-    auto commandList = commandQueue->GetCommandList();
-    return commandList.get();
-  }
-
-  void GraphicsCore::ExecuteCommandList(Reference<CommandListDx12> commandList) {
-    s_Instance->GetCommandQueue(commandList->GetCommandListType())->ExecuteCommandList(commandList);
+  void GraphicsCore::ExecuteCommandList(Reference<CommandList> commandList) {
+    s_Instance->GetCommandQueue(commandList->GetType())->ExecuteCommandList(commandList);
   }
 
   RenderTarget* GraphicsCore::CreateRenderTarget() {

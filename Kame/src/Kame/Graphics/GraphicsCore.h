@@ -31,10 +31,9 @@ namespace Kame {
     static void Destroy();
 
     static void Flush();
-
-    static Reference<CommandListDx12> BeginCommandListDx(D3D12_COMMAND_LIST_TYPE type);
-    static CommandList* BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
-    static void ExecuteCommandList(Reference<CommandListDx12> commandList);
+        
+    static Reference<CommandList> BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
+    static void ExecuteCommandList(Reference<CommandList> commandList);
 
     static RenderTarget* CreateRenderTarget();
 

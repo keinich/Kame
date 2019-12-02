@@ -42,6 +42,7 @@
 
 namespace Kame {
 
+  class CommandList;
   class CommandListDx12;
 
   class KAME_API CommandQueue {
@@ -54,8 +55,8 @@ namespace Kame {
 
     // Execute a command list.
     // Returns the fence value to wait for for this command list.
-    uint64_t ExecuteCommandList(Reference<CommandListDx12> commandList);
-    uint64_t ExecuteCommandLists(const std::vector<Reference<CommandListDx12> >& commandLists);
+    uint64_t ExecuteCommandList(Reference<CommandList> commandList);
+    uint64_t ExecuteCommandLists(const std::vector<Reference<CommandList> >& commandLists);
 
     uint64_t Signal();
     bool IsFenceComplete(uint64_t fenceValue);
@@ -82,7 +83,7 @@ namespace Kame {
     std::atomic_uint64_t                            m_FenceValue;
 
     ThreadSafeQueue<CommandListEntry>               m_InFlightCommandLists;
-    ThreadSafeQueue<Reference<CommandListDx12> >  m_AvailableCommandLists;
+    ThreadSafeQueue<Reference<CommandListDx12> >    m_AvailableCommandLists;
 
     // A thread to process in-flight command lists.
     std::thread m_ProcessInFlightCommandListsThread;

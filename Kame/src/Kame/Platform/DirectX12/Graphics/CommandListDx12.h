@@ -73,7 +73,7 @@ namespace Kame {
     /**
      * Get the type of command list.
      */
-    D3D12_COMMAND_LIST_TYPE GetCommandListType() const {
+    virtual D3D12_COMMAND_LIST_TYPE GetType() const override {
       return m_d3d12CommandListType;
     }
 
@@ -385,7 +385,7 @@ namespace Kame {
      * Reset the command list. This should only be called by the CommandQueue
      * before the command list is returned from CommandQueue::GetCommandList.
      */
-    void Reset();
+    virtual void Reset() override;
 
     /**
      * Release tracked objects. Useful if the swap chain needs to be resized.

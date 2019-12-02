@@ -3,6 +3,7 @@
 //#include "..\resource.h"
 
 #include "CommandQueue.h"
+#include "CommandListDx12.h"
 #include "Game.h"
 #include "DescriptorAllocator.h"
 #include "Display.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <d3d12.h> //TODO abstract away D3D12_CLEAR_FLAGS, D3D12_VIEWPORT, D3D12_RECT, D3D_PRIMITIVE_TOPOLOGY
+#include <d3d12.h> //TODO abstract away D3D12_CLEAR_FLAGS, D3D12_VIEWPORT, D3D12_RECT, D3D_PRIMITIVE_TOPOLOGY, D3D12_COMMAND_LIST_TYPE
 
 namespace Kame {
 
@@ -15,6 +15,8 @@ namespace Kame {
   class CommandList {
 
   public:
+
+    virtual D3D12_COMMAND_LIST_TYPE GetType() const = 0;
 
     virtual void ClearTexture(const Texture* texture, const float clearColor[4]) = 0;
     virtual void ClearDepthStencilTexture(const Texture* texture, D3D12_CLEAR_FLAGS clearFlags, float depth = 1.0f, uint8_t stencil = 0) = 0;
@@ -75,6 +77,7 @@ namespace Kame {
     virtual void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t startVertex = 0, uint32_t startInstance = 0) = 0;
     virtual void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t startIndex = 0, int32_t baseVertex = 0, uint32_t startInstance = 0) = 0;
 
+    virtual void Reset() = 0;
   };
 
 }

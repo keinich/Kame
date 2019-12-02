@@ -94,11 +94,11 @@ namespace Kame {
 
   // Execute a command list.
   // Returns the fence value to wait for for this command list.
-  uint64_t CommandQueue::ExecuteCommandList(Reference<CommandListDx12> commandList) {
-    return ExecuteCommandLists(std::vector<Reference<CommandListDx12> >({ commandList }));
+  uint64_t CommandQueue::ExecuteCommandList(Reference<CommandList> commandList) {
+    return ExecuteCommandLists(std::vector<Reference<CommandList> >({ commandList }));
   }
 
-  uint64_t CommandQueue::ExecuteCommandLists(const std::vector<Reference<CommandListDx12> >& commandLists) {
+  uint64_t CommandQueue::ExecuteCommandLists(const std::vector<Reference<CommandList> >& commandLists) {
     ResourceStateTracker::Lock();
 
     // Command lists that need to put back on the command list queue.
@@ -106,28 +106,32 @@ namespace Kame {
     toBeQueued.reserve(commandLists.size() * 2);        // 2x since each command list will have a pending command list.
 
     // Generate mips command lists.
-    std::vector<Reference<CommandListDx12> > generateMipsCommandLists;
+    std::vector<Reference<CommandList> > generateMipsCommandLists;
     generateMipsCommandLists.reserve(commandLists.size());
 
     // Command lists that need to be executed.
     std::vector<ID3D12CommandList*> d3d12CommandLists;
     d3d12CommandLists.reserve(commandLists.size() * 2); // 2x since each command list will have a pending command list.
 
+
     for (auto commandList : commandLists) {
+
+      Reference<CommandListDx12> commandListDx12 = std::static_pointer_cast<CommandListDx12>(commandList);
+
       auto pendingCommandList = GetCommandList();
-      bool hasPendingBarriers = commandList->Close(*pendingCommandList);
+      bool hasPendingBarriers = commandListDx12->Close(*pendingCommandList);
       pendingCommandList->Close();
       // If there are no pending barriers on the pending command list, there is no reason to 
       // execute an empty command list on the command queue.
       if (hasPendingBarriers) {
         d3d12CommandLists.push_back(pendingCommandList->GetGraphicsCommandList().Get());
       }
-      d3d12CommandLists.push_back(commandList->GetGraphicsCommandList().Get());
+      d3d12CommandLists.push_back(commandListDx12->GetGraphicsCommandList().Get());
 
       toBeQueued.push_back(pendingCommandList);
-      toBeQueued.push_back(commandList);
+      toBeQueued.push_back(commandListDx12);
 
-      auto generateMipsCommandList = commandList->GetGenerateMipsCommandList();
+      auto generateMipsCommandList = commandListDx12->GetGenerateMipsCommandList();
       if (generateMipsCommandList) {
         generateMipsCommandLists.push_back(generateMipsCommandList);
       }
