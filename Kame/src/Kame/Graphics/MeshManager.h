@@ -1,29 +1,41 @@
 #pragma once
 
 #include <map>
+#include "Mesh.h"
 
 namespace Kame {
 
-  class Mesh;
+  class ManagedMesh : public Mesh {
+  public:
+    ManagedMesh(const std::wstring& identifier) :
+      _Identifier(identifier) {}
+
+  private:
+    std::wstring _Identifier;
+  };
 
   class MeshManager {
 
+    friend class MeshFactory;
+
   public:
-    
+
     static void Create();
     static void Destroy();
 
-    static Mesh* GetMesh(std::wstring identifier);
+    virtual ~MeshManager();
+
 
   protected: // Methods
 
     static MeshManager* Get();
+    static std::pair<ManagedMesh*, bool> GetOrCreateMesh(std::wstring identifier);
 
   protected: // Fields
 
     static MeshManager* s_Instance;
 
-    std::map<std::wstring, std::unique_ptr<Mesh>> _MeshByIdentifier;
+    std::map<std::wstring, NotCopyableReference<ManagedMesh>> _MeshByIdentifier;
 
   };
 

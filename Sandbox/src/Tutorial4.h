@@ -110,7 +110,8 @@ namespace Kame {
 
   private:
     // Some geometry to render.
-    std::unique_ptr<Mesh> m_CubeMesh;
+    //std::unique_ptr<Mesh> m_CubeMesh;
+    Mesh* m_CubeMesh;
     std::unique_ptr<Mesh> m_SphereMesh;
     std::unique_ptr<Mesh> m_ConeMesh;
     std::unique_ptr<Mesh> m_TorusMesh;

@@ -93,6 +93,7 @@ namespace Kame {
   class KAME_API Mesh {
 
     friend class MeshManager;
+    friend class MeshFactory;
 
   public:
 
@@ -107,13 +108,13 @@ namespace Kame {
     static std::unique_ptr<Mesh> CreateDebugCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
 
   protected:
+    Mesh();
+    virtual ~Mesh();
 
   private:
     friend struct std::default_delete<Mesh>;
 
-    Mesh();
     Mesh(const Mesh& copy) = delete;
-    virtual ~Mesh();
 
     void Initialize(CommandListDx12& commandList, VertexCollection& vertices, IndexCollection& indices, bool rhcoords);
     void Initialize(CommandListDx12& commandList, SimpleVertexCollection& vertices, IndexCollection& indices, bool rhcoords);

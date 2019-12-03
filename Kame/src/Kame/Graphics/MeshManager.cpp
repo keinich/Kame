@@ -22,7 +22,13 @@ namespace Kame {
     s_Instance = nullptr;
   }
 
-  Mesh* Kame::MeshManager::GetMesh(std::wstring identifier) {
+  MeshManager::~MeshManager() {
+    _MeshByIdentifier.clear();
+  }
+
+  std::pair<ManagedMesh*, bool> Kame::MeshManager::GetOrCreateMesh(std::wstring identifier) {
+    assert(s_Instance);
+
     static std::mutex s_Mutex;
     std::lock_guard<std::mutex> guard(s_Mutex);
 
@@ -30,14 +36,15 @@ namespace Kame {
 
     // If it's found, it has already been loaded or the load process has begun
     if (iter != s_Instance->_MeshByIdentifier.end()) {
-      //return make_pair(iter->second.get(), false);
-      return iter->second.get();
+      return std::make_pair(iter->second.get(), false);
     }
 
-    std::unique_ptr<Mesh> newMesh;
-    s_Instance->_MeshByIdentifier[identifier].reset(newMesh.get());
+    ManagedMesh* newMesh = new ManagedMesh(identifier);
+    s_Instance->_MeshByIdentifier[identifier].reset(newMesh);
 
     // This was the first time it was requested, so indicate that the caller must read the file
     //return make_pair(NewTexture, true);
+    return std::make_pair(newMesh, true);
+
   }
 }

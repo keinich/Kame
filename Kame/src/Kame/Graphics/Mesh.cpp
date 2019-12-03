@@ -2,6 +2,7 @@
 #include "Mesh.h"
 
 #include "Kame/Platform/DirectX12/Graphics/DX12Core.h"
+#include "Kame/Platform/DirectX12/Graphics/CommandQueue.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -156,7 +157,11 @@ namespace Kame {
     // Create the primitive object.
     std::unique_ptr<Mesh> mesh(new Mesh());
 
-    mesh->Initialize(commandList, vertices, indices, rhcoords);
+    auto cl = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->GetCommandList();
+    mesh->Initialize(*cl, vertices, indices, rhcoords);
+
+    //mesh->Initialize(commandList, vertices, indices, rhcoords);
+    DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->ExecuteCommandList(cl);
 
     return mesh;
   }

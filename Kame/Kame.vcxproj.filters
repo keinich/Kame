@@ -384,6 +384,7 @@
     <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer.h">
       <Filter>Kame\Graphics\RenderApi</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\MeshFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -577,6 +578,7 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\MeshFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

@@ -25,6 +25,8 @@
 
 #include "Kame/Platform/DirectX12/Graphics/RenderProgramDx12.h"
 
+#include"Kame/Graphics/MeshFactory.h"
+
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
@@ -201,7 +203,7 @@ namespace Kame {
     auto commandList = commandQueue->GetCommandList();
 
     // Create a Cube mesh
-    m_CubeMesh = Mesh::CreateCube(*commandList);
+    m_CubeMesh = MeshFactory::GetCube();
     m_SphereMesh = Mesh::CreateSphere(*commandList);
     m_ConeMesh = Mesh::CreateCone(*commandList);
     m_TorusMesh = Mesh::CreateTorus(*commandList);
