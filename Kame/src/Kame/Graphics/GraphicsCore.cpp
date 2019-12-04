@@ -1,19 +1,18 @@
 #include "kmpch.h"
+
+//System
+#include <dxgidebug.h>
+
+//Kame
+#include <Kame/Core/DebugUtilities.h>
 #include "GraphicsCore.h"
 
+#include <Kame/Graphics/RenderTarget.h>
 #include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
-
-#include <Kame/Core/DebugUtilities.h>
-
-//TODO Remove this:
 #include <Kame/Platform/DirectX12/Graphics/CommandListDx12.h>
 #include <Kame/Platform/DirectX12/Graphics/CommandQueue.h>
-
-#include <Kame/Graphics/RenderTarget.h>
 #include <Kame/Platform/DirectX12/Graphics/TextureDx12.h>
-
 #include <Kame/Platform/DirectX12/Graphics/RootSignatureDx12.h>
-
 #include "Kame/Platform/DirectX12/Graphics/VertexBufferDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/IndexBufferDx12.h"
 
@@ -113,4 +112,11 @@ namespace Kame {
     //return reinterpret_cast<Texture*>(new TextureDx12(resourceDesc, clearValue, textureUsage, name));
   }
 
+  void GraphicsCore::ReportLiveObjects() {
+    IDXGIDebug1* dxgiDebug;
+    DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug));
+
+    dxgiDebug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_IGNORE_INTERNAL);
+    dxgiDebug->Release();
+  }
 }

@@ -10,7 +10,7 @@
 #include <Kame/Graphics/MeshManager.h>
 #include <Kame/Graphics/TextureManager.h>
 //#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
-#include <Kame/Platform/DirectX12/Graphics/Game.h>
+#include <Kame/Game/Game.h>
 
 #include <Kame/Input/Input.h>
 //#include "Kame/Events/Event.h"
@@ -29,6 +29,10 @@ namespace Kame {
   Application& Application::Get() {
     assert(_Instance);
     return *_Instance;
+  }
+
+  void Application::ReportLiveObjects() {
+    GraphicsCore::ReportLiveObjects();
   }
 
   void Application::Create() {

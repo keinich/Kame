@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 namespace Kame {
 
   template<typename T>

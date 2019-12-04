@@ -1,7 +1,7 @@
 #include "kmpch.h"
 #include "Window.h"
 
-#include "Kame/Platform/DirectX12/Graphics/Game.h"
+#include "Kame/Game/Game.h"
 
 #include "Kame/Application/Application.h"
 #include "Kame/Input/Input.h"

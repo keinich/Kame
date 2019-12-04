@@ -5,7 +5,6 @@
 #include "DX12Core.h"
 #include "CommandQueue.h"
 #include "CommandListDx12.h"
-#include "Game.h"
 #include "GUI.h"
 #include "Kame/Graphics/RenderTarget.h"
 #include "ResourceStateTracker.h"

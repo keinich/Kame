@@ -226,9 +226,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GUI.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\Game.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPSO.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
@@ -385,6 +382,9 @@
     <ClInclude Include="src\Kame\Core\ThreadSafeQueue.h">
       <Filter>Kame\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Game\Game.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -483,9 +483,6 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GUI.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\Game.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPSO.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
@@ -580,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\MeshFactory.cpp" />
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp" />
+    <ClCompile Include="src\Kame\Game\Game.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

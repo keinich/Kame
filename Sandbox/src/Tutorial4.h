@@ -32,7 +32,7 @@
 
 
 #include "Kame/Graphics/Camera.h"
-#include "Kame/Platform/DirectX12/Graphics/Game.h"
+#include "Kame/Game/Game.h"
 #include "Kame/Platform/DirectX12/Graphics/IndexBufferDx12.h"
 #include "Kame/Graphics/Light.h"
 #include "Kame/Platform/DirectX12/Graphics/Display.h"

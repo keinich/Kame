@@ -58,6 +58,8 @@ namespace Kame {
 
     static inline RenderApi GetApi() { return s_RenderApi; }
 
+    static void ReportLiveObjects();
+
   protected: // Methods
 
     virtual Reference<CommandQueue> GetCommandQueue(D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT) const = 0;
