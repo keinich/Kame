@@ -133,7 +133,7 @@ namespace Kame {
 
     if (firstCompile) {
       ThrowIfFailed(DX12Core::Get().GetDevice()->CreateGraphicsPipelineState(&m_PSODesc, MY_IID_PPV_ARGS(&m_PSO)));
-      s_GraphicsPSOHashMap[HashCode].Attach(m_PSO.Get());
+      s_GraphicsPSOHashMap[HashCode].Attach(m_PSO);
     }
     else {
       while (*PSORef == nullptr)
@@ -215,7 +215,7 @@ namespace Kame {
 
     if (firstCompile) {
       ThrowIfFailed(Kame::DX12Core::Get().GetDevice()->CreateComputePipelineState(&m_PSODesc, MY_IID_PPV_ARGS(&m_PSO)));
-      s_ComputePSOHashMap[HashCode].Attach(m_PSO.Get());
+      s_ComputePSOHashMap[HashCode].Attach(m_PSO);
     }
     else {
       while (*PSORef == nullptr)

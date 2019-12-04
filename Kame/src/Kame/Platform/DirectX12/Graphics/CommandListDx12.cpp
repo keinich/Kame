@@ -582,7 +582,7 @@ namespace Kame {
 
     TransitionBarrier(stagingTexture, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
-    m_d3d12CommandList->SetPipelineState(m_PanoToCubemapPSO->GetPipelineStateObject());
+    m_d3d12CommandList->SetPipelineState(m_PanoToCubemapPSO->GetPipelineState().Get());
     SetComputeRootSignature(m_PanoToCubemapPSO->GetRootSignature());
 
     PanoToCubemapCB panoToCubemapCB;

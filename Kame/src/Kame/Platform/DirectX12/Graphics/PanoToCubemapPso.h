@@ -61,7 +61,7 @@ namespace Kame {
     };
   }
 
-  class KAME_API PanoToCubemapPSO : public RenderProgramDx12 {
+  class KAME_API PanoToCubemapPSO  {
   public:
     PanoToCubemapPSO();
 
@@ -72,9 +72,13 @@ namespace Kame {
     D3D12_CPU_DESCRIPTOR_HANDLE GetDefaultUAV() const {
       return m_DefaultUAV.GetDescriptorHandle();
     }
-
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> GetPipelineState() const {
+      return m_PipelineState;
+    }
   private:
     RootSignatureDx12 m_RootSignature;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_PipelineState;
+
     // Default (no resource) UAV's to pad the unused UAV descriptors.
     // If generating less than 5 mip map levels, the unused mip maps
     // need to be padded with default UAVs (to keep the DX12 runtime happy).

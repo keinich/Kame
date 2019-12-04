@@ -110,16 +110,16 @@ namespace Kame {
 
   private:
     // Some geometry to render.
-    //std::unique_ptr<Mesh> m_CubeMesh;
     Mesh* m_CubeMesh;
-    std::unique_ptr<Mesh> m_SphereMesh;
-    std::unique_ptr<Mesh> m_ConeMesh;
-    std::unique_ptr<Mesh> m_TorusMesh;
-    std::unique_ptr<Mesh> m_PlaneMesh;
+    Mesh* m_SphereMesh;
+    Mesh* m_ConeMesh;
+    Mesh* m_TorusMesh;
+    Mesh* m_PlaneMesh;
 
-    std::unique_ptr<Mesh> m_DebugCube;
+    Mesh* m_DebugCube;
 
-    std::unique_ptr<Mesh> m_SkyboxMesh;
+    Mesh* m_SkyboxMesh;
+    //std::unique_ptr<Mesh> m_SkyboxMesh;
 
     TextureDx12 m_DefaultTexture;
     TextureDx12 m_DirectXTexture;

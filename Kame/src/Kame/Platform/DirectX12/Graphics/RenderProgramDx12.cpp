@@ -59,7 +59,7 @@ namespace Kame {
 
     if (firstCompile) {
       ThrowIfFailed(DX12Core::Get().GetDevice()->CreatePipelineState(&pipelineStateStreamDesc, IID_PPV_ARGS(&m_PSO)));
-      s_PSOHashMap[HashCode].Attach(m_PSO.Get());
+      s_PSOHashMap[HashCode].Attach(m_PSO);
     }
     else {
       while (*PSORef == nullptr)

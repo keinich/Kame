@@ -204,14 +204,16 @@ namespace Kame {
 
     // Create a Cube mesh
     m_CubeMesh = MeshFactory::GetCube();
-    m_SphereMesh = Mesh::CreateSphere(*commandList);
-    m_ConeMesh = Mesh::CreateCone(*commandList);
-    m_TorusMesh = Mesh::CreateTorus(*commandList);
-    m_PlaneMesh = Mesh::CreatePlane(*commandList);
+    m_SphereMesh = MeshFactory::GetSphere();
+    m_ConeMesh = MeshFactory::GetCone();
+    m_TorusMesh = MeshFactory::GetTorus();
+    //m_TorusMesh = MeshFactory::GetPlane();
+    m_PlaneMesh = MeshFactory::GetPlane();
 
-    m_DebugCube = Mesh::CreateDebugCube(*commandList);
+    m_DebugCube = MeshFactory::GetDebugCube();
     // Create an inverted (reverse winding order) cube so the insides are not clipped.
-    m_SkyboxMesh = Mesh::CreateCube(*commandList, 1.0f, true);
+    m_SkyboxMesh = MeshFactory::GetCube(1.0f, true);
+    //m_SkyboxMesh = Mesh::CreateCube(*commandList, 1.0f, true);
 
     // Load some textures
     commandList->LoadTextureFromFile(m_DefaultTexture, L"Assets/Textures/DefaultWhite.bmp");

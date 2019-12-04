@@ -58,7 +58,7 @@ namespace Kame {
       return *m_RootSignature;
     }
 
-    ID3D12PipelineState* GetPipelineStateObject(void) const { return m_PSO.Get(); }
+    ID3D12PipelineState* GetPipelineStateObject(void) const { return m_PSO; }
 
     virtual void Create() override;
 
@@ -96,7 +96,7 @@ namespace Kame {
 
     const RootSignatureDx12* m_RootSignature;
 
-    ComPtr<ID3D12PipelineState> m_PSO;
+    ID3D12PipelineState* m_PSO;
     PipelineStateStream _PipelineStateStream;
 
     UINT _NumInputElements;
