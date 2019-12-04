@@ -42,6 +42,8 @@ namespace Kame {
 
   void Kame::GraphicsCore::Destroy() {
 
+
+
     switch (s_RenderApi) {
     case RenderApi::DirectX12:
       DX12Core::Destroy();
@@ -78,6 +80,10 @@ namespace Kame {
 
   NotCopyableReference<RenderProgramSignature> GraphicsCore::CreateRenderProgramSignatureNc() {
     return CreateNotCopyableReference<RootSignatureDx12>();
+  }
+
+  Texture* GraphicsCore::CreateTexture() {
+    return new TextureDx12();
   }
 
   Reference<Texture> GraphicsCore::CreateTexture(

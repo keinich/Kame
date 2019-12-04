@@ -385,6 +385,7 @@
       <Filter>Kame\Graphics\RenderApi</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\MeshFactory.h" />
+    <ClInclude Include="src\Kame\Graphics\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -579,6 +580,7 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\MeshFactory.cpp" />
+    <ClCompile Include="src\Kame\Graphics\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

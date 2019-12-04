@@ -26,6 +26,7 @@
 #include "Kame/Platform/DirectX12/Graphics/RenderProgramDx12.h"
 
 #include"Kame/Graphics/MeshFactory.h"
+#include "Kame/Graphics/TextureManager.h"
 
 #include <wrl.h>
 using namespace Microsoft::WRL;
@@ -216,22 +217,17 @@ namespace Kame {
     //m_SkyboxMesh = Mesh::CreateCube(*commandList, 1.0f, true);
 
     // Load some textures
-    commandList->LoadTextureFromFile(m_DefaultTexture, L"Assets/Textures/DefaultWhite.bmp");
-    commandList->LoadTextureFromFile(m_DirectXTexture, L"Assets/Textures/Directx9.png");
-    commandList->LoadTextureFromFile(m_EarthTexture, L"Assets/Textures/earth.dds");
-    commandList->LoadTextureFromFile(m_MonaLisaTexture, L"Assets/Textures/Mona_Lisa.jpg");
-    commandList->LoadTextureFromFile(m_GraceCathedralTexture, L"Assets/Textures/grace-new.hdr");
+
+    //commandList->LoadTextureFromFile(m_DefaultTexture, L"Assets/Textures/DefaultWhite.bmp");
+    m_DefaultTexture = TextureManager::GetTexture(L"Assets/Textures/DefaultWhite.bmp");
+    m_DirectXTexture = TextureManager::GetTexture(L"Assets/Textures/Directx9.png");
+    m_EarthTexture = TextureManager::GetTexture(L"Assets/Textures/earth.dds");
+    m_MonaLisaTexture = TextureManager::GetTexture(L"Assets/Textures/Mona_Lisa.jpg");
+    m_GraceCathedralTexture = TextureManager::GetTexture(L"Assets/Textures/grace-new.hdr");
     //    commandList->LoadTextureFromFile(m_GraceCathedralTexture, L"Assets/Textures/UV_Test_Pattern.png");
 
         // Create a cubemap for the HDR panorama.
-    auto cubemapDesc = m_GraceCathedralTexture.GetD3D12ResourceDesc();
-    cubemapDesc.Width = cubemapDesc.Height = 1024;
-    cubemapDesc.DepthOrArraySize = 6;
-    cubemapDesc.MipLevels = 0;
-
-    m_GraceCathedralCubemap = TextureDx12(cubemapDesc, nullptr, TextureUsage::Albedo, L"Grace Cathedral Cubemap");
-    // Convert the 2D panorama to a 3D cubemap.
-    commandList->PanoToCubemap(m_GraceCathedralCubemap, m_GraceCathedralTexture);
+    m_GraceCathedralCubemap = m_GraceCathedralTexture->ToCubeMap(1024,L"Grace Cathedral Cubemap");
 
     // Create an HDR intermediate render target.
     DXGI_FORMAT HDRFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -804,13 +800,14 @@ namespace Kame {
       commandListBase->SetGraphics32BitConstants(0, viewProjMatrix);
 
       D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-      srvDesc.Format = m_GraceCathedralCubemap.GetD3D12ResourceDesc().Format;
+      //srvDesc.Format = m_GraceCathedralCubemap.GetD3D12ResourceDesc().Format;
+      srvDesc.Format = m_GraceCathedralCubemap->GetFormat();
       srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
       srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
       srvDesc.TextureCube.MipLevels = (UINT)-1; // Use all mips.
 
       // TODO: Need a better way to bind a cubemap.
-      commandListBase->SetShaderResourceViewTexture(1, 0, &m_GraceCathedralCubemap, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, 0, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, &srvDesc);
+      commandListBase->SetShaderResourceViewTexture(1, 0, m_GraceCathedralCubemap.get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, 0, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, &srvDesc);
 
       m_SkyboxMesh->Draw(commandListBase.get());
     }
@@ -841,7 +838,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_EarthTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_EarthTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_SphereMesh->Draw(commandListBase.get());
 
@@ -855,7 +852,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_MonaLisaTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_MonaLisaTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_CubeMesh->Draw(commandListBase.get());
 
@@ -869,7 +866,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::Ruby);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_TorusMesh->Draw(commandListBase.get());
 
@@ -886,7 +883,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DirectXTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_DirectXTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_PlaneMesh->Draw(commandListBase.get());
 
@@ -932,7 +929,7 @@ namespace Kame {
 
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
     commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::Red);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, &m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_PlaneMesh->Draw(commandListBase.get());
 

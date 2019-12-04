@@ -121,12 +121,13 @@ namespace Kame {
     Mesh* m_SkyboxMesh;
     //std::unique_ptr<Mesh> m_SkyboxMesh;
 
-    TextureDx12 m_DefaultTexture;
-    TextureDx12 m_DirectXTexture;
-    TextureDx12 m_EarthTexture;
-    TextureDx12 m_MonaLisaTexture;
-    TextureDx12 m_GraceCathedralTexture;
-    TextureDx12 m_GraceCathedralCubemap;
+    //TextureDx12 m_DefaultTexture;
+    Texture* m_DefaultTexture;
+    Texture* m_DirectXTexture;
+    Texture* m_EarthTexture;
+    Texture* m_MonaLisaTexture;
+    Texture* m_GraceCathedralTexture;
+    Reference<Texture> m_GraceCathedralCubemap;
 
     // HDR Render target
     std::unique_ptr<RenderTarget> m_HDRRenderTarget;

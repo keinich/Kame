@@ -64,6 +64,10 @@ namespace Kame {
 
     virtual ~TextureDx12();
 
+    virtual void LoadFromFile(const std::wstring& fileName, TextureUsage textureUsage) override;
+
+    virtual Reference<Texture> ToCubeMap(UINT64 width, std::wstring name) override;
+
     TextureUsage GetTextureUsage() const {
       return m_TextureUsage;
     }

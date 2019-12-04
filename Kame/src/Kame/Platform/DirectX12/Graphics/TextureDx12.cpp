@@ -5,6 +5,8 @@
 #include "DX12Core.h"
 #include "Helpers.h"
 #include "ResourceStateTracker.h"
+#include "CommandListDx12.h"
+#include "CommandQueue.h"
 
 namespace Kame {
 
@@ -55,6 +57,35 @@ namespace Kame {
   }
 
   TextureDx12::~TextureDx12() {}
+
+  void TextureDx12::LoadFromFile(const std::wstring& fileName, TextureUsage textureUsage) {
+    Reference<CommandListDx12> commandList = DX12Core::Get().GetCommandQueue(
+      D3D12_COMMAND_LIST_TYPE_COPY
+    )->GetCommandList();
+    commandList->LoadTextureFromFile(*this, fileName, textureUsage);
+    uint64_t fenceValue = DX12Core::Get().GetCommandQueue(
+      D3D12_COMMAND_LIST_TYPE_COPY
+    )->ExecuteCommandList(commandList);
+    DX12Core::Get().GetCommandQueue(
+      D3D12_COMMAND_LIST_TYPE_COPY
+    )->WaitForFenceValue(fenceValue);
+  }
+
+  Reference<Texture> TextureDx12::ToCubeMap(UINT64 width, std::wstring name) {
+    auto cubemapDesc = this->GetD3D12ResourceDesc();
+    cubemapDesc.Width = cubemapDesc.Height = width;
+    cubemapDesc.DepthOrArraySize = 6;
+    cubemapDesc.MipLevels = 0;
+
+    auto ret = CreateReference<TextureDx12>(cubemapDesc, nullptr, TextureUsage::Albedo, L"Grace Cathedral Cubemap");
+    // Convert the 2D panorama to a 3D cubemap.
+    auto commandList = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->GetCommandList();
+    commandList->PanoToCubemap(*ret, *this);
+    uint64_t fenceValue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->ExecuteCommandList(commandList);
+    DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->WaitForFenceValue(fenceValue);
+
+    return ret;
+  }
 
   void TextureDx12::Resize(uint32_t width, uint32_t height, uint32_t depthOrArraySize) {
     // Resource can't be resized if it was never created in the first place.

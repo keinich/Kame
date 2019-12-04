@@ -39,6 +39,8 @@ namespace Kame {
 
     static NotCopyableReference<RenderProgramSignature> CreateRenderProgramSignatureNc();
 
+    static Texture* GraphicsCore::CreateTexture();
+    
     static Reference<Texture> CreateTexture(
       const D3D12_RESOURCE_DESC& resourceDesc,
       const D3D12_CLEAR_VALUE* clearValue,
