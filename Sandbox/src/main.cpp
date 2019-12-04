@@ -1,8 +1,5 @@
 #define WIN32_LEAN_AND_MEAN
 
-#include "Kame/Core.h"
-
-
 #include <Windows.h>
 #include <shellapi.h>
 #include <Shlwapi.h>

@@ -59,7 +59,7 @@ namespace Kame {
     NumAttachmentPoints
   };
 
-  class KAME_API RenderTarget {
+  class RenderTarget {
   public:
     // Create an empty render target.
     RenderTarget();

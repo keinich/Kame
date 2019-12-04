@@ -10,6 +10,7 @@
 #include "Kame/Graphics/RenderTarget.h"
 #include "ResourceStateTracker.h"
 #include "TextureDx12.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

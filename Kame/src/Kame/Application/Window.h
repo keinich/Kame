@@ -2,9 +2,8 @@
 
 #include "kmpch.h"
 
-#include "Kame/Core.h"
-#include "Kame/Events/Event.h"
 
+#include "Kame/Events/Event.h"
 #include "Kame/Platform/DirectX12/Graphics/Display.h"
 
 #ifdef KAME_PLATFORM_WIN32

@@ -2,10 +2,10 @@
 
 #include <map>
 
-#include "Kame/Core.h"
 #include "Kame/Input/KeyCodes.h"
 #include "Kame/Events/Event.h"
 #include "Kame/Events/EventArgs.h"
+#include <Kame/Core/References.h>
 
 namespace Kame {
 

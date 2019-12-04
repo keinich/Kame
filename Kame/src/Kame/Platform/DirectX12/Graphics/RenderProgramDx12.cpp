@@ -2,10 +2,11 @@
 #include "DX12Core.h"
 #include "RenderProgramDx12.h"
 #include "RootSignatureDx12.h"
-#include "Kame/Utility/Hash.h"
+#include "Kame/Core/Hash.h"
 #include <map>
 #include <thread>
 #include <mutex>
+#include <Kame/Core/DebugUtilities.h>
 
 using Kame::Math::IsAligned;
 using Microsoft::WRL::ComPtr;

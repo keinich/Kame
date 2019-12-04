@@ -41,7 +41,7 @@ namespace Kame {
 
   class Window;
 
-  class KAME_API Game : public std::enable_shared_from_this<Game> {
+  class Game : public std::enable_shared_from_this<Game> {
   public:
     /**
      * Create the DirectX demo using the specified window dimensions.

@@ -4,7 +4,8 @@
 
 #include "DX12Core.h"
 
-#include "Kame/Utility/Hash.h"
+#include "Kame/Core/Hash.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

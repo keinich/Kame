@@ -146,7 +146,6 @@
     <ClInclude Include="src\Kame\Application\Layer.h" />
     <ClInclude Include="src\Kame\Application\LayerStack.h" />
     <ClInclude Include="src\Kame\Application\Window.h" />
-    <ClInclude Include="src\Kame\Core.h" />
     <ClInclude Include="src\Kame\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Kame\Events\Event.h" />
     <ClInclude Include="src\Kame\Events\EventArgs.h" />
@@ -246,9 +245,11 @@
     <ClInclude Include="src\Kame\Platform\OpenGl\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Kame\Platform\Vulkan\VulkanTest.h" />
     <ClInclude Include="src\Kame\Platform\Win32\Win32Window.h" />
-    <ClInclude Include="src\Kame\Utility\Casting.h" />
-    <ClInclude Include="src\Kame\Utility\Hash.h" />
-    <ClInclude Include="src\Kame\Utility\ThreadSafeQueue.h" />
+    <ClInclude Include="src\Kame\Core\Casting.h" />
+    <ClInclude Include="src\Kame\Core\DebugUtilities.h" />
+    <ClInclude Include="src\Kame\Core\Hash.h" />
+    <ClInclude Include="src\Kame\Core\References.h" />
+    <ClInclude Include="src\Kame\Core\ThreadSafeQueue.h" />
     <ClInclude Include="src\kmpch.h" />
   </ItemGroup>
   <ItemGroup>

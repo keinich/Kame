@@ -1,9 +1,12 @@
 #pragma once
 
-#include <d3d12.h> //TODO abstract away D3D12_RESOURCE_DESC, D3D12_CLEAR_VALUE
-#include "RenderApi/TextureUsage.h"
-
+//System
 #include <string>
+#include <d3d12.h> //TODO abstract away D3D12_RESOURCE_DESC, D3D12_CLEAR_VALUE
+
+//Kame
+#include "RenderApi/TextureUsage.h"
+#include <Kame/Core/References.h>
 
 namespace Kame {
 

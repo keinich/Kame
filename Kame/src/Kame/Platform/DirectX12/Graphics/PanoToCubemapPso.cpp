@@ -8,6 +8,7 @@
 #include "DX12Core.h"
 
 #include "d3dx12.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

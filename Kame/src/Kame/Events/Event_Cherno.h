@@ -1,8 +1,7 @@
 #pragma once
 
 #include "kmpch.h"
-
-#include "Kame/Core.h"
+#include <Kame/Memory/Memory.h>
 
 namespace Kame {
 

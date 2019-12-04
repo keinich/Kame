@@ -3,6 +3,8 @@
 
 #include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 
+#include <Kame/Core/DebugUtilities.h>
+
 //TODO Remove this:
 #include <Kame/Platform/DirectX12/Graphics/CommandListDx12.h>
 #include <Kame/Platform/DirectX12/Graphics/CommandQueue.h>

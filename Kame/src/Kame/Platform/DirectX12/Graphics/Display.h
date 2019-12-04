@@ -50,7 +50,7 @@ namespace Kame {
   class TextureDx12;
   class RenderTarget;
 
-  class KAME_API Display : public std::enable_shared_from_this<Display> {
+  class Display : public std::enable_shared_from_this<Display> {
 
     friend class Window;
     friend class Win32Window;

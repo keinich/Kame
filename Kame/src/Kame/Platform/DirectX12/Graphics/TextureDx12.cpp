@@ -7,6 +7,7 @@
 #include "ResourceStateTracker.h"
 #include "CommandListDx12.h"
 #include "CommandQueue.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

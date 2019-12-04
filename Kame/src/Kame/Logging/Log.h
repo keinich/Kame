@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Kame/Core.h>
+//#include <Kame/Core.h>
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 
 namespace Kame {
 
-  class KAME_API Log {
+  class Log {
 
   public:
     static void Init();

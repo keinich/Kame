@@ -46,7 +46,7 @@
 
 namespace Kame {
 
-  class KAME_API RootSignatureDx12 : public RenderProgramSignature {
+  class RootSignatureDx12 : public RenderProgramSignature {
   public:
 
     static void DestroyAll();

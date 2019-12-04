@@ -37,6 +37,7 @@
 
 #include <memory>
 #include <deque>
+#include <Kame/Core/References.h>
 
 namespace Kame {
 

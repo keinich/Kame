@@ -10,6 +10,7 @@
 #include "Kame/Application/Window.h"
 #include "GraphicsCommon.h"
 #include "PipelineState.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

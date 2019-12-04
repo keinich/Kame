@@ -2,8 +2,8 @@
 
 #include "kmpch.h"
 
-#include "Kame/Core.h"
 #include "Tutorial4.h"
+#include <Kame/Core/DebugUtilities.h>
 
 #include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include <Kame/Application/Application.h>

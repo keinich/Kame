@@ -41,6 +41,7 @@
 #include <cstdint>
 #include <memory>
 #include <queue>
+#include <Kame/Core/References.h>
 
 namespace Kame {
 

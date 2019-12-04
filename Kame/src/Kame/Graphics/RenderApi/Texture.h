@@ -3,6 +3,7 @@
 #include <d3d.h> //TODO abstract away DXGI_FORMAT
 #include "GpuResource.h"
 #include "TextureUsage.h"
+#include <Kame/Core/References.h>
 
 namespace Kame {
 

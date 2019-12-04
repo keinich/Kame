@@ -20,7 +20,8 @@
 #include "VertexBufferDx12.h"
 #include "DirectXTex.h"
 
-#include "Kame/Utility/Casting.h"
+
+#include <Kame/Core/DebugUtilities.h>
 #include "Kame/Graphics/RenderApi/Texture.h"
 
 #include "PipelineState.h"

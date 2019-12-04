@@ -14,3 +14,5 @@
 #define _128MB _MB(128)
 #define _256MB _MB(256)
 
+#define BIT(x) (1 << x)
+

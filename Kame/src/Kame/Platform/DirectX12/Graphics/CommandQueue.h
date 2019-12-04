@@ -39,6 +39,7 @@
 #include <condition_variable>   // For std::condition_variable.
 
 #include "ThreadSafeQueue.h"
+#include <Kame/Core/References.h>
 
 namespace Kame {
 

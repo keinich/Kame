@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Kame/Core.h"
 #include "Layer.h"
 
 #include <vector>

@@ -2,6 +2,7 @@
 
 #include <map>
 #include "Mesh.h"
+#include <Kame/Core/References.h>
 
 namespace Kame {
 

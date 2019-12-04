@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Kame/Core.h"
 #include "Kame/Events/Event_Cherno.h"
 
 namespace Kame {

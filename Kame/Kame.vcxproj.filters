@@ -88,9 +88,6 @@
     <ClInclude Include="src\Kame\Application\Window.h">
       <Filter>Kame\Application</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Core.h">
-      <Filter>Kame</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Events\ApplicationEvent.h">
       <Filter>Kame\Events</Filter>
     </ClInclude>
@@ -346,15 +343,6 @@
     <ClInclude Include="src\Kame\Platform\Win32\Win32Window.h">
       <Filter>Kame\Platform\Win32</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Utility\Casting.h">
-      <Filter>Kame\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Utility\Hash.h">
-      <Filter>Kame\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Utility\ThreadSafeQueue.h">
-      <Filter>Kame\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\kmpch.h" />
     <ClInclude Include="src\Kame\Graphics\RenderTarget.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
@@ -386,6 +374,17 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\MeshFactory.h" />
     <ClInclude Include="src\Kame\Graphics\TextureManager.h" />
+    <ClInclude Include="src\Kame\Core\Casting.h">
+      <Filter>Kame\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Core\DebugUtilities.h" />
+    <ClInclude Include="src\Kame\Core\Hash.h">
+      <Filter>Kame\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Core\References.h" />
+    <ClInclude Include="src\Kame\Core\ThreadSafeQueue.h">
+      <Filter>Kame\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">

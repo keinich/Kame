@@ -4,6 +4,7 @@
 
 #include "DX12Core.h"
 #include "Helpers.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

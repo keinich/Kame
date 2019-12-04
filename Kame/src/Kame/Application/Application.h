@@ -1,6 +1,10 @@
 #pragma once
 
+//System
 #include <dxgidebug.h>
+
+//Kame
+#include <Kame/Core/References.h>
 
 //#ifdef KAME_PLATFORM_WIN32
 #define KAME_NATIVE_WINDOW HWND
@@ -21,7 +25,7 @@ namespace Kame {
   using WindowPtr = std::shared_ptr<Window>;
   using WindowNameMap = std::map< std::wstring, WindowPtr >;
 
-  class KAME_API Application {
+  class Application {
 
   public:
 

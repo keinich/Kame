@@ -1,6 +1,7 @@
 #include "kmpch.h"
 #include "kmpch.h"
 #include "CommandAllocatorPool.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

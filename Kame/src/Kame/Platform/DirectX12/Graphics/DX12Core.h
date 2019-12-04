@@ -30,15 +30,17 @@
   *  @brief The application class is used to create windows for our application.
   */
 
-#include "DescriptorAllocation.h"
-#include "Kame/Graphics/GraphicsCore.h"
-
+//System
+#include <string>
+#include <memory>
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <wrl.h>
 
-#include <memory>
-#include <string>
+//Kame
+#include "DescriptorAllocation.h"
+#include "Kame/Graphics/GraphicsCore.h"
+#include <Kame/Core/References.h>
 
 namespace Kame {
 
@@ -47,7 +49,7 @@ namespace Kame {
   class Game;
   class Display;
 
-  class KAME_API DX12Core : public GraphicsCore {
+  class DX12Core : public GraphicsCore {
 
     friend class Application;
 

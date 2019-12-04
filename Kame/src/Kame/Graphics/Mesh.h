@@ -29,6 +29,8 @@
   *  @brief A mesh class encapsulates the index and vertex buffers for a geometric primitive.
   */
 
+#include <Kame/Core/References.h>
+
   //TODO make this RenderApi independent
 #include "Kame/Graphics/RenderApi/CommandList.h"
 #include "Kame/Graphics/RenderApi/CommandList.h"
@@ -46,7 +48,7 @@
 namespace Kame {
 
   // Vertex struct holding position, normal vector, and texture mapping information.
-  struct KAME_API VertexPositionNormalTexture {
+  struct VertexPositionNormalTexture {
     VertexPositionNormalTexture() {}
 
     VertexPositionNormalTexture(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& normal, const DirectX::XMFLOAT2& textureCoordinate)
@@ -69,7 +71,7 @@ namespace Kame {
   };
 
   // Vertex struct holding position, normal vector, and texture mapping information.
-  struct KAME_API VertexPosition {
+  struct VertexPosition {
     VertexPosition() {}
 
     VertexPosition(const DirectX::XMFLOAT3& position)
@@ -90,7 +92,7 @@ namespace Kame {
 
   using SimpleVertexCollection = std::vector<VertexPosition>;
 
-  class KAME_API Mesh {
+  class Mesh {
 
     friend class MeshManager;
     friend class MeshFactory;

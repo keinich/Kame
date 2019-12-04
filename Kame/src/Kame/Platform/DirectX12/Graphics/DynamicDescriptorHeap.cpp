@@ -5,6 +5,7 @@
 #include "DX12Core.h"
 #include "CommandListDx12.h"
 #include "RootSignatureDx12.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

@@ -2,6 +2,7 @@
 
 #include "DescriptorAllocatorPage.h"
 #include "DX12Core.h"
+#include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {
 

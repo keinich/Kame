@@ -31,20 +31,22 @@
   *  The CommandList class provides additional functionality that makes working with
   *  DirectX 12 applications easier.
   */
-#include <Kame/Graphics/RenderApi/Texture.h>
-#include <Kame/Graphics/RenderApi/TextureUsage.h>
 
-#include <Kame/Graphics/RenderApi/CommandList.h>
-
-#include <Kame/Graphics/RenderApi/IndexBuffer.h>
-
-#include <d3d12.h>
+//System
 #include <wrl.h>
-
+#include <d3d12.h>
 #include <map> // for std::map
 #include <memory> // for std::unique_ptr
 #include <mutex> // for std::mutex
 #include <vector> // for std::vector
+
+//Kame
+#include <Kame/Core/References.h>
+#include <Kame/Graphics/RenderApi/Texture.h>
+#include <Kame/Graphics/RenderApi/TextureUsage.h>
+#include <Kame/Graphics/RenderApi/CommandList.h>
+#include <Kame/Graphics/RenderApi/IndexBuffer.h>
+
 
 namespace Kame {
 

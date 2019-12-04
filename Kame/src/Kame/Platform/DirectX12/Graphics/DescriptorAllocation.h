@@ -34,10 +34,13 @@
   *  Date Accessed: May 9, 2018
   */
 
+//System
 #include <d3d12.h>
-
 #include <cstdint>
 #include <memory>
+
+//Kame
+#include <Kame/Core/References.h>
 
 namespace Kame {
 
