@@ -160,13 +160,8 @@ namespace Kame {
     }
 
     // Create the primitive object.
+    mesh->Initialize(vertices, indices, rhcoords);
 
-    auto cl = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->GetCommandList();
-    mesh->Initialize(*cl, vertices, indices, rhcoords);
-    uint64_t fenceValue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->ExecuteCommandList(cl);
-    DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->WaitForFenceValue(fenceValue);
-
-    //TODO abstract commandList.InitMesh
   }
 
   void MeshFactory::CreateSphere(Mesh* mesh, float diameter, size_t tessellation, bool rhcoords) {
@@ -227,10 +222,7 @@ namespace Kame {
     }
 
     // Create the primitive object.
-    auto cl = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->GetCommandList();
-    mesh->Initialize(*cl, vertices, indices, rhcoords);
-    uint64_t fenceValue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->ExecuteCommandList(cl);
-    DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->WaitForFenceValue(fenceValue);
+    mesh->Initialize(vertices, indices, rhcoords);
   }
 
   // Helper computes a point on a unit circle, aligned to the x/z plane and centered on the origin.
@@ -334,10 +326,7 @@ namespace Kame {
     CreateCylinderCap(vertices, indices, tessellation, height, radius, false);
 
     // Create the primitive object.
-    auto cl = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->GetCommandList();
-    mesh->Initialize(*cl, vertices, indices, rhcoords);
-    uint64_t fenceValue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->ExecuteCommandList(cl);
-    DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->WaitForFenceValue(fenceValue);
+    mesh->Initialize(vertices, indices, rhcoords);    
   }
 
   void MeshFactory::CreateTorus(Mesh* mesh, float diameter, float thickness, size_t tessellation, bool rhcoords) {
@@ -393,10 +382,7 @@ namespace Kame {
     }
 
     // Create the primitive object.
-    auto cl = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->GetCommandList();
-    mesh->Initialize(*cl, vertices, indices, rhcoords);
-    uint64_t fenceValue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->ExecuteCommandList(cl);
-    DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->WaitForFenceValue(fenceValue);
+    mesh->Initialize(vertices, indices, rhcoords);   
   }
 
   void MeshFactory::CreatePlane(Mesh* mesh, float width, float height, bool rhcoords) {
@@ -413,10 +399,7 @@ namespace Kame {
         0, 3, 1, 1, 3, 2
     };
 
-    auto cl = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->GetCommandList();
-    mesh->Initialize(*cl, vertices, indices, rhcoords);
-    uint64_t fenceValue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->ExecuteCommandList(cl);
-    DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->WaitForFenceValue(fenceValue);
+    mesh->Initialize(vertices, indices, rhcoords);
   }
 
   void MeshFactory::CreateDebugCube(Mesh* mesh, float size, bool rhcoords) {
@@ -474,10 +457,7 @@ namespace Kame {
     }
 
     // Create the primitive object.
-    auto cl = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->GetCommandList();
-    mesh->Initialize(*cl, vertices, indices, rhcoords);
-    uint64_t fenceValue = DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->ExecuteCommandList(cl);
-    DX12Core::Get().GetCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY)->WaitForFenceValue(fenceValue);
+    mesh->Initialize(vertices, indices, rhcoords);
   }
 
   // Helper for flipping winding of geometric primitives for LH vs. RH coords

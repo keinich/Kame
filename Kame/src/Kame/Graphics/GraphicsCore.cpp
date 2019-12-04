@@ -12,6 +12,9 @@
 
 #include <Kame/Platform/DirectX12/Graphics/RootSignatureDx12.h>
 
+#include "Kame/Platform/DirectX12/Graphics/VertexBufferDx12.h"
+#include "Kame/Platform/DirectX12/Graphics/IndexBufferDx12.h"
+
 namespace Kame {
 
   RenderApi GraphicsCore::s_RenderApi = RenderApi::DirectX12;
@@ -70,12 +73,23 @@ namespace Kame {
     return commandList;
   }
 
-  void GraphicsCore::ExecuteCommandList(Reference<CommandList> commandList) {
-    s_Instance->GetCommandQueue(commandList->GetType())->ExecuteCommandList(commandList);
+  void GraphicsCore::ExecuteCommandList(Reference<CommandList> commandList, bool waitForCompletion) {
+    uint64_t fenceValue =  s_Instance->GetCommandQueue(commandList->GetType())->ExecuteCommandList(commandList);
+    if (waitForCompletion) {
+      s_Instance->GetCommandQueue(commandList->GetType())->WaitForFenceValue(fenceValue);
+    }    
   }
 
   RenderTarget* GraphicsCore::CreateRenderTarget() {
     return reinterpret_cast<RenderTarget*>(new RenderTargetOf<TextureDx12>());
+  }
+
+  NotCopyableReference<VertexBuffer> GraphicsCore::CreateVertexBuffer() {
+    return CreateNotCopyableReference<VertexBufferDx12>();
+  }
+
+  NotCopyableReference<IndexBuffer> GraphicsCore::CreateIndexBuffer() {
+    return CreateNotCopyableReference<IndexBufferDx12>();
   }
 
   NotCopyableReference<RenderProgramSignature> GraphicsCore::CreateRenderProgramSignatureNc() {

@@ -14,6 +14,8 @@ namespace Kame {
   class RenderTarget;
   class Texture;
   class RenderProgramSignature;
+  class VertexBuffer;
+  class IndexBuffer;
 
   enum class RenderApi {
 
@@ -33,9 +35,12 @@ namespace Kame {
     static void Flush();
         
     static Reference<CommandList> BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
-    static void ExecuteCommandList(Reference<CommandList> commandList);
+    static void ExecuteCommandList(Reference<CommandList> commandList, bool waitForCompletion = false);
 
     static RenderTarget* CreateRenderTarget();
+
+    static NotCopyableReference<VertexBuffer> CreateVertexBuffer();
+    static NotCopyableReference<IndexBuffer> CreateIndexBuffer();
 
     static NotCopyableReference<RenderProgramSignature> CreateRenderProgramSignatureNc();
 

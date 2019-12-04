@@ -132,27 +132,16 @@ namespace Kame {
      * Resolve a multisampled resource into a non-multisampled resource.
      */
     void ResolveSubresource(GpuResourceDx12& dstRes, const GpuResourceDx12& srcRes, uint32_t dstSubresource = 0, uint32_t srcSubresource = 0);
+      
+    virtual void CopyVertexBuffer(
+      VertexBuffer* vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData
+    ) override;
+    void CopyVertexBufferInternal(
+      VertexBufferDx12& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData
+    );
 
-    /**
-     * Copy the contents to a vertex buffer in GPU memory.
-     */
-    void CopyVertexBuffer(VertexBufferDx12& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData);
-    template<typename T>
-    void CopyVertexBuffer(VertexBufferDx12& vertexBuffer, const std::vector<T>& vertexBufferData) {
-      CopyVertexBuffer(vertexBuffer, vertexBufferData.size(), sizeof(T), vertexBufferData.data());
-    }
-
-    /**
-     * Copy the contents to a index buffer in GPU memory.
-     */
-    void CopyIndexBuffer(IndexBufferDx12& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData);
-    template<typename T>
-    void CopyIndexBuffer(IndexBufferDx12& indexBuffer, const std::vector<T>& indexBufferData) {
-      assert(sizeof(T) == 2 || sizeof(T) == 4);
-
-      DXGI_FORMAT indexFormat = (sizeof(T) == 2) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-      CopyIndexBuffer(indexBuffer, indexBufferData.size(), indexFormat, indexBufferData.data());
-    }
+    virtual void CopyIndexBuffer(IndexBuffer* indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) override;
+    void CopyIndexBufferInternal(IndexBufferDx12& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData);
 
     /**
      * Copy the contents to a byte address buffer in GPU memory.

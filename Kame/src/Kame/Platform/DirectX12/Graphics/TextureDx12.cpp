@@ -71,7 +71,7 @@ namespace Kame {
     )->WaitForFenceValue(fenceValue);
   }
 
-  Reference<Texture> TextureDx12::ToCubeMap(UINT64 width, std::wstring name) {
+  Reference<Texture> TextureDx12::ToCubeMap(UINT width, std::wstring name) {
     auto cubemapDesc = this->GetD3D12ResourceDesc();
     cubemapDesc.Width = cubemapDesc.Height = width;
     cubemapDesc.DepthOrArraySize = 6;

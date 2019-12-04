@@ -183,11 +183,21 @@ namespace Kame {
     buffer.CreateViews(numElements, elementSize);
   }
 
-  void CommandListDx12::CopyVertexBuffer(VertexBufferDx12& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData) {
+  void CommandListDx12::CopyVertexBuffer(VertexBuffer* vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData) {
+    VertexBufferDx12& vertexBufferDx12 = *static_cast<VertexBufferDx12*>(vertexBuffer);
+    CopyVertexBufferInternal(vertexBufferDx12, numVertices, vertexStride, vertexBufferData);
+  }
+
+  void CommandListDx12::CopyVertexBufferInternal(VertexBufferDx12& vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData) {
     CopyBuffer(vertexBuffer, numVertices, vertexStride, vertexBufferData);
   }
 
-  void CommandListDx12::CopyIndexBuffer(IndexBufferDx12& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
+  void CommandListDx12::CopyIndexBuffer(IndexBuffer* indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
+    IndexBufferDx12& indexBufferDx12 = *static_cast<IndexBufferDx12*>(indexBuffer);
+    CopyIndexBufferInternal(indexBufferDx12, numIndicies, indexFormat, indexBufferData);
+  }
+
+  void CommandListDx12::CopyIndexBufferInternal(IndexBufferDx12& indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) {
     size_t indexSizeInBytes = indexFormat == DXGI_FORMAT_R16_UINT ? 2 : 4;
     CopyBuffer(indexBuffer, numIndicies, indexSizeInBytes, indexBufferData);
   }

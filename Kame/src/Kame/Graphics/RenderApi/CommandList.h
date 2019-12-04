@@ -74,6 +74,22 @@ namespace Kame {
     virtual void SetVertexBuffer(uint32_t slot, const VertexBuffer* vertexBuffer) = 0;
     virtual void SetIndexBuffer(const IndexBuffer* indexBuffer) = 0;
 
+    virtual void CopyVertexBuffer(
+      VertexBuffer* vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData
+    ) = 0;
+    template<typename T>
+    void CopyVertexBuffer(VertexBuffer* vertexBuffer, const std::vector<T>& vertexBufferData) {
+      CopyVertexBuffer(vertexBuffer, vertexBufferData.size(), sizeof(T), vertexBufferData.data());
+    }
+
+    virtual void CopyIndexBuffer(IndexBuffer* indexBuffer, size_t numIndicies, DXGI_FORMAT indexFormat, const void* indexBufferData) = 0;
+    template<typename T>
+    void CopyIndexBuffer(IndexBuffer* indexBuffer, const std::vector<T>& indexBufferData) {
+      assert(sizeof(T) == 2 || sizeof(T) == 4);
+      DXGI_FORMAT indexFormat = (sizeof(T) == 2) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
+      CopyIndexBuffer(indexBuffer, indexBufferData.size(), indexFormat, indexBufferData.data());
+    }
+
     virtual void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t startVertex = 0, uint32_t startInstance = 0) = 0;
     virtual void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t startIndex = 0, int32_t baseVertex = 0, uint32_t startInstance = 0) = 0;
 

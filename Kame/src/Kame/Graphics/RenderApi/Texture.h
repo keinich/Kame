@@ -21,7 +21,7 @@ namespace Kame {
 
     virtual void Resize(uint32_t width, uint32_t height, uint32_t depthOrArraySize = 1) = 0;
 
-    virtual Reference<Texture> ToCubeMap(UINT64 width, std::wstring name) = 0;
+    virtual Reference<Texture> ToCubeMap(UINT width, std::wstring name) = 0;
 
   };
 

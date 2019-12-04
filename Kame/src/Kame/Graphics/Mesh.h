@@ -31,9 +31,9 @@
 
   //TODO make this RenderApi independent
 #include "Kame/Graphics/RenderApi/CommandList.h"
-#include "Kame/Platform/DirectX12/Graphics/CommandListDx12.h"
-#include "Kame/Platform/DirectX12/Graphics/VertexBufferDx12.h"
-#include "Kame/Platform/DirectX12/Graphics/IndexBufferDx12.h"
+#include "Kame/Graphics/RenderApi/CommandList.h"
+#include "Kame/Graphics/RenderApi/VertexBuffer.h"
+#include "Kame/Graphics/RenderApi/IndexBuffer.h"
 
 #include <DirectXMath.h>
 #include <d3d12.h>
@@ -99,13 +99,13 @@ namespace Kame {
 
     void Draw(CommandList* commandList);
 
-    static std::unique_ptr<Mesh> CreateCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
-    static std::unique_ptr<Mesh> CreateSphere(CommandListDx12& commandList, float diameter = 1, size_t tessellation = 16, bool rhcoords = false);
-    static std::unique_ptr<Mesh> CreateCone(CommandListDx12& commandList, float diameter = 1, float height = 1, size_t tessellation = 32, bool rhcoords = false);
-    static std::unique_ptr<Mesh> CreateTorus(CommandListDx12& commandList, float diameter = 1, float thickness = 0.333f, size_t tessellation = 32, bool rhcoords = false);
-    static std::unique_ptr<Mesh> CreatePlane(CommandListDx12& commandList, float width = 1, float height = 1, bool rhcoords = false);
+    //static std::unique_ptr<Mesh> CreateCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
+    //static std::unique_ptr<Mesh> CreateSphere(CommandListDx12& commandList, float diameter = 1, size_t tessellation = 16, bool rhcoords = false);
+    //static std::unique_ptr<Mesh> CreateCone(CommandListDx12& commandList, float diameter = 1, float height = 1, size_t tessellation = 32, bool rhcoords = false);
+    //static std::unique_ptr<Mesh> CreateTorus(CommandListDx12& commandList, float diameter = 1, float thickness = 0.333f, size_t tessellation = 32, bool rhcoords = false);
+    //static std::unique_ptr<Mesh> CreatePlane(CommandListDx12& commandList, float width = 1, float height = 1, bool rhcoords = false);
 
-    static std::unique_ptr<Mesh> CreateDebugCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
+    //static std::unique_ptr<Mesh> CreateDebugCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
 
   protected:
     Mesh();
@@ -116,11 +116,11 @@ namespace Kame {
 
     Mesh(const Mesh& copy) = delete;
 
-    void Initialize(CommandListDx12& commandList, VertexCollection& vertices, IndexCollection& indices, bool rhcoords);
-    void Initialize(CommandListDx12& commandList, SimpleVertexCollection& vertices, IndexCollection& indices, bool rhcoords);
+    void Initialize(VertexCollection& vertices, IndexCollection& indices, bool rhcoords);
+    void Initialize(SimpleVertexCollection& vertices, IndexCollection& indices, bool rhcoords);
 
-    VertexBufferDx12 m_VertexBuffer;
-    IndexBufferDx12 m_IndexBuffer;
+    NotCopyableReference<VertexBuffer> m_VertexBuffer;
+    NotCopyableReference<IndexBuffer> m_IndexBuffer;
 
     UINT m_IndexCount;
   };
