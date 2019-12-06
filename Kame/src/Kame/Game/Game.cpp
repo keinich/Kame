@@ -3,6 +3,9 @@
 
 #include "Kame/Application/Application.h"
 #include "Kame/Application/Window.h"
+#include <Kame/Graphics/Renderer3D.h>
+#include <Kame/Graphics/Renderer.h>
+#include <Kame/Graphics/Mesh.h>
 
 namespace Kame {
 
@@ -33,6 +36,10 @@ namespace Kame {
   void Game::Destroy() {
     Application::Get().DestroyWindow(m_pWindow);
     m_pWindow.reset();
+  }
+
+  void Game::Render() {
+    //_Renderer3D->Render(_Meshes);
   }
 
   void Game::OnUpdate(UpdateEventArgs& e) {}

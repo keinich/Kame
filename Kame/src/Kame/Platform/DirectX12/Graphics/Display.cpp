@@ -10,17 +10,19 @@
 #include "ResourceStateTracker.h"
 #include "TextureDx12.h"
 #include <Kame/Core/DebugUtilities.h>
+#include <Kame/Graphics/Renderer.h>
 
 namespace Kame {
 
   Display::Display(const std::wstring& windowName, int clientWidth, int clientHeight, bool vSync) :
-    m_ClientWidth(clientWidth)
-    , m_ClientHeight(clientHeight)
-    , m_VSync(vSync)
+    _Width(clientWidth)
+    , _Height(clientHeight)
+    , _VSync(vSync)
     , m_FenceValues{ 0 }
     , m_FrameValues{ 0 } {
 
     m_RenderTarget.reset(GraphicsCore::CreateRenderTarget());
+    _Renderer = CreateReference<Renderer>();
 
   }
 
@@ -36,6 +38,8 @@ namespace Kame {
 
     m_dxgiSwapChain = CreateSwapChain(hWnd);
     UpdateRenderTargetViews();
+
+    _Renderer->Initialize(this);
   }
 
   Display::~Display() {}
@@ -44,31 +48,31 @@ namespace Kame {
     //m_GUI.Initialize( shared_from_this() );
   }
 
-  int Display::GetClientWidth() const {
-    return m_ClientWidth;
+  int Display::GetWidth() const {
+    return _Width;
   }
 
-  int Display::GetClientHeight() const {
-    return m_ClientHeight;
+  int Display::GetHeight() const {
+    return _Height;
   }
 
   bool Display::IsVSync() const {
-    return m_VSync;
+    return _VSync;
   }
 
   void Display::SetVSync(bool vSync) {
-    m_VSync = vSync;
+    _VSync = vSync;
   }
 
   void Display::ToggleVSync() {
-    SetVSync(!m_VSync);
+    SetVSync(!_VSync);
   }
 
   void Display::OnResize(ResizeEventArgs& e) {
     // Update the client size.
-    if (m_ClientWidth != e.Width || m_ClientHeight != e.Height) {
-      m_ClientWidth = std::max(1, e.Width);
-      m_ClientHeight = std::max(1, e.Height);
+    if (_Width != e.Width || _Height != e.Height) {
+      _Width = std::max(1, e.Width);
+      _Height = std::max(1, e.Height);
 
       DX12Core::Get().Flush();
 
@@ -81,8 +85,8 @@ namespace Kame {
 
       DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
       ThrowIfFailed(m_dxgiSwapChain->GetDesc(&swapChainDesc));
-      ThrowIfFailed(m_dxgiSwapChain->ResizeBuffers(BufferCount, m_ClientWidth,
-        m_ClientHeight, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags));
+      ThrowIfFailed(m_dxgiSwapChain->ResizeBuffers(BufferCount, _Width,
+        _Height, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags));
 
       m_CurrentBackBufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
 
@@ -104,8 +108,8 @@ namespace Kame {
     ThrowIfFailed(CreateDXGIFactory2(createFactoryFlags, IID_PPV_ARGS(&dxgiFactory4)));
 
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-    swapChainDesc.Width = m_ClientWidth;
-    swapChainDesc.Height = m_ClientHeight;
+    swapChainDesc.Width = _Width;
+    swapChainDesc.Height = _Height;
     swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.Stereo = FALSE;
     swapChainDesc.SampleDesc = { 1, 0 };
@@ -178,8 +182,8 @@ namespace Kame {
     commandList->TransitionBarrier(backBuffer, D3D12_RESOURCE_STATE_PRESENT);
     commandQueue->ExecuteCommandList(commandList);
 
-    UINT syncInterval = m_VSync ? 1 : 0;
-    UINT presentFlags = m_IsTearingSupported && !m_VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
+    UINT syncInterval = _VSync ? 1 : 0;
+    UINT presentFlags = m_IsTearingSupported && !_VSync ? DXGI_PRESENT_ALLOW_TEARING : 0;
     ThrowIfFailed(m_dxgiSwapChain->Present(syncInterval, presentFlags));
 
     m_FenceValues[m_CurrentBackBufferIndex] = commandQueue->Signal();

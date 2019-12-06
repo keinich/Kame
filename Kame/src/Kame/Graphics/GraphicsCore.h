@@ -17,6 +17,7 @@ namespace Kame {
   class RenderTarget;
   class Texture;
   class RenderProgramSignature;
+  class RenderProgram;
   class VertexBuffer;
   class IndexBuffer;
 
@@ -36,20 +37,28 @@ namespace Kame {
     static void Destroy();
 
     static void Flush();
-        
+
     static Reference<CommandList> BeginCommandList(D3D12_COMMAND_LIST_TYPE type);
     static void ExecuteCommandList(Reference<CommandList> commandList, bool waitForCompletion = false);
 
     static RenderTarget* CreateRenderTarget();
+    static NotCopyableReference<RenderTarget> CreateRenderTargetNc();
 
     static NotCopyableReference<VertexBuffer> CreateVertexBuffer();
     static NotCopyableReference<IndexBuffer> CreateIndexBuffer();
 
     static NotCopyableReference<RenderProgramSignature> CreateRenderProgramSignatureNc();
+    static NotCopyableReference<RenderProgram> CreateRenderProgramNc();
 
     static Texture* GraphicsCore::CreateTexture();
-    
+
     static Reference<Texture> CreateTexture(
+      const D3D12_RESOURCE_DESC& resourceDesc,
+      const D3D12_CLEAR_VALUE* clearValue,
+      TextureUsage textureUsage,
+      const std::wstring& name
+    );
+    static NotCopyableReference<Texture> CreateTextureNc(
       const D3D12_RESOURCE_DESC& resourceDesc,
       const D3D12_CLEAR_VALUE* clearValue,
       TextureUsage textureUsage,

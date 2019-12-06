@@ -11,8 +11,7 @@ namespace Kame {
     virtual ~RenderProgramSignature() {};
 
     virtual void SetDescription(
-      const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
-      D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
+      const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc
     ) = 0;
 
   };

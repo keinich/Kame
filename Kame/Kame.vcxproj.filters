@@ -7,11 +7,20 @@
     <Filter Include="Kame\Application">
       <UniqueIdentifier>{46B3027B-32AC-21CD-5BDE-0652473601D9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Core">
+      <UniqueIdentifier>{3B59214D-A7C3-D5C3-F001-87695CABB318}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\Events">
       <UniqueIdentifier>{87A5FE1F-F35A-7715-7C4F-71ECE8036E19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Game">
+      <UniqueIdentifier>{8C4E234D-F8B8-D7C3-41F7-8869ADA0B518}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\Graphics">
       <UniqueIdentifier>{A3B6A1B5-0F77-1DEC-D8B1-6669443162C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Graphics\PostEffects">
+      <UniqueIdentifier>{581D2CCA-C4DF-5F54-0D90-EEE079913832}</UniqueIdentifier>
     </Filter>
     <Filter Include="Kame\Graphics\RenderApi">
       <UniqueIdentifier>{CCBDB70D-38F5-FFA4-41FF-63C8ADB5269E}</UniqueIdentifier>
@@ -67,9 +76,6 @@
     <Filter Include="Kame\Platform\Win32">
       <UniqueIdentifier>{D94F3914-45B1-1622-CE1E-5DD43A7F4DE1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kame\Utility">
-      <UniqueIdentifier>{46EC13EB-324F-A38F-DBD4-DB45C7166F12}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Kame.h" />
@@ -79,14 +85,23 @@
     <ClInclude Include="src\Kame\Application\Entrypoint.h">
       <Filter>Kame\Application</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Application\Layer.h">
-      <Filter>Kame\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Application\LayerStack.h">
-      <Filter>Kame\Application</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Application\Window.h">
       <Filter>Kame\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Core\Casting.h">
+      <Filter>Kame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Core\DebugUtilities.h">
+      <Filter>Kame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Core\Hash.h">
+      <Filter>Kame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Core\References.h">
+      <Filter>Kame\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Core\ThreadSafeQueue.h">
+      <Filter>Kame\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Events\ApplicationEvent.h">
       <Filter>Kame\Events</Filter>
@@ -106,6 +121,15 @@
     <ClInclude Include="src\Kame\Events\MouseEvent.h">
       <Filter>Kame\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Game\Game.h">
+      <Filter>Kame\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Game\Layer.h">
+      <Filter>Kame\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Game\LayerStack.h">
+      <Filter>Kame\Game</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Camera.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
@@ -121,19 +145,55 @@
     <ClInclude Include="src\Kame\Graphics\Mesh.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\MeshFactory.h">
+      <Filter>Kame\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Graphics\MeshManager.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\PostEffects\ToneMapping.h">
+      <Filter>Kame\Graphics\PostEffects</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Graphics\RenderApi\CommandList.h">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\GpuResource.h">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer.h">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgram.h">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgramSignature.h">
       <Filter>Kame\Graphics\RenderApi</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\RenderApi\Texture.h">
       <Filter>Kame\Graphics\RenderApi</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\TextureUsage.h">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer.h">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Graphics\RenderApi\VertexLayout.h">
       <Filter>Kame\Graphics\RenderApi</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\RenderTarget.h">
+      <Filter>Kame\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\Renderer.h">
+      <Filter>Kame\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Renderer3D.h">
+      <Filter>Kame\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\Scene3D.h">
+      <Filter>Kame\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\TextureManager.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h">
@@ -226,10 +286,13 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GUI.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPSO.h">
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPso.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GenerateMips_CS.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GpuResourceDx12.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.h">
@@ -250,7 +313,10 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ImGUI_VS.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.h">
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPso.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemap_CS.h">
@@ -262,7 +328,13 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignatureDx12.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\StructuredBuffer.h">
@@ -275,6 +347,9 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.h">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBufferDx12.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\d3dx12.h">
@@ -341,63 +416,22 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\Graphics\RenderTarget.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgram.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.h" />
-    <ClInclude Include="src\Kame\Graphics\RenderApi\RenderProgramSignature.h" />
-    <ClInclude Include="src\Kame\Graphics\RenderApi\TextureUsage.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RootSignatureDx12.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\GpuResourceDx12.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Graphics\RenderApi\GpuResource.h" />
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\VertexBufferDx12.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Graphics\RenderApi\VertexBuffer.h">
-      <Filter>Kame\Graphics\RenderApi</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Graphics\RenderApi\IndexBuffer.h">
-      <Filter>Kame\Graphics\RenderApi</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Graphics\MeshFactory.h" />
-    <ClInclude Include="src\Kame\Graphics\TextureManager.h" />
-    <ClInclude Include="src\Kame\Core\Casting.h">
-      <Filter>Kame\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Core\DebugUtilities.h" />
-    <ClInclude Include="src\Kame\Core\Hash.h">
-      <Filter>Kame\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Core\References.h" />
-    <ClInclude Include="src\Kame\Core\ThreadSafeQueue.h">
-      <Filter>Kame\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Game\Game.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
       <Filter>Kame\Application</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Application\Layer.cpp">
-      <Filter>Kame\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Application\LayerStack.cpp">
-      <Filter>Kame\Application</Filter>
-    </ClCompile>
     <ClCompile Include="src\Kame\Application\Window.cpp">
       <Filter>Kame\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Game\Game.cpp">
+      <Filter>Kame\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Game\Layer.cpp">
+      <Filter>Kame\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Game\LayerStack.cpp">
+      <Filter>Kame\Game</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Camera.cpp">
       <Filter>Kame\Graphics</Filter>
@@ -414,7 +448,28 @@
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp">
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\MeshFactory.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kame\Graphics\MeshManager.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\PostEffects\ToneMapping.cpp">
+      <Filter>Kame\Graphics\PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\RenderApi\RenderProgram.cpp">
+      <Filter>Kame\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\RenderTarget.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\Renderer.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\Renderer3D.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\TextureManager.cpp">
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp">
@@ -483,7 +538,10 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GUI.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPSO.cpp">
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GenerateMipsPso.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResourceDx12.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GraphicsCommon.cpp">
@@ -495,7 +553,10 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\HighResolutionClock.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPSO.cpp">
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPso.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.cpp">
@@ -504,7 +565,13 @@
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\ResourceStateTracker.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignatureDx12.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\StructuredBuffer.cpp">
@@ -514,6 +581,9 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\UploadBuffer.cpp">
+      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBufferDx12.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\imgui.cpp">
@@ -559,27 +629,6 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
-    <ClCompile Include="src\Kame\Graphics\RenderTarget.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.cpp" />
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RootSignatureDx12.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\GpuResourceDx12.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\VertexBufferDx12.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\IndexBufferDx12.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Graphics\MeshFactory.cpp" />
-    <ClCompile Include="src\Kame\Graphics\TextureManager.cpp" />
-    <ClCompile Include="src\Kame\Game\Game.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

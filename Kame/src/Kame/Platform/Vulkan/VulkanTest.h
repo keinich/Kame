@@ -1,7 +1,7 @@
 #pragma once
 
-namespace VulkanTest {
-
-  void Run();
-
-};
+//namespace VulkanTest {
+//
+//  void Run();
+//
+//};

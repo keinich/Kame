@@ -49,6 +49,7 @@ namespace Kame {
   class Game;
   class TextureDx12;
   class RenderTarget;
+  class Renderer;
 
   class Display : public std::enable_shared_from_this<Display> {
 
@@ -64,8 +65,8 @@ namespace Kame {
      */
     void Initialize();
 
-    int GetClientWidth() const;
-    int GetClientHeight() const;
+    int GetWidth() const;
+    int GetHeight() const;
 
     /**
     * Should this window be rendered with vertical refresh synchronization.
@@ -80,6 +81,8 @@ namespace Kame {
      * current back buffer.
      */
     const RenderTarget& GetRenderTarget();
+
+    inline Renderer* GetRenderer() const { return _Renderer.get(); }
 
     /**
      * Present the swapchain's back buffer to the screen.
@@ -119,9 +122,9 @@ namespace Kame {
     Display(const Display& copy) = delete;
     Display& operator=(const Display& other) = delete;
 
-    int m_ClientWidth;
-    int m_ClientHeight;
-    bool m_VSync;
+    int _Width;
+    int _Height;
+    bool _VSync;
 
     UINT64 m_FenceValues[BufferCount];
     uint64_t m_FrameValues[BufferCount];
@@ -134,6 +137,9 @@ namespace Kame {
     UINT m_CurrentBackBufferIndex;
 
     bool m_IsTearingSupported;
+
+    //The Display owns a Renderer, which is responsible for the full Render-Pass that targets this Disply
+    Reference<Renderer> _Renderer;
 
 
 

@@ -13,6 +13,7 @@
 #include <Kame/Platform/DirectX12/Graphics/CommandQueue.h>
 #include <Kame/Platform/DirectX12/Graphics/TextureDx12.h>
 #include <Kame/Platform/DirectX12/Graphics/RootSignatureDx12.h>
+#include <Kame/Platform/DirectX12/Graphics/RenderProgramDx12.h>
 #include "Kame/Platform/DirectX12/Graphics/VertexBufferDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/IndexBufferDx12.h"
 
@@ -75,14 +76,18 @@ namespace Kame {
   }
 
   void GraphicsCore::ExecuteCommandList(Reference<CommandList> commandList, bool waitForCompletion) {
-    uint64_t fenceValue =  s_Instance->GetCommandQueue(commandList->GetType())->ExecuteCommandList(commandList);
+    uint64_t fenceValue = s_Instance->GetCommandQueue(commandList->GetType())->ExecuteCommandList(commandList);
     if (waitForCompletion) {
       s_Instance->GetCommandQueue(commandList->GetType())->WaitForFenceValue(fenceValue);
-    }    
+    }
   }
 
   RenderTarget* GraphicsCore::CreateRenderTarget() {
     return reinterpret_cast<RenderTarget*>(new RenderTargetOf<TextureDx12>());
+  }
+
+  NotCopyableReference<RenderTarget> GraphicsCore::CreateRenderTargetNc() {
+    return CreateNotCopyableReference<RenderTargetOf<TextureDx12>>();
   }
 
   NotCopyableReference<VertexBuffer> GraphicsCore::CreateVertexBuffer() {
@@ -97,6 +102,10 @@ namespace Kame {
     return CreateNotCopyableReference<RootSignatureDx12>();
   }
 
+  NotCopyableReference<RenderProgram> GraphicsCore::CreateRenderProgramNc() {
+    return CreateNotCopyableReference<RenderProgramDx12>();
+  }
+
   Texture* GraphicsCore::CreateTexture() {
     return new TextureDx12();
   }
@@ -107,9 +116,16 @@ namespace Kame {
     TextureUsage textureUsage,
     const std::wstring& name
   ) {
-    Reference<Texture> ret = CreateReference<TextureDx12>(resourceDesc, clearValue, textureUsage, name);
-    return ret;
-    //return reinterpret_cast<Texture*>(new TextureDx12(resourceDesc, clearValue, textureUsage, name));
+    return CreateReference<TextureDx12>(resourceDesc, clearValue, textureUsage, name);
+  }
+
+  NotCopyableReference<Texture> GraphicsCore::CreateTextureNc(
+    const D3D12_RESOURCE_DESC& resourceDesc,
+    const D3D12_CLEAR_VALUE* clearValue,
+    TextureUsage textureUsage,
+    const std::wstring& name
+  ) {
+    return CreateNotCopyableReference<TextureDx12>(resourceDesc, clearValue, textureUsage, name);
   }
 
   void GraphicsCore::ReportLiveObjects() {

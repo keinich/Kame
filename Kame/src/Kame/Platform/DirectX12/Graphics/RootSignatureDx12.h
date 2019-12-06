@@ -54,8 +54,7 @@ namespace Kame {
     // TODO: Add (deep) copy/move constructors and assignment operators!
     RootSignatureDx12();
     RootSignatureDx12(
-      const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
-      D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
+      const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc
     );
 
     virtual ~RootSignatureDx12();
@@ -67,8 +66,7 @@ namespace Kame {
     }
 
     virtual void SetDescription(
-      const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
-      D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
+      const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc
     ) override;
 
     const D3D12_ROOT_SIGNATURE_DESC1& GetRootSignatureDesc() const {

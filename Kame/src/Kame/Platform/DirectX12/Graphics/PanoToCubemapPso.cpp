@@ -15,12 +15,6 @@ namespace Kame {
   PanoToCubemapPSO::PanoToCubemapPSO() {
     auto device = DX12Core::Get().GetDevice();
 
-    D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
-    featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
-    if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))) {
-      featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
-    }
-
     CD3DX12_DESCRIPTOR_RANGE1 srcMip(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE);
     CD3DX12_DESCRIPTOR_RANGE1 outMip(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 5, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE);
 
@@ -39,7 +33,7 @@ namespace Kame {
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc(PanoToCubemapRS::NumRootParameters,
       rootParameters, 1, &linearRepeatSampler);
 
-    m_RootSignature.SetDescription(rootSignatureDesc.Desc_1_1, featureData.HighestVersion);
+    m_RootSignature.SetDescription(rootSignatureDesc.Desc_1_1);
 
     // Create the PSO for GenerateMips shader.
     struct PipelineStateStream {

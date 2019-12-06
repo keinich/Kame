@@ -23,13 +23,13 @@ namespace Kame {
   {}
 
   RootSignatureDx12::RootSignatureDx12(
-    const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion)
+    const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc)
     : m_RootSignatureDesc{}
     , m_NumDescriptorsPerTable{ 0 }
     , m_SamplerTableBitMask(0)
     , m_DescriptorTableBitMask(0)
   {
-    SetDescription(rootSignatureDesc, rootSignatureVersion);
+    SetDescription(rootSignatureDesc);
   }
 
   RootSignatureDx12::~RootSignatureDx12() {
@@ -59,9 +59,9 @@ namespace Kame {
   }
 
   void RootSignatureDx12::SetDescription(
-    const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc,
-    D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion
+    const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc    
   ) {
+    D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion = DX12Core::Get().GetHighestRootSignatureVersion();
     // Make sure any previously allocated root signature description is cleaned 
     // up first.
     Destroy();
@@ -165,8 +165,13 @@ namespace Kame {
       // Serialize the root signature.
       Microsoft::WRL::ComPtr<ID3DBlob> rootSignatureBlob;
       Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
-      ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&versionRootSignatureDesc,
-        rootSignatureVersion, &rootSignatureBlob, &errorBlob));
+      ThrowIfFailed(
+        D3DX12SerializeVersionedRootSignature(
+          &versionRootSignatureDesc,
+          rootSignatureVersion,
+          &rootSignatureBlob, &errorBlob
+        )
+      );
 
       // Create the root signature.
       ThrowIfFailed(device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(),

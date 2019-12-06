@@ -30,7 +30,7 @@
   *  @brief The application class is used to create windows for our application.
   */
 
-//System
+  //System
 #include <string>
 #include <memory>
 #include <d3d12.h>
@@ -156,6 +156,8 @@ namespace Kame {
       return ms_FrameCount;
     }
 
+    D3D_ROOT_SIGNATURE_VERSION GetHighestRootSignatureVersion() { return  _RootSignatureFeatureData.HighestVersion; }
+
   protected:
 
     // Create an application instance.
@@ -186,6 +188,8 @@ namespace Kame {
     bool m_TearingSupported;
 
     static uint64_t ms_FrameCount;
+
+    D3D12_FEATURE_DATA_ROOT_SIGNATURE _RootSignatureFeatureData;
   };
 
 }

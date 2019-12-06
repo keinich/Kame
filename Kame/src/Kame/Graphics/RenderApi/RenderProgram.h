@@ -1,6 +1,6 @@
 #pragma once
 
-#include <d3d12.h> //TODO abstract away D3D12_PIPELINE_STATE_STREAM_DESC, CD3DX12_RASTERIZER_DESC
+#include <d3d12.h> //TODO abstract away D3D12_PIPELINE_STATE_STREAM_DESC, CD3DX12_RASTERIZER_DESC, D3D_ROOT_SIGNATURE_VERSION
 
 namespace Kame {
 
@@ -15,6 +15,7 @@ namespace Kame {
 
     virtual void Create() = 0;
 
+    const virtual RenderProgramSignature* GetSignature() const = 0;
     virtual void SetRootSignature(const RenderProgramSignature* signature) = 0;
 
     virtual void SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE TopologyType) = 0;

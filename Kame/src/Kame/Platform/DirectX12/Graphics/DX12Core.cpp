@@ -61,6 +61,7 @@ namespace Kame {
     //if (!RegisterClassExW(&wndClass)) {
     //  MessageBoxA(NULL, "Unable to register the window class.", "Error", MB_OK | MB_ICONERROR);
     //}
+
   }
 
   void DX12Core::Initialize() {
@@ -87,6 +88,11 @@ namespace Kame {
     }
     else {
       throw std::exception("DXGI adapter enumeration failed.");
+    }
+
+    _RootSignatureFeatureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+    if (FAILED(m_d3d12Device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &_RootSignatureFeatureData, sizeof(_RootSignatureFeatureData)))) {
+      _RootSignatureFeatureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
     }
 
     m_DirectCommandQueue = CreateReference<CommandQueue>(D3D12_COMMAND_LIST_TYPE_DIRECT);

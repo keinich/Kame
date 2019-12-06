@@ -300,7 +300,8 @@ namespace Kame {
       CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
       rootSignatureDescription.Init_1_1(2, rootParameters, 1, &linearClampSampler, rootSignatureFlags);
 
-      m_SkyboxSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      //m_SkyboxSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      m_SkyboxSignature->SetDescription(rootSignatureDescription.Desc_1_1);
 
       _SkyboxProgram->SetRootSignature(m_SkyboxSignature.get());
       _SkyboxProgram->SetInputLayout1(1, inputLayout);
@@ -348,7 +349,8 @@ namespace Kame {
       CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
       rootSignatureDescription.Init_1_1(RootParameters::NumRootParameters, rootParameters, 1, &linearRepeatSampler, rootSignatureFlags);
 
-      m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      //m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1);
 
       _HDRProgram->SetRootSignature(m_HDRRootSignature.get());
       _HDRProgram->SetInputLayout1(VertexPositionNormalTexture::InputElementCount, VertexPositionNormalTexture::InputElements);
@@ -373,7 +375,8 @@ namespace Kame {
       CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
       rootSignatureDescription.Init_1_1(2, rootParameters, 1, &linearClampsSampler);
 
-      m_SDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      //m_SDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+      m_SDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1);
 
       //Test RootSignature Hash
       {
@@ -390,7 +393,8 @@ namespace Kame {
         rootSignatureDescription2.Init_1_1(2, rootParameters2, 1, &linearClampsSampler2);
 
         RootSignatureDx12 rootSignature2;
-        rootSignature2.SetDescription(rootSignatureDescription2.Desc_1_1, featureData.HighestVersion);
+        //rootSignature2.SetDescription(rootSignatureDescription2.Desc_1_1, featureData.HighestVersion);
+        rootSignature2.SetDescription(rootSignatureDescription2.Desc_1_1);
 
       } //End Test RootSignature Hash
 
@@ -783,7 +787,9 @@ namespace Kame {
     }
 
     commandListBase->SetRenderTarget(*m_HDRRenderTarget);
-    commandListBase->SetViewport(m_HDRRenderTarget->GetViewport());
+    D3D12_VIEWPORT& vp = m_HDRRenderTarget->GetViewport();
+    //vp.Width /= 2;
+    commandListBase->SetViewport(vp);
     commandListBase->SetScissorRect(m_ScissorRect);
 
     // Render the skybox.
@@ -856,6 +862,9 @@ namespace Kame {
 
     m_CubeMesh->Draw(commandListBase.get());
 
+    //vp.Width *= 2;
+    //vp.TopLeftX += vp.Width;
+    commandListBase->SetViewport(vp);
     // Draw a torus
     translationMatrix = XMMatrixTranslation(4.0f, 0.6f, -4.0f);
     rotationMatrix = XMMatrixRotationY(XMConvertToRadians(45.0f));

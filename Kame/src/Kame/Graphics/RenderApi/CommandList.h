@@ -2,6 +2,8 @@
 
 #include <d3d12.h> //TODO abstract away D3D12_CLEAR_FLAGS, D3D12_VIEWPORT, D3D12_RECT, D3D_PRIMITIVE_TOPOLOGY, D3D12_COMMAND_LIST_TYPE
 
+#include <vector>
+
 namespace Kame {
 
   class GpuResource;

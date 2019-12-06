@@ -58,6 +58,8 @@ namespace Kame {
       return *m_RootSignature;
     }
 
+    const virtual RenderProgramSignature* GetSignature() const override { return m_RootSignature; }
+
     ID3D12PipelineState* GetPipelineStateObject(void) const { return m_PSO; }
 
     virtual void Create() override;

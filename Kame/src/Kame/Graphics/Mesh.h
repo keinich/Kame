@@ -33,7 +33,6 @@
 
   //TODO make this RenderApi independent
 #include "Kame/Graphics/RenderApi/CommandList.h"
-#include "Kame/Graphics/RenderApi/CommandList.h"
 #include "Kame/Graphics/RenderApi/VertexBuffer.h"
 #include "Kame/Graphics/RenderApi/IndexBuffer.h"
 

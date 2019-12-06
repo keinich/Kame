@@ -12,6 +12,8 @@
 //#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include <Kame/Game/Game.h>
 
+#include <Kame/Graphics/Renderer.h>
+
 #include <Kame/Input/Input.h>
 //#include "Kame/Events/Event.h"
 
@@ -88,6 +90,7 @@ namespace Kame {
     //Renderer::Initialize();
     //DX12Core::Get().Initialize();
     GraphicsCore::Initialize();
+    //Renderer::Get()->Initialize(s_Windows); //TODO where to do this?
 
   }
 

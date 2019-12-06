@@ -10,6 +10,7 @@
     <ClInclude Include="src\HDR_VS.h" />
     <ClInclude Include="src\HDRtoSDR_PS.h" />
     <ClInclude Include="src\HDRtoSDR_VS.h" />
+    <ClInclude Include="src\InstancedRenderingDemo.h" />
     <ClInclude Include="src\Skybox_PS.h" />
     <ClInclude Include="src\Skybox_VS.h" />
     <ClInclude Include="src\Tutorial4.h" />
@@ -18,6 +19,7 @@
     <ClCompile Include="src\SandboxApp.cpp" />
     <ClCompile Include="src\Tutorial4.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\InstancedRenderingDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\shaders\HDR_PS.hlsl">

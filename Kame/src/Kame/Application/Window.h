@@ -6,9 +6,9 @@
 #include "Kame/Events/Event.h"
 #include "Kame/Platform/DirectX12/Graphics/Display.h"
 
-#ifdef KAME_PLATFORM_WIN32
+//#ifdef KAME_PLATFORM_WIN32
 #define KAME_NATIVE_WINDOW HWND
-#endif
+//#endif
 
 namespace Kame {
 
@@ -58,7 +58,7 @@ namespace Kame {
     virtual void PlatformCreate(int width, int height, const std::wstring& name) = 0;
     virtual ~Window();
 
-    inline KAME_NATIVE_WINDOW GetNativeWindow() { return _NativeWindow; };
+    inline KAME_NATIVE_WINDOW GetNativeWindow() { return _NativeWindow; }
 
     virtual void PlatformDestroyWindow() = 0;
     void Unregister();
