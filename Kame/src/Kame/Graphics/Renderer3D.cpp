@@ -38,11 +38,15 @@ namespace Kame {
     Camera* camera,
     RenderProgram* renderProgram,
     CommandList* commandList,
-    Texture* texture
+    Texture* texture,
+    MaterialInstanceBase* matInstace
   ) {
 
-    commandList->SetGraphicsRootSignature(renderProgram->GetSignature());
-    commandList->SetRenderProgram(renderProgram);
+    //commandList->SetGraphicsRootSignature(renderProgram->GetSignature());
+    //commandList->SetRenderProgram(renderProgram);
+
+    commandList->SetGraphicsRootSignature(matInstace->GetMaterial()->GetSignature());
+    commandList->SetRenderProgram(matInstace->GetMaterial()->GetProgram());
 
     // Upload lights
     /*LightProperties lightProps;
@@ -57,8 +61,7 @@ namespace Kame {
     XMMATRIX viewProjectionMatrix = viewMatrix * camera->get_ProjectionMatrix().GetXmMatrix();
 
     for (Mesh* mesh : meshes) {
-
-      // Draw the earth sphere
+      
       XMMATRIX translationMatrix = XMMatrixTranslation(-4.0f, 2.0f, -4.0f);
       XMMATRIX rotationMatrix = XMMatrixIdentity();
       XMMATRIX scaleMatrix = XMMatrixScaling(4.0f, 4.0f, 4.0f);
@@ -68,8 +71,11 @@ namespace Kame {
       ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
       commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-      commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, Material::White);
-      commandList->SetShaderResourceViewTexture(RootParameters::Textures, 0, texture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+      matInstace->ApplyParameters(commandList);
+
+      //commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::White);
+      //commandList->SetShaderResourceViewTexture(RootParameters::Textures, 0, texture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
       mesh->Draw(commandList);
 

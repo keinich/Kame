@@ -62,7 +62,8 @@ namespace Kame {
       game->GetActiveCamera(),
       game->GetRenderProgram(),
       commandList.get(),
-      game->GetTexture()
+      game->GetTexture(),
+      game->GetMaterial()
     );
 
     //game->RenderTo(_SceneRenderTarget);

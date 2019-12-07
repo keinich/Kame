@@ -162,6 +162,7 @@
     <ClInclude Include="src\Kame\Graphics\GraphicsCore.h" />
     <ClInclude Include="src\Kame\Graphics\Light.h" />
     <ClInclude Include="src\Kame\Graphics\Material.h" />
+    <ClInclude Include="src\Kame\Graphics\MaterialManager.h" />
     <ClInclude Include="src\Kame\Graphics\Mesh.h" />
     <ClInclude Include="src\Kame\Graphics\MeshFactory.h" />
     <ClInclude Include="src\Kame\Graphics\MeshManager.h" />
@@ -265,6 +266,7 @@
     <ClCompile Include="src\Kame\Graphics\GraphicsCore.cpp" />
     <ClCompile Include="src\Kame\Graphics\Light.cpp" />
     <ClCompile Include="src\Kame\Graphics\Material.cpp" />
+    <ClCompile Include="src\Kame\Graphics\MaterialManager.cpp" />
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Kame\Graphics\MeshFactory.cpp" />
     <ClCompile Include="src\Kame\Graphics\MeshManager.cpp" />

@@ -13,6 +13,8 @@
 #include <Kame/Graphics/GraphicsCore.h>
 #include <Kame/Application/Window.h>
 #include <Kame/Graphics/RenderTarget.h>
+#include <Kame/Graphics/Material.h>
+#include <Kame\Graphics\MaterialManager.h>
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -58,14 +60,28 @@ Kame::Camera* InstancedRenderingDemo::GetActiveCamera() {
   return &_Camera;
 }
 
+Kame::MaterialInstanceBase* InstancedRenderingDemo::GetMaterial() {
+  return _MaterialInstance.get();
+}
+
 bool InstancedRenderingDemo::LoadContent() {
   _SphereMesh = Kame::MeshFactory::GetSphere();
-  _KameDefaultTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/DefaultWhite.bmp");
+  //_KameDefaultTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/Directx9.png");
 
   _Meshes.push_back(_SphereMesh);
 
   CreateProgram();
 
+  //Kame::DefaultMaterial* material = Kame::MaterialManager::GetMaterial<Kame::DefaultMaterial>();
+
+  //auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial(material);
+  auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial1<Kame::DefaultMaterial>();
+  //matInstance->GetParameters().DiffuseTexture = _KameDefaultTexture;
+  matInstance->GetParameters().DiffuseTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/Directx9.png");
+  matInstance->GetParameters().BaseParams.Ambient = Kame::Math::Float4(0.1f, 0.1f, 0.1f, 0.1f);
+  matInstance->GetParameters().BaseParams.Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
+  //matInstance->GetParameters().BaseParams. = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
+  _MaterialInstance = matInstance;
   return true;
 }
 

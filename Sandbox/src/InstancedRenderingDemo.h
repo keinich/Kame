@@ -17,7 +17,8 @@ public:
   virtual std::vector<Kame::Mesh*>& GetMeshes() override;
   virtual Kame::RenderProgram* GetRenderProgram() override;
   virtual Kame::Texture* GetTexture() override; 
-  virtual Kame::Camera* GetActiveCamera() override; 
+  virtual Kame::Camera* GetActiveCamera() override;
+  virtual Kame::MaterialInstanceBase* GetMaterial() override;
 
   virtual bool LoadContent() override;
   virtual void UnloadContent() override;
@@ -34,6 +35,8 @@ private: //Fields
   std::vector<Kame::Mesh*> _Meshes;
   Kame::Texture* _KameDefaultTexture;  
   Kame::Camera _Camera;
+
+  Kame::Reference<Kame::MaterialInstanceBase> _MaterialInstance;
 
   Kame::NotCopyableReference<Kame::RenderProgramSignature> _RenderProgramSignature;
   Kame::NotCopyableReference<Kame::RenderProgram> _RenderProgram;

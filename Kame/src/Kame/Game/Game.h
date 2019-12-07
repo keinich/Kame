@@ -18,6 +18,7 @@ namespace Kame {
   class Camera;
   class RenderProgram;
   class Texture;
+  class MaterialInstanceBase;
 
   class Game : public std::enable_shared_from_this<Game> {
   public:
@@ -51,6 +52,7 @@ namespace Kame {
     virtual RenderProgram* GetRenderProgram() { return nullptr; }
     virtual Texture* GetTexture() { return nullptr; }
     virtual Camera* GetActiveCamera() { return nullptr; }
+    virtual Kame::MaterialInstanceBase* GetMaterial() { return nullptr; }
 
 #pragma endregion
 

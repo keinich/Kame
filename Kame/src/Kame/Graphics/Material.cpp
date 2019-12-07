@@ -1,9 +1,16 @@
 #include "kmpch.h"
 #include "Material.h"
+#include <Kame/Graphics/RenderApi/CommandList.h>
+#include <Kame/Graphics/RenderApi/RenderProgram.h>
+#include <Kame/Graphics/RenderApi/RenderProgramSignature.h>
+#include <Kame\Graphics\Mesh.h>
+#include <Kame/Core/DebugUtilities.h>
+#include <Kame\Graphics\Renderer3D.h>
+#include <Kame/Graphics/GraphicsCore.h>
 
 namespace Kame {
 
-  const Material Material::Red =
+  const BaseMaterialParameters BaseMaterialParameters::Red =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.1f, 0.0f, 0.0f, 1.0f },
@@ -12,7 +19,7 @@ namespace Kame {
       128.0f
   };
 
-  const Material Material::Green =
+  const BaseMaterialParameters BaseMaterialParameters::Green =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.1f, 0.0f, 1.0f },
@@ -21,7 +28,7 @@ namespace Kame {
       128.0f
   };
 
-  const Material Material::Blue =
+  const BaseMaterialParameters BaseMaterialParameters::Blue =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.0f, 0.1f, 1.0f },
@@ -30,7 +37,7 @@ namespace Kame {
       128.0f
   };
 
-  const Material Material::Cyan =
+  const BaseMaterialParameters BaseMaterialParameters::Cyan =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.1f, 0.1f, 1.0f },
@@ -39,7 +46,7 @@ namespace Kame {
       128.0f
   };
 
-  const Material Material::Magenta =
+  const BaseMaterialParameters BaseMaterialParameters::Magenta =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.1f, 0.0f, 0.1f, 1.0f },
@@ -48,7 +55,7 @@ namespace Kame {
       128.0f
   };
 
-  const Material Material::Yellow =
+  const BaseMaterialParameters BaseMaterialParameters::Yellow =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.1f, 0.1f, 1.0f },
@@ -57,7 +64,7 @@ namespace Kame {
       128.0f
   };
 
-  const Material Material::White =
+  const BaseMaterialParameters BaseMaterialParameters::White =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.1f, 0.1f, 0.1f, 1.0f },
@@ -66,7 +73,7 @@ namespace Kame {
       128.0f
   };
 
-  const Material Material::Black =
+  const BaseMaterialParameters BaseMaterialParameters::Black =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.0f, 0.0f, 1.0f },
@@ -75,7 +82,7 @@ namespace Kame {
       128.0f
   };
 
-  const Material Material::Emerald =
+  const BaseMaterialParameters BaseMaterialParameters::Emerald =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0215f, 0.1745f, 0.0215f, 1.0f },
@@ -84,7 +91,7 @@ namespace Kame {
       76.8f
   };
 
-  const Material Material::Jade =
+  const BaseMaterialParameters BaseMaterialParameters::Jade =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.135f, 0.2225f, 0.1575f, 1.0f },
@@ -93,7 +100,7 @@ namespace Kame {
       12.8f
   };
 
-  const Material Material::Obsidian =
+  const BaseMaterialParameters BaseMaterialParameters::Obsidian =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.05375f, 0.05f, 0.06625f, 1.0f },
@@ -102,7 +109,7 @@ namespace Kame {
       38.4f
   };
 
-  const Material Material::Pearl =
+  const BaseMaterialParameters BaseMaterialParameters::Pearl =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.25f, 0.20725f, 0.20725f, 1.0f },
@@ -111,7 +118,7 @@ namespace Kame {
       11.264f
   };
 
-  const Material Material::Ruby = {
+  const BaseMaterialParameters BaseMaterialParameters::Ruby = {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.1745f, 0.01175f, 0.01175f, 1.0f },
       { 0.61424f, 0.04136f, 0.04136f, 1.0f },
@@ -119,7 +126,7 @@ namespace Kame {
       76.8f
   };
 
-  const Material Material::Turquoise =
+  const BaseMaterialParameters BaseMaterialParameters::Turquoise =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.1f, 0.18725f, 0.1745f, 1.0f },
@@ -128,7 +135,7 @@ namespace Kame {
       12.8f
   };
 
-  const Material Material::Brass =
+  const BaseMaterialParameters BaseMaterialParameters::Brass =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.329412f, 0.223529f, 0.027451f, 1.0f },
@@ -137,7 +144,7 @@ namespace Kame {
       27.9f
   };
 
-  const Material Material::Bronze =
+  const BaseMaterialParameters BaseMaterialParameters::Bronze =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.2125f, 0.1275f, 0.054f, 1.0f },
@@ -146,7 +153,7 @@ namespace Kame {
       25.6f
   };
 
-  const Material Material::Chrome =
+  const BaseMaterialParameters BaseMaterialParameters::Chrome =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.25f, 0.25f, 0.25f, 1.0f },
@@ -155,7 +162,7 @@ namespace Kame {
       76.8f
   };
 
-  const Material Material::Copper =
+  const BaseMaterialParameters BaseMaterialParameters::Copper =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.19125f, 0.0735f, 0.0225f, 1.0f },
@@ -164,7 +171,7 @@ namespace Kame {
       12.8f
   };
 
-  const Material Material::Gold =
+  const BaseMaterialParameters BaseMaterialParameters::Gold =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.24725f, 0.1995f, 0.0745f, 1.0f },
@@ -173,7 +180,7 @@ namespace Kame {
       51.2f
   };
 
-  const Material Material::Silver =
+  const BaseMaterialParameters BaseMaterialParameters::Silver =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.19225f, 0.19225f, 0.19225f, 1.0f },
@@ -182,7 +189,7 @@ namespace Kame {
       51.2f
   };
 
-  const Material Material::BlackPlastic =
+  const BaseMaterialParameters BaseMaterialParameters::BlackPlastic =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.0f, 0.0f, 1.0f },
@@ -191,7 +198,7 @@ namespace Kame {
       32.0f
   };
 
-  const Material Material::CyanPlastic =
+  const BaseMaterialParameters BaseMaterialParameters::CyanPlastic =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.1f, 0.06f, 1.0f },
@@ -200,7 +207,7 @@ namespace Kame {
       32.0f
   };
 
-  const Material Material::GreenPlastic =
+  const BaseMaterialParameters BaseMaterialParameters::GreenPlastic =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.0f, 0.0f, 1.0f },
@@ -209,7 +216,7 @@ namespace Kame {
       32.0f
   };
 
-  const Material Material::RedPlastic =
+  const BaseMaterialParameters BaseMaterialParameters::RedPlastic =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.0f, 0.0f, 1.0f },
@@ -218,7 +225,7 @@ namespace Kame {
       32.0f
   };
 
-  const Material Material::WhitePlastic =
+  const BaseMaterialParameters BaseMaterialParameters::WhitePlastic =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.0f, 0.0f, 1.0f },
@@ -227,7 +234,7 @@ namespace Kame {
       32.0f
   };
 
-  const Material Material::YellowPlastic =
+  const BaseMaterialParameters BaseMaterialParameters::YellowPlastic =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.0f, 0.0f, 1.0f },
@@ -236,7 +243,7 @@ namespace Kame {
       32.0f
   };
 
-  const Material Material::BlackRubber =
+  const BaseMaterialParameters BaseMaterialParameters::BlackRubber =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.02f, 0.02f, 0.02f, 1.0f },
@@ -245,7 +252,7 @@ namespace Kame {
       10.0f
   };
 
-  const Material Material::CyanRubber =
+  const BaseMaterialParameters BaseMaterialParameters::CyanRubber =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.05f, 0.05f, 1.0f },
@@ -254,7 +261,7 @@ namespace Kame {
       10.0f
   };
 
-  const Material Material::GreenRubber =
+  const BaseMaterialParameters BaseMaterialParameters::GreenRubber =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.0f, 0.05f, 0.0f, 1.0f },
@@ -263,7 +270,7 @@ namespace Kame {
       10.0f
   };
 
-  const Material Material::RedRubber =
+  const BaseMaterialParameters BaseMaterialParameters::RedRubber =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.05f, 0.0f, 0.0f, 1.0f },
@@ -272,7 +279,7 @@ namespace Kame {
       10.0f
   };
 
-  const Material Material::WhiteRubber =
+  const BaseMaterialParameters BaseMaterialParameters::WhiteRubber =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.05f, 0.05f, 0.05f, 1.0f },
@@ -281,7 +288,7 @@ namespace Kame {
       10.0f
   };
 
-  const Material Material::YellowRubber =
+  const BaseMaterialParameters BaseMaterialParameters::YellowRubber =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
       { 0.05f, 0.05f, 0.0f, 1.0f },
@@ -289,5 +296,80 @@ namespace Kame {
       { 0.7f, 0.7f, 0.04f, 1.0f },
       10.0f
   };
+
+  enum DefaultMaterialRootParameters {
+    MatricesCB1,         // ConstantBuffer<Mat> MatCB : register(b0);
+    MaterialCB1,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
+    LightPropertiesCB1,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
+    PointLights1,        // StructuredBuffer<PointLight> PointLights : register( t0 );
+    SpotLights1,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
+    Textures1,           // Texture2D DiffuseTexture : register( t2 );
+    NumRootParameters1
+  };
+
+  void DefaultMaterial::ApplyParameters(CommandList* commandList, DefaultMaterialParameters& params) {
+    commandList->SetGraphicsDynamicConstantBuffer(DefaultMaterialRootParameters::MaterialCB1, params.BaseParams);
+    commandList->SetShaderResourceViewTexture(DefaultMaterialRootParameters::Textures1, 0, params.DiffuseTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+  }
+
+  void DefaultMaterial::CreateProgram() {
+
+    //TODO Have Base RootSignature and Base RootParameters
+    //Here should only be declared the extensions of thos Bases
+
+    ComPtr<ID3DBlob> vs;
+    ComPtr<ID3DBlob> ps;
+    ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_VS.cso", &vs));
+    ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_PS.cso", &ps));
+
+    // Allow input layout and deny unnecessary access to certain pipeline stages.
+    D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
+      D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+      D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+      D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+      D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
+
+    CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
+
+    CD3DX12_ROOT_PARAMETER1 rootParameters[Kame::DefaultMaterialRootParameters::NumRootParameters1];
+    rootParameters[Kame::DefaultMaterialRootParameters::MatricesCB1].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
+    rootParameters[Kame::DefaultMaterialRootParameters::MaterialCB1].InitAsConstantBufferView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[Kame::DefaultMaterialRootParameters::LightPropertiesCB1].InitAsConstants(sizeof(Kame::LightProperties) / 4, 1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[Kame::DefaultMaterialRootParameters::PointLights1].InitAsShaderResourceView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[Kame::DefaultMaterialRootParameters::SpotLights1].InitAsShaderResourceView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[Kame::DefaultMaterialRootParameters::Textures1].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
+
+    CD3DX12_STATIC_SAMPLER_DESC linearRepeatSampler(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
+    CD3DX12_STATIC_SAMPLER_DESC anisotropicSampler(0, D3D12_FILTER_ANISOTROPIC);
+
+    CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
+    rootSignatureDescription.Init_1_1(Kame::DefaultMaterialRootParameters::NumRootParameters1, rootParameters, 1, &linearRepeatSampler, rootSignatureFlags);
+
+    //m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
+    _ProgramSignature->SetDescription(rootSignatureDescription.Desc_1_1);
+
+    _Program->SetRootSignature(_ProgramSignature.get());
+    _Program->SetInputLayout1(Kame::VertexPositionNormalTexture::InputElementCount, Kame::VertexPositionNormalTexture::InputElements);
+    _Program->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+    _Program->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
+    _Program->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+    D3D12_RT_FORMAT_ARRAY rtFormat = {}; //TODO Woher kriegen wenn nicht stehlen?
+    rtFormat.NumRenderTargets = 1;
+    rtFormat.RTFormats[0] =  DXGI_FORMAT_R16G16B16A16_FLOAT;
+    DXGI_FORMAT dsFormat = DXGI_FORMAT_D32_FLOAT;
+    _Program->SetRenderTargetFormats1(
+      rtFormat,
+      dsFormat
+    );
+
+    _Program->Create();
+  }
+
+  MaterialBase::MaterialBase() {
+    _ProgramSignature = GraphicsCore::CreateRenderProgramSignatureNc();
+    _Program = GraphicsCore::CreateRenderProgramNc();
+  }
+
+  MaterialBase::~MaterialBase() {}
 
 }

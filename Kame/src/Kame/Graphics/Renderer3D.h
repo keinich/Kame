@@ -11,6 +11,7 @@ namespace Kame {
   class Camera;
   class RenderProgram;
   class CommandList;
+  class MaterialInstanceBase;
 
   enum RootParameters {
     MatricesCB,         // ConstantBuffer<Mat> MatCB : register(b0);
@@ -38,7 +39,8 @@ namespace Kame {
       Camera* camera, 
       RenderProgram* renderProgram, 
       CommandList* commandList, 
-      Texture* texture
+      Texture* texture,
+      MaterialInstanceBase* matInstace
     );
 
   private:

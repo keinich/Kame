@@ -9,6 +9,7 @@
 #include <Kame/Graphics/GraphicsCore.h>
 #include <Kame/Graphics/MeshManager.h>
 #include <Kame/Graphics/TextureManager.h>
+#include <Kame/Graphics/MaterialManager.h>
 //#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include <Kame/Game/Game.h>
 
@@ -47,6 +48,7 @@ namespace Kame {
     GraphicsCore::Create();
     MeshManager::Create();
     TextureManager::Create();
+    MaterialManager::Create();
     //DX12Core::Create();
 
     // Initialize
@@ -55,6 +57,7 @@ namespace Kame {
 
   void Application::Destroy() {
     //DX12Core::Destroy();
+    MaterialManager::Destroy();
     TextureManager::Destroy();
     MeshManager::Destroy();
     GraphicsCore::Destroy();
