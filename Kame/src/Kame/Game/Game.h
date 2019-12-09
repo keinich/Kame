@@ -19,6 +19,7 @@ namespace Kame {
   class RenderProgram;
   class Texture;
   class MaterialInstanceBase;
+  class Scene3D;
 
   class Game : public std::enable_shared_from_this<Game> {
   public:
@@ -45,6 +46,8 @@ namespace Kame {
     virtual void Destroy();
 
     void Render();
+
+    inline Scene3D* GetScene() const { return _Scene3D.get(); }
 
 #pragma region This shoul be in Layer/Material/Scene
 
@@ -83,12 +86,15 @@ namespace Kame {
 
     std::shared_ptr<Window> m_pWindow;
 
+    NotCopyableReference<Scene3D> _Scene3D;
+
   private: //Fields
 
     std::wstring m_Name;
     int m_Width;
     int m_Height;
     bool m_vSync;
+
 
   };
 

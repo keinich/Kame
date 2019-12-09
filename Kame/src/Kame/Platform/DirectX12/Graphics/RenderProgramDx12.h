@@ -24,7 +24,7 @@ namespace Kame {
     CD3DX12_PIPELINE_STATE_STREAM_PRIMITIVE_TOPOLOGY PrimitiveTopologyType;
     CD3DX12_PIPELINE_STATE_STREAM_VS VS;
     CD3DX12_PIPELINE_STATE_STREAM_PS PS;
-    CD3DX12_PIPELINE_STATE_STREAM_RASTERIZER Rasterizer;    
+    CD3DX12_PIPELINE_STATE_STREAM_RASTERIZER Rasterizer;
     CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
 
     PipelineStateStreamWithoutRtvs() {}
@@ -46,11 +46,14 @@ namespace Kame {
     RenderProgramDx12() :
       m_RootSignature(nullptr),
       _NumInputElements(0),
-      _InputElementDescs(nullptr) {}
+      _InputElementDescs(nullptr),
+      _Identifier(0) {}
 
     virtual ~RenderProgramDx12() override {}
 
     static void DestroyAll(void);
+
+    virtual size_t GetIdentifier() override { return _Identifier; }
 
 
     const RootSignatureDx12& GetRootSignature(void) const {
@@ -104,6 +107,9 @@ namespace Kame {
     UINT _NumInputElements;
     const D3D12_INPUT_ELEMENT_DESC* _InputElementDescs;
     D3D12_RT_FORMAT_ARRAY _RtvFormats;
+
+    size_t _Identifier;
+
   };
 
 }

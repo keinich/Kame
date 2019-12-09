@@ -42,6 +42,8 @@ namespace Kame {
     _PipelineStateStream.InputLayout = { _InputElementDescs, _NumInputElements };
     _PipelineStateStream.RTVFormats = _RtvFormats;
 
+    _Identifier = HashCode;
+
     ID3D12PipelineState** PSORef = nullptr;
     bool firstCompile = false;
     {

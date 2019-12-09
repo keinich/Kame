@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 #include <Kame/Core/References.h>
 #include <Kame/Graphics/RenderApi/Texture.h>
@@ -9,9 +10,11 @@ namespace Kame {
 
   class MeshComponent;
   class Camera;
+  class RenderProgramSignature;
   class RenderProgram;
   class CommandList;
   class MaterialInstanceBase;
+  class Scene3D;
 
   enum RootParameters {
     MatricesCB,         // ConstantBuffer<Mat> MatCB : register(b0);
@@ -28,6 +31,23 @@ namespace Kame {
     uint32_t NumSpotLights;
   };
 
+  struct RenderProgramMeshes {
+    RenderProgram* Program;
+    std::vector<MeshComponent*> MeshComponents;
+  };
+
+  struct RenderProgramSignatureTree {
+    RenderProgramSignatureTree() {}
+    virtual ~RenderProgramSignatureTree() {}
+    RenderProgramSignature* Signature;
+    std::map<size_t, RenderProgramMeshes> RenderProgramMeshesByProgramIdentifier;
+  };
+
+  struct RenderTree {
+    void Build(std::vector<Reference<MeshComponent>> meshComponents);
+    std::map<size_t, RenderProgramSignatureTree> RenderProgramMeshesBySignatureIdentifier;
+  };
+
   class Renderer3D {
 
   public:
@@ -37,10 +57,11 @@ namespace Kame {
     static void RenderScene(
       std::vector<Reference<MeshComponent>>& meshes,
       Camera* camera,
-      RenderProgram* renderProgram, 
-      CommandList* commandList, 
+      RenderProgram* renderProgram,
+      CommandList* commandList,
       Texture* texture,
-      MaterialInstanceBase* matInstace
+      MaterialInstanceBase* matInstace,
+      Scene3D* scene
     );
 
   private:

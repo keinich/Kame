@@ -59,7 +59,7 @@ namespace Kame {
   }
 
   void RootSignatureDx12::SetDescription(
-    const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc    
+    const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc
   ) {
     D3D_ROOT_SIGNATURE_VERSION rootSignatureVersion = DX12Core::Get().GetHighestRootSignatureVersion();
     // Make sure any previously allocated root signature description is cleaned 
@@ -136,9 +136,7 @@ namespace Kame {
     D3D12_ROOT_SIGNATURE_FLAGS flags = rootSignatureDesc.Flags;
     m_RootSignatureDesc.Flags = flags;
 
-
-
-
+    _Identifier = HashCode;
 
     // Begin creating
     ID3D12RootSignature** RSRef = nullptr;

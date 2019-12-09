@@ -636,6 +636,7 @@
     <ClCompile Include="src\Kame\Game\Objects\MeshComponent.cpp" />
     <ClCompile Include="src\Kame\Game\CameraController.cpp" />
     <ClCompile Include="src\Kame\Events\Event.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Scene3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

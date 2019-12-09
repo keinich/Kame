@@ -44,7 +44,7 @@ namespace Kame {
 
   void Renderer::Render(Game* game) {
     Reference<CommandList> commandList = GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
-    FLOAT clearColor[] = { 0.4f, 0.6f, 0.9f, 1.0f };
+    FLOAT clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
     commandList->ClearTexture(_SceneRenderTarget->GetTexture(AttachmentPoint::Color0), clearColor);
     commandList->ClearDepthStencilTexture(_SceneRenderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
@@ -63,7 +63,8 @@ namespace Kame {
       game->GetRenderProgram(),
       commandList.get(),
       game->GetTexture(),
-      game->GetMaterial()
+      game->GetMaterial(),
+      game->GetScene()
     );
 
     //game->RenderTo(_SceneRenderTarget);

@@ -6,6 +6,7 @@
 #include <Kame/Graphics/Renderer3D.h>
 #include <Kame/Graphics/Renderer.h>
 #include <Kame/Graphics/Mesh.h>
+#include <Kame/Graphics/Scene3D.h>
 
 namespace Kame {
 
@@ -13,7 +14,9 @@ namespace Kame {
     : m_Name(name)
     , m_Width(width)
     , m_Height(height)
-    , m_vSync(vSync) {}
+    , m_vSync(vSync) {
+    _Scene3D = CreateNotCopyableReference<Scene3D>();
+  }
 
   Game::~Game() {
     assert(!m_pWindow && "Use Game::Destroy() before destruction.");

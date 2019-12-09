@@ -65,6 +65,8 @@ namespace Kame {
       return m_RootSignature;
     }
 
+    inline virtual size_t GetIdentifier() override { return _Identifier; }
+
     virtual void SetDescription(
       const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc
     ) override;
@@ -93,6 +95,8 @@ namespace Kame {
     // A bit mask that represents the root parameter indices that are 
     // CBV, UAV, and SRV descriptor tables.
     uint32_t m_DescriptorTableBitMask;
+
+    size_t _Identifier;
   };
 
 }

@@ -14,6 +14,8 @@ namespace Kame {
       const D3D12_ROOT_SIGNATURE_DESC1& rootSignatureDesc
     ) = 0;
 
+    virtual size_t GetIdentifier() = 0;
+
   };
 
 }

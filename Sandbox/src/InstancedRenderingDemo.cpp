@@ -15,6 +15,7 @@
 #include <Kame/Graphics/RenderTarget.h>
 #include <Kame/Graphics/Material.h>
 #include <Kame\Graphics\MaterialManager.h>
+#include <Kame/Graphics/Scene3D.h>
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -86,8 +87,25 @@ bool InstancedRenderingDemo::LoadContent() {
 
   auto meshComponent = Kame::CreateReference<Kame::MeshComponent>();
   meshComponent->SetMesh(_SphereMesh);
-  meshComponent->SetMaterial(_MaterialInstance.get());
+  meshComponent->SetMaterialInstance(_MaterialInstance.get());
   _Meshes.push_back(meshComponent);
+  XMMATRIX translationMatrix = XMMatrixTranslation(4.0f, 4.0f, 4.0f);
+  XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(45.0f));
+  XMMATRIX scaleMatrix = XMMatrixScaling(4.0f, 8.0f, 4.0f);
+  XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+  meshComponent->SetWorldMatirx(worldMatrix);
+  _Scene3D->AddMeshComponent(meshComponent);
+
+  auto meshComponent2 = Kame::CreateReference<Kame::MeshComponent>();
+  meshComponent2->SetMesh(_SphereMesh);
+  meshComponent2->SetMaterialInstance(_MaterialInstance.get());
+  _Meshes.push_back(meshComponent2);
+  XMMATRIX translationMatrix2 = XMMatrixTranslation(14.0f, 4.0f, 4.0f);
+  XMMATRIX rotationMatrix2 = XMMatrixRotationY(XMConvertToRadians(45.0f));
+  XMMATRIX scaleMatrix2 = XMMatrixScaling(4.0f, 8.0f, 4.0f);
+  XMMATRIX worldMatrix2 = scaleMatrix2 * rotationMatrix2 * translationMatrix2;
+  meshComponent2->SetWorldMatirx(worldMatrix2);
+  _Scene3D->AddMeshComponent(meshComponent2);
 
   return true;
 }

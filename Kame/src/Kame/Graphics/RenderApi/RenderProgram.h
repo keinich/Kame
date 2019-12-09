@@ -15,6 +15,8 @@ namespace Kame {
 
     virtual void Create() = 0;
 
+    virtual size_t GetIdentifier() = 0;
+
     const virtual RenderProgramSignature* GetSignature() const = 0;
     virtual void SetRootSignature(const RenderProgramSignature* signature) = 0;
 

@@ -7,6 +7,7 @@
 #include <Kame/Graphics/RenderApi/RenderprogramSignature.h>
 #include <Kame/Graphics/RenderApi/CommandList.h>
 #include <Kame/Graphics/Material.h>
+#include <Kame/Graphics/Scene3D.h>
 
 //TODO
 // Renderer3D is also a singleton (in the end it maybe doesnt have a state at all, beacause the render-programs are in the materials),
@@ -40,7 +41,8 @@ namespace Kame {
     RenderProgram* renderProgram,
     CommandList* commandList,
     Texture* texture,
-    MaterialInstanceBase* matInstace
+    MaterialInstanceBase* matInstace,
+    Scene3D* scene
   ) {
 
     //commandList->SetGraphicsRootSignature(renderProgram->GetSignature());
@@ -49,7 +51,7 @@ namespace Kame {
     //commandList->SetGraphicsRootSignature(matInstace->GetMaterial()->GetSignature());
     //commandList->SetRenderProgram(matInstace->GetMaterial()->GetProgram());
 
-    
+
 
     // Upload lights
     /*LightProperties lightProps;
@@ -63,30 +65,69 @@ namespace Kame {
     XMMATRIX viewMatrix = camera->get_ViewMatrix().GetXmMatrix();
     XMMATRIX viewProjectionMatrix = viewMatrix * camera->get_ProjectionMatrix().GetXmMatrix();
 
-    for (Reference<MeshComponent> meshComponent : meshes) {
-      
-      commandList->SetGraphicsRootSignature(meshComponent->GetMaterial()->GetMaterial()->GetSignature());
-      commandList->SetRenderProgram(meshComponent->GetMaterial()->GetMaterial()->GetProgram());
+    RenderTree renderTree;
+    renderTree.Build(scene->GetMeshComponents());
 
-      //XMMATRIX translationMatrix = XMMatrixTranslation(-4.0f, 2.0f, -4.0f);
-      //XMMATRIX rotationMatrix = XMMatrixIdentity();
-      //XMMATRIX scaleMatrix = XMMatrixScaling(4.0f, 4.0f, 4.0f);
-      //XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+    for (auto it = renderTree.RenderProgramMeshesBySignatureIdentifier.begin(); it != renderTree.RenderProgramMeshesBySignatureIdentifier.end(); it++) {
+      commandList->SetGraphicsRootSignature(it->second.Signature);
+      for (auto it2 = it->second.RenderProgramMeshesByProgramIdentifier.begin(); it2 != it->second.RenderProgramMeshesByProgramIdentifier.end(); it2++) {
+        commandList->SetRenderProgram(it2->second.Program);
+        for (auto meshComponent : it2->second.MeshComponents) {
+          XMMATRIX worldMatrix = meshComponent->GetWorldMatrix();
 
-      XMMATRIX worldMatrix = meshComponent->GetWorldMatrix();
+          Mat matrices;
+          ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-      Mat matrices;
-      ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
+          commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
 
-      commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
+          meshComponent->GetMaterialInstance()->ApplyParameters(commandList);
 
-      matInstace->ApplyParameters(commandList);
+          meshComponent->GetMesh()->Draw(commandList);
+        }
+      }
+    }
 
-      //commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::White);
-      //commandList->SetShaderResourceViewTexture(RootParameters::Textures, 0, texture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    //for (Reference<MeshComponent> meshComponent : scene->GetMeshComponents()) {
 
-      meshComponent->GetMesh()->Draw(commandList);
+    //  commandList->SetGraphicsRootSignature(meshComponent->GetMaterialInstance()->GetMaterial()->GetSignature());
+    //  commandList->SetRenderProgram(meshComponent->GetMaterialInstance()->GetMaterial()->GetProgram());
 
+    //  XMMATRIX worldMatrix = meshComponent->GetWorldMatrix();
+
+    //  Mat matrices;
+    //  ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
+
+    //  commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
+
+    //  meshComponent->GetMaterialInstance()->ApplyParameters(commandList);
+
+    //  meshComponent->GetMesh()->Draw(commandList);
+
+    //}
+  }
+
+  void RenderTree::Build(std::vector<Reference<MeshComponent>> meshComponents) {
+    for (auto meshComponent : meshComponents) {
+      size_t signatureIdentifier = meshComponent->GetMaterialInstance()->GetMaterial()->GetSignature()->GetIdentifier();
+      std::map<size_t, RenderProgramSignatureTree>::iterator x = RenderProgramMeshesBySignatureIdentifier.find(signatureIdentifier);
+      if (x == RenderProgramMeshesBySignatureIdentifier.end()) {
+        RenderProgramMeshesBySignatureIdentifier.insert(
+          std::map<size_t, RenderProgramSignatureTree>::value_type(signatureIdentifier, RenderProgramSignatureTree())
+        );
+        RenderProgramMeshesBySignatureIdentifier[signatureIdentifier].Signature = meshComponent->GetMaterialInstance()->GetMaterial()->GetSignature();
+      }
+
+      size_t programIdentifier = meshComponent->GetMaterialInstance()->GetMaterial()->GetProgram()->GetIdentifier();
+      std::map<size_t, RenderProgramMeshes>::iterator y = RenderProgramMeshesBySignatureIdentifier[signatureIdentifier].RenderProgramMeshesByProgramIdentifier.find(programIdentifier);
+      if (
+        y == RenderProgramMeshesBySignatureIdentifier[signatureIdentifier].RenderProgramMeshesByProgramIdentifier.end()
+        ) {
+        RenderProgramMeshesBySignatureIdentifier[signatureIdentifier].RenderProgramMeshesByProgramIdentifier.insert(
+          std::map<size_t, RenderProgramMeshes>::value_type(programIdentifier, RenderProgramMeshes())
+        );
+        RenderProgramMeshesBySignatureIdentifier[signatureIdentifier].RenderProgramMeshesByProgramIdentifier[programIdentifier].Program = meshComponent->GetMaterialInstance()->GetMaterial()->GetProgram();
+      }
+      RenderProgramMeshesBySignatureIdentifier[signatureIdentifier].RenderProgramMeshesByProgramIdentifier[programIdentifier].MeshComponents.push_back(meshComponent.get());
     }
   }
 
