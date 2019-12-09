@@ -1,6 +1,7 @@
 #include "kmpch.h"
 #include "Renderer3D.h"
 #include <Kame/Graphics/Mesh.h>
+#include <Kame/Game/Objects/MeshComponent.h>
 #include <Kame/Graphics/Camera.h>
 #include <Kame/Graphics/RenderApi/Renderprogram.h>
 #include <Kame/Graphics/RenderApi/RenderprogramSignature.h>
@@ -34,7 +35,7 @@ namespace Kame {
   }
 
   void Renderer3D::RenderScene(
-    std::vector<Mesh*>& meshes,
+    std::vector<Reference<MeshComponent>>& meshes,
     Camera* camera,
     RenderProgram* renderProgram,
     CommandList* commandList,
@@ -45,8 +46,10 @@ namespace Kame {
     //commandList->SetGraphicsRootSignature(renderProgram->GetSignature());
     //commandList->SetRenderProgram(renderProgram);
 
-    commandList->SetGraphicsRootSignature(matInstace->GetMaterial()->GetSignature());
-    commandList->SetRenderProgram(matInstace->GetMaterial()->GetProgram());
+    //commandList->SetGraphicsRootSignature(matInstace->GetMaterial()->GetSignature());
+    //commandList->SetRenderProgram(matInstace->GetMaterial()->GetProgram());
+
+    
 
     // Upload lights
     /*LightProperties lightProps;
@@ -60,12 +63,17 @@ namespace Kame {
     XMMATRIX viewMatrix = camera->get_ViewMatrix().GetXmMatrix();
     XMMATRIX viewProjectionMatrix = viewMatrix * camera->get_ProjectionMatrix().GetXmMatrix();
 
-    for (Mesh* mesh : meshes) {
+    for (Reference<MeshComponent> meshComponent : meshes) {
       
-      XMMATRIX translationMatrix = XMMatrixTranslation(-4.0f, 2.0f, -4.0f);
-      XMMATRIX rotationMatrix = XMMatrixIdentity();
-      XMMATRIX scaleMatrix = XMMatrixScaling(4.0f, 4.0f, 4.0f);
-      XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+      commandList->SetGraphicsRootSignature(meshComponent->GetMaterial()->GetMaterial()->GetSignature());
+      commandList->SetRenderProgram(meshComponent->GetMaterial()->GetMaterial()->GetProgram());
+
+      //XMMATRIX translationMatrix = XMMatrixTranslation(-4.0f, 2.0f, -4.0f);
+      //XMMATRIX rotationMatrix = XMMatrixIdentity();
+      //XMMATRIX scaleMatrix = XMMatrixScaling(4.0f, 4.0f, 4.0f);
+      //XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+
+      XMMATRIX worldMatrix = meshComponent->GetWorldMatrix();
 
       Mat matrices;
       ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
@@ -77,7 +85,7 @@ namespace Kame {
       //commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::White);
       //commandList->SetShaderResourceViewTexture(RootParameters::Textures, 0, texture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-      mesh->Draw(commandList);
+      meshComponent->GetMesh()->Draw(commandList);
 
     }
   }

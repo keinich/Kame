@@ -26,6 +26,9 @@ namespace Kame {
     //inline static std::pair<float, float> GetMousePosition() { return s_Instance->GetMousePositionImpl(); }
 
     static Reference<Event<KeyEventArgs>> KeyEvent(Kame::Key key);
+    static Reference<Event<MouseButtonEventArgs>> MouseButtonEvent();
+    static Reference<Event<MouseMotionEventArgs>> MouseMotionEvent();
+    static Reference<Event<MouseWheelEventArgs>> MouseWheelEvent();
     static Reference<Event<KeyEventArgs>> CustomEvent(std::wstring name);
     static void MapKeyToCustomEvent(Kame::Key key, std::wstring name);
 
@@ -50,6 +53,9 @@ namespace Kame {
   private: // Fields
 
     std::map<Kame::Key, Reference<Event<KeyEventArgs>>> _KeyEvents;
+    Reference<Event<MouseButtonEventArgs>> _MouseButtonEvent;
+    Reference<Event<MouseMotionEventArgs>> _MouseMotionEvent;
+    Reference<Event<MouseWheelEventArgs>> _MouseWheelEvent;
     std::map<std::wstring, Reference<Event<KeyEventArgs>>> _CustomEvents;
     std::map<Kame::Key, bool> _KeyStates;
     std::map<Kame::Key, std::wstring> _CustomEventNameByKey;

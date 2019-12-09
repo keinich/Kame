@@ -7,7 +7,7 @@
 
 namespace Kame {
 
-  class Mesh;
+  class MeshComponent;
   class Camera;
   class RenderProgram;
   class CommandList;
@@ -35,8 +35,8 @@ namespace Kame {
     //inline static Renderer3D* Get() { return _Instance; }
 
     static void RenderScene(
-      std::vector<Mesh*>& meshes, 
-      Camera* camera, 
+      std::vector<Reference<MeshComponent>>& meshes,
+      Camera* camera,
       RenderProgram* renderProgram, 
       CommandList* commandList, 
       Texture* texture,

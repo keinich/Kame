@@ -417,6 +417,8 @@
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
     <ClInclude Include="src\Kame\Graphics\MaterialManager.h" />
+    <ClInclude Include="src\Kame\Game\Objects\MeshComponent.h" />
+    <ClInclude Include="src\Kame\Game\CameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -631,6 +633,9 @@
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
     <ClCompile Include="src\Kame\Graphics\MaterialManager.cpp" />
+    <ClCompile Include="src\Kame\Game\Objects\MeshComponent.cpp" />
+    <ClCompile Include="src\Kame\Game\CameraController.cpp" />
+    <ClCompile Include="src\Kame\Events\Event.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

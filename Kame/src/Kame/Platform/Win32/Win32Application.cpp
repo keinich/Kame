@@ -167,6 +167,8 @@ namespace Kame {
 
         MouseMotionEventArgs mouseMotionEventArgs(lButton, mButton, rButton, control, shift, x, y);
         pWindow->OnMouseMoved(mouseMotionEventArgs);
+        Input::MouseMotionEvent()->Raise(mouseMotionEventArgs);
+
       }
       break;
       case WM_LBUTTONDOWN:
@@ -184,6 +186,7 @@ namespace Kame {
 
         MouseButtonEventArgs mouseButtonEventArgs(DecodeMouseButton2(message), MouseButtonEventArgs::Pressed, lButton, mButton, rButton, control, shift, x, y);
         pWindow->OnMouseButtonPressed(mouseButtonEventArgs);
+        Input::MouseButtonEvent()->Raise(mouseButtonEventArgs);
       }
       break;
       case WM_LBUTTONUP:
@@ -201,6 +204,7 @@ namespace Kame {
 
         MouseButtonEventArgs mouseButtonEventArgs(DecodeMouseButton2(message), MouseButtonEventArgs::Released, lButton, mButton, rButton, control, shift, x, y);
         pWindow->OnMouseButtonReleased(mouseButtonEventArgs);
+        Input::MouseButtonEvent()->Raise(mouseButtonEventArgs);
       }
       break;
       case WM_MOUSEWHEEL:
@@ -228,6 +232,7 @@ namespace Kame {
 
         MouseWheelEventArgs mouseWheelEventArgs(zDelta, lButton, mButton, rButton, control, shift, (int)clientToScreenPoint.x, (int)clientToScreenPoint.y);
         pWindow->OnMouseWheel(mouseWheelEventArgs);
+        Input::MouseWheelEvent()->Raise(mouseWheelEventArgs);
       }
       break;
       case WM_SIZE:

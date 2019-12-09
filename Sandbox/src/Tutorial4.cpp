@@ -178,9 +178,9 @@ namespace Kame {
     m_pAlignedCameraData->m_InitialCamRot = m_Camera.get_Rotation();
     m_pAlignedCameraData->m_InitialFov = m_Camera.get_FoV();
 
-    Input::KeyEvent(Kame::Key::F)->AddHandler(BIND_FUNCTION(Tutorial4::OnKeyF));
+    Input::KeyEvent(Kame::Key::F)->AddHandler("Tutorial4::OnKeyF", BIND_FUNCTION(Tutorial4::OnKeyF));
     Input::MapKeyToCustomEvent(Kame::Key::G, L"Shoot");
-    Input::CustomEvent(L"Shoot")->AddHandler(BIND_FUNCTION(Tutorial4::Shoot));
+    Input::CustomEvent(L"Shoot")->AddHandler("Tutorial4::Shoot", BIND_FUNCTION(Tutorial4::Shoot));
 
     m_HDRRenderTarget.reset(GraphicsCore::CreateRenderTarget());
 

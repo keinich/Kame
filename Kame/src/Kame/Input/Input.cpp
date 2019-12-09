@@ -7,6 +7,8 @@ namespace Kame {
   Reference<Event<KeyEventArgs>> Input::KeyEvent(Kame::Key key) {
     //TODO could init one event for each key to save performance...
     auto input = Application::Get().GetInput();
+    if (!input)
+      return Reference<Event<KeyEventArgs>>();
     std::map<Kame::Key, Reference<Event<KeyEventArgs>>>::iterator x = input->_KeyEvents.find(key);
     if (x == input->_KeyEvents.end()) {
       Reference<Event<KeyEventArgs>> e = CreateReference< Event<KeyEventArgs>>();
@@ -21,6 +23,36 @@ namespace Kame {
     else {
       return x->second;
     }
+  }
+
+  Reference<Event<MouseButtonEventArgs>> Input::MouseButtonEvent() {
+    auto input = Application::Get().GetInput();
+    if (!input)
+      return Reference<Event<MouseButtonEventArgs>>();
+    if (!input->_MouseButtonEvent.get()) {
+      input->_MouseButtonEvent = CreateReference< Event<MouseButtonEventArgs>>();
+    }
+    return input->_MouseButtonEvent;
+  }
+
+  Reference<Event<MouseMotionEventArgs>> Input::MouseMotionEvent() {
+    auto input = Application::Get().GetInput();
+    if (!input)
+      return Reference<Event<MouseMotionEventArgs>>();
+    if (!input->_MouseMotionEvent.get()) {
+      input->_MouseMotionEvent = CreateReference< Event<MouseMotionEventArgs>>();
+    }
+    return input->_MouseMotionEvent;
+  }
+
+  Reference<Event<MouseWheelEventArgs>> Input::MouseWheelEvent() {
+    auto input = Application::Get().GetInput();
+    if (!input)
+      return Reference<Event<MouseWheelEventArgs>>();
+    if (!input->_MouseWheelEvent.get()) {
+      input->_MouseWheelEvent = CreateReference< Event<MouseWheelEventArgs>>();
+    }
+    return input->_MouseWheelEvent;
   }
 
   Reference<Event<KeyEventArgs>> Input::CustomEvent(std::wstring name) {
@@ -44,7 +76,7 @@ namespace Kame {
 
   void Input::MapKeyToCustomEvent(Kame::Key key, std::wstring name) {
     auto input = Application::Get().GetInput();
-    input->KeyEvent(key)->AddHandler(BIND_FUNCTION_I(input, Input::OnMappedKeyEvent));
+    input->KeyEvent(key)->AddHandler("Input::OnMappedKeyEvent", BIND_FUNCTION_I(input, Input::OnMappedKeyEvent));
     input->_CustomEventNameByKey[key] = name;
   }
 

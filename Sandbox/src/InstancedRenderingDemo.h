@@ -3,9 +3,11 @@
 //#include <Kame.h>
 
 //TODO include the correct headers in Kame.h
-#include <Kame/Graphics/Mesh.h>
+#include <Kame/Game/Objects/MeshComponent.h>
+#include <Kame/Graphics/RenderApi/RenderProgramSignature.h>
 #include <Kame/Game/Game.h>
 #include <Kame/Graphics/Camera.h>
+#include <Kame/Game/CameraController.h>
 
 class InstancedRenderingDemo : public Kame::Game {
 
@@ -14,7 +16,7 @@ public:
   InstancedRenderingDemo(const std::wstring& name, int width, int height, bool vSync);
   ~InstancedRenderingDemo();
 
-  virtual std::vector<Kame::Mesh*>& GetMeshes() override;
+  virtual std::vector<Kame::Reference<Kame::MeshComponent>>& GetMeshes() override;
   virtual Kame::RenderProgram* GetRenderProgram() override;
   virtual Kame::Texture* GetTexture() override; 
   virtual Kame::Camera* GetActiveCamera() override;
@@ -24,6 +26,7 @@ public:
   virtual void UnloadContent() override;
 
   virtual void OnRender(Kame::RenderEventArgs& e);
+  virtual void OnUpdate(Kame::UpdateEventArgs& e);
 
 private: //Methods
 
@@ -32,9 +35,10 @@ private: //Methods
 private: //Fields
 
   Kame::Mesh* _SphereMesh;
-  std::vector<Kame::Mesh*> _Meshes;
+  std::vector<Kame::Reference<Kame::MeshComponent>> _Meshes;
   Kame::Texture* _KameDefaultTexture;  
   Kame::Camera _Camera;
+  Kame::CameraController _CameraController;
 
   Kame::Reference<Kame::MaterialInstanceBase> _MaterialInstance;
 

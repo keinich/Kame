@@ -57,6 +57,7 @@ namespace Kame {
 
   void Application::Destroy() {
     //DX12Core::Destroy();
+    _Instance->_Game.reset();
     MaterialManager::Destroy();
     TextureManager::Destroy();
     MeshManager::Destroy();

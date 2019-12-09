@@ -20,7 +20,8 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 
 InstancedRenderingDemo::InstancedRenderingDemo(const std::wstring& name, int width, int height, bool vSync)
-  : Game(name, width, height, vSync) {
+  : Game(name, width, height, vSync),
+  _CameraController(&_Camera) {
 
   Kame::Math::Vector4 cameraPos1(0, 5, -20, 1);
   XMVECTOR cameraPos = XMVectorSet(0, 5, -20, 1);
@@ -29,6 +30,8 @@ InstancedRenderingDemo::InstancedRenderingDemo(const std::wstring& name, int wid
 
   _Camera.set_LookAt(cameraPos, cameraTarget, cameraUp);
   _Camera.set_Projection(45.0f, width / (float)height, 0.1f, 100.0f);
+
+  //_CameraController = Kame::CameraController(&_Camera);
 
   _pAlignedCameraData = (CameraData*)_aligned_malloc(sizeof(CameraData), 16);
 
@@ -44,7 +47,7 @@ InstancedRenderingDemo::~InstancedRenderingDemo() {
   _aligned_free(_pAlignedCameraData);
 }
 
-std::vector<Kame::Mesh*>& InstancedRenderingDemo::GetMeshes() {
+std::vector<Kame::Reference<Kame::MeshComponent>>& InstancedRenderingDemo::GetMeshes() {
   return _Meshes;
 }
 
@@ -68,8 +71,6 @@ bool InstancedRenderingDemo::LoadContent() {
   _SphereMesh = Kame::MeshFactory::GetSphere();
   //_KameDefaultTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/Directx9.png");
 
-  _Meshes.push_back(_SphereMesh);
-
   CreateProgram();
 
   //Kame::DefaultMaterial* material = Kame::MaterialManager::GetMaterial<Kame::DefaultMaterial>();
@@ -82,6 +83,12 @@ bool InstancedRenderingDemo::LoadContent() {
   matInstance->GetParameters().BaseParams.Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
   //matInstance->GetParameters().BaseParams. = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
   _MaterialInstance = matInstance;
+
+  auto meshComponent = Kame::CreateReference<Kame::MeshComponent>();
+  meshComponent->SetMesh(_SphereMesh);
+  meshComponent->SetMaterial(_MaterialInstance.get());
+  _Meshes.push_back(meshComponent);
+
   return true;
 }
 
@@ -92,6 +99,10 @@ void InstancedRenderingDemo::OnRender(Kame::RenderEventArgs& e) {
   m_pWindow->GetDisplay().GetRenderer()->Render(this);
   //Kame::Renderer::Get()->Render(this);
 
+}
+
+void InstancedRenderingDemo::OnUpdate(Kame::UpdateEventArgs& e) {
+  _CameraController.Update(e.ElapsedTime);
 }
 
 void InstancedRenderingDemo::CreateProgram() {

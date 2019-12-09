@@ -14,7 +14,7 @@ namespace Kame {
   class Window;
   class Renderer3D;
   class Scene3D;
-  class Mesh;
+  class MeshComponent;
   class Camera;
   class RenderProgram;
   class Texture;
@@ -48,7 +48,7 @@ namespace Kame {
 
 #pragma region This shoul be in Layer/Material/Scene
 
-    virtual std::vector<Mesh*>& GetMeshes() { return std::vector<Mesh*>(); }
+    virtual std::vector<Reference<MeshComponent>>& GetMeshes() { return std::vector<Reference<MeshComponent>>(); }
     virtual RenderProgram* GetRenderProgram() { return nullptr; }
     virtual Texture* GetTexture() { return nullptr; }
     virtual Camera* GetActiveCamera() { return nullptr; }

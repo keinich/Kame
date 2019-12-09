@@ -155,9 +155,11 @@
     <ClInclude Include="src\Kame\Events\Event_Cherno.h" />
     <ClInclude Include="src\Kame\Events\KeyEvent.h" />
     <ClInclude Include="src\Kame\Events\MouseEvent.h" />
+    <ClInclude Include="src\Kame\Game\CameraController.h" />
     <ClInclude Include="src\Kame\Game\Game.h" />
     <ClInclude Include="src\Kame\Game\Layer.h" />
     <ClInclude Include="src\Kame\Game\LayerStack.h" />
+    <ClInclude Include="src\Kame\Game\Objects\MeshComponent.h" />
     <ClInclude Include="src\Kame\Graphics\Camera.h" />
     <ClInclude Include="src\Kame\Graphics\GraphicsCore.h" />
     <ClInclude Include="src\Kame\Graphics\Light.h" />
@@ -259,9 +261,12 @@
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp" />
     <ClCompile Include="src\Kame\Application\Window.cpp" />
+    <ClCompile Include="src\Kame\Events\Event.cpp" />
+    <ClCompile Include="src\Kame\Game\CameraController.cpp" />
     <ClCompile Include="src\Kame\Game\Game.cpp" />
     <ClCompile Include="src\Kame\Game\Layer.cpp" />
     <ClCompile Include="src\Kame\Game\LayerStack.cpp" />
+    <ClCompile Include="src\Kame\Game\Objects\MeshComponent.cpp" />
     <ClCompile Include="src\Kame\Graphics\Camera.cpp" />
     <ClCompile Include="src\Kame\Graphics\GraphicsCore.cpp" />
     <ClCompile Include="src\Kame\Graphics\Light.cpp" />
