@@ -297,16 +297,6 @@ namespace Kame {
       10.0f
   };
 
-  enum DefaultMaterialRootParameters {
-    MatricesCB1,         // ConstantBuffer<Mat> MatCB : register(b0);
-    MaterialCB1,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
-    LightPropertiesCB1,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
-    PointLights1,        // StructuredBuffer<PointLight> PointLights : register( t0 );
-    SpotLights1,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
-    Textures1,           // Texture2D DiffuseTexture : register( t2 );
-    NumRootParameters1
-  };
-
   void DefaultMaterial::ApplyParameters(CommandList* commandList, DefaultMaterialParameters& params) {
     commandList->SetGraphicsDynamicConstantBuffer(DefaultMaterialRootParameters::MaterialCB1, params.BaseParams);
     commandList->SetShaderResourceViewTexture(DefaultMaterialRootParameters::Textures1, 0, params.DiffuseTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
@@ -319,7 +309,7 @@ namespace Kame {
 
     ComPtr<ID3DBlob> vs;
     ComPtr<ID3DBlob> ps;
-    ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_VS.cso", &vs));
+    ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_I_VS.cso", &vs));
     ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_PS.cso", &ps));
 
     // Allow input layout and deny unnecessary access to certain pipeline stages.
@@ -335,9 +325,11 @@ namespace Kame {
     rootParameters[Kame::DefaultMaterialRootParameters::MatricesCB1].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
     rootParameters[Kame::DefaultMaterialRootParameters::MaterialCB1].InitAsConstantBufferView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
     rootParameters[Kame::DefaultMaterialRootParameters::LightPropertiesCB1].InitAsConstants(sizeof(Kame::LightProperties) / 4, 1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[Kame::DefaultMaterialRootParameters::InstanceData1].InitAsShaderResourceView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
     rootParameters[Kame::DefaultMaterialRootParameters::PointLights1].InitAsShaderResourceView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
     rootParameters[Kame::DefaultMaterialRootParameters::SpotLights1].InitAsShaderResourceView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
     rootParameters[Kame::DefaultMaterialRootParameters::Textures1].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
+
 
     CD3DX12_STATIC_SAMPLER_DESC linearRepeatSampler(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
     CD3DX12_STATIC_SAMPLER_DESC anisotropicSampler(0, D3D12_FILTER_ANISOTROPIC);

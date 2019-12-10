@@ -15,15 +15,17 @@ namespace Kame {
   class CommandList;
   class MaterialInstanceBase;
   class Scene3D;
+  class Mesh;
 
-  enum RootParameters {
-    MatricesCB,         // ConstantBuffer<Mat> MatCB : register(b0);
-    MaterialCB,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
-    LightPropertiesCB,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
-    PointLights,        // StructuredBuffer<PointLight> PointLights : register( t0 );
-    SpotLights,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
-    Textures,           // Texture2D DiffuseTexture : register( t2 );
-    NumRootParameters
+  enum DefaultMaterialRootParameters {
+    MatricesCB1,         // ConstantBuffer<Mat> MatCB : register(b0);
+    MaterialCB1,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
+    LightPropertiesCB1,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
+    InstanceData1,        // StructuredBuffer<InstanceData> g_InstanceData : register (t0, space1);
+    PointLights1,        // StructuredBuffer<PointLight> PointLights : register( t0 );
+    SpotLights1,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
+    Textures1,           // Texture2D DiffuseTexture : register( t2 );
+    NumRootParameters1
   };
 
   struct LightProperties {
@@ -31,21 +33,46 @@ namespace Kame {
     uint32_t NumSpotLights;
   };
 
+  struct InstanceData {
+    DirectX::XMMATRIX ModelMatrix;
+    DirectX::XMMATRIX ModelViewMatrix;
+    DirectX::XMMATRIX InverseTransposeModelViewMatrix;
+    DirectX::XMMATRIX ModelViewProjectionMatrix;
+  };
+
+  struct InstancedMesh {
+    Mesh* Mesh;
+    std::vector<InstanceData> InstanceData;
+    MaterialInstanceBase* Material;
+  };
+
   struct RenderProgramMeshes {
     RenderProgram* Program;
-    std::vector<MeshComponent*> MeshComponents;
+    std::map<Mesh*, InstancedMesh> InstancedMeshesByMesh;
+    //std::vector<MeshComponent*> MeshComponents;
+  };
+
+  struct Matrices {
+    DirectX::XMMATRIX ModelMatrix;
+    DirectX::XMMATRIX ModelViewMatrix;
+    DirectX::XMMATRIX InverseTransposeModelViewMatrix;
+    DirectX::XMMATRIX ModelViewProjectionMatrix;
   };
 
   struct RenderProgramSignatureTree {
     RenderProgramSignatureTree() {}
     virtual ~RenderProgramSignatureTree() {}
     RenderProgramSignature* Signature;
-    std::map<size_t, RenderProgramMeshes> RenderProgramMeshesByProgramIdentifier;
+    std::map<size_t, RenderProgramMeshes> ProgramTreeByIdentifier;
   };
 
   struct RenderTree {
-    void Build(std::vector<Reference<MeshComponent>> meshComponents);
-    std::map<size_t, RenderProgramSignatureTree> RenderProgramMeshesBySignatureIdentifier;
+    void Build(
+      std::vector<Reference<MeshComponent>> meshComponents,
+      DirectX::XMMATRIX viewMatrix,
+      DirectX::XMMATRIX viewProjectionMatrix
+    );
+    std::map<size_t, RenderProgramSignatureTree> SignatureTreeByIdentifier;
   };
 
   class Renderer3D {
@@ -63,6 +90,8 @@ namespace Kame {
       MaterialInstanceBase* matInstace,
       Scene3D* scene
     );
+
+    static void CalculateLightPositions(Kame::Scene3D* scene, const DirectX::XMMATRIX& viewMatrix);
 
   private:
 

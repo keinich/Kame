@@ -30,11 +30,10 @@ public:
 
 private: //Methods
 
-  void CreateProgram();
-
 private: //Fields
 
   Kame::Mesh* _SphereMesh;
+  Kame::Mesh* _TorusMesh;
   std::vector<Kame::Reference<Kame::MeshComponent>> _Meshes;
   Kame::Texture* _KameDefaultTexture;  
   Kame::Camera _Camera;

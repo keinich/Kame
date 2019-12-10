@@ -31,11 +31,13 @@ namespace Kame {
     // Allocated resources will be cleaned automatically when the pointers go out of scope.
   }
 
-  void Mesh::Draw(CommandList* commandList) {
+  void Mesh::Draw(CommandList* commandList, size_t numberOfInstances) {
     commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandList->SetVertexBuffer(0, m_VertexBuffer.get());
     commandList->SetIndexBuffer(m_IndexBuffer.get());
-    commandList->DrawIndexed(m_IndexCount);
+    //commandList->DrawIndexed(m_IndexCount);
+    commandList->DrawIndexed(m_IndexCount, numberOfInstances);
+    
   }
 
   //std::unique_ptr<Mesh> Mesh::CreateSphere(CommandListDx12& commandList, float diameter, size_t tessellation, bool rhcoords) {

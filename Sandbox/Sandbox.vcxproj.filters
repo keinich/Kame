@@ -16,12 +16,15 @@
     <ClInclude Include="src\Tutorial4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\InstancedRenderingDemo.cpp" />
     <ClCompile Include="src\SandboxApp.cpp" />
     <ClCompile Include="src\Tutorial4.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\InstancedRenderingDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="src\shaders\HDR_I_VS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
     <FxCompile Include="src\shaders\HDR_PS.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>

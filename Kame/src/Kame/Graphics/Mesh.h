@@ -98,7 +98,7 @@ namespace Kame {
 
   public:
 
-    void Draw(CommandList* commandList);
+    void Draw(CommandList* commandList, size_t numberOfInstances = 1);
 
     //static std::unique_ptr<Mesh> CreateCube(CommandListDx12& commandList, float size = 1, bool rhcoords = false);
     //static std::unique_ptr<Mesh> CreateSphere(CommandListDx12& commandList, float diameter = 1, size_t tessellation = 16, bool rhcoords = false);

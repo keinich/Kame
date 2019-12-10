@@ -16,6 +16,7 @@
 #include <Kame/Graphics/Material.h>
 #include <Kame\Graphics\MaterialManager.h>
 #include <Kame/Graphics/Scene3D.h>
+#include <Kame\Graphics\Light.h>
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -70,9 +71,10 @@ Kame::MaterialInstanceBase* InstancedRenderingDemo::GetMaterial() {
 
 bool InstancedRenderingDemo::LoadContent() {
   _SphereMesh = Kame::MeshFactory::GetSphere();
+  _TorusMesh = Kame::MeshFactory::GetTorus();
   //_KameDefaultTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/Directx9.png");
 
-  CreateProgram();
+  //CreateProgram();
 
   //Kame::DefaultMaterial* material = Kame::MaterialManager::GetMaterial<Kame::DefaultMaterial>();
 
@@ -85,13 +87,20 @@ bool InstancedRenderingDemo::LoadContent() {
   //matInstance->GetParameters().BaseParams. = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
   _MaterialInstance = matInstance;
 
+
+
+
+
+
+
+
   auto meshComponent = Kame::CreateReference<Kame::MeshComponent>();
   meshComponent->SetMesh(_SphereMesh);
   meshComponent->SetMaterialInstance(_MaterialInstance.get());
   _Meshes.push_back(meshComponent);
   XMMATRIX translationMatrix = XMMatrixTranslation(4.0f, 4.0f, 4.0f);
   XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(45.0f));
-  XMMATRIX scaleMatrix = XMMatrixScaling(4.0f, 8.0f, 4.0f);
+  XMMATRIX scaleMatrix = XMMatrixScaling(2.0f, 2.0f, 2.0f);
   XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
   meshComponent->SetWorldMatirx(worldMatrix);
   _Scene3D->AddMeshComponent(meshComponent);
@@ -102,11 +111,47 @@ bool InstancedRenderingDemo::LoadContent() {
   _Meshes.push_back(meshComponent2);
   XMMATRIX translationMatrix2 = XMMatrixTranslation(14.0f, 4.0f, 4.0f);
   XMMATRIX rotationMatrix2 = XMMatrixRotationY(XMConvertToRadians(45.0f));
-  XMMATRIX scaleMatrix2 = XMMatrixScaling(4.0f, 8.0f, 4.0f);
+  XMMATRIX scaleMatrix2 = XMMatrixScaling(4.0f, 4.0f, 4.0f);
   XMMATRIX worldMatrix2 = scaleMatrix2 * rotationMatrix2 * translationMatrix2;
   meshComponent2->SetWorldMatirx(worldMatrix2);
   _Scene3D->AddMeshComponent(meshComponent2);
 
+  auto meshComponent3 = Kame::CreateReference<Kame::MeshComponent>();
+  meshComponent3->SetMesh(_TorusMesh);
+  meshComponent3->SetMaterialInstance(_MaterialInstance.get());
+  _Meshes.push_back(meshComponent3);
+  XMMATRIX translationMatrix3 = XMMatrixTranslation(24.0f, 4.0f, 4.0f);
+  XMMATRIX rotationMatrix3 = XMMatrixRotationY(XMConvertToRadians(45.0f));
+  XMMATRIX scaleMatrix3 = XMMatrixScaling(8.0f, 8.0f, 8.0f);
+  XMMATRIX worldMatrix3 = scaleMatrix3 * rotationMatrix3 * translationMatrix3;
+  meshComponent3->SetWorldMatirx(worldMatrix3);
+  _Scene3D->AddMeshComponent(meshComponent3);
+
+
+  for (int i = 0; i < 1; ++i) {
+    Kame::PointLight l;
+
+    l.PositionWS = XMFLOAT4(0.f, 0.f, 0.f, 1.f);
+
+    l.Color = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+    l.Intensity = 1.0f;
+    l.Attenuation = 0.0f;
+
+    _Scene3D->AddPointLight(l);
+  }
+
+  for (int i = 0; i < 1; ++i) {
+    Kame::SpotLight l;
+
+    l.PositionWS = XMFLOAT4(0.f, 17.f, 0.f, 1.f);
+    l.DirectionWS = XMFLOAT4(0.f, -1.f, 0.f, 0.f);
+    l.Color = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+    l.Intensity = 1.0f;
+    l.Attenuation = 0.0f;
+    l.SpotAngle = XMConvertToRadians(45.0f);
+
+    _Scene3D->AddSpotLight(l);
+  }
   return true;
 }
 
@@ -121,50 +166,4 @@ void InstancedRenderingDemo::OnRender(Kame::RenderEventArgs& e) {
 
 void InstancedRenderingDemo::OnUpdate(Kame::UpdateEventArgs& e) {
   _CameraController.Update(e.ElapsedTime);
-}
-
-void InstancedRenderingDemo::CreateProgram() {
-  // Load the HDR shaders.
-  ComPtr<ID3DBlob> vs;
-  ComPtr<ID3DBlob> ps;
-  ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_VS.cso", &vs));
-  ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_PS.cso", &ps));
-
-  // Allow input layout and deny unnecessary access to certain pipeline stages.
-  D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
-    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
-    D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
-    D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
-    D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
-
-  CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
-
-  CD3DX12_ROOT_PARAMETER1 rootParameters[Kame::RootParameters::NumRootParameters];
-  rootParameters[Kame::RootParameters::MatricesCB].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
-  rootParameters[Kame::RootParameters::MaterialCB].InitAsConstantBufferView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-  rootParameters[Kame::RootParameters::LightPropertiesCB].InitAsConstants(sizeof(Kame::LightProperties) / 4, 1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
-  rootParameters[Kame::RootParameters::PointLights].InitAsShaderResourceView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-  rootParameters[Kame::RootParameters::SpotLights].InitAsShaderResourceView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-  rootParameters[Kame::RootParameters::Textures].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
-
-  CD3DX12_STATIC_SAMPLER_DESC linearRepeatSampler(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
-  CD3DX12_STATIC_SAMPLER_DESC anisotropicSampler(0, D3D12_FILTER_ANISOTROPIC);
-
-  CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
-  rootSignatureDescription.Init_1_1(Kame::RootParameters::NumRootParameters, rootParameters, 1, &linearRepeatSampler, rootSignatureFlags);
-
-  //m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
-  _RenderProgramSignature->SetDescription(rootSignatureDescription.Desc_1_1);
-
-  _RenderProgram->SetRootSignature(_RenderProgramSignature.get());
-  _RenderProgram->SetInputLayout1(Kame::VertexPositionNormalTexture::InputElementCount, Kame::VertexPositionNormalTexture::InputElements);
-  _RenderProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-  _RenderProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
-  _RenderProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
-  _RenderProgram->SetRenderTargetFormats1(
-    m_pWindow->GetDisplay().GetRenderer()->GetRenderTargetFormats(),
-    m_pWindow->GetDisplay().GetRenderer()->GetDepthStencilFormat()
-  );
-
-  _RenderProgram->Create();
 }

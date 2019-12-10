@@ -16,6 +16,9 @@
     <Filter Include="Kame\Game">
       <UniqueIdentifier>{8C4E234D-F8B8-D7C3-41F7-8869ADA0B518}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Game\Objects">
+      <UniqueIdentifier>{45B93E6C-B1CF-3C02-FA46-C823669C0D8A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\Graphics">
       <UniqueIdentifier>{A3B6A1B5-0F77-1DEC-D8B1-6669443162C8}</UniqueIdentifier>
     </Filter>
@@ -121,6 +124,9 @@
     <ClInclude Include="src\Kame\Events\MouseEvent.h">
       <Filter>Kame\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Game\CameraController.h">
+      <Filter>Kame\Game</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Game\Game.h">
       <Filter>Kame\Game</Filter>
     </ClInclude>
@@ -129,6 +135,9 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Game\LayerStack.h">
       <Filter>Kame\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Game\Objects\MeshComponent.h">
+      <Filter>Kame\Game\Objects</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Camera.h">
       <Filter>Kame\Graphics</Filter>
@@ -140,6 +149,9 @@
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Material.h">
+      <Filter>Kame\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\MaterialManager.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Mesh.h">
@@ -416,9 +428,6 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\Graphics\MaterialManager.h" />
-    <ClInclude Include="src\Kame\Game\Objects\MeshComponent.h" />
-    <ClInclude Include="src\Kame\Game\CameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -426,6 +435,12 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Application\Window.cpp">
       <Filter>Kame\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Events\Event.cpp">
+      <Filter>Kame\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Game\CameraController.cpp">
+      <Filter>Kame\Game</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Game\Game.cpp">
       <Filter>Kame\Game</Filter>
@@ -435,6 +450,9 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Game\LayerStack.cpp">
       <Filter>Kame\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Game\Objects\MeshComponent.cpp">
+      <Filter>Kame\Game\Objects</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Camera.cpp">
       <Filter>Kame\Graphics</Filter>
@@ -446,6 +464,9 @@
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Material.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\MaterialManager.cpp">
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Mesh.cpp">
@@ -470,6 +491,9 @@
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Renderer3D.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\Scene3D.cpp">
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp">
@@ -632,11 +656,6 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
-    <ClCompile Include="src\Kame\Graphics\MaterialManager.cpp" />
-    <ClCompile Include="src\Kame\Game\Objects\MeshComponent.cpp" />
-    <ClCompile Include="src\Kame\Game\CameraController.cpp" />
-    <ClCompile Include="src\Kame\Events\Event.cpp" />
-    <ClCompile Include="src\Kame\Graphics\Scene3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

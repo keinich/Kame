@@ -147,6 +147,12 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="src\shaders\HDR_I_VS.hlsl">
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel>6.0</ShaderModel>
+      <VariableName>g_HDR_I_VS</VariableName>
+      <HeaderFileOutput>D:/Raftek/Kame/Sandbox/src/HDR_I_VS.h</HeaderFileOutput>
+    </FxCompile>
     <FxCompile Include="src\shaders\HDR_PS.hlsl">
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>6.0</ShaderModel>
