@@ -1,6 +1,7 @@
 #include "kmpch.h"
 #include "Scene3D.h"
 #include "Light.h"
+#include "Skybox.h"
 
 namespace Kame {
 
@@ -20,6 +21,11 @@ namespace Kame {
 
   void Scene3D::AddSpotLight(SpotLight spotLight) {
     _SpotLights.push_back(spotLight);
+  }
+
+  void Scene3D::CreateSkybox(Texture* skyboxTexture) {
+    _Skybox = CreateReference<Skybox>();
+    _Skybox->SetTexture(skyboxTexture);
   }
 
 }

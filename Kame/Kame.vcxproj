@@ -182,6 +182,7 @@
     <ClInclude Include="src\Kame\Graphics\Renderer.h" />
     <ClInclude Include="src\Kame\Graphics\Renderer3D.h" />
     <ClInclude Include="src\Kame\Graphics\Scene3D.h" />
+    <ClInclude Include="src\Kame\Graphics\Skybox.h" />
     <ClInclude Include="src\Kame\Graphics\TextureManager.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input\Input.h" />
@@ -281,6 +282,7 @@
     <ClCompile Include="src\Kame\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Kame\Graphics\Renderer3D.cpp" />
     <ClCompile Include="src\Kame\Graphics\Scene3D.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Skybox.cpp" />
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Input\Input.cpp" />

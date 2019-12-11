@@ -16,11 +16,7 @@ public:
   InstancedRenderingDemo(const std::wstring& name, int width, int height, bool vSync);
   ~InstancedRenderingDemo();
 
-  virtual std::vector<Kame::Reference<Kame::MeshComponent>>& GetMeshes() override;
-  virtual Kame::RenderProgram* GetRenderProgram() override;
-  virtual Kame::Texture* GetTexture() override; 
   virtual Kame::Camera* GetActiveCamera() override;
-  virtual Kame::MaterialInstanceBase* GetMaterial() override;
 
   virtual bool LoadContent() override;
   virtual void UnloadContent() override;
@@ -35,7 +31,7 @@ private: //Fields
   Kame::Mesh* _SphereMesh;
   Kame::Mesh* _TorusMesh;
   std::vector<Kame::Reference<Kame::MeshComponent>> _Meshes;
-  Kame::Texture* _KameDefaultTexture;  
+  Kame::Texture* _KameDefaultTexture;
   Kame::Camera _Camera;
   Kame::CameraController _CameraController;
 

@@ -49,24 +49,8 @@ InstancedRenderingDemo::~InstancedRenderingDemo() {
   _aligned_free(_pAlignedCameraData);
 }
 
-std::vector<Kame::Reference<Kame::MeshComponent>>& InstancedRenderingDemo::GetMeshes() {
-  return _Meshes;
-}
-
-Kame::RenderProgram* InstancedRenderingDemo::GetRenderProgram() {
-  return _RenderProgram.get();
-}
-
-Kame::Texture* InstancedRenderingDemo::GetTexture() {
-  return _KameDefaultTexture;
-}
-
 Kame::Camera* InstancedRenderingDemo::GetActiveCamera() {
   return &_Camera;
-}
-
-Kame::MaterialInstanceBase* InstancedRenderingDemo::GetMaterial() {
-  return _MaterialInstance.get();
 }
 
 bool InstancedRenderingDemo::LoadContent() {
@@ -152,6 +136,11 @@ bool InstancedRenderingDemo::LoadContent() {
 
     _Scene3D->AddSpotLight(l);
   }
+
+  //_Scene3D->CreateSkybox(Kame::TextureManager::GetTexture(L"Assets/Textures/glacier.hdr"));
+  _Scene3D->CreateSkybox(Kame::TextureManager::GetTexture(L"Assets/Textures/Space.jpg"));
+  
+
   return true;
 }
 

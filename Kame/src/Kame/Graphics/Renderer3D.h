@@ -82,12 +82,8 @@ namespace Kame {
     //inline static Renderer3D* Get() { return _Instance; }
 
     static void RenderScene(
-      std::vector<Reference<MeshComponent>>& meshes,
       Camera* camera,
-      RenderProgram* renderProgram,
       CommandList* commandList,
-      Texture* texture,
-      MaterialInstanceBase* matInstace,
       Scene3D* scene
     );
 

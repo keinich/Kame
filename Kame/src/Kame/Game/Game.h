@@ -49,16 +49,7 @@ namespace Kame {
 
     inline Scene3D* GetScene() const { return _Scene3D.get(); }
 
-#pragma region This shoul be in Layer/Material/Scene
-
-    virtual std::vector<Reference<MeshComponent>>& GetMeshes() { return std::vector<Reference<MeshComponent>>(); }
-    virtual RenderProgram* GetRenderProgram() { return nullptr; }
-    virtual Texture* GetTexture() { return nullptr; }
     virtual Camera* GetActiveCamera() { return nullptr; }
-    virtual Kame::MaterialInstanceBase* GetMaterial() { return nullptr; }
-
-#pragma endregion
-
 
   protected:
     //friend class Display;

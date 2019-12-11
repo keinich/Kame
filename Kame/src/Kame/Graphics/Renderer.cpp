@@ -58,12 +58,8 @@ namespace Kame {
     commandList->SetScissorRect(_ScissorRect);
 
     Renderer3D::RenderScene(
-      game->GetMeshes(),
       game->GetActiveCamera(),
-      game->GetRenderProgram(),
       commandList.get(),
-      game->GetTexture(),
-      game->GetMaterial(),
       game->GetScene()
     );
 

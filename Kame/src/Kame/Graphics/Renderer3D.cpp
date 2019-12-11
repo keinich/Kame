@@ -10,6 +10,7 @@
 #include <Kame/Graphics/Scene3D.h>
 #include <Kame/Graphics/Light.h>
 #include <Kame/Math/VectorMath.h>
+#include <Kame/Graphics/Skybox.h>
 
 //TODO
 // Renderer3D is also a singleton (in the end it maybe doesnt have a state at all, beacause the render-programs are in the materials),
@@ -33,34 +34,28 @@ namespace Kame {
   }
 
   void Renderer3D::RenderScene(
-    std::vector<Reference<MeshComponent>>& meshes,
     Camera* camera,
-    RenderProgram* renderProgram,
     CommandList* commandList,
-    Texture* texture,
-    MaterialInstanceBase* matInstace,
     Scene3D* scene
   ) {
 
-    //commandList->SetGraphicsRootSignature(renderProgram->GetSignature());
-    //commandList->SetRenderProgram(renderProgram);
-
-    //commandList->SetGraphicsRootSignature(matInstace->GetMaterial()->GetSignature());
-    //commandList->SetRenderProgram(matInstace->GetMaterial()->GetProgram());
-
-
-
-    // Upload lights
-    /*LightProperties lightProps;
-    lightProps.NumPointLights = static_cast<uint32_t>(m_PointLights.size());
-    lightProps.NumSpotLights = static_cast<uint32_t>(m_SpotLights.size());
-
-    commandList->SetGraphics32BitConstants(RootParameters::LightPropertiesCB, lightProps);
-    commandList->SetGraphicsDynamicStructuredBuffer(RootParameters::PointLights, m_PointLights);
-    commandList->SetGraphicsDynamicStructuredBuffer(RootParameters::SpotLights, m_SpotLights);*/
-
     XMMATRIX viewMatrix = camera->get_ViewMatrix().GetXmMatrix();
-    XMMATRIX viewProjectionMatrix = viewMatrix * camera->get_ProjectionMatrix().GetXmMatrix();
+    XMMATRIX projMatrixSkybox = camera->get_ProjectionMatrix().GetXmMatrix();
+    XMMATRIX viewProjectionMatrix = viewMatrix * projMatrixSkybox;
+
+    Skybox* skybox = scene->GetSkybox();
+    if (skybox) {
+      auto viewMatrixSkybox = XMMatrixTranspose(XMMatrixRotationQuaternion(camera->get_Rotation().GetXmVector()));
+      DirectX::XMMATRIX viewProjMatrixSkybox = viewMatrixSkybox * projMatrixSkybox;
+
+      //commandList->SetPipelineState(m_SkyboxPipelineState);
+      commandList->SetRenderProgram(skybox->GetProgram());
+      commandList->SetGraphicsRootSignature(skybox->GetProgram()->GetSignature());
+
+      commandList->SetGraphics32BitConstants(0, viewProjMatrixSkybox);
+
+      skybox->Draw(commandList);
+    }
 
     LightProperties lightProps;
     lightProps.NumPointLights = static_cast<uint32_t>(scene->GetPointLights().size());
@@ -89,9 +84,7 @@ namespace Kame {
           ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
           commandList->SetGraphicsDynamicConstantBuffer(DefaultMaterialRootParameters::MatricesCB1, matrices);
-          commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::InstanceData1, instanceData);         
-
-
+          commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::InstanceData1, instanceData);
 
           it3->second.Material->ApplyParameters(commandList);
 
@@ -100,23 +93,6 @@ namespace Kame {
       }
     }
 
-    //for (Reference<MeshComponent> meshComponent : scene->GetMeshComponents()) {
-
-    //  commandList->SetGraphicsRootSignature(meshComponent->GetMaterialInstance()->GetMaterial()->GetSignature());
-    //  commandList->SetRenderProgram(meshComponent->GetMaterialInstance()->GetMaterial()->GetProgram());
-
-    //  XMMATRIX worldMatrix = meshComponent->GetWorldMatrix();
-
-    //  Mat matrices;
-    //  ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
-
-    //  commandList->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-
-    //  meshComponent->GetMaterialInstance()->ApplyParameters(commandList);
-
-    //  meshComponent->GetMesh()->Draw(commandList);
-
-    //}
   }
 
   void Renderer3D::CalculateLightPositions(Kame::Scene3D* scene, const DirectX::XMMATRIX& viewMatrix) {
@@ -138,7 +114,7 @@ namespace Kame {
 
       Kame::Math::Vector4 directionWS = XMLoadFloat4(&l.DirectionWS);
       Kame::Math::Vector4 directionVS = XMVector3Normalize(XMVector3TransformNormal(directionWS.GetXmVector(), viewMatrix));
-      
+
       XMStoreFloat4(&l.DirectionVS, directionVS.GetXmVector());
     }
 
