@@ -8,6 +8,7 @@
 #include "string"  
 
 #include <Kame/Core/References.h>
+#include <Kame/Game/LayerStack.h>
 
 namespace Kame {
 
@@ -51,6 +52,8 @@ namespace Kame {
 
     virtual Camera* GetActiveCamera() { return nullptr; }
 
+    inline LayerStack& GetLayerStack() { return _LayerStack; }
+
   protected:
     //friend class Display;
     friend class Window;
@@ -75,9 +78,11 @@ namespace Kame {
 
     virtual void OnWindowDestroy();
 
-    std::shared_ptr<Window> m_pWindow;
+  protected: // Fields
 
+    std::shared_ptr<Window> m_pWindow;
     NotCopyableReference<Scene3D> _Scene3D;
+    LayerStack _LayerStack;
 
   private: //Fields
 

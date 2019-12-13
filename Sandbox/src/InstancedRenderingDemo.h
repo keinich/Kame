@@ -8,6 +8,36 @@
 #include <Kame/Game/Game.h>
 #include <Kame/Graphics/Camera.h>
 #include <Kame/Game/CameraController.h>
+#include <Kame/Game/Layer.h>
+
+class MainLayer : public Kame::Layer {
+
+public:
+  MainLayer(Kame::Game* game, const std::string& name = "Layer");
+  ~MainLayer();
+
+  virtual Kame::Camera* GetActiveCamera() override;
+  virtual Kame::Scene3D* GetScene() override;
+
+private:
+  Kame::Game* _Game;
+
+};
+
+class MinimapLayer : public Kame::Layer {
+
+public:
+  MinimapLayer(Kame::Game* game, const std::string& name = "MinimapLayer");
+  ~MinimapLayer();
+
+  virtual Kame::Camera* GetActiveCamera() override;
+  virtual Kame::Scene3D* GetScene() override;
+
+private:
+  Kame::Game* _Game;
+  Kame::Camera _Camera;
+
+};
 
 class InstancedRenderingDemo : public Kame::Game {
 

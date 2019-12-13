@@ -8,7 +8,7 @@ namespace Kame {
 
   class KAME_API LayerStack {
 
-    public:
+  public:
     LayerStack();
     ~LayerStack();
 
@@ -20,7 +20,7 @@ namespace Kame {
     std::vector<Layer*>::iterator begin() { return _Layers.begin(); }
     std::vector<Layer*>::iterator end() { return _Layers.end(); }
 
-    private:
+  private:
     std::vector<Layer*> _Layers;
     std::vector<Layer*>::iterator _LayerInsert;
   };

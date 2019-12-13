@@ -43,6 +43,10 @@ InstancedRenderingDemo::InstancedRenderingDemo(const std::wstring& name, int wid
 
   _RenderProgram = Kame::GraphicsCore::CreateRenderProgramNc();
   _RenderProgramSignature = Kame::GraphicsCore::CreateRenderProgramSignatureNc();
+
+
+  _LayerStack.PushLayer(new MainLayer(this));
+  _LayerStack.PushLayer(new MinimapLayer(this));
 }
 
 InstancedRenderingDemo::~InstancedRenderingDemo() {
@@ -65,7 +69,7 @@ bool InstancedRenderingDemo::LoadContent() {
   //auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial(material);
   auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial1<Kame::DefaultMaterial>();
   //matInstance->GetParameters().DiffuseTexture = _KameDefaultTexture;
-  matInstance->GetParameters().DiffuseTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/Directx9.png");
+  matInstance->GetParameters().DiffuseTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/Katze.jpg");
   matInstance->GetParameters().BaseParams.Ambient = Kame::Math::Float4(0.1f, 0.1f, 0.1f, 0.1f);
   matInstance->GetParameters().BaseParams.Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
   //matInstance->GetParameters().BaseParams. = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
@@ -76,18 +80,22 @@ bool InstancedRenderingDemo::LoadContent() {
 
 
 
+  for (int m = 0; m < 10; ++m) {
+    for (int n = 0; n < 10; ++n) {
 
+      auto meshComponent = Kame::CreateReference<Kame::MeshComponent>();
+      meshComponent->SetMesh(_SphereMesh);
+      meshComponent->SetMaterialInstance(_MaterialInstance.get());
+      _Meshes.push_back(meshComponent);
+      XMMATRIX translationMatrix = XMMatrixTranslation(m * 4.0f, 4.0f, n * 4.0f);
+      XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(45.0f));
+      XMMATRIX scaleMatrix = XMMatrixScaling(2.0f, 2.0f, 2.0f);
+      XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+      meshComponent->SetWorldMatirx(worldMatrix);
+      _Scene3D->AddMeshComponent(meshComponent);
 
-  auto meshComponent = Kame::CreateReference<Kame::MeshComponent>();
-  meshComponent->SetMesh(_SphereMesh);
-  meshComponent->SetMaterialInstance(_MaterialInstance.get());
-  _Meshes.push_back(meshComponent);
-  XMMATRIX translationMatrix = XMMatrixTranslation(4.0f, 4.0f, 4.0f);
-  XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(45.0f));
-  XMMATRIX scaleMatrix = XMMatrixScaling(2.0f, 2.0f, 2.0f);
-  XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
-  meshComponent->SetWorldMatirx(worldMatrix);
-  _Scene3D->AddMeshComponent(meshComponent);
+    }
+  }
 
   auto meshComponent2 = Kame::CreateReference<Kame::MeshComponent>();
   meshComponent2->SetMesh(_SphereMesh);
@@ -139,7 +147,7 @@ bool InstancedRenderingDemo::LoadContent() {
 
   //_Scene3D->CreateSkybox(Kame::TextureManager::GetTexture(L"Assets/Textures/glacier.hdr"));
   _Scene3D->CreateSkybox(Kame::TextureManager::GetTexture(L"Assets/Textures/Space.jpg"));
-  
+
 
   return true;
 }
@@ -155,4 +163,46 @@ void InstancedRenderingDemo::OnRender(Kame::RenderEventArgs& e) {
 
 void InstancedRenderingDemo::OnUpdate(Kame::UpdateEventArgs& e) {
   _CameraController.Update(e.ElapsedTime);
+}
+
+MainLayer::MainLayer(Kame::Game* game, const std::string& name) :
+  Layer(name) {
+  _Game = game;
+}
+
+MainLayer::~MainLayer() {}
+
+Kame::Camera* MainLayer::GetActiveCamera() {
+  return _Game->GetActiveCamera();
+}
+
+Kame::Scene3D* MainLayer::GetScene() {
+  return _Game->GetScene();
+}
+
+MinimapLayer::MinimapLayer(Kame::Game* game, const std::string& name) :
+  Layer(name) {
+  _Game = game;
+  _ScreenRectangle.Left = 0.5f;
+  _ScreenRectangle.Width = 0.1f;
+  _ScreenRectangle.Top = 0.5f;
+  _ScreenRectangle.Height = 0.1f;
+
+  Kame::Math::Vector4 cameraPos1(0, 5, -20, 1);
+  XMVECTOR cameraPos = XMVectorSet(0, 5, -20, 1);
+  XMVECTOR cameraTarget = XMVectorSet(0, 5, 0, 1);
+  XMVECTOR cameraUp = XMVectorSet(0, 1, 0, 0);
+
+  _Camera.set_LookAt(cameraPos, cameraTarget, cameraUp);
+  _Camera.set_Projection(45.0f, 100.f / 100.f, 0.1f, 100.0f);
+}
+
+MinimapLayer::~MinimapLayer() {}
+
+Kame::Camera* MinimapLayer::GetActiveCamera() {
+  return &_Camera;
+}
+
+Kame::Scene3D* MinimapLayer::GetScene() {
+  return _Game->GetScene();
 }

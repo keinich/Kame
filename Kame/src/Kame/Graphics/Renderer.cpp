@@ -15,7 +15,7 @@
 namespace Kame {
 
   Renderer* Renderer::_Instance = nullptr;
- 
+
   Renderer::Renderer() {
     _ScissorRect = CD3DX12_RECT(0, 0, LONG_MAX, LONG_MAX);
     _SdrRenderProgram = GraphicsCore::CreateRenderProgramNc();
@@ -54,14 +54,28 @@ namespace Kame {
     // layer3d->RenderTo(_SceneRenderTarget)
 
     commandList->SetRenderTarget(*_SceneRenderTarget);
-    commandList->SetViewport(_SceneRenderTarget->GetViewport());
-    commandList->SetScissorRect(_ScissorRect);
 
-    Renderer3D::RenderScene(
-      game->GetActiveCamera(),
-      commandList.get(),
-      game->GetScene()
-    );
+    for (Layer* layer : game->GetLayerStack()) {
+      D3D12_VIEWPORT vp = _SceneRenderTarget->GetViewport();
+      ScreenRectangle sr = layer->GetScreenRectangle();
+      //vp.TopLeftX = sr.Left * vp.Width;
+      //vp.TopLeftY = sr.Top * vp.Height;
+      //vp.Width = vp.Width * sr.Width;
+      //vp.Height = vp.Height * sr.Height;
+      _ScissorRect.left = sr.Left * vp.Width;
+      _ScissorRect.top = sr.Top * vp.Height;
+      _ScissorRect.right = _ScissorRect.left + sr.Width * vp.Width;
+      _ScissorRect.bottom = _ScissorRect.top + sr.Height * vp.Height;
+      commandList->SetViewport(vp);
+      commandList->SetScissorRect(_ScissorRect);
+
+      Renderer3D::RenderScene(
+        layer->GetActiveCamera(),
+        commandList.get(),
+        layer->GetScene()
+      );
+    }
+
 
     //game->RenderTo(_SceneRenderTarget);
 

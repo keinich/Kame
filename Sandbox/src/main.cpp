@@ -14,7 +14,7 @@
 
 Kame::Game* CreateGame() {
   return new Kame::Tutorial4(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
-  return new InstancedRenderingDemo(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
+  //return new InstancedRenderingDemo(L"Learning DirectX 12 - Lesson 4", 1280, 720, true);
 }
 
 //int main(int argc, char** argv) {
