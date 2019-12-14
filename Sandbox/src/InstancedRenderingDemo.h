@@ -54,6 +54,8 @@ public:
   virtual void OnRender(Kame::RenderEventArgs& e);
   virtual void OnUpdate(Kame::UpdateEventArgs& e);
 
+  virtual void OnResize(Kame::ResizeEventArgs& e) override;
+
 private: //Methods
 
 private: //Fields

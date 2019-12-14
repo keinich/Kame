@@ -45,8 +45,8 @@ InstancedRenderingDemo::InstancedRenderingDemo(const std::wstring& name, int wid
   _RenderProgramSignature = Kame::GraphicsCore::CreateRenderProgramSignatureNc();
 
 
-  _LayerStack.PushLayer(new MainLayer(this));
   _LayerStack.PushLayer(new MinimapLayer(this));
+  _LayerStack.PushLayer(new MainLayer(this));
 }
 
 InstancedRenderingDemo::~InstancedRenderingDemo() {
@@ -165,8 +165,15 @@ void InstancedRenderingDemo::OnUpdate(Kame::UpdateEventArgs& e) {
   _CameraController.Update(e.ElapsedTime);
 }
 
+void InstancedRenderingDemo::OnResize(Kame::ResizeEventArgs& e) {
+  Game::OnResize(e);
+  float fov = _Camera.get_FoV();
+  float aspectRatio = GetClientWidth() / (float)GetClientHeight();
+  _Camera.set_Projection(fov, aspectRatio, 0.1f, 100.0f);
+}
+
 MainLayer::MainLayer(Kame::Game* game, const std::string& name) :
-  Layer(name) {
+  Layer(game->GetClientWidth(), game->GetClientHeight(), name) {
   _Game = game;
 }
 
@@ -181,7 +188,7 @@ Kame::Scene3D* MainLayer::GetScene() {
 }
 
 MinimapLayer::MinimapLayer(Kame::Game* game, const std::string& name) :
-  Layer(name) {
+  Layer(game->GetClientWidth() / 5.0f, game->GetClientHeight() / 5.0f, name) {
   _Game = game;
   _ScreenRectangle.Left = 0.5f;
   _ScreenRectangle.Width = 0.1f;
@@ -201,6 +208,7 @@ MinimapLayer::~MinimapLayer() {}
 
 Kame::Camera* MinimapLayer::GetActiveCamera() {
   return &_Camera;
+  //return _Game->GetActiveCamera();
 }
 
 Kame::Scene3D* MinimapLayer::GetScene() {

@@ -78,6 +78,9 @@ namespace Kame {
   void Game::OnResize(ResizeEventArgs& e) {
     m_Width = e.Width;
     m_Height = e.Height;
+    for (Layer* layer : _LayerStack) {
+      layer->OnResize(e);
+    }
   }
 
   void Game::OnWindowDestroy() {

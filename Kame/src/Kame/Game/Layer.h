@@ -2,10 +2,15 @@
 
 #include "Kame/Events/Event_Cherno.h"
 
+#include <Kame/Core/References.h>
+#include <Kame\Events\EventArgs.h>
+
 namespace Kame {
 
   class Camera;
   class Scene3D;
+  class RenderTarget;
+  class Texture;
 
   struct ScreenRectangle {
     float Top = 0;
@@ -16,13 +21,16 @@ namespace Kame {
 
   class KAME_API Layer {
   public:
-    Layer(const std::string& name = "Layer");
+    Layer(UINT64 width, UINT height, const std::string& name = "Layer");
     ~Layer();
+
 
     virtual void OnAttach() {}
     virtual void OnDetach() {}
     virtual void OnUpdate() {}
     virtual void OnEvent(ChernoEvent& event) {}
+
+    virtual void OnResize(ResizeEventArgs& eventArgs);
 
     virtual Camera* GetActiveCamera() = 0;
     virtual Scene3D* GetScene() = 0;
@@ -31,9 +39,26 @@ namespace Kame {
 
     inline const std::string& GetName() const { return _DebugName; }
 
-  protected:
+    inline RenderTarget* GetRenderTarget() { return _SceneRenderTarget.get(); }
+
+  protected: // Functions
+
+    virtual void Initialize();
+
+    void CreateSceneTexture();
+    void CreateSceneDepthTexture();
+
+  protected: // Fields
     std::string _DebugName;
     ScreenRectangle _ScreenRectangle;
+
+    Reference<Texture> _SceneTexture;
+    Reference<Texture> _SceneDepthTexture;
+    Reference<RenderTarget> _SceneRenderTarget;
+
+    UINT64 _Width;
+    UINT _Height;
+
   };
 
 }

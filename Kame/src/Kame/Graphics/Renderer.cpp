@@ -46,26 +46,31 @@ namespace Kame {
     Reference<CommandList> commandList = GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
     FLOAT clearColor[] = { 1.0f, 0.4f, 0.7f, 1.0f };
 
-    commandList->ClearTexture(_SceneRenderTarget->GetTexture(AttachmentPoint::Color0), clearColor);
-    commandList->ClearDepthStencilTexture(_SceneRenderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
-
-    //TODO f.e. layer3d in game->Get3dLayers
-    // layer->SetViewport
-    // layer3d->RenderTo(_SceneRenderTarget)
-
-    commandList->SetRenderTarget(*_SceneRenderTarget);
+    //commandList->ClearTexture(_SceneRenderTarget->GetTexture(AttachmentPoint::Color0), clearColor);
+    //commandList->ClearDepthStencilTexture(_SceneRenderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
+    //commandList->SetRenderTarget(*_SceneRenderTarget);
 
     for (Layer* layer : game->GetLayerStack()) {
-      D3D12_VIEWPORT vp = _SceneRenderTarget->GetViewport();
+
+      RenderTarget* renderTarget = layer->GetRenderTarget();
+
+      commandList->ClearTexture(renderTarget->GetTexture(AttachmentPoint::Color0), clearColor);
+      commandList->ClearDepthStencilTexture(renderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
+      commandList->SetRenderTarget(*renderTarget);
+
+
+
+      //D3D12_VIEWPORT vp = renderTarget->GetViewport(DirectX::XMFLOAT2(0.1f, 0.1f));
+      D3D12_VIEWPORT vp = renderTarget->GetViewport();
       ScreenRectangle sr = layer->GetScreenRectangle();
       //vp.TopLeftX = sr.Left * vp.Width;
       //vp.TopLeftY = sr.Top * vp.Height;
       //vp.Width = vp.Width * sr.Width;
       //vp.Height = vp.Height * sr.Height;
-      _ScissorRect.left = sr.Left * vp.Width;
-      _ScissorRect.top = sr.Top * vp.Height;
-      _ScissorRect.right = _ScissorRect.left + sr.Width * vp.Width;
-      _ScissorRect.bottom = _ScissorRect.top + sr.Height * vp.Height;
+      //_ScissorRect.left = sr.Left * vp.Width;
+      //_ScissorRect.top = sr.Top * vp.Height;
+      //_ScissorRect.right = _ScissorRect.left + /*sr.Width **/ vp.Width;
+      //_ScissorRect.bottom = _ScissorRect.top + /*sr.Height **/ vp.Height;
       commandList->SetViewport(vp);
       commandList->SetScissorRect(_ScissorRect);
 
@@ -74,21 +79,33 @@ namespace Kame {
         commandList.get(),
         layer->GetScene()
       );
+
+      commandList->SetRenderTarget(_TargetDIsplay->GetRenderTarget());
+      D3D12_VIEWPORT finalVp = _TargetDIsplay->GetRenderTarget().GetViewport(
+        DirectX::XMFLOAT2(layer->GetScreenRectangle().Width, layer->GetScreenRectangle().Height),
+        DirectX::XMFLOAT2(layer->GetScreenRectangle().Left, layer->GetScreenRectangle().Top)
+      );
+      
+      commandList->SetViewport(finalVp);
+      commandList->SetRenderProgram(_SdrRenderProgram.get());
+      commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+      commandList->SetGraphicsRootSignature(_SdrRootSignature.get());
+      commandList->SetGraphics32BitConstants(0, ToneMapping::GetParameters1());
+      commandList->SetShaderResourceViewTexture(1, 0, renderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+      commandList->Draw(3);
     }
 
-
-    //game->RenderTo(_SceneRenderTarget);
-
     // Final Rendering to the Rendertarget of the Window (here with Tonamapping)
-    commandList->SetRenderTarget(_TargetDIsplay->GetRenderTarget());
-    commandList->SetViewport(_TargetDIsplay->GetRenderTarget().GetViewport());
-    commandList->SetRenderProgram(_SdrRenderProgram.get());
-    commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList->SetGraphicsRootSignature(_SdrRootSignature.get());
-    commandList->SetGraphics32BitConstants(0, ToneMapping::GetParameters1());
-    commandList->SetShaderResourceViewTexture(1, 0, _SceneRenderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    //commandList->SetRenderTarget(_TargetDIsplay->GetRenderTarget());
+    //commandList->SetViewport(_TargetDIsplay->GetRenderTarget().GetViewport());
+    //commandList->SetRenderProgram(_SdrRenderProgram.get());
+    //commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //commandList->SetGraphicsRootSignature(_SdrRootSignature.get());
+    //commandList->SetGraphics32BitConstants(0, ToneMapping::GetParameters1());
+    //commandList->SetShaderResourceViewTexture(1, 0, _SceneRenderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
-    commandList->Draw(3);
+    //commandList->Draw(3);
 
     GraphicsCore::ExecuteCommandList(commandList);
 
