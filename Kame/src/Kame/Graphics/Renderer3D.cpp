@@ -76,7 +76,7 @@ namespace Kame {
         commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::SpotLights1, scene->GetSpotLights());
 
         for (auto it3 = it2->second.InstancedMeshesByMesh.begin(); it3 != it2->second.InstancedMeshesByMesh.end(); it3++) {
-          std::vector<InstanceData> instanceData = it3->second.InstanceData;
+          std::vector<InstanceData> instanceData = it3->second.InstanceDataGroup.InstanceData;
           Mesh* mesh = it3->second.Mesh;
           XMMATRIX worldMatrix = instanceData[0].ModelMatrix;
 
@@ -84,8 +84,8 @@ namespace Kame {
           ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
           commandList->SetGraphicsDynamicConstantBuffer(DefaultMaterialRootParameters::MatricesCB1, matrices);
-          commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::InstanceData1, instanceData);
 
+          commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::InstanceData1, instanceData);
           it3->second.Material->ApplyParameters(commandList);
 
           mesh->Draw(commandList, instanceData.size());
@@ -161,7 +161,22 @@ namespace Kame {
       instanceData.ModelMatrix = matrices.ModelMatrix;
       instanceData.ModelViewMatrix = matrices.ModelViewMatrix;
       instanceData.ModelViewProjectionMatrix = matrices.ModelViewProjectionMatrix;
-      rpm[meshComponent->GetMesh()].InstanceData.push_back(instanceData);
+      // Find the MaterialInstance in the MaterialMap of the InstanceGroup of the rpm
+      bool found = false;
+      for (UINT i = 0; i < rpm[meshComponent->GetMesh()].InstanceDataGroup.MaterialMap.size(); ++i) {
+        MaterialInstanceBase* materialInstance = rpm[meshComponent->GetMesh()].InstanceDataGroup.MaterialMap[i];
+        if (materialInstance == meshComponent->GetMaterialInstance()) {
+          // If the MaterialInstance is found, assign the index of it to the MaterialIndex of the Instance Data
+          instanceData.MaterialParameterIndex = i;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        rpm[meshComponent->GetMesh()].InstanceDataGroup.MaterialMap.push_back(meshComponent->GetMaterialInstance());
+        instanceData.MaterialParameterIndex = rpm[meshComponent->GetMesh()].InstanceDataGroup.MaterialMap.size() - 1;
+      }
+      rpm[meshComponent->GetMesh()].InstanceDataGroup.InstanceData.push_back(instanceData);
       rpm[meshComponent->GetMesh()].Material = meshComponent->GetMaterialInstance();
     }
   }

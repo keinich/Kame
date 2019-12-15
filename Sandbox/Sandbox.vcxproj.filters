@@ -6,6 +6,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\HDR_I_VS.h" />
     <ClInclude Include="src\HDR_PS.h" />
     <ClInclude Include="src\HDR_VS.h" />
     <ClInclude Include="src\HDRtoSDR_PS.h" />
@@ -22,6 +23,9 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="src\shaders\HDR_I_PS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
     <FxCompile Include="src\shaders\HDR_I_VS.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>

@@ -205,6 +205,9 @@
     <ClInclude Include="src\Kame\Graphics\Scene3D.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\Skybox.h">
+      <Filter>Kame\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Graphics\TextureManager.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
@@ -428,7 +431,6 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\Graphics\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -495,6 +497,9 @@
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Scene3D.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\Skybox.cpp">
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp">
@@ -657,7 +662,6 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
-    <ClCompile Include="src\Kame\Graphics\Skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

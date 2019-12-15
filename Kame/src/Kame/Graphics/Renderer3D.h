@@ -15,7 +15,7 @@ namespace Kame {
   class CommandList;
   class MaterialInstanceBase;
   class Scene3D;
-  class Mesh;
+  class Mesh;  
 
   enum DefaultMaterialRootParameters {
     MatricesCB1,         // ConstantBuffer<Mat> MatCB : register(b0);
@@ -38,11 +38,21 @@ namespace Kame {
     DirectX::XMMATRIX ModelViewMatrix;
     DirectX::XMMATRIX InverseTransposeModelViewMatrix;
     DirectX::XMMATRIX ModelViewProjectionMatrix;
+    UINT MaterialParameterIndex;
+    UINT InstancePad0;
+    UINT InstancePad1;
+    UINT InstancePad2;
+
+  };
+
+  struct InstanceDataGroup {
+    std::vector<InstanceData> InstanceData;
+    std::vector<MaterialInstanceBase*> MaterialMap;
   };
 
   struct InstancedMesh {
     Mesh* Mesh;
-    std::vector<InstanceData> InstanceData;
+    InstanceDataGroup InstanceDataGroup;
     MaterialInstanceBase* Material;
   };
 

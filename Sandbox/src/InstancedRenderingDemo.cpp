@@ -76,7 +76,10 @@ bool InstancedRenderingDemo::LoadContent() {
   _MaterialInstance = matInstance;
 
 
-
+  Kame::Reference<Kame::MaterialInstance<Kame::DefaultMaterialParameters>> matInstance2 = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial1<Kame::DefaultMaterial>();
+  matInstance2->GetParameters().DiffuseTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/KameHouse.jpg");
+  matInstance2->GetParameters().BaseParams.Ambient = Kame::Math::Float4(0.1f, 0.1f, 0.1f, 0.1f);
+  matInstance2->GetParameters().BaseParams.Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
 
 
 
@@ -85,7 +88,12 @@ bool InstancedRenderingDemo::LoadContent() {
 
       auto meshComponent = Kame::CreateReference<Kame::MeshComponent>();
       meshComponent->SetMesh(_SphereMesh);
-      meshComponent->SetMaterialInstance(_MaterialInstance.get());
+      if (m * n % 2 == 0) {
+        meshComponent->SetMaterialInstance(_MaterialInstance);
+      }
+      else {
+        meshComponent->SetMaterialInstance(matInstance2);
+      }
       _Meshes.push_back(meshComponent);
       XMMATRIX translationMatrix = XMMatrixTranslation(m * 4.0f, 4.0f, n * 4.0f);
       XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(45.0f));
@@ -99,7 +107,7 @@ bool InstancedRenderingDemo::LoadContent() {
 
   auto meshComponent2 = Kame::CreateReference<Kame::MeshComponent>();
   meshComponent2->SetMesh(_SphereMesh);
-  meshComponent2->SetMaterialInstance(_MaterialInstance.get());
+  meshComponent2->SetMaterialInstance(_MaterialInstance);
   _Meshes.push_back(meshComponent2);
   XMMATRIX translationMatrix2 = XMMatrixTranslation(14.0f, 4.0f, 4.0f);
   XMMATRIX rotationMatrix2 = XMMatrixRotationY(XMConvertToRadians(45.0f));
@@ -110,7 +118,7 @@ bool InstancedRenderingDemo::LoadContent() {
 
   auto meshComponent3 = Kame::CreateReference<Kame::MeshComponent>();
   meshComponent3->SetMesh(_TorusMesh);
-  meshComponent3->SetMaterialInstance(_MaterialInstance.get());
+  meshComponent3->SetMaterialInstance(_MaterialInstance);
   _Meshes.push_back(meshComponent3);
   XMMATRIX translationMatrix3 = XMMatrixTranslation(24.0f, 4.0f, 4.0f);
   XMMATRIX rotationMatrix3 = XMMatrixRotationY(XMConvertToRadians(45.0f));

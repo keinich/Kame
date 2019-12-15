@@ -7,6 +7,7 @@
 #include <Kame/Core/DebugUtilities.h>
 #include <Kame\Graphics\Renderer3D.h>
 #include <Kame/Graphics/GraphicsCore.h>
+#include <Kame\Graphics\TextureManager.h>
 
 namespace Kame {
 
@@ -300,6 +301,8 @@ namespace Kame {
   void DefaultMaterial::ApplyParameters(CommandList* commandList, DefaultMaterialParameters& params) {
     commandList->SetGraphicsDynamicConstantBuffer(DefaultMaterialRootParameters::MaterialCB1, params.BaseParams);
     commandList->SetShaderResourceViewTexture(DefaultMaterialRootParameters::Textures1, 0, params.DiffuseTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    Texture* test = TextureManager::GetTexture(L"Assets/Textures/KameHouse.jpg");
+    commandList->SetShaderResourceViewTexture(DefaultMaterialRootParameters::Textures1, 1, test, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
   }
 
   void DefaultMaterial::CreateProgram() {
@@ -310,7 +313,7 @@ namespace Kame {
     ComPtr<ID3DBlob> vs;
     ComPtr<ID3DBlob> ps;
     ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_I_VS.cso", &vs));
-    ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_PS.cso", &ps));
+    ThrowIfFailed(D3DReadFileToBlob(L"D:\\Raftek\\Kame\\bin\\Debug-windows-x86_64\\Sandbox\\HDR_I_PS.cso", &ps));
 
     // Allow input layout and deny unnecessary access to certain pipeline stages.
     D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
@@ -319,7 +322,7 @@ namespace Kame {
       D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
       D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
 
-    CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
+    CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 2);
 
     CD3DX12_ROOT_PARAMETER1 rootParameters[Kame::DefaultMaterialRootParameters::NumRootParameters1];
     rootParameters[Kame::DefaultMaterialRootParameters::MatricesCB1].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);

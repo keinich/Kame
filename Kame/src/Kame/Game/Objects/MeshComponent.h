@@ -17,15 +17,15 @@ namespace Kame {
     inline void SetMesh(Mesh* mesh) { _Mesh = mesh; }
     inline Mesh* GetMesh() { return _Mesh; }
 
-    inline void SetMaterialInstance(MaterialInstanceBase* material) { _MaterialInstance = material; }
-    inline MaterialInstanceBase* GetMaterialInstance() { return _MaterialInstance; }
+    inline void SetMaterialInstance(Reference<MaterialInstanceBase> material) { _MaterialInstance = material; }
+    inline MaterialInstanceBase* GetMaterialInstance() { return _MaterialInstance.get(); }
 
     inline void SetWorldMatirx(DirectX::XMMATRIX matrix) { _WorldMatrix = matrix; }
     inline DirectX::XMMATRIX& GetWorldMatrix() { return _WorldMatrix; }
 
   private:
     Mesh* _Mesh;
-    MaterialInstanceBase* _MaterialInstance;
+    Reference<MaterialInstanceBase> _MaterialInstance;
     DirectX::XMMATRIX _WorldMatrix;
 
   };
