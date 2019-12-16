@@ -32,6 +32,11 @@ namespace Kame {
       return (T)((value + alignment - 1) / alignment);
     }
 
+    template<typename T>
+    constexpr const T& clamp(const T& val, const T& min = T(0), const T& max = T(1)) {
+      return val < min ? min : val > max ? max : val;
+    }
+
   }
 
 }

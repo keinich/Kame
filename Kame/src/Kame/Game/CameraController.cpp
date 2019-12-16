@@ -8,11 +8,6 @@
 
 using namespace DirectX;
 
-template<typename T>
-constexpr const T& clamp1(const T& val, const T& min = T(0), const T& max = T(1)) {
-  return val < min ? min : val > max ? max : val;
-}
-
 Kame::CameraController::CameraController(Camera* cameraToControl) :
   _Forward(0),
   _Backward(0),
@@ -93,7 +88,7 @@ bool Kame::CameraController::OnMouseMoved(MouseMotionEventArgs& e) {
   if (e.LeftButton) {
     _Pitch -= e.RelY * mouseSpeed;
 
-    _Pitch = clamp1(_Pitch, -90.0f, 90.0f);
+    _Pitch = Math::clamp(_Pitch, -90.0f, 90.0f);
 
     _Yaw -= e.RelX * mouseSpeed;
   }
@@ -104,7 +99,7 @@ bool Kame::CameraController::OnMouseWheel(MouseWheelEventArgs& e) {
   auto fov = _ControlledCamera->get_FoV();
 
   fov -= e.WheelDelta;
-  fov = clamp1(fov, 12.0f, 90.0f);
+  fov = Math::clamp(fov, 12.0f, 90.0f);
 
   _ControlledCamera->set_FoV(fov);
 

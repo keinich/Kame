@@ -46,7 +46,7 @@ namespace Kame {
   public:
 
     //virtual void ApplyParameters(CommandList* commandList, DefaultMaterialParametersForShader& params) override;
-    virtual void ApplyParameters1(CommandList* commandList, std::vector<DefaultMaterialParameters>& params) override;
+    virtual void ApplyParameters(CommandList* commandList, std::vector<DefaultMaterialParameters>& params) override;
 
     virtual void CreateProgram() override;
 

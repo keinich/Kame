@@ -14,7 +14,8 @@
 namespace Kame {
 
   Skybox::Skybox() {
-    _MaterialInstance = MaterialInstance<SkyboxMaterialParameters>::CreateFromMaterial1<SkyboxMaterial>();
+    _Material = MaterialManager::GetMaterial<SkyboxMaterial>();
+    _MaterialInstance = MaterialInstance<SkyboxMaterialParameters>::CreateFromMaterial(_Material);
     _Mesh = MeshFactory::GetCube(100.0f, true);
   }
 
@@ -23,11 +24,11 @@ namespace Kame {
   }
 
   void Skybox::Draw(CommandList* commandList) {
-    _MaterialInstance->ApplyParameters(commandList);
+    _Material->ApplySkyboxParameters(commandList, _MaterialInstance->GetParameters());
     _Mesh->Draw(commandList);
   }
 
-  void SkyboxMaterial::ApplyParameters(CommandList* commandList, SkyboxMaterialParameters& params) {
+  void SkyboxMaterial::ApplySkyboxParameters(CommandList* commandList, SkyboxMaterialParameters& params) {
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 
     srvDesc.Format = params.CubeTexture->GetFormat();

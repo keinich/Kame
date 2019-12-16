@@ -72,9 +72,9 @@ namespace Kame {
         ) {
         commandList->SetRenderProgram(programTree->second.Program);
 
-        commandList->SetGraphics32BitConstants(DefaultMaterialRootParameters::LightPropertiesCB1, lightProps);
-        commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::PointLights1, scene->GetPointLights());
-        commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::SpotLights1, scene->GetSpotLights());
+        commandList->SetGraphics32BitConstants(MaterialRootParameters::LightPropertiesCB, lightProps);
+        commandList->SetGraphicsDynamicStructuredBuffer(MaterialRootParameters::PointLights, scene->GetPointLights());
+        commandList->SetGraphicsDynamicStructuredBuffer(MaterialRootParameters::SpotLights, scene->GetSpotLights());
 
         // iterate Meshes
         for (
@@ -97,8 +97,8 @@ namespace Kame {
             Matrices matrices;
             ComputeMatrices1(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-            commandList->SetGraphicsDynamicConstantBuffer(DefaultMaterialRootParameters::MatricesCB1, matrices);
-            commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::InstanceData1, instanceData);
+            commandList->SetGraphicsDynamicConstantBuffer(MaterialRootParameters::MatricesCB, matrices);
+            commandList->SetGraphicsDynamicStructuredBuffer(MaterialRootParameters::InstanceDataSlot, instanceData);
 
             // There must be at least one materialInstance
             // wen can use the ApplyParameters of the first Instance since all the Instances share the type

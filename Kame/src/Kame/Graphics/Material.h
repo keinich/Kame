@@ -11,16 +11,16 @@ namespace Kame {
   class CommandList;
   class Texture;
 
-  enum DefaultMaterialRootParameters {
-    MatricesCB1,         // ConstantBuffer<Mat> MatCB : register(b0);
-    MaterialCB1,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
-    LightPropertiesCB1,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
-    InstanceData1,        // StructuredBuffer<InstanceData> g_InstanceData : register (t0, space1);
-    PointLights1,        // StructuredBuffer<PointLight> PointLights : register( t0 );
-    SpotLights1,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
-    Textures1,           // Texture2D DiffuseTexture : register( t2 );
+  enum MaterialRootParameters {
+    MatricesCB,         // ConstantBuffer<Mat> MatCB : register(b0);
+    MaterialCB,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
+    LightPropertiesCB,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
+    InstanceDataSlot,   // StructuredBuffer<InstanceData> g_InstanceData : register (t0, space1);
+    PointLights,        // StructuredBuffer<PointLight> PointLights : register( t0 );
+    SpotLights,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
+    Textures,           // Texture2D DiffuseTexture : register( t2 );
     MaterialParameters,  // StructuredBuffer<MaterialParameters> materialParameters : register (t1, space1);
-    NumRootParameters1
+    NumRootParameters
   };
 
   struct KAME_API BaseMaterialParameters {
@@ -83,7 +83,7 @@ namespace Kame {
     static const BaseMaterialParameters RedRubber;
     static const BaseMaterialParameters WhiteRubber;
     static const BaseMaterialParameters YellowRubber;
-  };  
+  };
 
   class MaterialBase {
   public:
@@ -109,15 +109,13 @@ namespace Kame {
   public:
 
     virtual void CreateProgram() = 0;
-    virtual void ApplyParameters(CommandList* commandList, TParams& params) {};
-    virtual void ApplyParameters1(CommandList* commandList, std::vector<TParams>& params) {};
+    virtual void ApplyParameters(CommandList* commandList, std::vector<TParams>& params) {};
 
     //Reference<MaterialInstance<TParams>> CreateInstance();
 
   protected: //Methods
     Material<TParams>() {};
     virtual ~Material<TParams>() {};
-
 
   };
 
@@ -178,12 +176,14 @@ namespace Kame {
   private:
     std::vector<TParameters&> _ParemeterCollection;
   };
-   
+
   template<typename TParameters>
   inline Reference<MaterialInstance<TParameters>> MaterialInstance<TParameters>::CreateFromMaterial(
     Material<TParameters>* material
   ) {
-    auto ret = CreateReference< MaterialInstance<TParameters>>();
+    MaterialInstance<TParameters>* ret1 = new MaterialInstance<TParameters>();
+    auto ret = Reference< MaterialInstance<TParameters>>(ret1);
+    
     ret->_BaseMaterial = material;
     return ret;
   }
@@ -195,8 +195,8 @@ namespace Kame {
 
   template<typename TParameters>
   inline void MaterialInstance<TParameters>::ApplyParameters(CommandList* commandList) {
-    _BaseMaterial->ApplyParameters(commandList, _ParameterCollection[_Index]);
-    _BaseMaterial->ApplyParameters1(commandList, _ParameterCollection);
+    //_BaseMaterial->ApplyParameters(commandList, _ParameterCollection[_Index]);
+    _BaseMaterial->ApplyParameters(commandList, _ParameterCollection);
   }
 
   template<typename TParameters>

@@ -113,20 +113,14 @@ namespace Kame {
   // I'm not using scoped enums to avoid the explicit cast that would be required
   // to use these as root indices in the root signature.
   enum RootParameters {
-    MatricesCB,         // ConstantBuffer<Mat> MatCB : register(b0);
-    MaterialCB,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
-    LightPropertiesCB,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
-    PointLights,        // StructuredBuffer<PointLight> PointLights : register( t0 );
-    SpotLights,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
-    Textures,           // Texture2D DiffuseTexture : register( t2 );
-    NumRootParameters
+    MatricesCBTutorial,         // ConstantBuffer<Mat> MatCB : register(b0);
+    MaterialCBTutorial,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
+    LightPropertiesCBTutorial,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
+    PointLightsTutorial,        // StructuredBuffer<PointLight> PointLights : register( t0 );
+    SpotLightsTutorial,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
+    TexturesTutorial,           // Texture2D DiffuseTexture : register( t2 );
+    NumRootParametersTutorial
   };
-
-  // Clamp a value between a min and max range.
-  template<typename T>
-  constexpr const T& clamp(const T& val, const T& min = T(0), const T& max = T(1)) {
-    return val < min ? min : val > max ? max : val;
-  }
 
   // Builds a look-at (world) matrix from a point, up and direction vectors.
   XMMATRIX XM_CALLCONV LookAtMatrix(FXMVECTOR Position, FXMVECTOR Direction, FXMVECTOR Up) {
@@ -335,19 +329,19 @@ namespace Kame {
 
       CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
 
-      CD3DX12_ROOT_PARAMETER1 rootParameters[RootParameters::NumRootParameters];
-      rootParameters[RootParameters::MatricesCB].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
-      rootParameters[RootParameters::MaterialCB].InitAsConstantBufferView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-      rootParameters[RootParameters::LightPropertiesCB].InitAsConstants(sizeof(LightProperties) / 4, 1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
-      rootParameters[RootParameters::PointLights].InitAsShaderResourceView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-      rootParameters[RootParameters::SpotLights].InitAsShaderResourceView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-      rootParameters[RootParameters::Textures].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
+      CD3DX12_ROOT_PARAMETER1 rootParameters[RootParameters::NumRootParametersTutorial];
+      rootParameters[RootParameters::MatricesCBTutorial].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
+      rootParameters[RootParameters::MaterialCBTutorial].InitAsConstantBufferView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+      rootParameters[RootParameters::LightPropertiesCBTutorial].InitAsConstants(sizeof(LightProperties) / 4, 1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+      rootParameters[RootParameters::PointLightsTutorial].InitAsShaderResourceView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+      rootParameters[RootParameters::SpotLightsTutorial].InitAsShaderResourceView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+      rootParameters[RootParameters::TexturesTutorial].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
 
       CD3DX12_STATIC_SAMPLER_DESC linearRepeatSampler(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
       CD3DX12_STATIC_SAMPLER_DESC anisotropicSampler(0, D3D12_FILTER_ANISOTROPIC);
 
       CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
-      rootSignatureDescription.Init_1_1(RootParameters::NumRootParameters, rootParameters, 1, &linearRepeatSampler, rootSignatureFlags);
+      rootSignatureDescription.Init_1_1(RootParameters::NumRootParametersTutorial, rootParameters, 1, &linearRepeatSampler, rootSignatureFlags);
 
       //m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
       m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1);
@@ -440,8 +434,8 @@ namespace Kame {
     uint32_t width = static_cast<uint32_t>(m_Width * scale);
     uint32_t height = static_cast<uint32_t>(m_Height * scale);
 
-    width = clamp<uint32_t>(width, 1, D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
-    height = clamp<uint32_t>(height, 1, D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+    width = Kame::Math::clamp<uint32_t>(width, 1, D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+    height = Kame::Math::clamp<uint32_t>(height, 1, D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
     m_HDRRenderTarget->Resize(width, height);
   }
@@ -581,7 +575,7 @@ namespace Kame {
 
   float LinearTonemapping(float HDR, float max) {
     if (max > 0.0f) {
-      return clamp(HDR / max);
+      return Kame::Math::clamp(HDR / max);
     }
     return HDR;
   }
@@ -827,9 +821,9 @@ namespace Kame {
     lightProps.NumPointLights = static_cast<uint32_t>(m_PointLights.size());
     lightProps.NumSpotLights = static_cast<uint32_t>(m_SpotLights.size());
 
-    commandListBase->SetGraphics32BitConstants(RootParameters::LightPropertiesCB, lightProps);
-    commandListBase->SetGraphicsDynamicStructuredBuffer(RootParameters::PointLights, m_PointLights);
-    commandListBase->SetGraphicsDynamicStructuredBuffer(RootParameters::SpotLights, m_SpotLights);
+    commandListBase->SetGraphics32BitConstants(RootParameters::LightPropertiesCBTutorial, lightProps);
+    commandListBase->SetGraphicsDynamicStructuredBuffer(RootParameters::PointLightsTutorial, m_PointLights);
+    commandListBase->SetGraphicsDynamicStructuredBuffer(RootParameters::SpotLightsTutorial, m_SpotLights);
 
     // Draw the earth sphere
     XMMATRIX translationMatrix = XMMatrixTranslation(-4.0f, 2.0f, -4.0f);
@@ -842,9 +836,9 @@ namespace Kame {
     Mat matrices;
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::White);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_EarthTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCBTutorial, BaseMaterialParameters::White);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::TexturesTutorial, 0, m_EarthTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_SphereMesh->Draw(commandListBase.get());
 
@@ -856,9 +850,9 @@ namespace Kame {
 
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::White);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_MonaLisaTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCBTutorial, BaseMaterialParameters::White);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::TexturesTutorial, 0, m_MonaLisaTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_CubeMesh->Draw(commandListBase.get());
 
@@ -873,9 +867,9 @@ namespace Kame {
 
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::Ruby);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCBTutorial, BaseMaterialParameters::Ruby);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::TexturesTutorial, 0, m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_TorusMesh->Draw(commandListBase.get());
 
@@ -890,9 +884,9 @@ namespace Kame {
 
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::White);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_DirectXTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCBTutorial, BaseMaterialParameters::White);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::TexturesTutorial, 0, m_DirectXTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_PlaneMesh->Draw(commandListBase.get());
 
@@ -903,7 +897,7 @@ namespace Kame {
 
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
 
     m_PlaneMesh->Draw(commandListBase.get());
 
@@ -914,7 +908,7 @@ namespace Kame {
 
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
 
     m_PlaneMesh->Draw(commandListBase.get());
 
@@ -925,7 +919,7 @@ namespace Kame {
 
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
 
     m_PlaneMesh->Draw(commandListBase.get());
 
@@ -936,9 +930,9 @@ namespace Kame {
 
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::Red);
-    commandListBase->SetShaderResourceViewTexture(RootParameters::Textures, 0, m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCBTutorial, BaseMaterialParameters::Red);
+    commandListBase->SetShaderResourceViewTexture(RootParameters::TexturesTutorial, 0, m_DefaultTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
     m_PlaneMesh->Draw(commandListBase.get());
 
@@ -949,8 +943,8 @@ namespace Kame {
 
     ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, BaseMaterialParameters::Blue);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
+    commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCBTutorial, BaseMaterialParameters::Blue);
     m_PlaneMesh->Draw(commandListBase.get());
 
     // Draw shapes to visualize the position of the lights in the scene.
@@ -963,8 +957,8 @@ namespace Kame {
       worldMatrix = XMMatrixTranslationFromVector(lightPos);
       ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-      commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-      commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, lightMaterial);
+      commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
+      commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCBTutorial, lightMaterial);
 
       m_SphereMesh->Draw(commandListBase.get());
 
@@ -986,8 +980,8 @@ namespace Kame {
 
       ComputeMatrices(worldMatrix, viewMatrix, viewProjectionMatrix, matrices);
 
-      commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCB, matrices);
-      commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCB, lightMaterial);
+      commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MatricesCBTutorial, matrices);
+      commandListBase->SetGraphicsDynamicConstantBuffer(RootParameters::MaterialCBTutorial, lightMaterial);
 
       m_ConeMesh->Draw(commandListBase.get());
     }
@@ -1141,7 +1135,7 @@ namespace Kame {
     if (e.LeftButton) {
       m_Pitch -= e.RelY * mouseSpeed;
 
-      m_Pitch = clamp(m_Pitch, -90.0f, 90.0f);
+      m_Pitch = Kame::Math::clamp(m_Pitch, -90.0f, 90.0f);
 
       m_Yaw -= e.RelX * mouseSpeed;
     }
@@ -1155,7 +1149,7 @@ namespace Kame {
     auto fov = m_Camera.get_FoV();
 
     fov -= e.WheelDelta;
-    fov = clamp(fov, 12.0f, 90.0f);
+    fov = Kame::Math::clamp(fov, 12.0f, 90.0f);
 
     m_Camera.set_FoV(fov);
 

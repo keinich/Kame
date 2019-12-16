@@ -17,7 +17,7 @@ namespace Kame {
   class SkyboxMaterial : public Material<SkyboxMaterialParameters> {
 
   public:
-    virtual void ApplyParameters(CommandList* commandList, SkyboxMaterialParameters& params) override;
+    void ApplySkyboxParameters(CommandList* commandList, SkyboxMaterialParameters& params);
     virtual void CreateProgram() override;
 
     SkyboxMaterial() { CreateProgram(); }
@@ -37,6 +37,7 @@ namespace Kame {
 
   private:
     Reference<MaterialInstance<SkyboxMaterialParameters>> _MaterialInstance;
+    SkyboxMaterial* _Material;
     Mesh* _Mesh;
   };
 

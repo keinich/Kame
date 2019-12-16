@@ -22,17 +22,17 @@ namespace Kame {
     TextureIndex = _Textures.size() - 1;
   }
 
-  void DefaultMaterial::ApplyParameters1(CommandList* commandList, std::vector<DefaultMaterialParameters>& params) {
+  void DefaultMaterial::ApplyParameters(CommandList* commandList, std::vector<DefaultMaterialParameters>& params) {
     for (UINT i = 0; i < DefaultMaterialParameters::_Textures.size(); ++i) {
       Texture* texture = DefaultMaterialParameters::_Textures[i];
       commandList->SetShaderResourceViewTexture(
-        DefaultMaterialRootParameters::Textures1,
+        MaterialRootParameters::Textures,
         i,
         texture,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
       );
     }
-    commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::MaterialParameters, params);
+    commandList->SetGraphicsDynamicStructuredBuffer(MaterialRootParameters::MaterialParameters, params);
   }
 
   void DefaultMaterial::CreateProgram() {
@@ -54,21 +54,21 @@ namespace Kame {
 
     CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 2);
 
-    CD3DX12_ROOT_PARAMETER1 rootParameters[DefaultMaterialRootParameters::NumRootParameters1];
-    rootParameters[DefaultMaterialRootParameters::MatricesCB1].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
-    rootParameters[DefaultMaterialRootParameters::MaterialCB1].InitAsConstantBufferView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-    rootParameters[DefaultMaterialRootParameters::LightPropertiesCB1].InitAsConstants(sizeof(LightProperties) / 4, 1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
-    rootParameters[DefaultMaterialRootParameters::InstanceData1].InitAsShaderResourceView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
-    rootParameters[DefaultMaterialRootParameters::PointLights1].InitAsShaderResourceView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-    rootParameters[DefaultMaterialRootParameters::SpotLights1].InitAsShaderResourceView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
-    rootParameters[DefaultMaterialRootParameters::Textures1].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
-    rootParameters[DefaultMaterialRootParameters::MaterialParameters].InitAsShaderResourceView(1, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+    CD3DX12_ROOT_PARAMETER1 rootParameters[MaterialRootParameters::NumRootParameters];
+    rootParameters[MaterialRootParameters::MatricesCB].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
+    rootParameters[MaterialRootParameters::MaterialCB].InitAsConstantBufferView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[MaterialRootParameters::LightPropertiesCB].InitAsConstants(sizeof(LightProperties) / 4, 1, 0, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[MaterialRootParameters::InstanceDataSlot].InitAsShaderResourceView(0, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);
+    rootParameters[MaterialRootParameters::PointLights].InitAsShaderResourceView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[MaterialRootParameters::SpotLights].InitAsShaderResourceView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[MaterialRootParameters::Textures].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
+    rootParameters[MaterialRootParameters::MaterialParameters].InitAsShaderResourceView(1, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
 
     CD3DX12_STATIC_SAMPLER_DESC linearRepeatSampler(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
     CD3DX12_STATIC_SAMPLER_DESC anisotropicSampler(0, D3D12_FILTER_ANISOTROPIC);
 
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDescription;
-    rootSignatureDescription.Init_1_1(DefaultMaterialRootParameters::NumRootParameters1, rootParameters, 1, &linearRepeatSampler, rootSignatureFlags);
+    rootSignatureDescription.Init_1_1(MaterialRootParameters::NumRootParameters, rootParameters, 1, &linearRepeatSampler, rootSignatureFlags);
 
     //m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1, featureData.HighestVersion);
     _ProgramSignature->SetDescription(rootSignatureDescription.Desc_1_1);
