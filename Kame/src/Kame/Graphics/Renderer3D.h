@@ -14,19 +14,9 @@ namespace Kame {
   class RenderProgram;
   class CommandList;
   class MaterialInstanceBase;
+  class MaterialBase;
   class Scene3D;
-  class Mesh;  
-
-  enum DefaultMaterialRootParameters {
-    MatricesCB1,         // ConstantBuffer<Mat> MatCB : register(b0);
-    MaterialCB1,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
-    LightPropertiesCB1,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
-    InstanceData1,        // StructuredBuffer<InstanceData> g_InstanceData : register (t0, space1);
-    PointLights1,        // StructuredBuffer<PointLight> PointLights : register( t0 );
-    SpotLights1,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
-    Textures1,           // Texture2D DiffuseTexture : register( t2 );
-    NumRootParameters1
-  };
+  class Mesh; 
 
   struct LightProperties {
     uint32_t NumPointLights;
@@ -58,7 +48,7 @@ namespace Kame {
 
   struct RenderProgramMeshes {
     RenderProgram* Program;
-    std::map<Mesh*, InstancedMesh> InstancedMeshesByMesh;
+    std::map<Mesh*, std::map<MaterialBase*, InstancedMesh>> InstancedMeshesByMesh;
     //std::vector<MeshComponent*> MeshComponents;
   };
 

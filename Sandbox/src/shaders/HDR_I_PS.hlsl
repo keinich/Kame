@@ -20,6 +20,23 @@ struct Material {
   // Total:                              16 * 5 = 80 bytes
 };
 
+struct MaterialParameters {
+  float4 Emissive;
+  //----------------------------------- (16 byte boundary)
+  float4 Ambient;
+  //----------------------------------- (16 byte boundary)
+  float4 Diffuse;
+  //----------------------------------- (16 byte boundary)
+  float4 Specular;
+  //----------------------------------- (16 byte boundary)
+  float  SpecularPower;
+  uint TextureIndex;
+  float2 Padding;
+  //----------------------------------- (16 byte boundary)
+  // Total:                              16 * 5 = 80 bytes
+  
+};
+
 struct PointLight {
   float4 PositionWS; // Light position in world space.
   //----------------------------------- (16 byte boundary)
@@ -72,6 +89,8 @@ Texture2D DiffuseTexture[2]            : register(t2);
 
 SamplerState LinearRepeatSampler    : register(s0);
 
+StructuredBuffer<MaterialParameters> materialParameters : register(t1, space1);
+
 float3 LinearToSRGB(float3 x) {
   // This is exactly the sRGB curve
   //return x < 0.0031308 ? 12.92 * x : 1.055 * pow(abs(x), 1.0 / 2.4) - 0.055;
@@ -84,11 +103,11 @@ float DoDiffuse(float3 N, float3 L) {
   return max(0, dot(N, L));
 }
 
-float DoSpecular(float3 V, float3 N, float3 L) {
+float DoSpecular(float3 V, float3 N, float3 L, float specularPower) {
   float3 R = normalize(reflect(-L, N));
   float RdotV = max(0, dot(R, V));
-
-  return pow(RdotV, MaterialCB.SpecularPower);
+     
+  return pow(RdotV, specularPower);
 }
 
 float DoAttenuation(float attenuation, float distance) {
@@ -102,7 +121,7 @@ float DoSpotCone(float3 spotDir, float3 L, float spotAngle) {
   return smoothstep(minCos, maxCos, cosAngle);
 }
 
-LightResult DoPointLight(PointLight light, float3 V, float3 P, float3 N) {
+LightResult DoPointLight(PointLight light, float3 V, float3 P, float3 N, float specularPower) {
   LightResult result;
   float3 L = (light.PositionVS.xyz - P);
   float d = length(L);
@@ -111,12 +130,12 @@ LightResult DoPointLight(PointLight light, float3 V, float3 P, float3 N) {
   float attenuation = DoAttenuation(light.Attenuation, d);
 
   result.Diffuse = DoDiffuse(N, L) * attenuation * light.Color * light.Intensity;
-  result.Specular = DoSpecular(V, N, L) * attenuation * light.Color * light.Intensity;
+  result.Specular = DoSpecular(V, N, L, specularPower) * attenuation * light.Color * light.Intensity;
 
   return result;
 }
 
-LightResult DoSpotLight(SpotLight light, float3 V, float3 P, float3 N) {
+LightResult DoSpotLight(SpotLight light, float3 V, float3 P, float3 N, float specularPower) {
   LightResult result;
   float3 L = (light.PositionVS.xyz - P);
   float d = length(L);
@@ -127,12 +146,12 @@ LightResult DoSpotLight(SpotLight light, float3 V, float3 P, float3 N) {
   float spotIntensity = DoSpotCone(light.DirectionVS.xyz, L, light.SpotAngle);
 
   result.Diffuse = DoDiffuse(N, L) * attenuation * spotIntensity * light.Color * light.Intensity;
-  result.Specular = DoSpecular(V, N, L) * attenuation * spotIntensity * light.Color * light.Intensity;
+  result.Specular = DoSpecular(V, N, L, specularPower) * attenuation * spotIntensity * light.Color * light.Intensity;
 
   return result;
 }
 
-LightResult DoLighting(float3 P, float3 N) {
+LightResult DoLighting(float3 P, float3 N, float specularPower) {
   uint i;
 
   // Lighting is performed in view space.
@@ -141,14 +160,14 @@ LightResult DoLighting(float3 P, float3 N) {
   LightResult totalResult = (LightResult)0;
 
   for (i = 0; i < LightPropertiesCB.NumPointLights; ++i) {
-    LightResult result = DoPointLight(PointLights[i], V, P, N);
+    LightResult result = DoPointLight(PointLights[i], V, P, N, specularPower);
 
     totalResult.Diffuse += result.Diffuse;
     totalResult.Specular += result.Specular;
   }
 
   for (i = 0; i < LightPropertiesCB.NumSpotLights; ++i) {
-    LightResult result = DoSpotLight(SpotLights[i], V, P, N);
+    LightResult result = DoSpotLight(SpotLights[i], V, P, N, specularPower);
 
     totalResult.Diffuse += result.Diffuse;
     totalResult.Specular += result.Specular;
@@ -159,13 +178,20 @@ LightResult DoLighting(float3 P, float3 N) {
 
 float4 main(PixelShaderInput IN) : SV_Target
 {
-    LightResult lit = DoLighting(IN.PositionVS.xyz, normalize(IN.NormalVS));
+    MaterialParameters matParams = materialParameters[IN.MatIndex];
+    LightResult lit = DoLighting(IN.PositionVS.xyz, normalize(IN.NormalVS), matParams.SpecularPower);
 
-    float4 emissive = MaterialCB.Emissive;
-    float4 ambient = MaterialCB.Ambient;
-    float4 diffuse = MaterialCB.Diffuse * lit.Diffuse;
-    float4 specular = MaterialCB.Specular * lit.Specular;
-    float4 texColor = DiffuseTexture[IN.MatIndex].Sample(LinearRepeatSampler, IN.TexCoord);
+    float4 emissive = matParams.Emissive;
+    float4 ambient = matParams.Ambient;
+    float4 diffuse = matParams.Diffuse * lit.Diffuse;
+    float4 specular = matParams.Specular * lit.Specular;
+    
+    //emissive = 1;
+    //diffuse = 1;
+    //ambient = 1;
+    //specular = lit.Specular;
+
+    float4 texColor = DiffuseTexture[matParams.TextureIndex].Sample(LinearRepeatSampler, IN.TexCoord);
 
     return (emissive + ambient + diffuse + specular) * texColor;
 }

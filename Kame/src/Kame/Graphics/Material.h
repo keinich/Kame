@@ -11,6 +11,18 @@ namespace Kame {
   class CommandList;
   class Texture;
 
+  enum DefaultMaterialRootParameters {
+    MatricesCB1,         // ConstantBuffer<Mat> MatCB : register(b0);
+    MaterialCB1,         // ConstantBuffer<Material> MaterialCB : register( b0, space1 );
+    LightPropertiesCB1,  // ConstantBuffer<LightProperties> LightPropertiesCB : register( b1 );
+    InstanceData1,        // StructuredBuffer<InstanceData> g_InstanceData : register (t0, space1);
+    PointLights1,        // StructuredBuffer<PointLight> PointLights : register( t0 );
+    SpotLights1,         // StructuredBuffer<SpotLight> SpotLights : register( t1 );
+    Textures1,           // Texture2D DiffuseTexture : register( t2 );
+    MaterialParameters,  // StructuredBuffer<MaterialParameters> materialParameters : register (t1, space1);
+    NumRootParameters1
+  };
+
   struct KAME_API BaseMaterialParameters {
     BaseMaterialParameters(
       Kame::Math::Float4 emissive = { 0.0f, 0.0f, 0.0f, 1.0f },
@@ -78,6 +90,41 @@ namespace Kame {
     Texture* DiffuseTexture;
   };
 
+  struct DefaultMaterialParametersForShader {
+
+    DefaultMaterialParametersForShader(
+      Kame::Math::Float4 emissive = { 0.0f, 0.0f, 0.0f, 1.0f },
+      Kame::Math::Float4 ambient = { 0.1f, 0.1f, 0.1f, 1.0f },
+      Kame::Math::Float4 diffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
+      Kame::Math::Float4 specular = { 1.0f, 1.0f, 1.0f, 1.0f },
+      float specularPower = 128.0f
+    )
+      : Emissive(emissive)
+      , Ambient(ambient)
+      , Diffuse(diffuse)
+      , Specular(specular)
+      , SpecularPower(specularPower) {}
+
+    Kame::Math::Float4 Emissive;
+    //----------------------------------- (16 byte boundary)
+    Kame::Math::Float4 Ambient;
+    //----------------------------------- (16 byte boundary)
+    Kame::Math::Float4 Diffuse;
+    //----------------------------------- (16 byte boundary)
+    Kame::Math::Float4 Specular;
+    //----------------------------------- (16 byte boundary)
+    float             SpecularPower;
+    uint32_t          TextureIndex;
+    uint32_t          Padding[2];
+
+    void SetDiffuseTexture(Texture* texture);
+
+    static void Clear() { _Textures.clear(); }
+
+    static std::vector<Texture*> _Textures;
+  
+  };
+
   class MaterialBase {
   public:
 
@@ -102,7 +149,8 @@ namespace Kame {
   public:
 
     virtual void CreateProgram() = 0;
-    virtual void ApplyParameters(CommandList* commandList, TParams& params) = 0;
+    virtual void ApplyParameters(CommandList* commandList, TParams& params) {};
+    virtual void ApplyParameters1(CommandList* commandList, std::vector<TParams>& params) {};
 
     //Reference<MaterialInstance<TParams>> CreateInstance();
 
@@ -132,28 +180,54 @@ namespace Kame {
     template<class TMaterial>
     static Reference<MaterialInstance<TParameters>> CreateFromMaterial1();
 
-    void SetParameters(TParameters& params);
+    //void SetParameters(TParameters& params);
     TParameters& GetParameters();
     virtual void ApplyParameters(CommandList* commandList) override;
     virtual MaterialBase* GetMaterial() override;
 
     ~MaterialInstance<TParameters>();
   protected:
-    MaterialInstance<TParameters>() {};
+    MaterialInstance<TParameters>();
 
   private:
 
+    static std::vector<TParameters> _ParameterCollection;
+    uint16_t _Index;
     Material<TParameters>* _BaseMaterial;
-    TParameters _Parameters;
+    //TParameters _Parameters;
 
   };
 
-  class DefaultMaterial : public Material<DefaultMaterialParameters> {
+  template<typename TParameters>
+  std::vector<TParameters> MaterialInstance<TParameters>::_ParameterCollection;
+
+  class MaterialInstanceCollectionBase {
+  public:
+    MaterialInstanceCollectionBase() {};
+    virtual ~MaterialInstanceCollectionBase() {};
+  };
+
+  template <typename TParameters>
+  class MaterialInstanceCollection {
+  public:
+    MaterialInstanceCollection<TParameters>() {}
+    virtual ~MaterialInstanceCollection<TParameters>() { _ParemeterCollection.clear(); }
+
+    void AddParameters(TParameters& parameters);
+
+  private:
+    std::vector<TParameters&> _ParemeterCollection;
+  };
+
+  class DefaultMaterial : public Material<DefaultMaterialParametersForShader> {
 
   public:
 
 
-    virtual void ApplyParameters(CommandList* commandList, DefaultMaterialParameters& params) override;
+    //virtual void ApplyParameters(CommandList* commandList, DefaultMaterialParametersForShader& params) override;
+    virtual void ApplyParameters1(CommandList* commandList, std::vector<DefaultMaterialParametersForShader>& params) override;
+
+
     virtual void CreateProgram() override;
 
     DefaultMaterial() { CreateProgram(); }
@@ -173,19 +247,20 @@ namespace Kame {
     return ret;
   }
 
-  template<typename TParameters>
-  inline void MaterialInstance<TParameters>::SetParameters(TParameters& params) {
-    _Parameters = params;
-  }
+  //template<typename TParameters>
+  //inline void MaterialInstance<TParameters>::SetParameters(TParameters& params) {
+  //  _Parameters = params;
+  //}
 
   template<typename TParameters>
   inline TParameters& MaterialInstance<TParameters>::GetParameters() {
-    return _Parameters;
+    return _ParameterCollection[_Index];
   }
 
   template<typename TParameters>
   inline void MaterialInstance<TParameters>::ApplyParameters(CommandList* commandList) {
-    _BaseMaterial->ApplyParameters(commandList, _Parameters);
+    _BaseMaterial->ApplyParameters(commandList, _ParameterCollection[_Index]);
+    _BaseMaterial->ApplyParameters1(commandList, _ParameterCollection);
   }
 
   template<typename TParameters>
@@ -206,6 +281,26 @@ namespace Kame {
   }
 
   template<typename TParameters>
-  inline MaterialInstance<TParameters>::~MaterialInstance() {}
+  inline MaterialInstance<TParameters>::~MaterialInstance() {
+    _ParameterCollection.erase(_ParameterCollection.begin() + _Index);
+  }
+
+  inline MaterialInstance<DefaultMaterialParametersForShader>::~MaterialInstance() {
+    _ParameterCollection.erase(_ParameterCollection.begin() + _Index);
+    if (_ParameterCollection.size() == 0) {
+      DefaultMaterialParametersForShader::Clear();
+    }
+  }
+
+  template<typename TParameters>
+  inline MaterialInstance<TParameters>::MaterialInstance() {
+    _ParameterCollection.push_back(TParameters());
+    _Index = _ParameterCollection.size() - 1;
+  }
+
+  template<typename TParameters>
+  inline void MaterialInstanceCollection<TParameters>::AddParameters(TParameters& parameters) {
+    _ParemeterCollection.push_back(parameters);
+  }
 
 }

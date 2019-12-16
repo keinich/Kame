@@ -67,19 +67,19 @@ bool InstancedRenderingDemo::LoadContent() {
   //Kame::DefaultMaterial* material = Kame::MaterialManager::GetMaterial<Kame::DefaultMaterial>();
 
   //auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial(material);
-  auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial1<Kame::DefaultMaterial>();
+  auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParametersForShader>::CreateFromMaterial1<Kame::DefaultMaterial>();
   //matInstance->GetParameters().DiffuseTexture = _KameDefaultTexture;
-  matInstance->GetParameters().DiffuseTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/Katze.jpg");
-  matInstance->GetParameters().BaseParams.Ambient = Kame::Math::Float4(0.1f, 0.1f, 0.1f, 0.1f);
-  matInstance->GetParameters().BaseParams.Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
+  matInstance->GetParameters().SetDiffuseTexture(Kame::TextureManager::GetTexture(L"Assets/Textures/Katze.jpg"));
+  matInstance->GetParameters().Ambient = Kame::Math::Float4(0.1f, 0.1f, 0.1f, 0.1f);
+  matInstance->GetParameters().Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
   //matInstance->GetParameters().BaseParams. = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
   _MaterialInstance = matInstance;
 
 
-  Kame::Reference<Kame::MaterialInstance<Kame::DefaultMaterialParameters>> matInstance2 = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial1<Kame::DefaultMaterial>();
-  matInstance2->GetParameters().DiffuseTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/KameHouse.jpg");
-  matInstance2->GetParameters().BaseParams.Ambient = Kame::Math::Float4(0.1f, 0.1f, 0.1f, 0.1f);
-  matInstance2->GetParameters().BaseParams.Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
+  Kame::Reference<Kame::MaterialInstance<Kame::DefaultMaterialParametersForShader>> matInstance2 = Kame::MaterialInstance<Kame::DefaultMaterialParametersForShader>::CreateFromMaterial1<Kame::DefaultMaterial>();
+  matInstance2->GetParameters().SetDiffuseTexture(Kame::TextureManager::GetTexture(L"Assets/Textures/KameHouse.jpg"));
+  matInstance2->GetParameters().Ambient = Kame::Math::Float4(0.4f, 0.4f, 0.4f, 0.4f);
+  matInstance2->GetParameters().Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
 
 
 

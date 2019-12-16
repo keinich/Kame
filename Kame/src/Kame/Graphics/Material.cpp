@@ -11,6 +11,19 @@
 
 namespace Kame {
 
+  std::vector<Texture*> DefaultMaterialParametersForShader::_Textures;
+
+  void DefaultMaterialParametersForShader::SetDiffuseTexture(Texture* texture) {
+    for (UINT i = 0; i < _Textures.size(); ++i) {
+      if (_Textures[i] == texture) {
+        TextureIndex = i;
+        return;
+      }
+    }
+    _Textures.push_back(texture);
+    TextureIndex = _Textures.size() - 1;
+  }
+
   const BaseMaterialParameters BaseMaterialParameters::Red =
   {
       { 0.0f, 0.0f, 0.0f, 1.0f },
@@ -298,12 +311,27 @@ namespace Kame {
       10.0f
   };
 
-  void DefaultMaterial::ApplyParameters(CommandList* commandList, DefaultMaterialParameters& params) {
-    commandList->SetGraphicsDynamicConstantBuffer(DefaultMaterialRootParameters::MaterialCB1, params.BaseParams);
-    commandList->SetShaderResourceViewTexture(DefaultMaterialRootParameters::Textures1, 0, params.DiffuseTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-    Texture* test = TextureManager::GetTexture(L"Assets/Textures/KameHouse.jpg");
-    commandList->SetShaderResourceViewTexture(DefaultMaterialRootParameters::Textures1, 1, test, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+  //void DefaultMaterial::ApplyParameters(CommandList* commandList, DefaultMaterialParametersForShader& params) {
+  //  commandList->SetGraphicsDynamicConstantBuffer(DefaultMaterialRootParameters::MaterialCB1, params.BaseParams);
+  //  commandList->SetShaderResourceViewTexture(DefaultMaterialRootParameters::Textures1, 0, params.DiffuseTexture, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+  //  Texture* test = TextureManager::GetTexture(L"Assets/Textures/KameHouse.jpg");
+  //  commandList->SetShaderResourceViewTexture(DefaultMaterialRootParameters::Textures1, 1, test, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+  //}
+
+  void DefaultMaterial::ApplyParameters1(CommandList* commandList, std::vector<DefaultMaterialParametersForShader>& params) {
+    for (UINT i = 0; i < DefaultMaterialParametersForShader::_Textures.size(); ++i) {
+      Texture* texture = DefaultMaterialParametersForShader::_Textures[i];
+      commandList->SetShaderResourceViewTexture(
+        DefaultMaterialRootParameters::Textures1,
+        i,
+        texture,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+      );
+    }
+    commandList->SetGraphicsDynamicStructuredBuffer(DefaultMaterialRootParameters::MaterialParameters, params);
   }
+
+
 
   void DefaultMaterial::CreateProgram() {
 
@@ -332,7 +360,7 @@ namespace Kame {
     rootParameters[Kame::DefaultMaterialRootParameters::PointLights1].InitAsShaderResourceView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
     rootParameters[Kame::DefaultMaterialRootParameters::SpotLights1].InitAsShaderResourceView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
     rootParameters[Kame::DefaultMaterialRootParameters::Textures1].InitAsDescriptorTable(1, &descriptorRange, D3D12_SHADER_VISIBILITY_PIXEL);
-
+    rootParameters[Kame::DefaultMaterialRootParameters::MaterialParameters].InitAsShaderResourceView(1, 1, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_PIXEL);
 
     CD3DX12_STATIC_SAMPLER_DESC linearRepeatSampler(0, D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
     CD3DX12_STATIC_SAMPLER_DESC anisotropicSampler(0, D3D12_FILTER_ANISOTROPIC);
@@ -350,7 +378,7 @@ namespace Kame {
     _Program->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
     D3D12_RT_FORMAT_ARRAY rtFormat = {}; //TODO Woher kriegen wenn nicht stehlen?
     rtFormat.NumRenderTargets = 1;
-    rtFormat.RTFormats[0] =  DXGI_FORMAT_R16G16B16A16_FLOAT;
+    rtFormat.RTFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
     DXGI_FORMAT dsFormat = DXGI_FORMAT_D32_FLOAT;
     _Program->SetRenderTargetFormats1(
       rtFormat,
