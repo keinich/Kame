@@ -16,7 +16,7 @@ namespace Kame {
   class MaterialInstanceBase;
   class MaterialBase;
   class Scene3D;
-  class Mesh; 
+  class Mesh;
 
   struct LightProperties {
     uint32_t NumPointLights;
@@ -32,24 +32,29 @@ namespace Kame {
     UINT InstancePad0;
     UINT InstancePad1;
     UINT InstancePad2;
-
   };
 
   struct InstanceDataGroup {
     std::vector<InstanceData> InstanceData;
-    std::vector<MaterialInstanceBase*> MaterialMap;
+    std::vector<MaterialInstanceBase*> MaterialInstances;
   };
 
   struct InstancedMesh {
     Mesh* Mesh;
     InstanceDataGroup InstanceDataGroup;
-    MaterialInstanceBase* Material;
+    MaterialBase* Material;
+
+    InstancedMesh() :
+      Mesh(nullptr),
+      Material(nullptr) {}
   };
 
   struct RenderProgramMeshes {
     RenderProgram* Program;
-    std::map<Mesh*, std::map<MaterialBase*, InstancedMesh>> InstancedMeshesByMesh;
-    //std::vector<MeshComponent*> MeshComponents;
+    std::map<Mesh*, std::map<MaterialBase*, InstancedMesh>> InstancedMeshesByMaterialByMesh;
+
+    RenderProgramMeshes() :
+      Program(nullptr) {}
   };
 
   struct Matrices {
@@ -60,7 +65,8 @@ namespace Kame {
   };
 
   struct RenderProgramSignatureTree {
-    RenderProgramSignatureTree() {}
+    RenderProgramSignatureTree() :
+      Signature(nullptr) {}
     virtual ~RenderProgramSignatureTree() {}
     RenderProgramSignature* Signature;
     std::map<size_t, RenderProgramMeshes> ProgramTreeByIdentifier;
@@ -79,21 +85,14 @@ namespace Kame {
 
   public:
 
-    //inline static Renderer3D* Get() { return _Instance; }
-
     static void RenderScene(
       Camera* camera,
       CommandList* commandList,
       Scene3D* scene
     );
 
-    static void CalculateLightPositions(Kame::Scene3D* scene, const DirectX::XMMATRIX& viewMatrix);
-
   private:
-
-    //static Renderer3D* _Instance;
-    //Renderer3D();
-    //virtual ~Renderer3D();
+    static void CalculateLightPositions(Kame::Scene3D* scene, const DirectX::XMMATRIX& viewMatrix);
 
   };
 

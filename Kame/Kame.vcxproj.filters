@@ -431,6 +431,7 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
+    <ClInclude Include="src\Kame\Graphics\DefaultMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -662,6 +663,7 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
+    <ClCompile Include="src\Kame\Graphics\DefaultMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

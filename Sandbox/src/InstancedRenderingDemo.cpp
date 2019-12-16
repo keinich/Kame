@@ -13,7 +13,7 @@
 #include <Kame/Graphics/GraphicsCore.h>
 #include <Kame/Application/Window.h>
 #include <Kame/Graphics/RenderTarget.h>
-#include <Kame/Graphics/Material.h>
+#include <Kame/Graphics/DefaultMaterial.h>
 #include <Kame\Graphics\MaterialManager.h>
 #include <Kame/Graphics/Scene3D.h>
 #include <Kame\Graphics\Light.h>
@@ -67,7 +67,7 @@ bool InstancedRenderingDemo::LoadContent() {
   //Kame::DefaultMaterial* material = Kame::MaterialManager::GetMaterial<Kame::DefaultMaterial>();
 
   //auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial(material);
-  auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParametersForShader>::CreateFromMaterial1<Kame::DefaultMaterial>();
+  auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial1<Kame::DefaultMaterial>();
   //matInstance->GetParameters().DiffuseTexture = _KameDefaultTexture;
   matInstance->GetParameters().SetDiffuseTexture(Kame::TextureManager::GetTexture(L"Assets/Textures/Katze.jpg"));
   matInstance->GetParameters().Ambient = Kame::Math::Float4(0.1f, 0.1f, 0.1f, 0.1f);
@@ -76,7 +76,7 @@ bool InstancedRenderingDemo::LoadContent() {
   _MaterialInstance = matInstance;
 
 
-  Kame::Reference<Kame::MaterialInstance<Kame::DefaultMaterialParametersForShader>> matInstance2 = Kame::MaterialInstance<Kame::DefaultMaterialParametersForShader>::CreateFromMaterial1<Kame::DefaultMaterial>();
+  Kame::Reference<Kame::MaterialInstance<Kame::DefaultMaterialParameters>> matInstance2 = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial1<Kame::DefaultMaterial>();
   matInstance2->GetParameters().SetDiffuseTexture(Kame::TextureManager::GetTexture(L"Assets/Textures/KameHouse.jpg"));
   matInstance2->GetParameters().Ambient = Kame::Math::Float4(0.4f, 0.4f, 0.4f, 0.4f);
   matInstance2->GetParameters().Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);

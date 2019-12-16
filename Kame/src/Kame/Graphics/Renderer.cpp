@@ -20,38 +20,22 @@ namespace Kame {
     _ScissorRect = CD3DX12_RECT(0, 0, LONG_MAX, LONG_MAX);
     _SdrRenderProgram = GraphicsCore::CreateRenderProgramNc();
     _SdrRootSignature = GraphicsCore::CreateRenderProgramSignatureNc();
-    _SceneRenderTarget = GraphicsCore::CreateRenderTargetNc();
   }
 
   Renderer::~Renderer() {}
 
   void Renderer::Initialize(Display* targetDisplay) {
     _TargetDIsplay = targetDisplay;
-    CreateSceneTexture();
-    CreateSceneDepthTexture();
     CreateSdrProgram();
-    _SceneRenderTarget->AttachTexture(AttachmentPoint::Color0, _SceneTexture.get());
-    _SceneRenderTarget->AttachTexture(AttachmentPoint::DepthStencil, _SceneDepthTexture.get());
-  }
-
-  D3D12_RT_FORMAT_ARRAY Renderer::GetRenderTargetFormats() {
-    return _SceneRenderTarget->GetRenderTargetFormats();
-  }
-
-  DXGI_FORMAT Renderer::GetDepthStencilFormat() {
-    return _SceneRenderTarget->GetDepthStencilFormat();
   }
 
   void Renderer::Render(Game* game) {
     Reference<CommandList> commandList = GraphicsCore::BeginCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
     FLOAT clearColor[] = { 1.0f, 0.4f, 0.7f, 1.0f };
 
-    //commandList->ClearTexture(_SceneRenderTarget->GetTexture(AttachmentPoint::Color0), clearColor);
-    //commandList->ClearDepthStencilTexture(_SceneRenderTarget->GetTexture(AttachmentPoint::DepthStencil), D3D12_CLEAR_FLAG_DEPTH);
-    //commandList->SetRenderTarget(*_SceneRenderTarget);
-
     for (Layer* layer : game->GetLayerStack()) {
 
+      // Render against the RenderTarget of the Layer
       RenderTarget* renderTarget = layer->GetRenderTarget();
 
       commandList->ClearTexture(renderTarget->GetTexture(AttachmentPoint::Color0), clearColor);
@@ -59,19 +43,7 @@ namespace Kame {
       commandList->SetRenderTarget(*renderTarget);
 
 
-
-      //D3D12_VIEWPORT vp = renderTarget->GetViewport(DirectX::XMFLOAT2(0.1f, 0.1f));
-      D3D12_VIEWPORT vp = renderTarget->GetViewport();
-      ScreenRectangle sr = layer->GetScreenRectangle();
-      //vp.TopLeftX = sr.Left * vp.Width;
-      //vp.TopLeftY = sr.Top * vp.Height;
-      //vp.Width = vp.Width * sr.Width;
-      //vp.Height = vp.Height * sr.Height;
-      //_ScissorRect.left = sr.Left * vp.Width;
-      //_ScissorRect.top = sr.Top * vp.Height;
-      //_ScissorRect.right = _ScissorRect.left + /*sr.Width **/ vp.Width;
-      //_ScissorRect.bottom = _ScissorRect.top + /*sr.Height **/ vp.Height;
-      commandList->SetViewport(vp);
+      commandList->SetViewport(renderTarget->GetViewport());
       commandList->SetScissorRect(_ScissorRect);
 
       Renderer3D::RenderScene(
@@ -80,12 +52,15 @@ namespace Kame {
         layer->GetScene()
       );
 
+      // Calculate the Viewport for the Copying to the TargetDisplay according to the screenRectangle of the Layer
+      ScreenRectangle screenRectangle = layer->GetScreenRectangle();
       commandList->SetRenderTarget(_TargetDIsplay->GetRenderTarget());
       D3D12_VIEWPORT finalVp = _TargetDIsplay->GetRenderTarget().GetViewport(
-        DirectX::XMFLOAT2(layer->GetScreenRectangle().Width, layer->GetScreenRectangle().Height),
-        DirectX::XMFLOAT2(layer->GetScreenRectangle().Left, layer->GetScreenRectangle().Top)
+        DirectX::XMFLOAT2(screenRectangle.Width, screenRectangle.Height),
+        DirectX::XMFLOAT2(screenRectangle.Left, screenRectangle.Top)
       );
-      
+
+      // Copy the Layer-Scene to the TargetDisplay
       commandList->SetViewport(finalVp);
       commandList->SetRenderProgram(_SdrRenderProgram.get());
       commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -96,17 +71,6 @@ namespace Kame {
       commandList->Draw(3);
     }
 
-    // Final Rendering to the Rendertarget of the Window (here with Tonamapping)
-    //commandList->SetRenderTarget(_TargetDIsplay->GetRenderTarget());
-    //commandList->SetViewport(_TargetDIsplay->GetRenderTarget().GetViewport());
-    //commandList->SetRenderProgram(_SdrRenderProgram.get());
-    //commandList->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    //commandList->SetGraphicsRootSignature(_SdrRootSignature.get());
-    //commandList->SetGraphics32BitConstants(0, ToneMapping::GetParameters1());
-    //commandList->SetShaderResourceViewTexture(1, 0, _SceneRenderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
-    //commandList->Draw(3);
-
     GraphicsCore::ExecuteCommandList(commandList);
 
     // Render GUI.
@@ -115,44 +79,6 @@ namespace Kame {
     // Present
     _TargetDIsplay->Present();
 
-  }
-
-  void Renderer::CreateSceneTexture() {
-    DXGI_FORMAT hDRFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
-
-    // Create an off-screen render target with a single color buffer and a depth buffer.
-    auto colorDesc = CD3DX12_RESOURCE_DESC::Tex2D(hDRFormat, _TargetDIsplay->GetWidth(), _TargetDIsplay->GetHeight());
-    colorDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-
-    D3D12_CLEAR_VALUE colorClearValue;
-    colorClearValue.Format = colorDesc.Format;
-    colorClearValue.Color[0] = 0.4f;
-    colorClearValue.Color[1] = 0.6f;
-    colorClearValue.Color[2] = 0.9f;
-    colorClearValue.Color[3] = 1.0f;
-
-    _SceneTexture = GraphicsCore::CreateTextureNc(
-      colorDesc, &colorClearValue,
-      TextureUsage::RenderTarget,
-      L"HDR Texture"
-    );
-
-  }
-
-  void Renderer::CreateSceneDepthTexture() {
-    DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D32_FLOAT;
-    auto depthDesc = CD3DX12_RESOURCE_DESC::Tex2D(depthBufferFormat, _TargetDIsplay->GetWidth(), _TargetDIsplay->GetHeight());
-    depthDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-
-    D3D12_CLEAR_VALUE depthClearValue;
-    depthClearValue.Format = depthDesc.Format;
-    depthClearValue.DepthStencil = { 1.0f, 0 };
-
-    _SceneDepthTexture = GraphicsCore::CreateTextureNc(depthDesc, &depthClearValue, TextureUsage::Depth, L"Depth Render Target");
-
-    // Attach the HDR texture to the HDR render target.
-    //m_HDRRenderTarget->AttachTexture(AttachmentPoint::Color0, _HDRTexture.get());
-    //m_HDRRenderTarget->AttachTexture(AttachmentPoint::DepthStencil, _DepthTexture.get());
   }
 
   void Renderer::CreateSdrProgram() {

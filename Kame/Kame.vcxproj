@@ -161,6 +161,7 @@
     <ClInclude Include="src\Kame\Game\LayerStack.h" />
     <ClInclude Include="src\Kame\Game\Objects\MeshComponent.h" />
     <ClInclude Include="src\Kame\Graphics\Camera.h" />
+    <ClInclude Include="src\Kame\Graphics\DefaultMaterial.h" />
     <ClInclude Include="src\Kame\Graphics\GraphicsCore.h" />
     <ClInclude Include="src\Kame\Graphics\Light.h" />
     <ClInclude Include="src\Kame\Graphics\Material.h" />
@@ -269,6 +270,7 @@
     <ClCompile Include="src\Kame\Game\LayerStack.cpp" />
     <ClCompile Include="src\Kame\Game\Objects\MeshComponent.cpp" />
     <ClCompile Include="src\Kame\Graphics\Camera.cpp" />
+    <ClCompile Include="src\Kame\Graphics\DefaultMaterial.cpp" />
     <ClCompile Include="src\Kame\Graphics\GraphicsCore.cpp" />
     <ClCompile Include="src\Kame\Graphics\Light.cpp" />
     <ClCompile Include="src\Kame\Graphics\Material.cpp" />
@@ -387,4 +389,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project> 
+</Project>

@@ -83,47 +83,7 @@ namespace Kame {
     static const BaseMaterialParameters RedRubber;
     static const BaseMaterialParameters WhiteRubber;
     static const BaseMaterialParameters YellowRubber;
-  };
-
-  struct DefaultMaterialParameters {
-    BaseMaterialParameters BaseParams;
-    Texture* DiffuseTexture;
-  };
-
-  struct DefaultMaterialParametersForShader {
-
-    DefaultMaterialParametersForShader(
-      Kame::Math::Float4 emissive = { 0.0f, 0.0f, 0.0f, 1.0f },
-      Kame::Math::Float4 ambient = { 0.1f, 0.1f, 0.1f, 1.0f },
-      Kame::Math::Float4 diffuse = { 1.0f, 1.0f, 1.0f, 1.0f },
-      Kame::Math::Float4 specular = { 1.0f, 1.0f, 1.0f, 1.0f },
-      float specularPower = 128.0f
-    )
-      : Emissive(emissive)
-      , Ambient(ambient)
-      , Diffuse(diffuse)
-      , Specular(specular)
-      , SpecularPower(specularPower) {}
-
-    Kame::Math::Float4 Emissive;
-    //----------------------------------- (16 byte boundary)
-    Kame::Math::Float4 Ambient;
-    //----------------------------------- (16 byte boundary)
-    Kame::Math::Float4 Diffuse;
-    //----------------------------------- (16 byte boundary)
-    Kame::Math::Float4 Specular;
-    //----------------------------------- (16 byte boundary)
-    float             SpecularPower;
-    uint32_t          TextureIndex;
-    uint32_t          Padding[2];
-
-    void SetDiffuseTexture(Texture* texture);
-
-    static void Clear() { _Textures.clear(); }
-
-    static std::vector<Texture*> _Textures;
-  
-  };
+  };  
 
   class MaterialBase {
   public:
@@ -218,26 +178,7 @@ namespace Kame {
   private:
     std::vector<TParameters&> _ParemeterCollection;
   };
-
-  class DefaultMaterial : public Material<DefaultMaterialParametersForShader> {
-
-  public:
-
-
-    //virtual void ApplyParameters(CommandList* commandList, DefaultMaterialParametersForShader& params) override;
-    virtual void ApplyParameters1(CommandList* commandList, std::vector<DefaultMaterialParametersForShader>& params) override;
-
-
-    virtual void CreateProgram() override;
-
-    DefaultMaterial() { CreateProgram(); }
-    virtual ~DefaultMaterial() {};
-  protected:
-
-    //DefaultMaterialParameters _Parameters;
-    //Texture* _DiffuseTexture;
-  };
-
+   
   template<typename TParameters>
   inline Reference<MaterialInstance<TParameters>> MaterialInstance<TParameters>::CreateFromMaterial(
     Material<TParameters>* material
@@ -246,11 +187,6 @@ namespace Kame {
     ret->_BaseMaterial = material;
     return ret;
   }
-
-  //template<typename TParameters>
-  //inline void MaterialInstance<TParameters>::SetParameters(TParameters& params) {
-  //  _Parameters = params;
-  //}
 
   template<typename TParameters>
   inline TParameters& MaterialInstance<TParameters>::GetParameters() {
@@ -283,13 +219,6 @@ namespace Kame {
   template<typename TParameters>
   inline MaterialInstance<TParameters>::~MaterialInstance() {
     _ParameterCollection.erase(_ParameterCollection.begin() + _Index);
-  }
-
-  inline MaterialInstance<DefaultMaterialParametersForShader>::~MaterialInstance() {
-    _ParameterCollection.erase(_ParameterCollection.begin() + _Index);
-    if (_ParameterCollection.size() == 0) {
-      DefaultMaterialParametersForShader::Clear();
-    }
   }
 
   template<typename TParameters>
