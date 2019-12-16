@@ -76,16 +76,16 @@ namespace Kame {
     _ProgramSignature->SetDescription(rootSignatureDescription.Desc_1_1);
 
     _Program->SetRootSignature(_ProgramSignature.get());
-    _Program->SetInputLayout1(1, inputLayout);
-    _Program->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-    _Program->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
-    _Program->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+    _Program->SetInputLayout(1, inputLayout);
+    _Program->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+    _Program->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
+    _Program->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
 
     D3D12_RT_FORMAT_ARRAY rtFormat = {}; //TODO Woher kriegen wenn nicht stehlen?
     rtFormat.NumRenderTargets = 1;
     rtFormat.RTFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
     DXGI_FORMAT dsFormat = DXGI_FORMAT_D32_FLOAT;
-    _Program->SetRenderTargetFormats1(rtFormat, dsFormat);
+    _Program->SetRenderTargetFormats(rtFormat, dsFormat);
 
     _Program->Create();
   }

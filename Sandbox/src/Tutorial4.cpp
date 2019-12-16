@@ -298,11 +298,11 @@ namespace Kame {
       m_SkyboxSignature->SetDescription(rootSignatureDescription.Desc_1_1);
 
       _SkyboxProgram->SetRootSignature(m_SkyboxSignature.get());
-      _SkyboxProgram->SetInputLayout1(1, inputLayout);
-      _SkyboxProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-      _SkyboxProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
-      _SkyboxProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
-      _SkyboxProgram->SetRenderTargetFormats1(m_HDRRenderTarget->GetRenderTargetFormats());
+      _SkyboxProgram->SetInputLayout(1, inputLayout);
+      _SkyboxProgram->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      _SkyboxProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      _SkyboxProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      _SkyboxProgram->SetRenderTargetFormats(m_HDRRenderTarget->GetRenderTargetFormats());
 
       _SkyboxProgram->Create();
     }
@@ -347,11 +347,11 @@ namespace Kame {
       m_HDRRootSignature->SetDescription(rootSignatureDescription.Desc_1_1);
 
       _HDRProgram->SetRootSignature(m_HDRRootSignature.get());
-      _HDRProgram->SetInputLayout1(VertexPositionNormalTexture::InputElementCount, VertexPositionNormalTexture::InputElements);
-      _HDRProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-      _HDRProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
-      _HDRProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
-      _HDRProgram->SetRenderTargetFormats1(m_HDRRenderTarget->GetRenderTargetFormats(), m_HDRRenderTarget->GetDepthStencilFormat());
+      _HDRProgram->SetInputLayout(VertexPositionNormalTexture::InputElementCount, VertexPositionNormalTexture::InputElements);
+      _HDRProgram->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      _HDRProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      _HDRProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      _HDRProgram->SetRenderTargetFormats(m_HDRRenderTarget->GetRenderTargetFormats(), m_HDRRenderTarget->GetDepthStencilFormat());
 
       _HDRProgram->Create();
     }
@@ -402,11 +402,11 @@ namespace Kame {
       rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
 
       _SDRProgram->SetRootSignature(m_SDRRootSignature.get());
-      _SDRProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-      _SDRProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
-      _SDRProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      _SDRProgram->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      _SDRProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      _SDRProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
       _SDRProgram->SetRasterizer(rasterizerDesc);
-      _SDRProgram->SetRenderTargetFormats1(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
+      _SDRProgram->SetRenderTargetFormats(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
 
       _SDRProgram->Create();
 
@@ -415,11 +415,11 @@ namespace Kame {
       Reference<RenderProgramDx12> testProgram;
       testProgram.reset(new RenderProgramDx12());
       testProgram->SetRootSignature(m_SDRRootSignature.get());
-      testProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-      testProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
-      testProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+      testProgram->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+      testProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
+      testProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
       testProgram->SetRasterizer(rasterizerDesc);
-      testProgram->SetRenderTargetFormats1(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
+      testProgram->SetRenderTargetFormats(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
       testProgram->Create();
 
     }

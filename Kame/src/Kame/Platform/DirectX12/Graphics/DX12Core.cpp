@@ -8,7 +8,7 @@
 #include "Display.h"
 #include "Kame/Application/Window.h"
 #include "GraphicsCommon.h"
-#include "PipelineState.h"
+#include "RenderProgramDx12.h"
 #include <Kame/Core/DebugUtilities.h>
 
 namespace Kame {

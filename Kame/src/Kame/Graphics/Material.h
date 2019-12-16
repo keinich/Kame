@@ -128,15 +128,12 @@ namespace Kame {
   template<typename TParameters>
   class MaterialInstance : public MaterialInstanceBase {
 
-    //template<typename T>
-    //friend class std::shared_ptr<MaterialInstance<TParameters>>;    
-
   public:
 
     static Reference<MaterialInstance<TParameters>> CreateFromMaterial(Material<TParameters>* material);
 
     template<class TMaterial>
-    static Reference<MaterialInstance<TParameters>> CreateFromMaterial1();
+    static Reference<MaterialInstance<TParameters>> CreateFromMaterial();
 
     //void SetParameters(TParameters& params);
     TParameters& GetParameters();
@@ -206,7 +203,7 @@ namespace Kame {
 
   template<typename TParameters>
   template<class TMaterial>
-  inline Reference<MaterialInstance<TParameters>> MaterialInstance<TParameters>::CreateFromMaterial1() {
+  inline Reference<MaterialInstance<TParameters>> MaterialInstance<TParameters>::CreateFromMaterial() {
     MaterialInstance<TParameters>* ret1 = new MaterialInstance<TParameters>();
 
     auto ret = Reference< MaterialInstance<TParameters>>(ret1);

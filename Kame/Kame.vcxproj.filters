@@ -337,12 +337,6 @@
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemap_CS.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.h">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.h">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClInclude>
@@ -591,12 +585,6 @@
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PanoToCubemapPso.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineState.cpp">
-      <Filter>Kame\Platform\DirectX12\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\PipelineStateManager.cpp">
       <Filter>Kame\Platform\DirectX12\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Platform\DirectX12\Graphics\RenderProgramDx12.cpp">

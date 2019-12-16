@@ -20,11 +20,8 @@
 #include "VertexBufferDx12.h"
 #include "DirectXTex.h"
 
-
 #include <Kame/Core/DebugUtilities.h>
 #include "Kame/Graphics/RenderApi/Texture.h"
-
-#include "PipelineState.h"
 
 using namespace DirectX;
 

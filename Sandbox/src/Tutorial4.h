@@ -42,8 +42,6 @@
 #include "Kame/Platform/DirectX12/Graphics/TextureDx12.h"
 #include "Kame/Platform/DirectX12/Graphics/VertexBufferDx12.h"
 
-#include "Kame/Platform/DirectX12/Graphics/PipelineState.h"
-
 #include "Kame/Math/Vector4.h"
 
 #include <DirectXMath.h>

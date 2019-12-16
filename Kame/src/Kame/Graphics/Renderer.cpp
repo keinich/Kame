@@ -106,11 +106,11 @@ namespace Kame {
     rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
 
     _SdrRenderProgram->SetRootSignature(_SdrRootSignature.get());
-    _SdrRenderProgram->SetPrimitiveTopologyType1(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-    _SdrRenderProgram->SetVertexShader1(CD3DX12_SHADER_BYTECODE(vs.Get()));
-    _SdrRenderProgram->SetPixelShader1(CD3DX12_SHADER_BYTECODE(ps.Get()));
+    _SdrRenderProgram->SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+    _SdrRenderProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
+    _SdrRenderProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
     _SdrRenderProgram->SetRasterizer(rasterizerDesc);
-    _SdrRenderProgram->SetRenderTargetFormats1(_TargetDIsplay->GetRenderTarget().GetRenderTargetFormats());
+    _SdrRenderProgram->SetRenderTargetFormats(_TargetDIsplay->GetRenderTarget().GetRenderTargetFormats());
 
     _SdrRenderProgram->Create();
   }
