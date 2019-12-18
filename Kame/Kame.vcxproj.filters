@@ -28,6 +28,9 @@
     <Filter Include="Kame\Graphics\RenderApi">
       <UniqueIdentifier>{CCBDB70D-38F5-FFA4-41FF-63C8ADB5269E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Graphics\Text">
+      <UniqueIdentifier>{97A1DE6C-8385-9FC2-ECE5-9915D8E88944}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\ImGui">
       <UniqueIdentifier>{6D46B7F1-59FE-F83E-C205-D29AAEDC932F}</UniqueIdentifier>
     </Filter>
@@ -142,6 +145,9 @@
     <ClInclude Include="src\Kame\Graphics\Camera.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\DefaultMaterial.h">
+      <Filter>Kame\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Graphics\GraphicsCore.h">
       <Filter>Kame\Graphics</Filter>
     </ClInclude>
@@ -207,6 +213,9 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Skybox.h">
       <Filter>Kame\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\Text\TextRenderer.h">
+      <Filter>Kame\Graphics\Text</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\TextureManager.h">
       <Filter>Kame\Graphics</Filter>
@@ -425,7 +434,9 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\Graphics\DefaultMaterial.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\Font.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\FontManager.h" />
+    <ClInclude Include="src\Kame\Core\FileUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -453,6 +464,9 @@
       <Filter>Kame\Game\Objects</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Camera.cpp">
+      <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\DefaultMaterial.cpp">
       <Filter>Kame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\GraphicsCore.cpp">
@@ -496,6 +510,9 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Skybox.cpp">
       <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\Text\TextRenderer.cpp">
+      <Filter>Kame\Graphics\Text</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp">
       <Filter>Kame\Graphics</Filter>
@@ -651,7 +668,10 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
-    <ClCompile Include="src\Kame\Graphics\DefaultMaterial.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Text\Font.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Text\FontManager.cpp" />
+    <ClCompile Include="src\Kame\Core\FileUtility.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Text\Consolas.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">
@@ -666,5 +686,8 @@
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\PanoToCubemap_CS.hlsl">
       <Filter>Kame\Platform\DirectX12\Graphics\Resources\Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

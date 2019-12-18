@@ -146,6 +146,7 @@
     <ClInclude Include="src\Kame\Application\Window.h" />
     <ClInclude Include="src\Kame\Core\Casting.h" />
     <ClInclude Include="src\Kame\Core\DebugUtilities.h" />
+    <ClInclude Include="src\Kame\Core\FileUtility.h" />
     <ClInclude Include="src\Kame\Core\Hash.h" />
     <ClInclude Include="src\Kame\Core\References.h" />
     <ClInclude Include="src\Kame\Core\ThreadSafeQueue.h" />
@@ -184,7 +185,10 @@
     <ClInclude Include="src\Kame\Graphics\Renderer3D.h" />
     <ClInclude Include="src\Kame\Graphics\Scene3D.h" />
     <ClInclude Include="src\Kame\Graphics\Skybox.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\Font.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\TextRenderer.h" />
     <ClInclude Include="src\Kame\Graphics\TextureManager.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\FontManager.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input\Input.h" />
     <ClInclude Include="src\Kame\Input\KeyCodes.h" />
@@ -261,6 +265,7 @@
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp" />
     <ClCompile Include="src\Kame\Application\Window.cpp" />
+    <ClCompile Include="src\Kame\Core\FileUtility.cpp" />
     <ClCompile Include="src\Kame\Events\Event.cpp" />
     <ClCompile Include="src\Kame\Game\CameraController.cpp" />
     <ClCompile Include="src\Kame\Game\Game.cpp" />
@@ -283,7 +288,11 @@
     <ClCompile Include="src\Kame\Graphics\Renderer3D.cpp" />
     <ClCompile Include="src\Kame\Graphics\Scene3D.cpp" />
     <ClCompile Include="src\Kame\Graphics\Skybox.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Text\Consolas.h" />
+    <ClCompile Include="src\Kame\Graphics\Text\Font.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Text\TextRenderer.cpp" />
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Text\FontManager.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Input\Input.cpp" />
     <ClCompile Include="src\Kame\Logging\Log.cpp" />
@@ -382,7 +391,17 @@
       <Project>{A90EE592-95C6-26E0-FECD-FF3BEAA4C1D0}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\zlib-vc140-static-64.1.2.11\build\native\zlib-vc140-static-64.targets" Condition="Exists('..\packages\zlib-vc140-static-64.1.2.11\build\native\zlib-vc140-static-64.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\zlib-vc140-static-64.1.2.11\build\native\zlib-vc140-static-64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib-vc140-static-64.1.2.11\build\native\zlib-vc140-static-64.targets'))" />
+  </Target>
 </Project>

@@ -16,6 +16,7 @@ namespace Kame {
     CD3DX12_PIPELINE_STATE_STREAM_RASTERIZER Rasterizer;
     CD3DX12_PIPELINE_STATE_STREAM_RENDER_TARGET_FORMATS RTVFormats;
     CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
+    CD3DX12_PIPELINE_STATE_STREAM_BLEND_DESC BlendDesc;
   };
 
   struct PipelineStateStreamWithoutRtvs {
@@ -26,6 +27,7 @@ namespace Kame {
     CD3DX12_PIPELINE_STATE_STREAM_PS PS;
     CD3DX12_PIPELINE_STATE_STREAM_RASTERIZER Rasterizer;
     CD3DX12_PIPELINE_STATE_STREAM_DEPTH_STENCIL_FORMAT DSVFormat;
+    CD3DX12_PIPELINE_STATE_STREAM_BLEND_DESC BlendDesc;
 
     PipelineStateStreamWithoutRtvs() {}
 
@@ -37,6 +39,7 @@ namespace Kame {
       PS = pss.PS;
       Rasterizer = pss.Rasterizer;
       DSVFormat = pss.DSVFormat;
+      BlendDesc = pss.BlendDesc;
     }
   };
 
@@ -95,6 +98,10 @@ namespace Kame {
 
     virtual void SetRasterizer(const CD3DX12_RASTERIZER_DESC& rasterizerDesc) override {
       _PipelineStateStream.Rasterizer = rasterizerDesc;
+    }
+
+    virtual void SetBlendDescription(const CD3DX12_BLEND_DESC& blendDesc) override {
+      _PipelineStateStream.BlendDesc = blendDesc;
     }
 
   protected:

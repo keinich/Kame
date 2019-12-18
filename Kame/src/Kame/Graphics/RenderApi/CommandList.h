@@ -76,6 +76,12 @@ namespace Kame {
     virtual void SetVertexBuffer(uint32_t slot, const VertexBuffer* vertexBuffer) = 0;
     virtual void SetIndexBuffer(const IndexBuffer* indexBuffer) = 0;
 
+    virtual void SetDynamicVertexBuffer(uint32_t slot, size_t numVertices, size_t vertexSize, const void* vertexBufferData) = 0;
+    template<typename T>
+    void SetDynamicVertexBuffer(uint32_t slot, const std::vector<T>& vertexBufferData) {
+      SetDynamicVertexBuffer(slot, vertexBufferData.size(), sizeof(T), vertexBufferData.data());
+    }
+
     virtual void CopyVertexBuffer(
       VertexBuffer* vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData
     ) = 0;

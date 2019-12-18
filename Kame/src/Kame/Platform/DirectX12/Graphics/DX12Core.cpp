@@ -111,6 +111,7 @@ namespace Kame {
 
     // Initialize Common Objects
     GraphicsCommon::InitializeCommonState();
+    
   }
 
   void DX12Core::Create() {

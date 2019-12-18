@@ -11,6 +11,7 @@
 #include <Kame/Game/Game.h>
 #include <Kame/Graphics/PostEffects/ToneMapping.h>
 #include "Renderer3D.h"
+#include "Text/TextRenderer.h"
 
 namespace Kame {
 
@@ -52,6 +53,9 @@ namespace Kame {
         layer->GetScene()
       );
 
+
+     /* TextRenderer::Get()->Render(commandList.get());*/
+
       // Calculate the Viewport for the Copying to the TargetDisplay according to the screenRectangle of the Layer
       ScreenRectangle screenRectangle = layer->GetScreenRectangle();
       commandList->SetRenderTarget(_TargetDIsplay->GetRenderTarget());
@@ -59,6 +63,8 @@ namespace Kame {
         DirectX::XMFLOAT2(screenRectangle.Width, screenRectangle.Height),
         DirectX::XMFLOAT2(screenRectangle.Left, screenRectangle.Top)
       );
+
+      commandList->SetViewport(finalVp);
 
       // Copy the Layer-Scene to the TargetDisplay
       commandList->SetViewport(finalVp);
@@ -69,6 +75,7 @@ namespace Kame {
       commandList->SetShaderResourceViewTexture(1, 0, renderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
       commandList->Draw(3);
+      TextRenderer::Get()->Render(commandList.get(), L"I LOVE YOU");
     }
 
     GraphicsCore::ExecuteCommandList(commandList);

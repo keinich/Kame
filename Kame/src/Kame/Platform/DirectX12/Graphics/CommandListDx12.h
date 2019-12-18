@@ -32,7 +32,7 @@
   *  DirectX 12 applications easier.
   */
 
-//System
+  //System
 #include <wrl.h>
 #include <d3d12.h>
 #include <map> // for std::map
@@ -134,7 +134,7 @@ namespace Kame {
      * Resolve a multisampled resource into a non-multisampled resource.
      */
     void ResolveSubresource(GpuResourceDx12& dstRes, const GpuResourceDx12& srcRes, uint32_t dstSubresource = 0, uint32_t srcSubresource = 0);
-      
+
     virtual void CopyVertexBuffer(
       VertexBuffer* vertexBuffer, size_t numVertices, size_t vertexStride, const void* vertexBufferData
     ) override;
@@ -207,7 +207,7 @@ namespace Kame {
      * signature.
      */
     virtual void SetGraphicsDynamicConstantBuffer(uint32_t rootParameterIndex, size_t sizeInBytes, const void* bufferData) override;
-    
+
 
     /**
      * Set a set of 32-bit constants on the graphics pipeline.
@@ -234,11 +234,7 @@ namespace Kame {
     /**
      * Set dynamic vertex buffer data to the rendering pipeline.
      */
-    void SetDynamicVertexBuffer(uint32_t slot, size_t numVertices, size_t vertexSize, const void* vertexBufferData);
-    template<typename T>
-    void SetDynamicVertexBuffer(uint32_t slot, const std::vector<T>& vertexBufferData) {
-      SetDynamicVertexBuffer(slot, vertexBufferData.size(), sizeof(T), vertexBufferData.data());
-    }
+    virtual void SetDynamicVertexBuffer(uint32_t slot, size_t numVertices, size_t vertexSize, const void* vertexBufferData) override;
 
     /**
      * Bind the index buffer to the rendering pipeline.

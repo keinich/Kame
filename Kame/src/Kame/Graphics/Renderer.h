@@ -18,7 +18,7 @@ namespace Kame {
 
     void Initialize(Display* targetWindow);
 
-    void Render(Game* game);   
+    void Render(Game* game);
 
     Renderer();
     virtual ~Renderer();

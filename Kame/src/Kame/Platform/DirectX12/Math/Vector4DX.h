@@ -11,8 +11,13 @@ namespace Kame {
     class Vector4DX {
 
     public:
+
+      Vector4DX() {
+        _XmVector = DirectX::XMVectorSet(0, 0, 0, 0);
+      }
+
       Vector4DX(float x, float y, float z, float w) {
-        _XmVector = DirectX::XMVectorSet(0, 5, -20, 1);
+        _XmVector = DirectX::XMVectorSet(x, y, z, w);
       }
 
       Vector4DX(DirectX::XMVECTOR xmVector) {

@@ -24,6 +24,21 @@ namespace Kame {
 
   void RenderProgramDx12::Create() {
 
+    //CD3DX12_DEPTH_STENCIL_DESC1 depthStencilDesc;
+    //depthStencilDesc.DepthEnable = TRUE;
+    //depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    //depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_GREATER;
+    //depthStencilDesc.StencilEnable = TRUE;
+    //depthStencilDesc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+    //depthStencilDesc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
+    //depthStencilDesc.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_GREATER;
+    //depthStencilDesc.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
+    //depthStencilDesc.FrontFace.StencilFailOp = D3D12_STENCIL_OP_DECR;
+    //depthStencilDesc.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+    //depthStencilDesc.BackFace = depthStencilDesc.FrontFace;
+
+    //_PipelineStateStream.DepthStencil = depthStencilDesc;
+
     assert(_PipelineStateStream.pRootSignature != nullptr);
 
     _PipelineStateStream.InputLayout = { nullptr, 0U };

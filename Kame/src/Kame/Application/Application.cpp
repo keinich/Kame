@@ -10,10 +10,12 @@
 #include <Kame/Graphics/MeshManager.h>
 #include <Kame/Graphics/TextureManager.h>
 #include <Kame/Graphics/MaterialManager.h>
+#include <Kame/Graphics/Text/FontManager.h>
 //#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include <Kame/Game/Game.h>
 
 #include <Kame/Graphics/Renderer.h>
+#include <Kame/Graphics/Text/TextRenderer.h>
 
 #include <Kame/Input/Input.h>
 //#include "Kame/Events/Event.h"
@@ -49,6 +51,8 @@ namespace Kame {
     MeshManager::Create();
     TextureManager::Create();
     MaterialManager::Create();
+    TextRenderer::Create();
+    FontManager::Create();
     //DX12Core::Create();
 
     // Initialize
@@ -58,6 +62,8 @@ namespace Kame {
   void Application::Destroy() {
     //DX12Core::Destroy();
     _Instance->_Game.reset();
+    FontManager::Destroy();
+    TextRenderer::Destroy();
     MaterialManager::Destroy();
     TextureManager::Destroy();
     MeshManager::Destroy();
@@ -94,6 +100,8 @@ namespace Kame {
     //Renderer::Initialize();
     //DX12Core::Get().Initialize();
     GraphicsCore::Initialize();
+    TextRenderer::Get()->Initialize();
+
     //Renderer::Get()->Initialize(s_Windows); //TODO where to do this?
 
   }

@@ -14,6 +14,7 @@ namespace Kame {
     virtual bool IsValid1() const = 0;
 
     virtual void LoadFromFile(const std::wstring& fileName, TextureUsage textureUsage) = 0;
+    virtual void Create(size_t Width, size_t Height, DXGI_FORMAT Format, const void* InitialData) = 0;
 
     virtual UINT64 GetWidth() const = 0;
     virtual UINT64 GetHeight() const = 0;

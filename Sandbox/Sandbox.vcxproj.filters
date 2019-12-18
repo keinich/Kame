@@ -6,6 +6,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\HDR_I_PS.h" />
     <ClInclude Include="src\HDR_I_VS.h" />
     <ClInclude Include="src\HDR_PS.h" />
     <ClInclude Include="src\HDR_VS.h" />
@@ -45,6 +46,12 @@
       <Filter>shaders</Filter>
     </FxCompile>
     <FxCompile Include="src\shaders\Skybox_VS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\shaders\Text_PS.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\shaders\Text_VS.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>
