@@ -437,6 +437,7 @@
     <ClInclude Include="src\Kame\Graphics\Text\Font.h" />
     <ClInclude Include="src\Kame\Graphics\Text\FontManager.h" />
     <ClInclude Include="src\Kame\Core\FileUtility.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\TextRenderContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -672,6 +673,7 @@
     <ClCompile Include="src\Kame\Graphics\Text\FontManager.cpp" />
     <ClCompile Include="src\Kame\Core\FileUtility.cpp" />
     <ClCompile Include="src\Kame\Graphics\Text\Consolas.h" />
+    <ClCompile Include="src\Kame\Graphics\Text\TextRenderContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">

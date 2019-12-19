@@ -12,6 +12,7 @@
 #include <Kame/Graphics/PostEffects/ToneMapping.h>
 #include "Renderer3D.h"
 #include "Text/TextRenderer.h"
+#include "Text/TextRenderContext.h"
 
 namespace Kame {
 
@@ -54,9 +55,9 @@ namespace Kame {
       );
 
 
-     /* TextRenderer::Get()->Render(commandList.get());*/
+      /* TextRenderer::Get()->Render(commandList.get());*/
 
-      // Calculate the Viewport for the Copying to the TargetDisplay according to the screenRectangle of the Layer
+       // Calculate the Viewport for the Copying to the TargetDisplay according to the screenRectangle of the Layer
       ScreenRectangle screenRectangle = layer->GetScreenRectangle();
       commandList->SetRenderTarget(_TargetDIsplay->GetRenderTarget());
       D3D12_VIEWPORT finalVp = _TargetDIsplay->GetRenderTarget().GetViewport(
@@ -75,7 +76,18 @@ namespace Kame {
       commandList->SetShaderResourceViewTexture(1, 0, renderTarget->GetTexture(Color0), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
       commandList->Draw(3);
-      TextRenderer::Get()->Render(commandList.get(), L"I LOVE YOU");
+
+      TextRenderContext textRenderContext = TextRenderContext::Begin(commandList.get(), finalVp.Width, finalVp.Height);
+      textRenderContext.SetColor(Math::Float4(1.0f, 0.0f, 0.0f, 1.0f));
+      textRenderContext.SetCursorPosition(-0.2f, 1.0f);
+      textRenderContext.DrawString(L"Welcome to the amazing KAME Engine");
+
+      textRenderContext.SetColor(Math::Float4(1.0f, 0.8f, 0.8f, 1.0f));
+      textRenderContext.SetCursorPosition(-0.2f, 0.9f);
+      textRenderContext.SetTextSize(12);
+      textRenderContext.DrawString(L"It is supergreat !! :)");
+      textRenderContext.SetCursorPosition(-0.2f, 0.8f);
+      textRenderContext.DrawString(L"Dont you think?");
     }
 
     GraphicsCore::ExecuteCommandList(commandList);

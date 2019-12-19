@@ -186,6 +186,7 @@
     <ClInclude Include="src\Kame\Graphics\Scene3D.h" />
     <ClInclude Include="src\Kame\Graphics\Skybox.h" />
     <ClInclude Include="src\Kame\Graphics\Text\Font.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\TextRenderContext.h" />
     <ClInclude Include="src\Kame\Graphics\Text\TextRenderer.h" />
     <ClInclude Include="src\Kame\Graphics\TextureManager.h" />
     <ClInclude Include="src\Kame\Graphics\Text\FontManager.h" />
@@ -290,6 +291,7 @@
     <ClCompile Include="src\Kame\Graphics\Skybox.cpp" />
     <ClCompile Include="src\Kame\Graphics\Text\Consolas.h" />
     <ClCompile Include="src\Kame\Graphics\Text\Font.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Text\TextRenderContext.cpp" />
     <ClCompile Include="src\Kame\Graphics\Text\TextRenderer.cpp" />
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp" />
     <ClCompile Include="src\Kame\Graphics\Text\FontManager.cpp" />

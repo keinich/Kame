@@ -20,32 +20,27 @@ struct PS_INPUT {
 };
 
 float GetAlpha(float2 uv) {
-  return saturate(SignedDistanceFieldTex.Sample(LinearClampSampler, uv) * 1.0f + 0.5);
-  //return saturate(SignedDistanceFieldTex.Sample(LinearClampSampler, uv) * HeightRange + 0.5);
+  //return saturate(SignedDistanceFieldTex.Sample(LinearClampSampler, uv) * 1.0f + 0.5);
+  return saturate(SignedDistanceFieldTex.Sample(LinearClampSampler, uv) * HeightRange + 0.5);
+}
+
+float GetAlpha2(float2 uv, float range) {
+  return saturate(SignedDistanceFieldTex.Sample(LinearClampSampler, uv) * range + 0.5);
 }
 
 float4 main(PS_INPUT Input) : SV_Target0
 {
-  //float3 HDR = SignedDistanceFieldTex.SampleLevel(LinearClampSampler, TexCoord, 0);
 
-  // Add exposure to HDR result.
-  //HDR *= exp2(TonemapParametersCB.Exposure);
-
-  float alpha = GetAlpha(Input.uv);
-
-//if (alpha <= 0.2f) {
+//  float alpha = GetAlpha(Input.uv);
+//if (alpha < 0.1f) {
 //  discard;
 //}
-return float4(Color.rgb, 1) * GetAlpha(Input.uv) * Color.a;
-  //return float4(alpha, alpha, alpha, alpha);
-  //return float4(SignedDistanceFieldTex.SampleLevel(LinearClampSampler, Input.uv, 0), 1);
-  //return float4(Color.rgb, 1);
-
-  //return float4(Color.rgb, 1) * GetAlpha(Input.uv) * Color.a;
+//  return float4(Color.rgb, 1);
 
 
-  //return float4(1, 0, 0, 1);
-  //return Color * float4(HDR, 1);
-  //return float4(HDR, 1);
+
+float alpha1 = GetAlpha2(Input.uv, HeightRange) * Color.a;
+float alpha2 = GetAlpha2(Input.uv - ShadowOffset, HeightRange * ShadowHardness) * ShadowOpacity * Color.a;
+return float4(Color.rgb * alpha1, lerp(alpha2, 1, alpha1));
 
 }
