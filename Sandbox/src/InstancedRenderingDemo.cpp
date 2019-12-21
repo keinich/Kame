@@ -69,7 +69,7 @@ bool InstancedRenderingDemo::LoadContent() {
   //auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial(material);
   auto matInstance = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial<Kame::DefaultMaterial>();
   //matInstance->GetParameters().DiffuseTexture = _KameDefaultTexture;
-  matInstance->GetParameters().SetDiffuseTexture(Kame::TextureManager::GetTexture(L"Assets/Textures/Katze.jpg"));
+  matInstance->GetParameters().SetDiffuseTexture(Kame::TextureManager::GetTexture(L"Assets/Textures/goku.jpg"));
   matInstance->GetParameters().Ambient = Kame::Math::Float4(0.1f, 0.1f, 0.1f, 0.1f);
   matInstance->GetParameters().Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
   //matInstance->GetParameters().BaseParams. = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
@@ -81,21 +81,35 @@ bool InstancedRenderingDemo::LoadContent() {
   matInstance2->GetParameters().Ambient = Kame::Math::Float4(0.4f, 0.4f, 0.4f, 0.4f);
   matInstance2->GetParameters().Diffuse = Kame::Math::Float4(0.9f, 0.9f, 0.9f, 0.9f);
 
+  Kame::Reference<Kame::MaterialInstance<Kame::DefaultMaterialParameters>> matInstance3 = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial<Kame::DefaultMaterial>();
+  matInstance3->GetParameters().SetDiffuseTexture(Kame::TextureManager::GetTexture(L"Assets/Textures/bulma.jpg"));
 
+  Kame::Reference<Kame::MaterialInstance<Kame::DefaultMaterialParameters>> matInstance4 = Kame::MaterialInstance<Kame::DefaultMaterialParameters>::CreateFromMaterial<Kame::DefaultMaterial>();
+  matInstance4->GetParameters().SetDiffuseTexture(Kame::TextureManager::GetTexture(L"Assets/Textures/roshi.jpg"));
 
   for (int m = 0; m < 10; ++m) {
     for (int n = 0; n < 10; ++n) {
 
+      float yOffset = 0;
       auto meshComponent = Kame::CreateReference<Kame::MeshComponent>();
       meshComponent->SetMesh(_SphereMesh);
-      if ((m + n) % 2 == 0) {
+      if ((m % 2 == 0 && n % 2 == 0)) {
         meshComponent->SetMaterialInstance(_MaterialInstance);
       }
-      else {
+      else if ((m % 2 == 0 && n % 2 != 0)) {
         meshComponent->SetMaterialInstance(matInstance2);
+        yOffset = 5.0f;
+      }
+      else if ((m % 2 != 0 && n % 2 == 0)) {
+        meshComponent->SetMaterialInstance(matInstance3);
+        yOffset = 10.0f;
+      }
+      else if ((m % 2 != 0 && n % 2 != 0)) {
+        meshComponent->SetMaterialInstance(matInstance4);
+        yOffset = -5.0f;
       }
       _Meshes.push_back(meshComponent);
-      XMMATRIX translationMatrix = XMMatrixTranslation(m * 4.0f, 4.0f, n * 4.0f);
+      XMMATRIX translationMatrix = XMMatrixTranslation(m * 4.0f, 4.0f + yOffset, n * 4.0f);
       XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(45.0f));
       XMMATRIX scaleMatrix = XMMatrixScaling(2.0f, 2.0f, 2.0f);
       XMMATRIX worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;

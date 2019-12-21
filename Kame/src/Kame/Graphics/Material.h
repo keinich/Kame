@@ -85,12 +85,16 @@ namespace Kame {
     static const BaseMaterialParameters YellowRubber;
   };
 
+    class MaterialInstanceBase;
+
   class MaterialBase {
+
   public:
 
     virtual void CreateProgram() = 0;
     inline RenderProgramSignature* GetSignature() const { return _ProgramSignature.get(); }
     inline RenderProgram* GetProgram() const { return _Program.get(); }
+    virtual void ApplyParameters(CommandList* commandList, std::vector<MaterialInstanceBase*>& materialInstances ) = 0;
 
     MaterialBase();
     virtual ~MaterialBase();
@@ -104,12 +108,14 @@ namespace Kame {
   template<typename TParams>
   class Material : public MaterialBase {
 
-    //friend class MaterialInstance<TParams>;
-
   public:
 
     virtual void CreateProgram() = 0;
     virtual void ApplyParameters(CommandList* commandList, std::vector<TParams>& params) {};
+    virtual void ApplyParameters(
+      CommandList* commandList, 
+      std::vector<MaterialInstanceBase*>& materialInstances
+    ) override {};
 
     //Reference<MaterialInstance<TParams>> CreateInstance();
 
@@ -122,7 +128,9 @@ namespace Kame {
   class MaterialInstanceBase {
   public:
     virtual void ApplyParameters(CommandList* commandList) = 0;
+    virtual void ApplyParameters(CommandList* commandList, std::vector<MaterialInstanceBase*>& materialInstances) = 0;
     virtual MaterialBase* GetMaterial() = 0;
+    virtual void* GetParameters1() = 0;
   };
 
   template<typename TParameters>
@@ -137,7 +145,9 @@ namespace Kame {
 
     //void SetParameters(TParameters& params);
     TParameters& GetParameters();
+    inline virtual void* GetParameters1() override { return &_Parameters; }
     virtual void ApplyParameters(CommandList* commandList) override;
+    virtual void ApplyParameters(CommandList* commandList, std::vector<MaterialInstanceBase*>& materialInstances) override;
     virtual MaterialBase* GetMaterial() override;
 
     ~MaterialInstance<TParameters>();
@@ -146,32 +156,18 @@ namespace Kame {
 
   private:
 
-    static std::vector<TParameters> _ParameterCollection;
-    uint16_t _Index;
+    //static std::vector<TParameters> _ParameterCollection;
+    //uint16_t _Index;
+
     Material<TParameters>* _BaseMaterial;
-    //TParameters _Parameters;
+    TParameters _Parameters;
 
   };
-
-  template<typename TParameters>
-  std::vector<TParameters> MaterialInstance<TParameters>::_ParameterCollection;
 
   class MaterialInstanceCollectionBase {
   public:
     MaterialInstanceCollectionBase() {};
     virtual ~MaterialInstanceCollectionBase() {};
-  };
-
-  template <typename TParameters>
-  class MaterialInstanceCollection {
-  public:
-    MaterialInstanceCollection<TParameters>() {}
-    virtual ~MaterialInstanceCollection<TParameters>() { _ParemeterCollection.clear(); }
-
-    void AddParameters(TParameters& parameters);
-
-  private:
-    std::vector<TParameters&> _ParemeterCollection;
   };
 
   template<typename TParameters>
@@ -180,20 +176,33 @@ namespace Kame {
   ) {
     MaterialInstance<TParameters>* ret1 = new MaterialInstance<TParameters>();
     auto ret = Reference< MaterialInstance<TParameters>>(ret1);
-    
+
     ret->_BaseMaterial = material;
     return ret;
   }
 
   template<typename TParameters>
   inline TParameters& MaterialInstance<TParameters>::GetParameters() {
-    return _ParameterCollection[_Index];
+    return _Parameters;
   }
 
   template<typename TParameters>
   inline void MaterialInstance<TParameters>::ApplyParameters(CommandList* commandList) {
     //_BaseMaterial->ApplyParameters(commandList, _ParameterCollection[_Index]);
-    _BaseMaterial->ApplyParameters(commandList, _ParameterCollection);
+    //_BaseMaterial->ApplyParameters(commandList, _ParameterCollection);
+  }
+
+  template<typename TParameters>
+  inline void MaterialInstance<TParameters>::ApplyParameters(
+    CommandList* commandList, 
+    std::vector<MaterialInstanceBase*>& materialInstances
+  ) {
+    std::vector<TParameters> params;
+    for (MaterialInstanceBase* matInstance : materialInstances) {
+      TParameters parameters = *reinterpret_cast<TParameters*>(matInstance->GetParameters1());
+      params.push_back(parameters);
+    }
+    _BaseMaterial->ApplyParameters(commandList, params);
   }
 
   template<typename TParameters>
@@ -215,18 +224,13 @@ namespace Kame {
 
   template<typename TParameters>
   inline MaterialInstance<TParameters>::~MaterialInstance() {
-    _ParameterCollection.erase(_ParameterCollection.begin() + _Index);
+    //_ParameterCollection.erase(_ParameterCollection.begin() + _Index);
   }
 
   template<typename TParameters>
   inline MaterialInstance<TParameters>::MaterialInstance() {
-    _ParameterCollection.push_back(TParameters());
-    _Index = _ParameterCollection.size() - 1;
-  }
-
-  template<typename TParameters>
-  inline void MaterialInstanceCollection<TParameters>::AddParameters(TParameters& parameters) {
-    _ParemeterCollection.push_back(parameters);
+    //_ParameterCollection.push_back(TParameters());
+    //_Index = _ParameterCollection.size() - 1;
   }
 
 }

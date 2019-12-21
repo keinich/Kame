@@ -85,7 +85,7 @@ ConstantBuffer<LightProperties> LightPropertiesCB : register(b1);
 
 StructuredBuffer<PointLight> PointLights : register(t0);
 StructuredBuffer<SpotLight> SpotLights : register(t1);
-Texture2D DiffuseTexture[2]            : register(t2);
+Texture2D DiffuseTexture[]            : register(t2);
 
 SamplerState LinearRepeatSampler    : register(s0);
 

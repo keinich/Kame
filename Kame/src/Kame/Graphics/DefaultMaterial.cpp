@@ -6,6 +6,7 @@
 #include <Kame/Graphics/RenderApi/RenderProgramSignature.h>
 #include <Kame/Graphics/Mesh.h>
 #include <Kame/Graphics/Renderer3D.h>
+#include <Kame\Graphics\MaterialManager.h>
 
 namespace Kame {
 
@@ -14,12 +15,16 @@ namespace Kame {
   void DefaultMaterialParameters::SetDiffuseTexture(Texture* texture) {
     for (UINT i = 0; i < _Textures.size(); ++i) {
       if (_Textures[i] == texture) {
-        TextureIndex = i;
+        TextureIndexStatic = i;
+        TextureIndexForShader = i;
         return;
       }
     }
     _Textures.push_back(texture);
-    TextureIndex = _Textures.size() - 1;
+    TextureIndexStatic = _Textures.size() - 1;
+    TextureIndexForShader = _Textures.size() - 1;
+    DefaultMaterial* mat = MaterialManager::GetMaterial<DefaultMaterial>();
+    mat->CreateProgram();
   }
 
   void DefaultMaterial::ApplyParameters(CommandList* commandList, std::vector<DefaultMaterialParameters>& params) {
@@ -33,6 +38,39 @@ namespace Kame {
       );
     }
     commandList->SetGraphicsDynamicStructuredBuffer(MaterialRootParameters::MaterialParameters, params);
+  }
+
+  void DefaultMaterial::ApplyParameters(
+    CommandList* commandList, 
+    std::vector<MaterialInstanceBase*>& materialInstances
+  ) {
+    std::vector<DefaultMaterialParameters> params;
+    std::map<uint32_t, uint32_t> shaderIndexByStaticIndex;
+    uint32_t currentShaderIndex = 0;
+    for (MaterialInstanceBase* matInstance : materialInstances) {
+      DefaultMaterialParameters& parameters = *reinterpret_cast<DefaultMaterialParameters*>(matInstance->GetParameters1());
+      auto shaderIndexIt = shaderIndexByStaticIndex.find(parameters.TextureIndexStatic);
+      if (shaderIndexIt == shaderIndexByStaticIndex.end()) {
+        parameters.TextureIndexForShader = currentShaderIndex;
+        currentShaderIndex++;
+        shaderIndexByStaticIndex.insert(std::map<uint32_t, uint32_t>::value_type(parameters.TextureIndexStatic, parameters.TextureIndexForShader));
+        Texture* texture = DefaultMaterialParameters::_Textures[parameters.TextureIndexStatic];
+        commandList->SetShaderResourceViewTexture(
+          MaterialRootParameters::Textures,
+          parameters.TextureIndexForShader,
+          texture,
+          D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+        );
+      }
+      else {
+        parameters.TextureIndexForShader = shaderIndexIt->second;
+      }
+
+      params.push_back(parameters);
+    }
+
+    commandList->SetGraphicsDynamicStructuredBuffer(MaterialRootParameters::MaterialParameters, params);
+
   }
 
   void DefaultMaterial::CreateProgram() {
@@ -52,7 +90,10 @@ namespace Kame {
       D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
       D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
 
-    CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 2);
+    UINT numberOfTextures = Kame::DefaultMaterialParameters::_Textures.size();
+    if (numberOfTextures == 0)
+      numberOfTextures = 1;
+    CD3DX12_DESCRIPTOR_RANGE1 descriptorRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, numberOfTextures, 2);
 
     CD3DX12_ROOT_PARAMETER1 rootParameters[MaterialRootParameters::NumRootParameters];
     rootParameters[MaterialRootParameters::MatricesCB].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_NONE, D3D12_SHADER_VISIBILITY_VERTEX);

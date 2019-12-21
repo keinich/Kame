@@ -103,7 +103,15 @@ namespace Kame {
             // There must be at least one materialInstance
             // wen can use the ApplyParameters of the first Instance since all the Instances share the type
             // ApplyParameters will only consider the static MaterialParameters
-            instancedMeshes->second.InstanceDataGroup.MaterialInstances[0]->ApplyParameters(commandList);
+            //instancedMeshes->second.InstanceDataGroup.MaterialInstances[0]->ApplyParameters(commandList);
+            /*instancedMeshes->second.InstanceDataGroup.MaterialInstances[0]->ApplyParameters(
+              commandList, instancedMeshes->second.InstanceDataGroup.MaterialInstances
+            );*/
+
+            instancedMeshes->second.Material->ApplyParameters(
+              commandList,
+              instancedMeshes->second.InstanceDataGroup.MaterialInstances
+            );
 
             mesh->Draw(commandList, instanceData.size());
           }
@@ -145,7 +153,10 @@ namespace Kame {
     XMMATRIX viewProjectionMatrix
   ) {
     for (auto meshComponent : meshComponents) {
-      RenderProgramSignature* signature = meshComponent->GetMaterialInstance()->GetMaterial()->GetSignature();
+      MaterialInstanceBase* materialInstance = meshComponent->GetMaterialInstance();
+      MaterialBase* material = materialInstance->GetMaterial();
+      RenderProgramSignature* signature = material->GetSignature();
+      Mesh* mesh = meshComponent->GetMesh();
       size_t signatureIdentifier = signature->GetIdentifier();
       std::map<size_t, RenderProgramSignatureTree>::iterator signatureTree = SignatureTreeByIdentifier.find(signatureIdentifier);
       if (signatureTree == SignatureTreeByIdentifier.end()) {
@@ -154,7 +165,7 @@ namespace Kame {
         );
         SignatureTreeByIdentifier[signatureIdentifier].Signature = signature;
       }
-      RenderProgram* program = meshComponent->GetMaterialInstance()->GetMaterial()->GetProgram();
+      RenderProgram* program = material->GetProgram();
       size_t programIdentifier = program->GetIdentifier();
       std::map<size_t, RenderProgramMeshes>::iterator programTree = SignatureTreeByIdentifier[signatureIdentifier].ProgramTreeByIdentifier.find(
         programIdentifier
@@ -168,17 +179,17 @@ namespace Kame {
         SignatureTreeByIdentifier[signatureIdentifier].ProgramTreeByIdentifier[programIdentifier].Program = program;
       }
       auto& rpm = SignatureTreeByIdentifier[signatureIdentifier].ProgramTreeByIdentifier[programIdentifier].InstancedMeshesByMaterialByMesh;
-      std::map<Mesh*, std::map<MaterialBase*, InstancedMesh>>::iterator instancedMeshesByMaterial = rpm.find(meshComponent->GetMesh());
+      std::map<Mesh*, std::map<MaterialBase*, InstancedMesh>>::iterator instancedMeshesByMaterial = rpm.find(mesh);
       if (instancedMeshesByMaterial == rpm.end()) {
-        rpm.insert(std::map < Mesh*, std::map<MaterialBase*, InstancedMesh >> ::value_type(meshComponent->GetMesh(), std::map < MaterialBase*, InstancedMesh>()));
+        rpm.insert(std::map < Mesh*, std::map<MaterialBase*, InstancedMesh >> ::value_type(mesh, std::map < MaterialBase*, InstancedMesh>()));
       }
-      std::map<MaterialBase*, InstancedMesh>::iterator instancedMeshes = rpm[meshComponent->GetMesh()].find(meshComponent->GetMaterialInstance()->GetMaterial());
-      if (instancedMeshes == rpm[meshComponent->GetMesh()].end()) {
-        rpm[meshComponent->GetMesh()].insert(
-          std::map < MaterialBase*, InstancedMesh > ::value_type(meshComponent->GetMaterialInstance()->GetMaterial(), InstancedMesh()));
+      std::map<MaterialBase*, InstancedMesh>::iterator instancedMeshes = rpm[mesh].find(material);
+      if (instancedMeshes == rpm[mesh].end()) {
+        rpm[mesh].insert(
+          std::map < MaterialBase*, InstancedMesh > ::value_type(material, InstancedMesh()));
       }
-      rpm[meshComponent->GetMesh()][meshComponent->GetMaterialInstance()->GetMaterial()].Mesh = meshComponent->GetMesh();
-      rpm[meshComponent->GetMesh()][meshComponent->GetMaterialInstance()->GetMaterial()].Material = meshComponent->GetMaterialInstance()->GetMaterial();
+      rpm[mesh][material].Mesh = mesh;
+      rpm[mesh][material].Material = material;
       InstanceData& instanceData = InstanceData();
       XMMATRIX worldMatrix = meshComponent->GetWorldMatrix();
       Matrices matrices;
@@ -189,9 +200,9 @@ namespace Kame {
       instanceData.ModelViewProjectionMatrix = matrices.ModelViewProjectionMatrix;
       // Find the MaterialInstance in the MaterialMap of the InstanceGroup of the rpm
       bool found = false;
-      for (UINT i = 0; i < rpm[meshComponent->GetMesh()][meshComponent->GetMaterialInstance()->GetMaterial()].InstanceDataGroup.MaterialInstances.size(); ++i) {
-        MaterialInstanceBase* materialInstance = rpm[meshComponent->GetMesh()][meshComponent->GetMaterialInstance()->GetMaterial()].InstanceDataGroup.MaterialInstances[i];
-        if (materialInstance == meshComponent->GetMaterialInstance()) {
+      for (UINT i = 0; i < rpm[mesh][material].InstanceDataGroup.MaterialInstances.size(); ++i) {
+        MaterialInstanceBase* materialInstanceI = rpm[mesh][material].InstanceDataGroup.MaterialInstances[i];
+        if (materialInstanceI == materialInstance) {
           // If the MaterialInstance is found, assign the index of it to the MaterialIndex of the Instance Data
           instanceData.MaterialParameterIndex = i;
           found = true;
@@ -199,11 +210,11 @@ namespace Kame {
         }
       }
       if (!found) {
-        rpm[meshComponent->GetMesh()][meshComponent->GetMaterialInstance()->GetMaterial()].InstanceDataGroup.MaterialInstances.push_back(meshComponent->GetMaterialInstance());
-        instanceData.MaterialParameterIndex = rpm[meshComponent->GetMesh()][meshComponent->GetMaterialInstance()->GetMaterial()].InstanceDataGroup.MaterialInstances.size() - 1;
+        rpm[mesh][material].InstanceDataGroup.MaterialInstances.push_back(materialInstance);
+        instanceData.MaterialParameterIndex = rpm[mesh][material].InstanceDataGroup.MaterialInstances.size() - 1;
       }
-      rpm[meshComponent->GetMesh()][meshComponent->GetMaterialInstance()->GetMaterial()].InstanceDataGroup.InstanceData.push_back(instanceData);
-      rpm[meshComponent->GetMesh()][meshComponent->GetMaterialInstance()->GetMaterial()].Material = meshComponent->GetMaterialInstance()->GetMaterial();
+      rpm[mesh][material].InstanceDataGroup.InstanceData.push_back(instanceData);
+      rpm[mesh][material].Material = material;
     }
   }
 

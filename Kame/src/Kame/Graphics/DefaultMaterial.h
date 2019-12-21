@@ -30,8 +30,10 @@ namespace Kame {
     Kame::Math::Float4 Specular;
     //----------------------------------- (16 byte boundary)
     float             SpecularPower;
-    uint32_t          TextureIndex;
-    uint32_t          Padding[2];
+    uint32_t          TextureIndexForShader;
+    uint32_t          TextureIndexStatic;
+    uint32_t          Padding[1];
+    //Texture* DiffuseTexture;
 
     void SetDiffuseTexture(Texture* texture);
 
@@ -47,6 +49,10 @@ namespace Kame {
 
     //virtual void ApplyParameters(CommandList* commandList, DefaultMaterialParametersForShader& params) override;
     virtual void ApplyParameters(CommandList* commandList, std::vector<DefaultMaterialParameters>& params) override;
+    virtual void ApplyParameters(
+      CommandList* commandList,
+      std::vector<MaterialInstanceBase*>& materialInstances
+    ) override;
 
     virtual void CreateProgram() override;
 
@@ -58,10 +64,10 @@ namespace Kame {
   };
 
   inline MaterialInstance<DefaultMaterialParameters>::~MaterialInstance() {
-    _ParameterCollection.erase(_ParameterCollection.begin() + _Index);
-    if (_ParameterCollection.size() == 0) {
-      DefaultMaterialParameters::Clear();
-    }
+    //_ParameterCollection.erase(_ParameterCollection.begin() + _Index);
+    //if (_ParameterCollection.size() == 0) {
+      //DefaultMaterialParameters::Clear();
+    //}
   }
 
 }
