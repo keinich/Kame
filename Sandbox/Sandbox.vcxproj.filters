@@ -15,6 +15,8 @@
     <ClInclude Include="src\InstancedRenderingDemo.h" />
     <ClInclude Include="src\Skybox_PS.h" />
     <ClInclude Include="src\Skybox_VS.h" />
+    <ClInclude Include="src\Text_PS.h" />
+    <ClInclude Include="src\Text_VS.h" />
     <ClInclude Include="src\Tutorial4.h" />
   </ItemGroup>
   <ItemGroup>

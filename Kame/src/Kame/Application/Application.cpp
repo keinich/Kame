@@ -13,6 +13,7 @@
 #include <Kame/Graphics/Text/FontManager.h>
 //#include <Kame/Platform/DirectX12/Graphics/DX12Core.h>
 #include <Kame/Game/Game.h>
+#include <Kame/Graphics/2D/Renderer2D.h>
 
 #include <Kame/Graphics/Renderer.h>
 #include <Kame/Graphics/Text/TextRenderer.h>
@@ -53,6 +54,7 @@ namespace Kame {
     MaterialManager::Create();
     TextRenderer::Create();
     FontManager::Create();
+    Renderer2D::Create();
     //DX12Core::Create();
 
     // Initialize
@@ -62,6 +64,7 @@ namespace Kame {
   void Application::Destroy() {
     //DX12Core::Destroy();
     _Instance->_Game.reset();
+    Renderer2D::Destroy();
     FontManager::Destroy();
     TextRenderer::Destroy();
     MaterialManager::Destroy();
@@ -101,6 +104,7 @@ namespace Kame {
     //DX12Core::Get().Initialize();
     GraphicsCore::Initialize();
     TextRenderer::Get()->Initialize();
+    Renderer2D::Get()->Initialize();
 
     //Renderer::Get()->Initialize(s_Windows); //TODO where to do this?
 

@@ -161,6 +161,8 @@
     <ClInclude Include="src\Kame\Game\Layer.h" />
     <ClInclude Include="src\Kame\Game\LayerStack.h" />
     <ClInclude Include="src\Kame\Game\Objects\MeshComponent.h" />
+    <ClInclude Include="src\Kame\Graphics\2D\ColoredRectangle.h" />
+    <ClInclude Include="src\Kame\Graphics\2D\Renderer2D.h" />
     <ClInclude Include="src\Kame\Graphics\Camera.h" />
     <ClInclude Include="src\Kame\Graphics\DefaultMaterial.h" />
     <ClInclude Include="src\Kame\Graphics\GraphicsCore.h" />
@@ -185,11 +187,13 @@
     <ClInclude Include="src\Kame\Graphics\Renderer3D.h" />
     <ClInclude Include="src\Kame\Graphics\Scene3D.h" />
     <ClInclude Include="src\Kame\Graphics\Skybox.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\Consolas.h" />
     <ClInclude Include="src\Kame\Graphics\Text\Font.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\FontManager.h" />
     <ClInclude Include="src\Kame\Graphics\Text\TextRenderContext.h" />
     <ClInclude Include="src\Kame\Graphics\Text\TextRenderer.h" />
     <ClInclude Include="src\Kame\Graphics\TextureManager.h" />
-    <ClInclude Include="src\Kame\Graphics\Text\FontManager.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\TextRenderItem.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input\Input.h" />
     <ClInclude Include="src\Kame\Input\KeyCodes.h" />
@@ -273,6 +277,8 @@
     <ClCompile Include="src\Kame\Game\Layer.cpp" />
     <ClCompile Include="src\Kame\Game\LayerStack.cpp" />
     <ClCompile Include="src\Kame\Game\Objects\MeshComponent.cpp" />
+    <ClCompile Include="src\Kame\Graphics\2D\ColoredRectangle.cpp" />
+    <ClCompile Include="src\Kame\Graphics\2D\Renderer2D.cpp" />
     <ClCompile Include="src\Kame\Graphics\Camera.cpp" />
     <ClCompile Include="src\Kame\Graphics\DefaultMaterial.cpp" />
     <ClCompile Include="src\Kame\Graphics\GraphicsCore.cpp" />
@@ -289,12 +295,11 @@
     <ClCompile Include="src\Kame\Graphics\Renderer3D.cpp" />
     <ClCompile Include="src\Kame\Graphics\Scene3D.cpp" />
     <ClCompile Include="src\Kame\Graphics\Skybox.cpp" />
-    <ClCompile Include="src\Kame\Graphics\Text\Consolas.h" />
     <ClCompile Include="src\Kame\Graphics\Text\Font.cpp" />
+    <ClCompile Include="src\Kame\Graphics\Text\FontManager.cpp" />
     <ClCompile Include="src\Kame\Graphics\Text\TextRenderContext.cpp" />
     <ClCompile Include="src\Kame\Graphics\Text\TextRenderer.cpp" />
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp" />
-    <ClCompile Include="src\Kame\Graphics\Text\FontManager.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Input\Input.cpp" />
     <ClCompile Include="src\Kame\Logging\Log.cpp" />
@@ -350,33 +355,41 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="src\Kame\Graphics\2D\Shaders\ColoredRectangle_PS.hlsl">
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>6.0</ShaderModel>
+      <VariableName>g_ColoredRectangle_PS</VariableName>
+      <HeaderFileOutput>src/Kame/Graphics/2D/Shaders/ColoredRectangle_PS.h</HeaderFileOutput>
+    </FxCompile>
+    <FxCompile Include="src\Kame\Graphics\2D\Shaders\ColoredRectangle_VS.hlsl">
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel>6.0</ShaderModel>
+      <VariableName>g_ColoredRectangle_VS</VariableName>
+      <HeaderFileOutput>src/Kame/Graphics/2D/Shaders/ColoredRectangle_VS.h</HeaderFileOutput>
+    </FxCompile>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">
       <ShaderType>Compute</ShaderType>
       <ShaderModel>6.0</ShaderModel>
       <VariableName>g_GenerateMips_CS</VariableName>
-      <HeaderFileOutput>D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/GenerateMips_CS.h</HeaderFileOutput>
-      <ObjectFileOutput>D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/GenerateMips_CS.cso</ObjectFileOutput>
+      <HeaderFileOutput>src/Kame/Platform/DirectX12/Graphics/Resources/Shaders/GenerateMips_CS.h</HeaderFileOutput>
     </FxCompile>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\ImGUI_PS.hlsl">
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>6.0</ShaderModel>
       <VariableName>g_ImGUI_PS</VariableName>
-      <HeaderFileOutput>D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/ImGUI_PS.h</HeaderFileOutput>
-      <ObjectFileOutput>D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/ImGUI_PS.cso</ObjectFileOutput>
+      <HeaderFileOutput>src/Kame/Platform/DirectX12/Graphics/Resources/Shaders/ImGUI_PS.h</HeaderFileOutput>
     </FxCompile>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\ImGUI_VS.hlsl">
       <ShaderType>Vertex</ShaderType>
       <ShaderModel>6.0</ShaderModel>
       <VariableName>g_ImGUI_VS</VariableName>
-      <HeaderFileOutput>D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/ImGUI_VS.h</HeaderFileOutput>
-      <ObjectFileOutput>D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/ImGUI_VS.cso</ObjectFileOutput>
+      <HeaderFileOutput>src/Kame/Platform/DirectX12/Graphics/Resources/Shaders/ImGUI_VS.h</HeaderFileOutput>
     </FxCompile>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\PanoToCubemap_CS.hlsl">
       <ShaderType>Compute</ShaderType>
       <ShaderModel>6.0</ShaderModel>
       <VariableName>g_PanoToCubemap_CS</VariableName>
-      <HeaderFileOutput>D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/PanoToCubemap_CS.h</HeaderFileOutput>
-      <ObjectFileOutput>D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/PanoToCubemap_CS.cso</ObjectFileOutput>
+      <HeaderFileOutput>src/Kame/Platform/DirectX12/Graphics/Resources/Shaders/PanoToCubemap_CS.h</HeaderFileOutput>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -393,17 +406,7 @@
       <Project>{A90EE592-95C6-26E0-FECD-FF3BEAA4C1D0}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\zlib-vc140-static-64.1.2.11\build\native\zlib-vc140-static-64.targets" Condition="Exists('..\packages\zlib-vc140-static-64.1.2.11\build\native\zlib-vc140-static-64.targets')" />
   </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\zlib-vc140-static-64.1.2.11\build\native\zlib-vc140-static-64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib-vc140-static-64.1.2.11\build\native\zlib-vc140-static-64.targets'))" />
-  </Target>
 </Project>

@@ -168,7 +168,7 @@ bool InstancedRenderingDemo::LoadContent() {
   }
 
   //_Scene3D->CreateSkybox(Kame::TextureManager::GetTexture(L"Assets/Textures/glacier.hdr"));
-  _Scene3D->CreateSkybox(Kame::TextureManager::GetTexture(L"Assets/Textures/Space.jpg"));
+  _Scene3D->CreateSkybox(Kame::TextureManager::GetTexture(L"Assets/Textures/tvNLzeq.jpg"));
 
 
   return true;

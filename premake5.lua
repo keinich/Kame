@@ -88,8 +88,8 @@ project "Kame"
   filter { "files:**.hlsl" }
     shadermodel "6.0"
     shadervariablename "g_%{file.basename}"
-    shaderheaderfileoutput "D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/%{file.basename}.h"
-    shaderobjectfileoutput "D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/%{file.basename}.cso"
+    --shaderheaderfileoutput "D:/Raftek/Kame/Kame/src/Kame/Platform/DirectX12/Graphics/%{file.basename}.h"
+	shaderheaderfileoutput "%{file.directory}/%{file.basename}.h"    
   filter { "files:**_PS.hlsl" }
     shadertype "Pixel"
   filter { "files:**_CS.hlsl" }

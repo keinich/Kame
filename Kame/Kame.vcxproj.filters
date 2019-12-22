@@ -22,6 +22,12 @@
     <Filter Include="Kame\Graphics">
       <UniqueIdentifier>{A3B6A1B5-0F77-1DEC-D8B1-6669443162C8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kame\Graphics\2D">
+      <UniqueIdentifier>{68262842-541F-4794-7D51-2C1969A926A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kame\Graphics\2D\Shaders">
+      <UniqueIdentifier>{41336004-2D58-AF84-56A3-94144227AEA2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Kame\Graphics\PostEffects">
       <UniqueIdentifier>{581D2CCA-C4DF-5F54-0D90-EEE079913832}</UniqueIdentifier>
     </Filter>
@@ -100,6 +106,9 @@
     <ClInclude Include="src\Kame\Core\DebugUtilities.h">
       <Filter>Kame\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kame\Core\FileUtility.h">
+      <Filter>Kame\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kame\Core\Hash.h">
       <Filter>Kame\Core</Filter>
     </ClInclude>
@@ -141,6 +150,9 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Game\Objects\MeshComponent.h">
       <Filter>Kame\Game\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\2D\Renderer2D.h">
+      <Filter>Kame\Graphics\2D</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Camera.h">
       <Filter>Kame\Graphics</Filter>
@@ -213,6 +225,18 @@
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Skybox.h">
       <Filter>Kame\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\Text\Consolas.h">
+      <Filter>Kame\Graphics\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\Text\Font.h">
+      <Filter>Kame\Graphics\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\Text\FontManager.h">
+      <Filter>Kame\Graphics\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kame\Graphics\Text\TextRenderContext.h">
+      <Filter>Kame\Graphics\Text</Filter>
     </ClInclude>
     <ClInclude Include="src\Kame\Graphics\Text\TextRenderer.h">
       <Filter>Kame\Graphics\Text</Filter>
@@ -434,10 +458,8 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClInclude>
     <ClInclude Include="src\kmpch.h" />
-    <ClInclude Include="src\Kame\Graphics\Text\Font.h" />
-    <ClInclude Include="src\Kame\Graphics\Text\FontManager.h" />
-    <ClInclude Include="src\Kame\Core\FileUtility.h" />
-    <ClInclude Include="src\Kame\Graphics\Text\TextRenderContext.h" />
+    <ClInclude Include="src\Kame\Graphics\2D\ColoredRectangle.h" />
+    <ClInclude Include="src\Kame\Graphics\Text\TextRenderItem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -445,6 +467,9 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Application\Window.cpp">
       <Filter>Kame\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Core\FileUtility.cpp">
+      <Filter>Kame\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Events\Event.cpp">
       <Filter>Kame\Events</Filter>
@@ -511,6 +536,15 @@
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Skybox.cpp">
       <Filter>Kame\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\Text\Font.cpp">
+      <Filter>Kame\Graphics\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\Text\FontManager.cpp">
+      <Filter>Kame\Graphics\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kame\Graphics\Text\TextRenderContext.cpp">
+      <Filter>Kame\Graphics\Text</Filter>
     </ClCompile>
     <ClCompile Include="src\Kame\Graphics\Text\TextRenderer.cpp">
       <Filter>Kame\Graphics\Text</Filter>
@@ -669,13 +703,16 @@
       <Filter>Kame\Platform\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\kmpch.cpp" />
-    <ClCompile Include="src\Kame\Graphics\Text\Font.cpp" />
-    <ClCompile Include="src\Kame\Graphics\Text\FontManager.cpp" />
-    <ClCompile Include="src\Kame\Core\FileUtility.cpp" />
-    <ClCompile Include="src\Kame\Graphics\Text\Consolas.h" />
-    <ClCompile Include="src\Kame\Graphics\Text\TextRenderContext.cpp" />
+    <ClCompile Include="src\Kame\Graphics\2D\Renderer2D.cpp" />
+    <ClCompile Include="src\Kame\Graphics\2D\ColoredRectangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="src\Kame\Graphics\2D\Shaders\ColoredRectangle_PS.hlsl">
+      <Filter>Kame\Graphics\2D\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\Kame\Graphics\2D\Shaders\ColoredRectangle_VS.hlsl">
+      <Filter>Kame\Graphics\2D\Shaders</Filter>
+    </FxCompile>
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\GenerateMips_CS.hlsl">
       <Filter>Kame\Platform\DirectX12\Graphics\Resources\Shaders</Filter>
     </FxCompile>
@@ -688,8 +725,5 @@
     <FxCompile Include="src\Kame\Platform\DirectX12\Graphics\Resources\Shaders\PanoToCubemap_CS.hlsl">
       <Filter>Kame\Platform\DirectX12\Graphics\Resources\Shaders</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

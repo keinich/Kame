@@ -11,6 +11,7 @@
 #include <Kame/Game/Game.h>
 #include <Kame/Graphics/PostEffects/ToneMapping.h>
 #include "Renderer3D.h"
+#include "2D/Renderer2D.h"
 #include "Text/TextRenderer.h"
 #include "Text/TextRenderContext.h"
 
@@ -67,6 +68,8 @@ namespace Kame {
 
       commandList->SetViewport(finalVp);
 
+
+      // ToneMapping
       // Copy the Layer-Scene to the TargetDisplay
       commandList->SetViewport(finalVp);
       commandList->SetRenderProgram(_SdrRenderProgram.get());
@@ -77,14 +80,34 @@ namespace Kame {
 
       commandList->Draw(3);
 
+      // 2D Test
+      std::vector<ColoredRectangle> rectangles;
+      ColoredRectangle rectangle1;
+      rectangle1.X = 0.0f;
+      rectangle1.Y = 0.0f;
+      rectangle1.Width = 0.1f;
+      rectangle1.Height = 0.1f;
+      rectangle1.SetColor(Math::Float4(1.0f, 0.0f, 1.0f, 1.0f));
+      rectangles.push_back(rectangle1);
+      ColoredRectangle rectangle2;
+      rectangle2.X = 0.5f;
+      rectangle2.Y = 0.0f;
+      rectangle2.Width = 0.1f;
+      rectangle2.Height = 0.1f;
+      rectangle2.SetColor(Math::Float4(0.0f, 1.0f, 1.0f, 0.9f));
+      rectangles.push_back(rectangle2);
+      Renderer2D::Get()->RenderColoredRectangles(commandList.get(), rectangles);
+
+      // Text Test
       TextRenderContext textRenderContext = TextRenderContext::Begin(commandList.get(), finalVp.Width, finalVp.Height);
       textRenderContext.SetColor(Math::Float4(1.0f, 0.0f, 0.0f, 1.0f));
       textRenderContext.SetCursorPosition(-0.2f, 1.0f);
+      textRenderContext.SetTextSize(34);
       textRenderContext.DrawString(L"Welcome to the amazing KAME Engine");
 
       textRenderContext.SetColor(Math::Float4(1.0f, 0.8f, 0.8f, 1.0f));
       textRenderContext.SetCursorPosition(-0.2f, 0.9f);
-      textRenderContext.SetTextSize(12);
+      textRenderContext.SetTextSize(24);
       textRenderContext.DrawString(L"It is supergreat !! :)");
       textRenderContext.SetCursorPosition(-0.2f, 0.8f);
       textRenderContext.DrawString(L"Dont you think?");
