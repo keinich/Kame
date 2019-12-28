@@ -39,22 +39,23 @@ namespace Kame {
 
   TextRenderContext::~TextRenderContext() {}
 
-  void TextRenderContext::DrawString(const std::wstring text) {
+  void TextRenderContext::DrawString(const std::wstring text, const float x, const float y) {
 
     SetParameters();
 
     std::vector<TextVert> vertices;
 
     float xMargin = 20.0f;
-    float currentX = 0.0f;
     const float UVtoPixel = _VsParams.Scale;
+    float currentX = x / UVtoPixel;
+    float currentY = y / UVtoPixel;
 
     for (wchar_t c : text) {
 
       const Glyph* glyph = _CurrentFont->GetGlyph(c);
       TextVert vertex;
       vertex.X = currentX;
-      vertex.Y = 0.0f;
+      vertex.Y = currentY;
       vertex.U = glyph->x;
       vertex.V = glyph->y;
       vertex.W = glyph->w;
@@ -71,7 +72,7 @@ namespace Kame {
     _CommandList->Draw(4, vertices.size());
   }
 
-  void TextRenderContext::SetColor(const Math::Float4& color) {
+  void TextRenderContext::SetColor(Math::Float4& color) {
     _PsParams.TextColor.f[0] = color.x;
     _PsParams.TextColor.f[1] = color.y;
     _PsParams.TextColor.f[2] = color.z;

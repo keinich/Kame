@@ -14,6 +14,7 @@
 #include "2D/Renderer2D.h"
 #include "Text/TextRenderer.h"
 #include "Text/TextRenderContext.h"
+#include <Kame\Graphics\Text\FontManager.h>
 
 namespace Kame {
 
@@ -111,6 +112,58 @@ namespace Kame {
       textRenderContext.DrawString(L"It is supergreat !! :)");
       textRenderContext.SetCursorPosition(-0.2f, 0.8f);
       textRenderContext.DrawString(L"Dont you think?");
+
+      Reference<TextRenderItem> tri1 = CreateReference<TextRenderItem>();
+      Reference<TextRenderItem> tri2 = CreateReference<TextRenderItem>();
+      Reference<TextRenderItem> tri3 = CreateReference<TextRenderItem>();
+      Reference<TextRenderItem> tri4 = CreateReference<TextRenderItem>();
+      Reference<TextRenderItem> tri5 = CreateReference<TextRenderItem>();
+
+      Font* font = FontManager::GetFont(L"default");
+      tri1->X = 0.0f;
+      //tri1->Y = -0.5f;
+      tri1->Font = font;
+      tri1->Color = Math::Float4(1.0f, 0.0f, 0.0f, 1.0f);
+      tri1->Size = 5.0f;
+      tri1->Text = L"tri1";
+
+      tri2->Font = font;
+      tri2->X = 0.1f;
+      //tri2->Y = -0.5f;
+      tri2->Color = Math::Float4(1.0f, 0.0f, 0.0f, 1.0f);
+      tri2->Size = 10.0f;
+      tri2->Text = L"tri2";
+
+      tri3->Font = font;
+      tri3->X = 0.2f;
+      //tri3->Y = -0.5f;
+      tri3->Color = Math::Float4(0.0f, 1.0f, 0.0f, 1.0f);
+      tri3->Size = 5.0f;
+      tri3->Text = L"tri3";
+
+      tri4->Font = font;
+      tri4->X = 0.3f;
+      //tri4->Y = -0.5f;
+      tri4->Color = Math::Float4(0.0f, 1.0f, 0.0f, 1.0f);
+      tri4->Size = 5.0f;
+      tri4->Text = L"tri4";
+
+      tri5->Font = font;
+      tri5->X = 10.8f;
+      //tri5->Y = -0.5f;
+      tri5->Color = Math::Float4(0.0f, 1.0f, 0.0f, 1.0f);
+      tri5->Size = 10.0f;
+      tri5->Text = L"tri5";
+
+      std::vector < Reference<TextRenderItem>> textRenderItems;
+      textRenderItems.push_back(tri1);
+      textRenderItems.push_back(tri2);
+      textRenderItems.push_back(tri3);
+      textRenderItems.push_back(tri4);
+      textRenderItems.push_back(tri5);
+
+
+      TextRenderer::Get()->RenderTextItems(commandList.get(), textRenderItems);
     }
 
     GraphicsCore::ExecuteCommandList(commandList);

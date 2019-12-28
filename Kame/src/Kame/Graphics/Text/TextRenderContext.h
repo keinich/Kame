@@ -45,9 +45,9 @@ namespace Kame {
 
     virtual ~TextRenderContext();
 
-    void DrawString(const std::wstring text);
+    void DrawString(const std::wstring text, const float x = 0, const float y = 0);
 
-    void SetColor(const Math::Float4& color);
+    void SetColor(Math::Float4& color);
     void SetCursorPosition(float x, float y);
     void SetTextSize(float size);
 

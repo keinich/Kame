@@ -2,6 +2,7 @@
 
 #include <Kame/Core/References.h>
 #include <Kame/Math/Vector4.h>
+#include "TextRenderItem.h"
 
 namespace Kame {
 
@@ -29,6 +30,8 @@ namespace Kame {
     inline static TextRenderer* Get() { return s_Instance; }
 
     void Initialize();
+
+    void RenderTextItems(CommandList* commandList, std::vector<Reference<TextRenderItem>>& textRenderItems);
 
   protected: // Methods
     TextRenderer();

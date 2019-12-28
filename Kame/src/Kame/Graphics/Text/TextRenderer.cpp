@@ -106,4 +106,76 @@ namespace Kame {
 
   }
 
+
+
+  struct TextRenderTreeColor {
+
+    std::map<float, std::vector<Reference<TextRenderItem>>> TextRenderItemsBySize;
+    Math::Float4* Color;
+  };
+
+  struct TextRenderTreeFont {
+
+    std::map<float, TextRenderTreeColor> TextRenderTreeColorsByColorHash;
+
+  };
+
+  struct TextRenderTree {
+
+    void Build(std::vector<Reference<TextRenderItem>>& textRenderItems) {
+
+      for (Reference<TextRenderItem> textRenderItem : textRenderItems) {
+        Font* font = textRenderItem->Font;
+        auto fontIt = RenderTreeFont.find(font);
+        if (fontIt == RenderTreeFont.end()) {
+          RenderTreeFont.insert(std::map<Font*, TextRenderTreeFont>::value_type(font, TextRenderTreeFont()));
+        }
+        Math::Float4& color = textRenderItem->Color;
+        float colorHash = color.x + color.y * 10.0f + color.z * 100.0f + color.w * 1000.0f;
+        auto colorIt = RenderTreeFont[font].TextRenderTreeColorsByColorHash.find(colorHash);
+        if (colorIt == RenderTreeFont[font].TextRenderTreeColorsByColorHash.end()) {
+          RenderTreeFont[font].TextRenderTreeColorsByColorHash.insert(
+            std::map<float, TextRenderTreeColor>::value_type(colorHash, TextRenderTreeColor())
+          );
+        }
+        float& size = textRenderItem->Size;
+        auto sizeIt = RenderTreeFont[font].TextRenderTreeColorsByColorHash[colorHash].TextRenderItemsBySize.find(size);
+        if (sizeIt == RenderTreeFont[font].TextRenderTreeColorsByColorHash[colorHash].TextRenderItemsBySize.end()) {
+          RenderTreeFont[font].TextRenderTreeColorsByColorHash[colorHash].TextRenderItemsBySize.insert(
+            std::map<float, std::vector<Reference<TextRenderItem>>>::value_type(size, std::vector<Reference<TextRenderItem>>())
+          );
+          RenderTreeFont[font].TextRenderTreeColorsByColorHash[colorHash].Color = &color;
+        }
+        RenderTreeFont[font].TextRenderTreeColorsByColorHash[colorHash].TextRenderItemsBySize[size].push_back(textRenderItem);
+      }
+
+    }
+
+    std::map<Font*, TextRenderTreeFont> RenderTreeFont;
+
+  };
+
+  void TextRenderer::RenderTextItems(CommandList* commandList, std::vector<Reference<TextRenderItem>>& textRenderItems) {
+
+    TextRenderTree textRenderTree;
+    textRenderTree.Build(textRenderItems);
+
+    TextRenderContext textContext = TextRenderContext(commandList, 100, 100);
+
+    for (auto fontIt : textRenderTree.RenderTreeFont) {
+      //textContext.SetFont(fontIt.first);
+      for (auto colorIt : fontIt.second.TextRenderTreeColorsByColorHash) {
+        textContext.SetColor(*colorIt.second.Color);
+        for (auto sizeIt : colorIt.second.TextRenderItemsBySize) {
+          textContext.SetTextSize(sizeIt.first);
+          for (auto tri : sizeIt.second) {
+            //textContext.SetCursorPosition(tri->X, tri->Y);
+            textContext.DrawString(tri->Text, tri->X, tri->Y);
+          }
+        }
+      }
+    }
+
+  }
+
 }
