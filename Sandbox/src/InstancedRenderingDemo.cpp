@@ -45,8 +45,6 @@ InstancedRenderingDemo::InstancedRenderingDemo(const std::wstring& name, int wid
   _RenderProgramSignature = Kame::GraphicsCore::CreateRenderProgramSignatureNc();
 
 
-  _LayerStack.PushLayer(new MinimapLayer(this));
-  _LayerStack.PushLayer(new MainLayer(this));
 }
 
 InstancedRenderingDemo::~InstancedRenderingDemo() {
@@ -58,6 +56,10 @@ Kame::Camera* InstancedRenderingDemo::GetActiveCamera() {
 }
 
 bool InstancedRenderingDemo::LoadContent() {
+
+  _LayerStack.PushLayer(new MinimapLayer(this));
+  _LayerStack.PushLayer(new MainLayer(this));
+
   _SphereMesh = Kame::MeshFactory::GetSphere();
   _TorusMesh = Kame::MeshFactory::GetTorus();
   //_KameDefaultTexture = Kame::TextureManager::GetTexture(L"Assets/Textures/Directx9.png");
@@ -178,7 +180,7 @@ void InstancedRenderingDemo::UnloadContent() {}
 
 void InstancedRenderingDemo::OnRender(Kame::RenderEventArgs& e) {
 
-  m_pWindow->GetDisplay().GetRenderer()->Render(this);
+  _Window->GetDisplay().GetRenderer()->Render(this);
   //Kame::Renderer::Get()->Render(this);
 
 }
@@ -190,12 +192,12 @@ void InstancedRenderingDemo::OnUpdate(Kame::UpdateEventArgs& e) {
 void InstancedRenderingDemo::OnResize(Kame::ResizeEventArgs& e) {
   Game::OnResize(e);
   float fov = _Camera.get_FoV();
-  float aspectRatio = GetClientWidth() / (float)GetClientHeight();
+  float aspectRatio = GetAbsoluteWidthInPixels() / (float)GetAbsoluteHeightInPixels();
   _Camera.set_Projection(fov, aspectRatio, 0.1f, 100.0f);
 }
 
 MainLayer::MainLayer(Kame::Game* game, const std::string& name) :
-  Layer(game->GetClientWidth(), game->GetClientHeight(), name) {
+  Layer(game, 0, 0, 1, 1, name) {
   _Game = game;
 }
 
@@ -210,12 +212,8 @@ Kame::Scene3D* MainLayer::GetScene() {
 }
 
 MinimapLayer::MinimapLayer(Kame::Game* game, const std::string& name) :
-  Layer(game->GetClientWidth() / 5.0f, game->GetClientHeight() / 5.0f, name) {
+  Layer(game, 0.5f, 0.5f, 0.1f, 0.1f, name) {
   _Game = game;
-  _ScreenRectangle.Left = 0.5f;
-  _ScreenRectangle.Width = 0.1f;
-  _ScreenRectangle.Top = 0.5f;
-  _ScreenRectangle.Height = 0.1f;
 
   Kame::Math::Vector4 cameraPos1(0, 5, -20, 1);
   XMVECTOR cameraPos = XMVectorSet(0, 5, -20, 1);

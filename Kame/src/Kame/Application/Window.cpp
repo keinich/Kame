@@ -6,6 +6,8 @@
 #include "Kame/Application/Application.h"
 #include "Kame/Input/Input.h"
 
+#include <Kame/Logging/Log.h>
+
 namespace Kame {
 
   Window::Window(const std::wstring& name, int width, int height, bool vSync) :
@@ -28,8 +30,7 @@ namespace Kame {
     //_MyTestEvent.Raise(2);
   }
 
-  Window::~Window() {
-  }
+  Window::~Window() {}
 
   void Window::Unregister() {
     Application::RemoveWindow(_NativeWindow);
@@ -114,6 +115,9 @@ namespace Kame {
 
   // The mouse was moved
   void Window::OnMouseMoved(MouseMotionEventArgs& e) {
+
+    KM_CORE_INFO("({0},{1}", e.X, e.Y);
+
     e.RelX = e.X - _PreviousMouseX;
     e.RelY = e.Y - _PreviousMouseY;
 

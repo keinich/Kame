@@ -63,8 +63,8 @@ namespace Kame {
       ScreenRectangle screenRectangle = layer->GetScreenRectangle();
       commandList->SetRenderTarget(_TargetDIsplay->GetRenderTarget());
       D3D12_VIEWPORT finalVp = _TargetDIsplay->GetRenderTarget().GetViewport(
-        DirectX::XMFLOAT2(screenRectangle.Width, screenRectangle.Height),
-        DirectX::XMFLOAT2(screenRectangle.Left, screenRectangle.Top)
+        DirectX::XMFLOAT2(screenRectangle.GetRelativeWidth(), screenRectangle.GetRelativeHeight()),
+        DirectX::XMFLOAT2(screenRectangle.GetRelativeLeft(), screenRectangle.GetRelativeTop())
       );
 
       commandList->SetViewport(finalVp);
@@ -100,7 +100,7 @@ namespace Kame {
       Renderer2D::Get()->RenderColoredRectangles(commandList.get(), rectangles);
 
       // Text Test
-      TextRenderContext textRenderContext = TextRenderContext::Begin(commandList.get(), finalVp.Width, finalVp.Height);
+      TextRenderContext textRenderContext(commandList.get(), finalVp.Width, finalVp.Height);
       textRenderContext.SetColor(Math::Float4(1.0f, 0.0f, 0.0f, 1.0f));
       textRenderContext.SetCursorPosition(-0.2f, 1.0f);
       textRenderContext.SetTextSize(34);

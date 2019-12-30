@@ -36,7 +36,7 @@ namespace Kame {
 
   public:
 
-    static TextRenderContext Begin(CommandList* commandList, float viewportWidth, float fiewportHeight);
+    TextRenderContext(CommandList* commandList, float viewportWidth, float viewportHeight);
 
     inline const VertexShaderParams& GetVertexShaderParams() { return _VsParams; }
     inline const PixelShaderParams& GetPixelShaderParams() { return _PsParams; }
@@ -52,8 +52,6 @@ namespace Kame {
     void SetTextSize(float size);
 
   protected: // Methods
-
-    TextRenderContext(CommandList* commandList, float viewportWidth, float viewportHeight);
 
     void SetFont(const std::wstring& fontName, float TextSize = 0.0f);
 

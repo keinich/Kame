@@ -30,12 +30,12 @@ namespace Kame {
     Game(const std::wstring& name, int width, int height, bool vSync);
     virtual ~Game();
 
-    int GetClientWidth() const {
-      return m_Width;
+    int GetAbsoluteWidthInPixels() const {
+      return _ScreenRectangle.GetAbsoluteWidth();
     }
 
-    int GetClientHeight() const {
-      return m_Height;
+    int GetAbsoluteHeightInPixels() const {
+      return _ScreenRectangle.GetAbsoluteHeight();
     }
 
     virtual bool Initialize();
@@ -53,6 +53,8 @@ namespace Kame {
     virtual Camera* GetActiveCamera() { return nullptr; }
 
     inline LayerStack& GetLayerStack() { return _LayerStack; }
+
+    inline ScreenRectangle& GetScreenRectangle() { return _ScreenRectangle; }
 
   protected:
     //friend class Display;
@@ -80,17 +82,15 @@ namespace Kame {
 
   protected: // Fields
 
-    std::shared_ptr<Window> m_pWindow;
+    std::shared_ptr<Window> _Window;
     NotCopyableReference<Scene3D> _Scene3D;
     LayerStack _LayerStack;
 
   private: //Fields
 
-    std::wstring m_Name;
-    int m_Width;
-    int m_Height;
+    std::wstring m_Name;    
     bool m_vSync;
-
+    ScreenRectangle _ScreenRectangle;
 
   };
 

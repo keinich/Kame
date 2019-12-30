@@ -406,7 +406,7 @@ namespace Kame {
       _SDRProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
       _SDRProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
       _SDRProgram->SetRasterizer(rasterizerDesc);
-      _SDRProgram->SetRenderTargetFormats(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
+      _SDRProgram->SetRenderTargetFormats(_Window->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
 
       _SDRProgram->Create();
 
@@ -419,7 +419,7 @@ namespace Kame {
       testProgram->SetVertexShader(CD3DX12_SHADER_BYTECODE(vs.Get()));
       testProgram->SetPixelShader(CD3DX12_SHADER_BYTECODE(ps.Get()));
       testProgram->SetRasterizer(rasterizerDesc);
-      testProgram->SetRenderTargetFormats(m_pWindow->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
+      testProgram->SetRenderTargetFormats(_Window->GetDisplay().GetRenderTarget().GetRenderTargetFormats());
       testProgram->Create();
 
     }
@@ -987,8 +987,8 @@ namespace Kame {
     }
 
     // Perform HDR -> SDR tonemapping directly to the Window's render target.
-    commandListBase->SetRenderTarget(m_pWindow->GetDisplay().GetRenderTarget());
-    commandListBase->SetViewport(m_pWindow->GetDisplay().GetRenderTarget().GetViewport());
+    commandListBase->SetRenderTarget(_Window->GetDisplay().GetRenderTarget());
+    commandListBase->SetViewport(_Window->GetDisplay().GetRenderTarget().GetViewport());
     commandListBase->SetRenderProgram(_SDRProgram.get());
     commandListBase->SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     commandListBase->SetGraphicsRootSignature(m_SDRRootSignature.get());
@@ -1005,7 +1005,7 @@ namespace Kame {
     OnGUI();
 
     // Present
-    m_pWindow->GetDisplay().Present();
+    _Window->GetDisplay().Present();
   }
 
   static bool g_AllowFullscreenToggle = true;
@@ -1023,13 +1023,13 @@ namespace Kame {
       if (e.Alt) {
     case Kame::Key::F11:
       if (g_AllowFullscreenToggle) {
-        m_pWindow->ToggleFullscreen();
+        _Window->ToggleFullscreen();
         g_AllowFullscreenToggle = false;
       }
       break;
       }
     case Kame::Key::V:
-      m_pWindow->GetDisplay().ToggleVSync();
+      _Window->GetDisplay().ToggleVSync();
       break;
     case Kame::Key::R:
       // Reset camera transform
@@ -1073,14 +1073,14 @@ namespace Kame {
 
   bool Tutorial4::OnKeyF(KeyEventArgs& e) {
     if (e.State == KeyEventArgs::KeyState::Released) {
-      m_pWindow->ToggleFullscreen();
+      _Window->ToggleFullscreen();
     }
     return true;
   }
 
   bool Tutorial4::Shoot(KeyEventArgs& e) {
     if (e.State == KeyEventArgs::KeyState::Released) {
-      m_pWindow->ToggleFullscreen();
+      _Window->ToggleFullscreen();
     }
     return true;
   }

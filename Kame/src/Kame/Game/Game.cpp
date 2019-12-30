@@ -12,14 +12,13 @@ namespace Kame {
 
   Game::Game(const std::wstring& name, int width, int height, bool vSync)
     : m_Name(name)
-    , m_Width(width)
-    , m_Height(height)
-    , m_vSync(vSync) {
+    , m_vSync(vSync)
+    , _ScreenRectangle(0, 0, width, height) {
     _Scene3D = CreateNotCopyableReference<Scene3D>();
   }
 
   Game::~Game() {
-    assert(!m_pWindow && "Use Game::Destroy() before destruction.");
+    assert(!_Window && "Use Game::Destroy() before destruction.");
   }
 
   bool Game::Initialize() {
@@ -29,16 +28,20 @@ namespace Kame {
       return false;
     }
 
-    m_pWindow = Application::Get().CreateRenderWindow(m_Name, m_Width, m_Height, m_vSync);
-    m_pWindow->RegisterCallbacks(shared_from_this());
-    m_pWindow->Show();
+    _Window = Application::Get().CreateRenderWindow(
+      m_Name,_ScreenRectangle.GetAbsoluteWidth(), 
+      _ScreenRectangle.GetAbsoluteHeight(), 
+      m_vSync
+    );
+    _Window->RegisterCallbacks(shared_from_this());
+    _Window->Show();
 
     return true;
   }
 
   void Game::Destroy() {
-    Application::Get().DestroyWindow(m_pWindow);
-    m_pWindow.reset();
+    Application::Get().DestroyWindow(_Window);
+    _Window.reset();
   }
 
   void Game::Render() {
@@ -76,8 +79,8 @@ namespace Kame {
   }
 
   void Game::OnResize(ResizeEventArgs& e) {
-    m_Width = e.Width;
-    m_Height = e.Height;
+    _ScreenRectangle.SetAbsoluteWidth(e.Width);
+    _ScreenRectangle.SetAbsoluteHeight(e.Height);
     for (Layer* layer : _LayerStack) {
       layer->OnResize(e);
     }

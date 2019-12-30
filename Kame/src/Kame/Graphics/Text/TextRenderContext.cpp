@@ -33,10 +33,6 @@ namespace Kame {
 
   }
 
-  TextRenderContext TextRenderContext::Begin(CommandList* commandList, float viewportWidth, float fiewportHeight) {
-    return TextRenderContext(commandList, viewportWidth, fiewportHeight);
-  }
-
   TextRenderContext::~TextRenderContext() {}
 
   void TextRenderContext::DrawString(const std::wstring text, const float x, const float y) {

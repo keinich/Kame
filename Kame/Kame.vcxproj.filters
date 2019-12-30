@@ -460,6 +460,10 @@
     <ClInclude Include="src\kmpch.h" />
     <ClInclude Include="src\Kame\Graphics\2D\ColoredRectangle.h" />
     <ClInclude Include="src\Kame\Graphics\Text\TextRenderItem.h" />
+    <ClInclude Include="src\Kame\Graphics\2D\RenderContext2D.h" />
+    <ClInclude Include="src\Kame\Gui\GuiRenderContext.h" />
+    <ClInclude Include="src\Kame\Gui\Label.h" />
+    <ClInclude Include="src\Kame\Gui\GuiElement.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kame\Application\Application.cpp">
@@ -705,6 +709,9 @@
     <ClCompile Include="src\kmpch.cpp" />
     <ClCompile Include="src\Kame\Graphics\2D\Renderer2D.cpp" />
     <ClCompile Include="src\Kame\Graphics\2D\ColoredRectangle.cpp" />
+    <ClCompile Include="src\Kame\Graphics\2D\RenderContext2D.cpp" />
+    <ClCompile Include="src\Kame\Gui\GuiRenderContext.cpp" />
+    <ClCompile Include="src\Kame\Gui\Label.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Kame\Graphics\2D\Shaders\ColoredRectangle_PS.hlsl">

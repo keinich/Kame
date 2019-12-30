@@ -162,6 +162,7 @@
     <ClInclude Include="src\Kame\Game\LayerStack.h" />
     <ClInclude Include="src\Kame\Game\Objects\MeshComponent.h" />
     <ClInclude Include="src\Kame\Graphics\2D\ColoredRectangle.h" />
+    <ClInclude Include="src\Kame\Graphics\2D\RenderContext2D.h" />
     <ClInclude Include="src\Kame\Graphics\2D\Renderer2D.h" />
     <ClInclude Include="src\Kame\Graphics\Camera.h" />
     <ClInclude Include="src\Kame\Graphics\DefaultMaterial.h" />
@@ -194,6 +195,9 @@
     <ClInclude Include="src\Kame\Graphics\Text\TextRenderer.h" />
     <ClInclude Include="src\Kame\Graphics\TextureManager.h" />
     <ClInclude Include="src\Kame\Graphics\Text\TextRenderItem.h" />
+    <ClInclude Include="src\Kame\Gui\GuiRenderContext.h" />
+    <ClInclude Include="src\Kame\Gui\GuiElement.h" />
+    <ClInclude Include="src\Kame\Gui\Label.h" />
     <ClInclude Include="src\Kame\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Kame\Input\Input.h" />
     <ClInclude Include="src\Kame\Input\KeyCodes.h" />
@@ -278,6 +282,7 @@
     <ClCompile Include="src\Kame\Game\LayerStack.cpp" />
     <ClCompile Include="src\Kame\Game\Objects\MeshComponent.cpp" />
     <ClCompile Include="src\Kame\Graphics\2D\ColoredRectangle.cpp" />
+    <ClCompile Include="src\Kame\Graphics\2D\RenderContext2D.cpp" />
     <ClCompile Include="src\Kame\Graphics\2D\Renderer2D.cpp" />
     <ClCompile Include="src\Kame\Graphics\Camera.cpp" />
     <ClCompile Include="src\Kame\Graphics\DefaultMaterial.cpp" />
@@ -300,6 +305,8 @@
     <ClCompile Include="src\Kame\Graphics\Text\TextRenderContext.cpp" />
     <ClCompile Include="src\Kame\Graphics\Text\TextRenderer.cpp" />
     <ClCompile Include="src\Kame\Graphics\TextureManager.cpp" />
+    <ClCompile Include="src\Kame\Gui\GuiRenderContext.cpp" />
+    <ClCompile Include="src\Kame\Gui\Label.cpp" />
     <ClCompile Include="src\Kame\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Kame\Input\Input.cpp" />
     <ClCompile Include="src\Kame\Logging\Log.cpp" />
