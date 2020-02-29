@@ -21,11 +21,12 @@ namespace Kame {
 
     virtual void Render(GuiRenderContext& renderContext) override;
 
+    virtual void OnScreenRectangleChanged() override;
 
   private:
 
     ColoredRectangle _ColoredRectangle;
-    TextRenderItem _TextRenderItem;
+    Reference<TextRenderItem> _TextRenderItem;
 
   };
 

@@ -155,12 +155,15 @@ namespace Kame {
 
   };
 
-  void TextRenderer::RenderTextItems(CommandList* commandList, std::vector<Reference<TextRenderItem>>& textRenderItems) {
+  void TextRenderer::RenderTextItems(
+    CommandList* commandList, std::vector<Reference<TextRenderItem>>& textRenderItems,
+    float viewportWidth, float viewportHeight
+  ) {
 
     TextRenderTree textRenderTree;
     textRenderTree.Build(textRenderItems);
 
-    TextRenderContext textContext = TextRenderContext(commandList, 100, 100);
+    TextRenderContext textContext = TextRenderContext(commandList, viewportWidth, viewportHeight);
 
     for (auto fontIt : textRenderTree.RenderTreeFont) {
       //textContext.SetFont(fontIt.first);
@@ -169,7 +172,7 @@ namespace Kame {
         for (auto sizeIt : colorIt.second.TextRenderItemsBySize) {
           textContext.SetTextSize(sizeIt.first);
           for (auto tri : sizeIt.second) {
-            //textContext.SetCursorPosition(tri->X, tri->Y);
+            textContext.SetCursorPosition(tri->X, tri->Y);
             textContext.DrawString(tri->Text, tri->X, tri->Y);
           }
         }

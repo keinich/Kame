@@ -7,7 +7,6 @@ namespace Kame {
 
   class CommandList;
 
-
   class GuiRenderContext {
 
   public:

@@ -4,8 +4,8 @@
 namespace Kame {
 
   void GuiRenderContext::Finish() {
-    //TextContext.Finish();
     Context2D.Finish();
+    TextContext.Finish();
   }
 
 }

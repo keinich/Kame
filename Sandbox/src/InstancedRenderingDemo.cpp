@@ -17,6 +17,9 @@
 #include <Kame\Graphics\MaterialManager.h>
 #include <Kame/Graphics/Scene3D.h>
 #include <Kame\Graphics\Light.h>
+#include <Kame\Gui\Label.h>
+#include "Kame/Input/Input.h"
+
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
@@ -44,7 +47,16 @@ InstancedRenderingDemo::InstancedRenderingDemo(const std::wstring& name, int wid
   _RenderProgram = Kame::GraphicsCore::CreateRenderProgramNc();
   _RenderProgramSignature = Kame::GraphicsCore::CreateRenderProgramSignatureNc();
 
+  Kame::Input::KeyEvent(Kame::Key::F)->AddHandler("Tutorial4::OnKeyF", BIND_FUNCTION(InstancedRenderingDemo::OnKeyF));
 
+}
+
+
+bool InstancedRenderingDemo::OnKeyF(Kame::KeyEventArgs& e) {
+  if (e.State == (Kame::KeyEventArgs::KeyState::Released)) {
+    _Window->ToggleFullscreen();
+  }
+  return true;
 }
 
 InstancedRenderingDemo::~InstancedRenderingDemo() {
@@ -57,8 +69,13 @@ Kame::Camera* InstancedRenderingDemo::GetActiveCamera() {
 
 bool InstancedRenderingDemo::LoadContent() {
 
+  //TODO make structure of Game vs Layers better!!!!
+  Kame::Layer* mainLayer = new MainLayer(this);
   _LayerStack.PushLayer(new MinimapLayer(this));
-  _LayerStack.PushLayer(new MainLayer(this));
+  _LayerStack.PushLayer(mainLayer);
+
+  mainLayer->Load();
+
 
   _SphereMesh = Kame::MeshFactory::GetSphere();
   _TorusMesh = Kame::MeshFactory::GetTorus();
@@ -186,6 +203,7 @@ void InstancedRenderingDemo::OnRender(Kame::RenderEventArgs& e) {
 }
 
 void InstancedRenderingDemo::OnUpdate(Kame::UpdateEventArgs& e) {
+  Game::OnUpdate(e);
   _CameraController.Update(e.ElapsedTime);
 }
 
@@ -211,8 +229,17 @@ Kame::Scene3D* MainLayer::GetScene() {
   return _Game->GetScene();
 }
 
+void MainLayer::Load() {
+  _Label1 = Kame::CreateReference<Kame::Label>();
+  _Label1->SetText(L"Test Label 1");
+  _Label1->SetRelativeLeft(-0.8f);
+  //_Label1->SetRelativeY(0.8f);
+  
+  _GuiScene->AddGuiElement(_Label1);
+}
+
 MinimapLayer::MinimapLayer(Kame::Game* game, const std::string& name) :
-  Layer(game, 0.5f, 0.5f, 0.1f, 0.1f, name) {
+  Layer(game, 0.9f, 0.9f, 0.1f, 0.1f, name) {
   _Game = game;
 
   Kame::Math::Vector4 cameraPos1(0, 5, -20, 1);
@@ -222,6 +249,7 @@ MinimapLayer::MinimapLayer(Kame::Game* game, const std::string& name) :
 
   _Camera.set_LookAt(cameraPos, cameraTarget, cameraUp);
   _Camera.set_Projection(45.0f, 100.f / 100.f, 0.1f, 100.0f);
+
 }
 
 MinimapLayer::~MinimapLayer() {}

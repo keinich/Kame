@@ -48,7 +48,11 @@ namespace Kame {
     //_Renderer3D->Render(_Meshes);
   }
 
-  void Game::OnUpdate(UpdateEventArgs& e) {}
+  void Game::OnUpdate(UpdateEventArgs& e) {
+    for (Layer* layer : _LayerStack) {
+      layer->OnUpdate(e);
+    }
+  }
 
   void Game::OnRender(RenderEventArgs& e) {
 

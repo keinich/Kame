@@ -31,7 +31,10 @@ namespace Kame {
 
     void Initialize();
 
-    void RenderTextItems(CommandList* commandList, std::vector<Reference<TextRenderItem>>& textRenderItems);
+    void RenderTextItems(
+      CommandList* commandList, std::vector<Reference<TextRenderItem>>& textRenderItems,
+      float viewportWidth, float viewportHeight
+    );
 
   protected: // Methods
     TextRenderer();

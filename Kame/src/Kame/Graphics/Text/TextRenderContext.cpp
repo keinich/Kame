@@ -33,7 +33,9 @@ namespace Kame {
 
   }
 
-  TextRenderContext::~TextRenderContext() {}
+  TextRenderContext::~TextRenderContext() {
+    _TextRenderItems.clear();
+  }
 
   void TextRenderContext::DrawString(const std::wstring text, const float x, const float y) {
 
@@ -43,8 +45,10 @@ namespace Kame {
 
     float xMargin = 20.0f;
     const float UVtoPixel = _VsParams.Scale;
-    float currentX = x / UVtoPixel;
-    float currentY = y / UVtoPixel;
+    //float currentX = x / UVtoPixel;
+    float currentX = x;
+    //float currentY = y / UVtoPixel;
+    float currentY = y;
 
     for (wchar_t c : text) {
 
@@ -91,6 +95,14 @@ namespace Kame {
   void TextRenderContext::SetTextSize(float size) {
     SetFontDependentParameters(size);
     _VsConstantBufferIsStale = true;
+  }
+
+  void TextRenderContext::SubmitTextRenderItem(Reference<TextRenderItem>& tri) {
+    _TextRenderItems.push_back(tri);
+  }
+
+  void TextRenderContext::Finish() {
+    TextRenderer::Get()->RenderTextItems(_CommandList, _TextRenderItems, _ViewWidth, _ViewHeight);
   }
 
   void TextRenderContext::SetParameters() {

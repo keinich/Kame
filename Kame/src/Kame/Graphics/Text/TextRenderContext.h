@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kame/Math/Vector4.h>
+#include "TextRenderItem.h"
 
 namespace Kame {
 
@@ -51,6 +52,9 @@ namespace Kame {
     void SetCursorPosition(float x, float y);
     void SetTextSize(float size);
 
+    void SubmitTextRenderItem(Reference<TextRenderItem>& tri);
+    void Finish();
+
   protected: // Methods
 
     void SetFont(const std::wstring& fontName, float TextSize = 0.0f);
@@ -83,6 +87,8 @@ namespace Kame {
     float _ViewHeight;                // Height of the drawable area
     float _ShadowOffsetX;            // Percentage of the font's TextSize should the shadow be offset
     float _ShadowOffsetY;            // Percentage of the font's TextSize should the shadow be offset
+
+    std::vector<Reference<TextRenderItem>> _TextRenderItems;
   };
 
 }

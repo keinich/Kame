@@ -1,32 +1,41 @@
 #pragma once
 
+#include <Kame/Graphics/2D/ScreenRectangle.h>
+#include <Kame\Events\EventArgs.h>
+
 namespace Kame {
 
   class GuiRenderContext;
 
   class GuiElement {
 
+    friend class Renderer;
+    friend class GuiScene;
+
   public:
 
-    inline float GetAbsoulteX() { return _AbsoluteX; }
-    inline float GetAbsoulteY() { return _AbsoluteY; }
-    inline float GetRelativeX() { return _RelativeX; }
-    inline float GetRelativeY() { return _RelativeY; }
+    //inline float GetAbsoulteX() { return _AbsoluteX; }
+    //inline float GetAbsoulteY() { return _AbsoluteY; }
+    //inline float GetRelativeX() { return _RelativeX; }
+    //inline float GetRelativeY() { return _RelativeY; }
 
-    inline void SetRelativeX(float x) { _RelativeX = x; }
-    inline void SetRelativeY(float y) { _RelativeY = y; }
+    void SetRelativeLeft(float left);
+    void SetRelativeTop(float top);
+    void SetRelativeWidth(float width);
+    void SetRelativeHeight(float height);
+    //inline void SetRelativeY(float y) { _RelativeY = y; }
 
   protected: // Methdos
 
+    void Update(UpdateEventArgs& e);
     virtual void Render(GuiRenderContext& renderContext) = 0;
+
+    virtual void OnScreenRectangleChanged() = 0;
 
   protected: // Fields
 
-    float _AbsoluteX;
-    float _AbsoluteY;
-
-    float _RelativeX;
-    float _RelativeY;
+    ScreenRectangle _ScreenRectangle;
+    bool _ScreenRectangleIsDirty;
 
   };
 

@@ -15,6 +15,8 @@
 #include "Text/TextRenderer.h"
 #include "Text/TextRenderContext.h"
 #include <Kame\Graphics\Text\FontManager.h>
+#include <Kame/Gui/GuiRenderContext.h>
+#include <Kame/Gui/GuiElement.h>
 
 namespace Kame {
 
@@ -88,14 +90,14 @@ namespace Kame {
       rectangle1.Y = 0.0f;
       rectangle1.Width = 0.1f;
       rectangle1.Height = 0.1f;
-      rectangle1.SetColor(Math::Float4(1.0f, 0.0f, 1.0f, 1.0f));
+      rectangle1.SetColor(Math::Float4(1.0f, 0.0f, 0.0f, 1.0f));
       rectangles.push_back(rectangle1);
       ColoredRectangle rectangle2;
       rectangle2.X = 0.5f;
       rectangle2.Y = 0.0f;
       rectangle2.Width = 0.1f;
       rectangle2.Height = 0.1f;
-      rectangle2.SetColor(Math::Float4(0.0f, 1.0f, 1.0f, 0.9f));
+      rectangle2.SetColor(Math::Float4(0.0f, 1.0f, 0.0f, 0.9f));
       rectangles.push_back(rectangle2);
       Renderer2D::Get()->RenderColoredRectangles(commandList.get(), rectangles);
 
@@ -124,35 +126,35 @@ namespace Kame {
       //tri1->Y = -0.5f;
       tri1->Font = font;
       tri1->Color = Math::Float4(1.0f, 0.0f, 0.0f, 1.0f);
-      tri1->Size = 5.0f;
+      tri1->Size = 15.0f;
       tri1->Text = L"tri1";
 
       tri2->Font = font;
       tri2->X = 0.1f;
       //tri2->Y = -0.5f;
       tri2->Color = Math::Float4(1.0f, 0.0f, 0.0f, 1.0f);
-      tri2->Size = 10.0f;
+      tri2->Size = 25.0f;
       tri2->Text = L"tri2";
 
       tri3->Font = font;
       tri3->X = 0.2f;
       //tri3->Y = -0.5f;
       tri3->Color = Math::Float4(0.0f, 1.0f, 0.0f, 1.0f);
-      tri3->Size = 5.0f;
+      tri3->Size = 15.0f;
       tri3->Text = L"tri3";
 
       tri4->Font = font;
       tri4->X = 0.3f;
       //tri4->Y = -0.5f;
       tri4->Color = Math::Float4(0.0f, 1.0f, 0.0f, 1.0f);
-      tri4->Size = 5.0f;
+      tri4->Size = 15.0f;
       tri4->Text = L"tri4";
 
       tri5->Font = font;
       tri5->X = 10.8f;
       //tri5->Y = -0.5f;
       tri5->Color = Math::Float4(0.0f, 1.0f, 0.0f, 1.0f);
-      tri5->Size = 10.0f;
+      tri5->Size = 25.0f;
       tri5->Text = L"tri5";
 
       std::vector < Reference<TextRenderItem>> textRenderItems;
@@ -163,7 +165,18 @@ namespace Kame {
       textRenderItems.push_back(tri5);
 
 
-      TextRenderer::Get()->RenderTextItems(commandList.get(), textRenderItems);
+      TextRenderer::Get()->RenderTextItems(commandList.get(), textRenderItems, finalVp.Width, finalVp.Height);
+
+      // GUI Test 
+      // TODO extract to GuiRenderer
+
+      GuiRenderContext guiContext(commandList.get(), finalVp.Width, finalVp.Height);
+      std::vector<Reference<GuiElement>>& guiElements = layer->GetGuiScene()->GetGuiElements();
+      for (Reference<GuiElement> guiElement : layer->GetGuiScene()->GetGuiElements()) {
+        guiElement->Render(guiContext);
+      }
+      guiContext.Finish();
+
     }
 
     GraphicsCore::ExecuteCommandList(commandList);

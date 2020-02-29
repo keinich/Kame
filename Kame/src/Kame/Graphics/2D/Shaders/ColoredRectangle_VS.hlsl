@@ -13,7 +13,7 @@ struct VS_INPUT {
 VS_OUTPUT main(VS_INPUT input, uint VertID : SV_VertexID) {
 
   const float2 xy0 = input.Position;
-  const float2 xy1 = input.Position + float2(input.Scale.x, input.Scale.y);
+  const float2 xy1 = input.Position + float2(input.Scale.x, - input.Scale.y);
 
   //const float2 xy0 = input.Position;
   //const float2 xy1 = float2(0.2f, 0.2f);

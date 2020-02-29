@@ -9,6 +9,7 @@
 #include <Kame/Graphics/Camera.h>
 #include <Kame/Game/CameraController.h>
 #include <Kame/Game/Layer.h>
+#include <Kame/Gui/Label.h>
 
 class MainLayer : public Kame::Layer {
 
@@ -19,8 +20,12 @@ public:
   virtual Kame::Camera* GetActiveCamera() override;
   virtual Kame::Scene3D* GetScene() override;
 
+  virtual void Load() override;
+
 private:
   Kame::Game* _Game;
+
+  Kame::Reference<Kame::Label> _Label1;
 
 };
 
@@ -55,6 +60,8 @@ public:
   virtual void OnUpdate(Kame::UpdateEventArgs& e);
 
   virtual void OnResize(Kame::ResizeEventArgs& e) override;
+
+  bool OnKeyF(Kame::KeyEventArgs& e);
 
 private: //Methods
 
